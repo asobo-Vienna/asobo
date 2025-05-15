@@ -1,4 +1,4 @@
-package at.msm.asobo.controller;
+package at.msm.asobo.controllers;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
