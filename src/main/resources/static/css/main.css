@@ -1,3 +1,11 @@
 .asobo-logo {
-    width: 100px;
+    height: auto;
+    max-width: 100%;     /* prevents overflow on small screens */
+    width: 80px;        /* base size for desktop */
+}
+
+@media (max-width: 768px) {
+    .asobo-logo {
+        width: 60px;    /* smaller logo on mobile */
+    }
 }
