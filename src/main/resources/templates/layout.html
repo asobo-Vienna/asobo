@@ -18,21 +18,25 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/about}">About</a>
+                </li>
                 <li class="nav-item">
                     <a class="nav-link active" aria-current="page" th:href="@{/events}">Events</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" th:href="@{/about}">About</a>
-                </li>
-
-                <li class="nav-item">
                     <a class="nav-link" th:href="@{/register}">Register</a>
                 </li>
+                <li class="nav-item">
+                    <div class="d-flex ms-2">
+                        <button class="btn form-control me-2 d-flex btn-purple btn-primary" type="button">
+                            <a th:href="@{/login}" class="btn-purple">Login</a>
+                        </button>
+                    </div>
+                </li>
             </ul>
-            <button class="btn form-control me-2 d-flex btn-purple btn-primary" type="button">
-                <a th:href="@{/login}" class="btn-purple">Login</a>
-            </button>
+
             <!--<form class="d-flex" role="search">
                 <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"/>
                 <button class="btn btn-outline-success search-button" type="submit">Search</button>
