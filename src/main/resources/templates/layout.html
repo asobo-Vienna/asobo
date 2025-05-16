@@ -30,8 +30,8 @@
                     <a class="nav-link">Register</a>
                 </li>
             </ul>
-            <button class="btn form-control me-2 d-flex btn-login btn-primary" type="button">
-                <a href="#" class="btn-login">Login</a>
+            <button class="btn form-control me-2 d-flex btn-purple btn-primary" type="button">
+                <a href="#" class="btn-purple">Login</a>
             </button>
             <!--<form class="d-flex" role="search">
                 <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"/>
@@ -40,7 +40,7 @@
         </div>
     </div>
 </nav>
-<main layout:fragment="content" class="container mt-5">
+<main layout:fragment="content" class="container d-flex flex-column align-items-center mt-5">
     <h1 class="text-primary">Welcome to My Site</h1>
     <p th:text="'Hello, ' + ${name} + '!'"></p>
 </main>

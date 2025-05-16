@@ -10,18 +10,18 @@
     }
 }
 
-.btn-login {
+.btn-purple {
     color: #FFFFFF;
     background-color: #690F93 !important;
     border-color: #690F93 !important;
     width: auto;
 }
 
-.btn-login:hover {
+.btn-purple:hover {
     background-color: #690F93 !important;
 }
 
-a.btn-login {
+a.btn-purple {
     color: #FFFFFF !important;
     text-decoration: none;
 }
@@ -30,3 +30,13 @@ a.btn-login {
     color: #690F93;
     border-color: #690F93;
 }
+
+.register-form div.form-group {
+    margin: 0.7em;
+    width: 100%;
+}
+
+.register-form .btn-purple {
+    width: 60%;
+}
+
