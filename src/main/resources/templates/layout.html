@@ -20,18 +20,18 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="#">Events</a>
+                    <a class="nav-link active" aria-current="page" th:href="@{/events}">Events</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">About</a>
+                    <a class="nav-link" th:href="@{/about}">About</a>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link">Register</a>
+                    <a class="nav-link" th:href="@{/register}">Register</a>
                 </li>
             </ul>
             <button class="btn form-control me-2 d-flex btn-purple btn-primary" type="button">
-                <a href="#" class="btn-purple">Login</a>
+                <a th:href="@{/login}" class="btn-purple">Login</a>
             </button>
             <!--<form class="d-flex" role="search">
                 <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"/>
