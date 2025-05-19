@@ -1,3 +1,11 @@
+* {
+    color: #000000;
+}
+
+:root {
+    --bs-primary-rgb: 105, 15, 147;
+}
+
 .asobo-logo {
     height: auto;
     max-width: 100%;     /* prevents overflow on small screens */
