@@ -1,6 +1,8 @@
 package at.msm.asobo.entities;
 
 import at.msm.asobo.entities.media.Gallery;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -8,21 +10,37 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.UUID;
 
+@Entity
 public class Event {
 
-    private ArrayList<User> participants;
-    private String name;
-    private String description;
-    private LocalDateTime date;
-    private String location;
-    private URI pictureURI;
-    private LocalDateTime creationDate;
-    private ArrayList<UserComment> comments;
-    private Gallery gallery;
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    public Event(){
+    private ArrayList<User> participants;
+
+    @NotBlank
+    private String name;
+
+    private String description;
+
+    private LocalDateTime date;
+
+    private String location;
+
+    private URI pictureURI;
+
+    private LocalDateTime creationDate;
+
+    private ArrayList<UserComment> comments;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "gallery_id")
+    private Gallery gallery;
+
+
+    public Event() {
+        this.creationDate = LocalDateTime.now();
     }
 
     public Event(String name, String description, LocalDateTime date, String location){

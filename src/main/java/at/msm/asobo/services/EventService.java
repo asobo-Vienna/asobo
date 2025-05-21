@@ -1,54 +1,42 @@
 package at.msm.asobo.services;
 
 import at.msm.asobo.entities.Event;
+import at.msm.asobo.exceptions.EventNotFoundException;
+import at.msm.asobo.repositories.EventRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 
 @Service
 public class EventService {
-    private ArrayList<Event> events;
 
-    public EventService(){
+    private final EventRepository eventRepository;
 
-        this.events = new ArrayList<Event>();
+    public EventService(EventRepository eventRepository) {
+        this.eventRepository = eventRepository;
     }
 
 
-    public ArrayList<Event> getAllEvents(){
-        return events;
+    public List<Event> getAllEvents(){
+        return eventRepository.findAll();
     }
 
 
     public Event addNewEvent(Event event) {
-        this.events.add(new Event(
-                event.getName(),
-                event.getDescription(),
-                event.getDate(),
-                event.getLocation()));
-        return event;
+        return this.eventRepository.save(event);
     }
 
 
     public Event findEventByID(UUID id) {
-
-        for (Event event : this.events) {
-            if (event.getId().equals(id)) {
-                return event;
-            }
-        }
-        return null;
+        return eventRepository.findById(id).orElseThrow();
     }
 
     public Event deleteEventByID(UUID id) {
-        for (Event event : this.events) {
-            if (event.getId().equals(id)) {
-                this.events.remove(event);
-                return event;
-            }
-        }
-        return null;
+        Event eventToDelete = this.findEventByID(id);
+        this.eventRepository.deleteById(id);
+        return eventToDelete;
     }
 }

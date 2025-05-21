@@ -2,9 +2,12 @@ package at.msm.asobo.controllers;
 
 import at.msm.asobo.entities.Event;
 import at.msm.asobo.services.EventService;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,12 +29,13 @@ public class EventController {
     }
 
     @GetMapping
-    public ArrayList<Event> getAllEvents(){
+    public List<Event> getAllEvents(){
         return this.eventService.getAllEvents();
     }
 
     @PostMapping
-    public Event createEvent(@RequestBody Event event) {
+    @ResponseStatus(HttpStatus.CREATED)
+    public Event createEvent(@RequestBody @Valid Event event) {
         return eventService.addNewEvent(event);
     }
 
