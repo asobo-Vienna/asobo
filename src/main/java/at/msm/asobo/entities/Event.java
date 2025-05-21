@@ -3,6 +3,8 @@ package at.msm.asobo.entities;
 import at.msm.asobo.entities.media.Gallery;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -22,14 +24,18 @@ public class Event {
     @NotBlank
     private String name;
 
+    @NotBlank
     private String description;
 
+    @NotNull
     private LocalDateTime date;
 
+    @NotBlank
     private String location;
 
     private URI pictureURI;
 
+    @CreationTimestamp
     private LocalDateTime creationDate;
 
     private ArrayList<UserComment> comments;
@@ -40,7 +46,6 @@ public class Event {
 
 
     public Event() {
-        this.creationDate = LocalDateTime.now();
     }
 
     public Event(String name, String description, LocalDateTime date, String location){
