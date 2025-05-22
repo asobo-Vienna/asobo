@@ -54,5 +54,9 @@ a.btn-purple {
 
 #register-email-error {
     display: none;
+    left: 105%;
+    right: -160px;
+    top: 50%;
+    transform: translateY(-50%);
     white-space: nowrap;
 }
