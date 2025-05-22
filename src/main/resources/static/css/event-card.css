@@ -1,0 +1,31 @@
+
+@media (max-width: 768px) {
+    .event-card {
+        width: 150px !important;
+    }
+    .event-card .card-body {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+}
+
+.event-card {
+    width: 15vw;
+    border-radius: 15px;
+    overflow: hidden;
+    filter: drop-shadow(3px 3px 5px gray);
+}
+
+.event-card .card-title {
+    font-weight: bold;
+}
+
+.event-card .date-text {
+    font-size: 1.7vh;
+}
+
+.event-card .location-text {
+    font-size: 1.5vh;
+}

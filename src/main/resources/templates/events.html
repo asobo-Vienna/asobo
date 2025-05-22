@@ -1,0 +1,34 @@
+<!-- src/main/resources/templates/index.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}"
+      lang="en">
+<head>
+    <title>Events</title>
+</head>
+
+<body>
+<main layout:fragment="content" class="mt-5 container d-flex flex-column align-items-center">
+<ul id="event-list" class="list-unstyled">
+    <!-- JavaScript will populate this -->
+
+   <li>
+        <div class="card event-card">
+            <img src="/images/events/test_event/movie_night.jpg" class="card-img-top" alt="movie night picture">
+            <div class="card-body">
+                <h6 class="card-title">Movie Night</h6>
+                <p class="date-text text-muted">Thu, May 29, 2025, 7 p.m.</p>
+                <p class="location-text text-muted">in San Juan Capistrano</p>
+
+<!--                <div class="d-flex justify-content-center">-->
+<!--                    <a href="#" class="btn btn-purple">Find out More</a>-->
+<!--                </div>-->
+            </div>
+        </div>
+   </li>
+
+</ul>
+</main>
+</body>
+</html>
