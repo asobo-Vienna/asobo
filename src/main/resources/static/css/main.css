@@ -61,8 +61,25 @@ a.btn-purple {
     white-space: nowrap;
 }
 
-.search-bar form {
-    max-width: 600px;
+.search-bar {
+    flex-direction: column;
+    margin-left: 0;
+}
+
+.search-bar .search-div {
+    max-width: 37vw;
+    display: flex;
+}
+
+.search-bar .btn-search {
+    transform: translateX(-100%);
+    border: none;
+    padding-right: 8px;
+}
+
+.btn-search-img {
+    width: 25px;
+    height: 25px;
 }
 
 footer .footer-content {
