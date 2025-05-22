@@ -51,3 +51,8 @@ a.btn-purple {
 #salutation-other-group {
     display: none;
 }
+
+#register-email-error {
+    display: none;
+    white-space: nowrap;
+}
