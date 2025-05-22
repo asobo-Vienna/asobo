@@ -60,3 +60,7 @@ a.btn-purple {
     transform: translateY(-50%);
     white-space: nowrap;
 }
+
+footer.footer-content {
+    justify-content: space-between;
+}
