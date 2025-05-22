@@ -47,10 +47,12 @@
 
 <div class="py-2">
     <div class="search-bar container d-flex justify-content-center">
-        <form class="d-flex w-100" th:action="@{/search}" method="get">
+        <!--<form class="d-flex w-100" th:action="@{/search}" method="get">-->
+        <div class="" >
             <input class="form-control me-2" type="search" name="query" placeholder="Search" aria-label="Search">
             <button class="btn btn-outline-success" type="submit">Search</button>
-        </form>
+        </div>
+            <!--</form>-->
     </div>
 </div>
 <main layout:fragment="content" class="container d-flex flex-column align-items-center mt-5">
