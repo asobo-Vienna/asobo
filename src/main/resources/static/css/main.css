@@ -61,6 +61,10 @@ a.btn-purple {
     white-space: nowrap;
 }
 
+.search-bar form {
+    max-width: 600px;
+}
+
 footer .footer-content {
     justify-content: space-between;
 }
