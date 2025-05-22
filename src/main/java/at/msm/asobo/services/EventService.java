@@ -1,11 +1,9 @@
 package at.msm.asobo.services;
 
 import at.msm.asobo.entities.Event;
-import at.msm.asobo.exceptions.EventNotFoundException;
 import at.msm.asobo.repositories.EventRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
