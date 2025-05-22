@@ -61,6 +61,6 @@ a.btn-purple {
     white-space: nowrap;
 }
 
-footer.footer-content {
+footer .footer-content {
     justify-content: space-between;
 }
