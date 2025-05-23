@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}"
+      lang="en">
+<head>
+  <title>About</title>
+</head>
+<body>
+<main layout:fragment="content" class="container d-flex flex-column align-items-center mt-5 flex-grow-1">
+  <h1 class="text-primary">About asobo!</h1>
+  <p th:text="${aboutText}"></p>
+</main>
+</body>
+</html>
