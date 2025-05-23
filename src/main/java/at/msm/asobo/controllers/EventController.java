@@ -30,11 +30,18 @@ public class EventController {
 
     }
 
-    // TEST
+    // TEST WITH STATIC HTML PAGES
     @GetMapping("/test")
-    public String events(Model model) {
+    public String getEvents(Model model) {
         return "events";
     }
+
+    @GetMapping("/test/single-event")
+    public String getSingleEvent(Model model) {
+        return "event";
+    }
+
+
 
     @GetMapping
     public List<Event> getAllEvents() {
