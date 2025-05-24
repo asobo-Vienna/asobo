@@ -34,6 +34,10 @@ a.btn-purple {
     text-decoration: none;
 }
 
+#user-nav-thumbnail {
+    display: none !important;
+}
+
 .user-thumbnail {
     /*height: 40px;
     width: 40px;*/
