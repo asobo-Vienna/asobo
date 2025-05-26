@@ -19,10 +19,11 @@ public class Event {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "creator_id")
     private User creator;
 
+    @ManyToMany
     private ArrayList<User> participants;
 
     @NotBlank
