@@ -1,9 +1,6 @@
 package at.msm.asobo.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -13,6 +10,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
+@Table(name="users")
 public class User {
 
     @Id
