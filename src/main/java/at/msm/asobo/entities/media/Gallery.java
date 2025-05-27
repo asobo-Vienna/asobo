@@ -1,9 +1,6 @@
 package at.msm.asobo.entities.media;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.util.ArrayList;
 import java.util.UUID;
@@ -15,6 +12,8 @@ public class Gallery {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
     private String name;
+
+    @OneToMany
     private ArrayList<Medium> media;
 
     public Gallery() {

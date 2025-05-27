@@ -1,13 +1,27 @@
 package at.msm.asobo.entities;
 
-import java.time.LocalDateTime;
+import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
+import java.util.UUID;
+
+@Entity
 public class UserComment {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
+
     private String text;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
     private User user;
+
     private LocalDateTime creationDate;
+
     private LocalDateTime modificationDate;
+
     // private File file;
 
     public UserComment(){
@@ -51,5 +65,13 @@ public class UserComment {
 
     public void setModificationDate(LocalDateTime modificationDate) {
         this.modificationDate = modificationDate;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public UUID getId() {
+        return id;
     }
 }

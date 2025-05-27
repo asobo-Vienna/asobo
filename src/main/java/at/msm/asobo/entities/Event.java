@@ -23,6 +23,8 @@ public class Event {
     @JoinColumn(name = "creator_id")
     private User creator;
 
+    @ManyToMany
+    @JoinTable(name = "participant_id")
     private ArrayList<User> participants;
 
     @NotBlank
@@ -42,6 +44,8 @@ public class Event {
     @CreationTimestamp
     private LocalDateTime creationDate;
 
+    @OneToMany
+    @JoinColumn(name = "comment_id")
     private ArrayList<UserComment> comments;
 
     @OneToOne(cascade = CascadeType.ALL)

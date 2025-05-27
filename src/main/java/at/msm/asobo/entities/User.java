@@ -17,6 +17,12 @@ public class User {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
+    // list of events?
+    // @OneToMany(mappedBy="event")
+
+    // list of comments?
+    // @OneToMany(mappedBy="usercomment")
+
     private String email;
     private String username;
     private String password;
