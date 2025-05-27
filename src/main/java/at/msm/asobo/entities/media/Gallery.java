@@ -3,6 +3,7 @@ package at.msm.asobo.entities.media;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -14,7 +15,7 @@ public class Gallery {
     private String name;
 
     @OneToMany
-    private ArrayList<Medium> media;
+    private List<Medium> media;
 
     public Gallery() {
     }
@@ -33,11 +34,11 @@ public class Gallery {
         this.name = name;
     }
 
-    public ArrayList<Medium> getMedia() {
+    public List<Medium> getMedia() {
         return media;
     }
 
-    public void setMedia(ArrayList<Medium> media) {
+    public void setMedia(List<Medium> media) {
         this.media = media;
     }
 

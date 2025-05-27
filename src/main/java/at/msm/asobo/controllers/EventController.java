@@ -23,11 +23,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class EventController {
 
     private EventService eventService;
-
-
+    
     public EventController(EventService eventService){
         this.eventService = eventService;
-
     }
 
     // TEST WITH STATIC HTML PAGES
@@ -40,7 +38,6 @@ public class EventController {
     public String getSingleEvent(Model model) {
         return "event";
     }
-
 
 
     @GetMapping

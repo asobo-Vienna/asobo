@@ -25,7 +25,6 @@ public class UserComment {
     // private File file;
 
     public UserComment(){
-
     }
 
     public UserComment(String text, User user) {

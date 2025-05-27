@@ -10,6 +10,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -25,7 +26,7 @@ public class Event {
 
     @ManyToMany
     @JoinTable(name = "participant_id")
-    private ArrayList<User> participants;
+    private List<User> participants;
 
     @NotBlank
     private String name;
@@ -45,8 +46,8 @@ public class Event {
     private LocalDateTime creationDate;
 
     @OneToMany
-    @JoinColumn(name = "comment_id")
-    private ArrayList<UserComment> comments;
+    @JoinColumn(name = "event_id")
+    private List<UserComment> comments;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "gallery_id")
@@ -75,11 +76,11 @@ public class Event {
 
     }
 
-    public ArrayList<User> getParticipants() {
+    public List<User> getParticipants() {
         return participants;
     }
 
-    public void setParticipants(ArrayList<User> participants) {
+    public void setParticipants(List<User> participants) {
         this.participants = participants;
     }
 
@@ -131,11 +132,11 @@ public class Event {
         this.creationDate = creationDate;
     }
 
-    public ArrayList<UserComment> getComments() {
+    public List<UserComment> getComments() {
         return comments;
     }
 
-    public void setComments(ArrayList<UserComment> comments) {
+    public void setComments(List<UserComment> comments) {
         this.comments = comments;
     }
 

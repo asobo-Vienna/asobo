@@ -5,6 +5,7 @@ import at.msm.asobo.exceptions.NotFoundException;
 import at.msm.asobo.repositories.EventRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -21,6 +22,10 @@ public class EventService {
 
     public List<Event> getAllEvents(){
         return eventRepository.findAll();
+    }
+
+    public List<Event> getEventsByDate(LocalDateTime date) {
+        return eventRepository.findEventsByDate(date);
     }
 
 
