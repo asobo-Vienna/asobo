@@ -19,6 +19,7 @@ $(document).ready(function () {
     $toggleSalutationSelect.on('change', updateVisibility);
 
     emailValidation();
+    passwordValidation();
 });
 
 function emailValidation() {
@@ -43,13 +44,16 @@ function passwordValidation() {
     const $pwError = $('#pw-notmatching-error');
 
     $pwConfirmation.on('input', function () {
-        const $pwText = $pw.val();
-        const $pwConfirmationText = $pwConfirmation.val();
+        const $pwText = $pw.val().trim().normalize();
+        const $pwConfirmationText = $pwConfirmation.val().trim().normalize();
 
-        if ($pwText.trim() !== $pwConfirmationText.trim()) {
-            $pwError.show();
-        } else {
+        console.log("pw:", $pwText);
+        console.log("confirmation:", $pwConfirmationText);
+        console.log("pws equal? " + ($pwText === $pwConfirmationText));
+        if ($pwText === $pwConfirmationText) {
             $pwError.hide();
+        } else {
+            $pwError.show();
         }
     });
 }
