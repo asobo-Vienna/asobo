@@ -83,7 +83,7 @@ a.btn-purple {
     display: none;
 }
 
-#register-email-error {
+#register-email-error, #pw-notmatching-error {
     display: none;
     left: 105%;
     right: -160px;

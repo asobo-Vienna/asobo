@@ -18,7 +18,7 @@ $(document).ready(function () {
     // And again when changed
     $toggleSalutationSelect.on('change', updateVisibility);
 
-    emailValidation(); // Assuming this is defined elsewhere
+    emailValidation();
 });
 
 function emailValidation() {
@@ -33,6 +33,23 @@ function emailValidation() {
             $emailError.show();
         } else {
             $emailError.hide();
+        }
+    });
+}
+
+function passwordValidation() {
+    const $pw = $('#register-password');
+    const $pwConfirmation = $('#register-password-conf');
+    const $pwError = $('#pw-notmatching-error');
+
+    $pwConfirmation.on('input', function () {
+        const $pwText = $pw.val();
+        const $pwConfirmationText = $pwConfirmation.val();
+
+        if ($pwText.trim() !== $pwConfirmationText.trim()) {
+            $pwError.show();
+        } else {
+            $pwError.hide();
         }
     });
 }
