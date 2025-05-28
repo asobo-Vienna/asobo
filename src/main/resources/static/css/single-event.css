@@ -25,8 +25,10 @@
     background: white;
     border-radius: 10px;
     padding: 10px;
-    margin-bottom: 20px;
     border: 1px solid #E9ECEF;
+}
+.comment-box:not(:last-child) {
+    margin-bottom: 20px;
 }
 
 .comment-username {
@@ -52,7 +54,7 @@
     font-size: 0.9rem;
     max-width: 800px;
     margin: 2rem auto;
-    padding: 10px;
+    padding: 15px;
     background-color: #F8F9FA;
     border-radius: 15px;
     box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
