@@ -1,14 +1,14 @@
 // event listener for salutation selection
-document.addEventListener('DOMContentLoaded', () => {
-    const toggleSalutationSelect = document.getElementById('salutation');
-    const otherInput = document.getElementById('salutation-other-group');
+$(document).ready(function () {
+    const $toggleSalutationSelect = $('#salutation');
+    const $otherInput = $('#salutation-other-group');
 
     // Function to show/hide based on current value
     const updateVisibility = () => {
-        if (toggleSalutationSelect.value === 'other') {
-            otherInput.style.display = 'block';
+        if ($toggleSalutationSelect.val() === 'other') {
+            $otherInput.show();
         } else {
-            otherInput.style.display = 'none';
+            $otherInput.hide();
         }
     };
 
@@ -16,23 +16,23 @@ document.addEventListener('DOMContentLoaded', () => {
     updateVisibility();
 
     // And again when changed
-    toggleSalutationSelect.addEventListener('change', updateVisibility);
+    $toggleSalutationSelect.on('change', updateVisibility);
 
-    emailValidation();
+    emailValidation(); // Assuming this is defined elsewhere
 });
 
 function emailValidation() {
-    const emailInput = document.getElementById('register-email');
-    const emailError = document.getElementById('register-email-error');
+    const $emailInput = $('#register-email');
+    const $emailError = $('#register-email-error');
 
-    emailInput.addEventListener('input', () => {
-        const value = emailInput.value;
+    $emailInput.on('input', function () {
+        const value = $emailInput.val();
         const isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 
         if (value && !isValid) {
-            emailError.style.display = 'block';
+            $emailError.show();
         } else {
-            emailError.style.display = 'none';
+            $emailError.hide();
         }
     });
 }
