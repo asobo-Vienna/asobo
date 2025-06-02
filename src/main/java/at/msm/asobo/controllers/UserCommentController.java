@@ -1,12 +1,12 @@
 package at.msm.asobo.controllers;
 
+import at.msm.asobo.entities.User;
 import at.msm.asobo.entities.UserComment;
 import at.msm.asobo.services.UserCommentService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
@@ -22,19 +22,24 @@ public class UserCommentController {
     }
 
     @GetMapping
-    public List<UserComment> getAllUserComments(@PathVariable String eventId) {
-        try {
-            UUID eventUUID = UUID.fromString(eventId);
-            return this.userCommentService.getUserCommentsByEventId(eventUUID);
-        } catch (IllegalArgumentException iae) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid UUID format: " + eventId);
-        }
+    public List<UserComment> getAllUserComments(@PathVariable UUID eventId) {
+        return this.userCommentService.getUserCommentsByEventId(eventId);
     }
 
     @GetMapping("/{id}")
-    public UserComment getUserCommentById(@PathVariable String eventId, UUID id) {
-        return this.userCommentService.getUserCommentById(id);
+    public UserComment getUserCommentById(@PathVariable UUID eventId, @PathVariable UUID id) {
+        return this.userCommentService.getUserCommentByEventIdAndCommentId(eventId, id);
     }
 
-    
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public UserComment addNewComment(@PathVariable UUID eventId, @RequestBody @Valid UserComment comment) {
+        return this.userCommentService.addNewUserCommentToEventById(eventId, comment);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<UserComment> deleteUserComment(@PathVariable UUID eventId, @PathVariable UUID id) {
+        UserComment deletedComment = userCommentService.deleteUserCommentByEventIdAndCommentId(eventId, id);
+        return ResponseEntity.ok(deletedComment);
+    }
 }

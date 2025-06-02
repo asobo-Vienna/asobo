@@ -3,7 +3,9 @@ package at.msm.asobo.services;
 import at.msm.asobo.entities.Event;
 import at.msm.asobo.entities.User;
 import at.msm.asobo.entities.UserComment;
+import at.msm.asobo.exceptions.EventNotFoundException;
 import at.msm.asobo.exceptions.UserCommentNotFoundException;
+import at.msm.asobo.repositories.EventRepository;
 import at.msm.asobo.repositories.UserCommentRepository;
 import org.springframework.stereotype.Service;
 
@@ -14,8 +16,10 @@ import java.util.UUID;
 @Service
 public class UserCommentService {
     private final UserCommentRepository userCommentRepository;
+    private final EventRepository eventRepository;
 
-    public UserCommentService(UserCommentRepository userCommentRepository) {
+    public UserCommentService(EventRepository eventRepository, UserCommentRepository userCommentRepository) {
+        this.eventRepository = eventRepository;
         this.userCommentRepository = userCommentRepository;
     }
 
@@ -43,16 +47,20 @@ public class UserCommentService {
         return this.userCommentRepository.findUserCommentsByEventId(eventId);
     }
 
-    public UserComment getUserCommentByEventIdAndId(UUID eventId, UUID commentId) {
+    public UserComment getUserCommentByEventIdAndCommentId(UUID eventId, UUID commentId) {
         return this.userCommentRepository.findUserCommentByEventIdAndId(eventId, commentId).orElseThrow(() -> new UserCommentNotFoundException(commentId));
     }
 
-    public UserComment addNewUserComment(UserComment userComment) {
+    public UserComment addNewUserCommentToEventById(UUID eventId, UserComment userComment) {
+        Event event = eventRepository.findById(eventId)
+                .orElseThrow(() -> new EventNotFoundException(eventId));
+
+        userComment.setEvent(event);  // Set the owning side of the relationship
         return this.userCommentRepository.save(userComment);
     }
 
-    public UserComment deleteUserComment(UUID id) {
-        UserComment userComment = this.getUserCommentById(id);
+    public UserComment deleteUserCommentByEventIdAndCommentId(UUID eventId, UUID commentId) {
+        UserComment userComment = this.getUserCommentByEventIdAndCommentId(eventId, commentId);
         this.userCommentRepository.delete(userComment);
         return userComment;
     }

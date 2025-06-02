@@ -85,4 +85,19 @@ public class UserComment {
     public UUID getId() {
         return id;
     }
+
+    public Event getEvent() {
+        return event;
+    }
+
+    public User getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(User author) {
+        this.author = author;
+    }
+
+    public void setEvent(Event event) {
+    }
 }
