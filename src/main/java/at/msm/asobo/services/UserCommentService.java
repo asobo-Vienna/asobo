@@ -59,6 +59,19 @@ public class UserCommentService {
         return this.userCommentRepository.save(userComment);
     }
 
+    public UserComment updateUserCommentByEventIdAndCommentId(UUID eventId, UUID commentId, UserComment updatedComment) {
+        UserComment existingComment = userCommentRepository.findUserCommentByEventIdAndId(eventId, commentId)
+                .orElseThrow(() -> new UserCommentNotFoundException(commentId));
+
+        // Copy over the fields you allow to be updated
+        existingComment.setText(updatedComment.getText());
+        existingComment.setModificationDate(LocalDateTime.now());
+        existingComment.setAuthor(updatedComment.getAuthor());
+
+        return userCommentRepository.save(existingComment);
+    }
+
+
     public UserComment deleteUserCommentByEventIdAndCommentId(UUID eventId, UUID commentId) {
         UserComment userComment = this.getUserCommentByEventIdAndCommentId(eventId, commentId);
         this.userCommentRepository.delete(userComment);

@@ -54,14 +54,6 @@ public class UserComment {
         this.text = text;
     }
 
-    public User getUser() {
-        return author;
-    }
-
-    public void setUser(User user) {
-        this.author = user;
-    }
-
     public LocalDateTime getCreationDate() {
         return creationDate;
     }
