@@ -28,16 +28,16 @@ public class Event {
     @JoinTable(name = "participant_id")
     private List<User> participants;
 
-    @NotBlank
+    @NotBlank(message = "Name is mandatory")
     private String name;
 
-    @NotBlank
+    @NotBlank(message = "Description is mandatory")
     private String description;
 
     @NotNull
     private LocalDateTime date;
 
-    @NotBlank
+    @NotBlank(message = "Location is mandatory")
     private String location;
 
     private URI pictureURI;
