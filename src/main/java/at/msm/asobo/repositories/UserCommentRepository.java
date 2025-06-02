@@ -8,13 +8,18 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
 public interface UserCommentRepository extends JpaRepository<UserComment, UUID> {
     List<UserComment> findUserCommentsByCreationDate(LocalDateTime creationDate);
 
-    List<UserComment> findUserCommentsByCreator(User user);
+    List<UserComment> findUserCommentsByAuthor(User author);
 
     List<UserComment> findUserCommentsByEvent(Event event);
+
+    List<UserComment> findUserCommentsByEventId(UUID eventId);
+
+    Optional<UserComment> findUserCommentByEventIdAndId(UUID eventId, UUID commentId);
 }

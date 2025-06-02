@@ -20,7 +20,7 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping()
+    @GetMapping
     public List<User> getAllUsers() {
         return this.userService.getAllUsers();
     }
@@ -35,7 +35,7 @@ public class UserController {
         return this.userService.getUserByUsername(username);
     }
 
-    @PostMapping()
+    @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public User createUser(@RequestBody @Valid User user) {
         return this.userService.createUser(user);

@@ -31,12 +31,20 @@ public class UserCommentService {
         return this.userCommentRepository.findUserCommentsByCreationDate(date);
     }
 
-    public List<UserComment> getUserCommentsByCreator(User user) {
-        return this.userCommentRepository.findUserCommentsByCreator(user);
+    public List<UserComment> getUserCommentsByAuthor(User author) {
+        return this.userCommentRepository.findUserCommentsByAuthor(author);
     }
 
     public List<UserComment> getUserCommentsByEvent(Event event) {
-        return  this.userCommentRepository.findUserCommentsByEvent(event);
+        return this.userCommentRepository.findUserCommentsByEvent(event);
+    }
+
+    public List<UserComment> getUserCommentsByEventId(UUID eventId) {
+        return this.userCommentRepository.findUserCommentsByEventId(eventId);
+    }
+
+    public UserComment getUserCommentByEventIdAndId(UUID eventId, UUID commentId) {
+        return this.userCommentRepository.findUserCommentByEventIdAndId(eventId, commentId).orElseThrow(() -> new UserCommentNotFoundException(commentId));
     }
 
     public UserComment addNewUserComment(UserComment userComment) {

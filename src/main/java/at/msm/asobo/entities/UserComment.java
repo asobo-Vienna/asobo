@@ -19,10 +19,14 @@ public class UserComment {
     @NotBlank(message = "Text is mandatory")
     private String text;
 
-    @NotNull(message = "User is required to create a user comment")
+    @NotNull(message = "Author is required to create a user comment")
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "author_id")
+    private User author;
+
+    @ManyToOne//(fetch = FetchType.LAZY)
+    @JoinColumn(name = "event_id")
+    private Event event;
 
     @CreationTimestamp
     private LocalDateTime creationDate;
@@ -37,7 +41,7 @@ public class UserComment {
 
     public UserComment(String text, User user) {
         this.text = text;
-        this.user = user;
+        this.author = user;
         this.creationDate = LocalDateTime.now();
         this.modificationDate = null;
     }
@@ -51,11 +55,11 @@ public class UserComment {
     }
 
     public User getUser() {
-        return user;
+        return author;
     }
 
     public void setUser(User user) {
-        this.user = user;
+        this.author = user;
     }
 
     public LocalDateTime getCreationDate() {

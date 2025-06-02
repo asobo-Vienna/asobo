@@ -31,7 +31,7 @@ public class User {
     @OneToMany(mappedBy = "creator")
     private List<Event> events;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "author")
     private List<UserComment> comments;
 
     private URI pictureURI;
