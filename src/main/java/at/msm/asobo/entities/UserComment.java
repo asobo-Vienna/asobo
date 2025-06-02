@@ -19,11 +19,11 @@ public class UserComment {
     @NotBlank(message = "Text is mandatory")
     private String text;
 
+    @NotNull(message = "User is required to create a user comment")
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
-    @NotNull(message = "Date must be specified")
     @CreationTimestamp
     private LocalDateTime creationDate;
 
