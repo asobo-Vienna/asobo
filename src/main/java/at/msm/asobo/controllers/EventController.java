@@ -47,7 +47,7 @@ public class EventController {
         return this.eventService.getAllEvents();
     }
 
-    @GetMapping
+    @GetMapping(value = "/events", params = "location")
     public List<Event> getEventsByLocation(@RequestParam(required = false) String location) {
         if (location == null) {
             return this.eventService.getAllEvents();
@@ -55,7 +55,7 @@ public class EventController {
         return this.eventService.getEventsByLocation(location);
     }
 
-    @GetMapping
+    @GetMapping(value = "/events", params = "date")
     public List<Event> getEventsByDate(@RequestParam(required = false) String date) {
         if (date == null) {
             return this.eventService.getAllEvents();
