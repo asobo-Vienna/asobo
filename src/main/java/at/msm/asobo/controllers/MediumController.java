@@ -2,6 +2,7 @@ package at.msm.asobo.controllers;
 
 import at.msm.asobo.entities.media.Medium;
 import at.msm.asobo.services.MediumService;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,7 +33,7 @@ public class MediumController {
 
 
     @PostMapping
-    public Medium addMedium(@PathVariable UUID eventID, @RequestBody Medium medium) {
+    public Medium addMedium(@PathVariable UUID eventID, @RequestBody @Valid Medium medium) {
         return this.mediumService.saveMedium(eventID, medium);
     }
 

@@ -75,8 +75,6 @@ public class EventController {
     }
 
 
-
-
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Event createEvent(@RequestBody @Valid Event event) {
