@@ -35,7 +35,7 @@ public class UserCommentController {
         return this.userCommentService.addNewUserCommentToEventById(eventId, comment);
     }
 
-    @PutMapping("{commentId}")
+    @PutMapping("/{commentId}")
     public UserComment updateUserComment(@PathVariable UUID eventId, @PathVariable UUID commentId, @RequestBody @Valid UserComment updatedComment) {
         return this.userCommentService.updateUserCommentByEventIdAndCommentId(eventId, commentId, updatedComment);
     }
