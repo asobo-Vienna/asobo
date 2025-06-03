@@ -41,5 +41,4 @@ public class MediumController {
     public Medium deleteMediumById(@PathVariable UUID eventID, @PathVariable UUID mediumID) {
         return mediumService.deleteMediumById(eventID, mediumID);
     }
-
 }

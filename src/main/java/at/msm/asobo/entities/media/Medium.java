@@ -1,10 +1,24 @@
 package at.msm.asobo.entities.media;
 
 import at.msm.asobo.entities.Event;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import jakarta.persistence.*;
 
 import java.net.URI;
 import java.util.UUID;
+
+
+
+@JsonTypeInfo(
+        use = JsonTypeInfo.Id.NAME,
+        include = JsonTypeInfo.As.PROPERTY,
+        property = "type" // This must be present in the JSON!
+)
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = Picture.class, name = "picture"),
+        @JsonSubTypes.Type(value = Video.class, name = "video")
+})
 
 @Entity
 public abstract class Medium {
