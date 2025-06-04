@@ -41,8 +41,7 @@ public class UserCommentController {
     }
 
     @DeleteMapping("/{commentId}")
-    public ResponseEntity<UserComment> deleteUserComment(@PathVariable UUID eventId, @PathVariable UUID commentId) {
-        UserComment deletedComment = userCommentService.deleteUserCommentByEventIdAndCommentId(eventId, commentId);
-        return ResponseEntity.ok(deletedComment);
+    public UserComment deleteUserComment(@PathVariable UUID eventId, @PathVariable UUID commentId) {
+        return userCommentService.deleteUserCommentByEventIdAndCommentId(eventId, commentId);
     }
 }

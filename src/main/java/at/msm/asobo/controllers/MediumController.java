@@ -14,7 +14,6 @@ public class MediumController {
 
    private final MediumService mediumService;
 
-
     public MediumController(MediumService mediumService) {
         this.mediumService = mediumService;
     }
@@ -30,7 +29,6 @@ public class MediumController {
     public Medium getMediumById(@PathVariable UUID eventID, @PathVariable UUID mediumID) {
         return mediumService.getMediumByEventIdAndMediumId(eventID, mediumID);
     }
-
 
     @PostMapping
     public Medium addMedium(@PathVariable UUID eventID, @RequestBody @Valid Medium medium) {

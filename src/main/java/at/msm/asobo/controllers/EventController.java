@@ -4,10 +4,7 @@ import at.msm.asobo.dto.EventDTO;
 import at.msm.asobo.entities.Event;
 import at.msm.asobo.services.EventService;
 import jakarta.validation.Valid;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
@@ -47,15 +44,11 @@ public class EventController {
 
 
     @GetMapping
-    public ResponseEntity<List<EventDTO>> getAllEvents() {
+    public List<EventDTO> getAllEvents() {
         List<Event> events = eventService.getAllEvents();
 
-        if (events.isEmpty()) {
-            return ResponseEntity.noContent().build(); // 204 No Content
-        }
-
         List<EventDTO> eventDTOS = events.stream().map(EventDTO::new).toList();
-        return ResponseEntity.ok(eventDTOS);
+        return eventDTOS;
     }
 
 
@@ -101,5 +94,4 @@ public class EventController {
     public Event deleteEventByID(@PathVariable UUID id) {
         return eventService.deleteEventByID(id);
     }
-
 }
