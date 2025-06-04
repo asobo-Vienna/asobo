@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 
-// change this to restcontroller as soon as done testing
+
 @RestController
 @RequestMapping("/events")
 public class EventController {
@@ -59,7 +59,7 @@ public class EventController {
     }
 
 
-    @GetMapping(value = "/events", params = "location")
+    @GetMapping(params = "location")
     public List<Event> getEventsByLocation(@RequestParam(required = false) String location) {
         if (location == null || location.isBlank()) {
             return this.eventService.getAllEvents();
@@ -68,7 +68,7 @@ public class EventController {
     }
 
 
-    @GetMapping(value = "/events", params = "date")
+    @GetMapping(params = "date")
     public List<Event> getEventsByDate(@RequestParam(required = false) String date) {
         if (date == null || date.isBlank()) {
             return eventService.getAllEvents();
