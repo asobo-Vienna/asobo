@@ -3,7 +3,7 @@ package at.msm.asobo.dto;
 import at.msm.asobo.entities.Event;
 import at.msm.asobo.entities.User;
 import at.msm.asobo.entities.UserComment;
-import at.msm.asobo.entities.media.Medium;
+import at.msm.asobo.entities.Medium;
 
 import java.net.URI;
 import java.time.LocalDateTime;

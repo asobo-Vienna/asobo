@@ -1,5 +1,7 @@
 package at.msm.asobo.controllers;
 
+
+import at.msm.asobo.dto.UserAdminDTO;
 import at.msm.asobo.dto.UserDTO;
 import at.msm.asobo.dto.UserUpdateDTO;
 import at.msm.asobo.entities.User;
@@ -11,51 +13,51 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.UUID;
 
-
 @RestController
-@RequestMapping("/users")
-public class UserController {
+@RequestMapping("admin/users")
+public class UserControllerAdmin {
 
     private final UserService userService;
 
-    public UserController(UserService userService) {
+    public UserControllerAdmin(UserService userService) {
         this.userService = userService;
     }
 
     @GetMapping
-    public List<UserDTO> getAllUsers() {
+    public List<UserAdminDTO> getAllUsers() {
         List<User> allUsers = this.userService.getAllUsers();
-        return allUsers.stream().map(UserDTO::new).toList();
+        return allUsers.stream().map(UserAdminDTO::new).toList();
     }
 
     @GetMapping("/{id}")
-    public UserDTO getUserById(@PathVariable UUID id) {
+    public UserAdminDTO getUserById(@PathVariable UUID id) {
         User foundUser = this.userService.getUserById(id);
-        return new UserDTO(foundUser);
+        return new UserAdminDTO(foundUser);
     }
 
     @GetMapping("/{username}")
-    public UserDTO getUserByUsername(@PathVariable String username) {
+    public UserAdminDTO getUserByUsername(@PathVariable String username) {
         User foundUser = this.userService.getUserByUsername(username);
-        return new UserDTO(foundUser);
+        return new UserAdminDTO(foundUser);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public UserDTO createUser(@RequestBody @Valid User user) {
+    public UserAdminDTO createUser(@RequestBody @Valid User user) {
         User savedUser = this.userService.createUser(user);
-        return new UserDTO(savedUser);
+        return new UserAdminDTO(savedUser);
     }
 
     @PutMapping("/{id}")
-    public UserDTO updateUser(@PathVariable UUID id, @RequestBody @Valid UserUpdateDTO userUpdateDTO) {
+    public UserAdminDTO updateUser(@PathVariable UUID id, @RequestBody @Valid UserUpdateDTO userUpdateDTO) {
         User updatedUser = this.userService.updateUserById(id, userUpdateDTO);
-        return new UserDTO(updatedUser);
+        return new UserAdminDTO(updatedUser);
     }
 
     @DeleteMapping("/{id}")
-    public UserDTO deleteUser(@PathVariable UUID id) {
+    public UserAdminDTO deleteUser(@PathVariable UUID id) {
         User deletedUser = this.userService.deleteUserById(id);
-        return new UserDTO(deletedUser);
+        return new UserAdminDTO(deletedUser);
     }
+
 }

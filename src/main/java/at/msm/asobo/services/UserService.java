@@ -37,7 +37,7 @@ public class UserService {
         return this.userRepository.save(user);
     }
 
-    // TODO ask Altin about user update function!
+
     public User updateUserById(UUID userId, UserUpdateDTO userUpdateDTO) {
         User existingUser = userRepository.findUserById(userId)
                 .orElseThrow(() -> new UserNotFoundException(userId));

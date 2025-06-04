@@ -1,8 +1,5 @@
 package at.msm.asobo.entities;
 
-import at.msm.asobo.entities.media.Medium;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

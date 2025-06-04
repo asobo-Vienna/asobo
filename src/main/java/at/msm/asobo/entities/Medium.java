@@ -1,9 +1,6 @@
-package at.msm.asobo.entities.media;
+package at.msm.asobo.entities;
 
-import at.msm.asobo.entities.Event;
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
@@ -11,20 +8,8 @@ import java.net.URI;
 import java.util.UUID;
 
 
-
-@JsonTypeInfo(
-        use = JsonTypeInfo.Id.NAME,
-        include = JsonTypeInfo.As.PROPERTY,
-        property = "type"
-)
-
-@JsonSubTypes({
-        @JsonSubTypes.Type(value = Picture.class, name = "picture"),
-        @JsonSubTypes.Type(value = Video.class, name = "video")
-})
-
 @Entity
-public abstract class Medium {
+public class Medium {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

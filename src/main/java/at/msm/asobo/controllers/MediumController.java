@@ -1,6 +1,7 @@
 package at.msm.asobo.controllers;
 
-import at.msm.asobo.entities.media.Medium;
+import at.msm.asobo.dto.MediumDTO;
+import at.msm.asobo.entities.Medium;
 import at.msm.asobo.services.MediumService;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
@@ -20,24 +21,28 @@ public class MediumController {
 
 
     @GetMapping()
-    public List<Medium> getAllMedia(@PathVariable UUID eventID) {
-        return mediumService.getAllMediaByEventId(eventID);
+    public List<MediumDTO> getAllMedia(@PathVariable UUID eventID) {
+        List<Medium> media = mediumService.getAllMediaByEventId(eventID);
+        return media.stream().map(MediumDTO::new).toList();
     }
 
 
     @GetMapping("/{mediumID}")
-    public Medium getMediumById(@PathVariable UUID eventID, @PathVariable UUID mediumID) {
-        return this.mediumService.getMediumByEventIdAndMediumId(eventID, mediumID);
+    public MediumDTO getMediumById(@PathVariable UUID eventID, @PathVariable UUID mediumID) {
+        Medium medium = this.mediumService.getMediumByEventIdAndMediumId(eventID, mediumID);
+        return new MediumDTO(medium);
     }
 
     @PostMapping
-    public Medium addMedium(@PathVariable UUID eventID, @RequestBody @Valid Medium medium) {
-        return this.mediumService.saveMedium(eventID, medium);
+    public MediumDTO addMedium(@PathVariable UUID eventID, @RequestBody @Valid Medium medium) {
+        Medium savedMedium = this.mediumService.saveMedium(eventID, medium);
+        return new MediumDTO(savedMedium);
     }
 
 
     @DeleteMapping("/{mediumID}")
-    public Medium deleteMediumById(@PathVariable UUID eventID, @PathVariable UUID mediumID) {
-        return this.mediumService.deleteMediumById(eventID, mediumID);
+    public MediumDTO deleteMediumById(@PathVariable UUID eventID, @PathVariable UUID mediumID) {
+        Medium deletedMedium = this.mediumService.deleteMediumById(eventID, mediumID);
+        return new MediumDTO(deletedMedium);
     }
 }

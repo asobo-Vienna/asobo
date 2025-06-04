@@ -1,6 +1,6 @@
 package at.msm.asobo.repositories;
 
-import at.msm.asobo.entities.media.Medium;
+import at.msm.asobo.entities.Medium;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

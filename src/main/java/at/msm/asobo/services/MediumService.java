@@ -1,7 +1,7 @@
 package at.msm.asobo.services;
 
 import at.msm.asobo.entities.Event;
-import at.msm.asobo.entities.media.Medium;
+import at.msm.asobo.entities.Medium;
 import at.msm.asobo.exceptions.EventNotFoundException;
 import at.msm.asobo.exceptions.MediumNotFoundException;
 import at.msm.asobo.repositories.EventRepository;

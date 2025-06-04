@@ -73,17 +73,17 @@ public class User {
 
 
 
-    public User(String email, String username, String password, String location){
+    public User(String email, String username, String password, String location) {
         this(email, username, password);
         this.location = location;
     }
 
-    public User(String email, String username, String password, URI pictureURI){
+    public User(String email, String username, String password, URI pictureURI) {
         this(email, username, password);
         this.pictureURI=pictureURI;
     }
 
-    public User(String email, String username, String password, String location, URI pictureURI){
+    public User(String email, String username, String password, String location, URI pictureURI) {
         this(email, username, password);
         this.location = location;
         this.pictureURI=pictureURI;
