@@ -5,9 +5,7 @@ import at.msm.asobo.entities.Event;
 import at.msm.asobo.services.EventService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
@@ -32,44 +30,49 @@ public class EventController {
     }
 
     // TEST WITH STATIC HTML PAGES
-    @GetMapping("/test")
-    public String getEvents(Model model) {
-        return "events";
-    }
-
-    @GetMapping("/test/single-event")
-    public String getSingleEvent(Model model) {
-        return "event";
-    }
+//    @GetMapping("/test")
+//    public String getEvents(Model model) {
+//        return "events";
+//    }
+//
+//    @GetMapping("/test/single-event")
+//    public String getSingleEvent(Model model) {
+//        return "event";
+//    }
 
 
     @GetMapping
     public List<EventDTO> getAllEvents() {
         List<Event> events = eventService.getAllEvents();
-
         List<EventDTO> eventDTOS = events.stream().map(EventDTO::new).toList();
         return eventDTOS;
     }
 
 
     @GetMapping(params = "location")
-    public List<Event> getEventsByLocation(@RequestParam(required = false) String location) {
+    public List<EventDTO> getEventsByLocation(@RequestParam(required = false) String location) {
+
         if (location == null || location.isBlank()) {
-            return this.eventService.getAllEvents();
+            List<Event> allEvents = eventService.getAllEvents();
+            return allEvents.stream().map(EventDTO::new).toList();
         }
-        return this.eventService.getEventsByLocation(location);
+
+        List<Event> events = this.eventService.getEventsByLocation(location);
+        return events.stream().map(EventDTO::new).toList();
     }
 
 
     @GetMapping(params = "date")
-    public List<Event> getEventsByDate(@RequestParam(required = false) String date) {
+    public List<EventDTO> getEventsByDate(@RequestParam(required = false) String date) {
         if (date == null || date.isBlank()) {
-            return this.eventService.getAllEvents();
+            List<Event> allEvents = eventService.getAllEvents();
+            return allEvents.stream().map(EventDTO::new).toList();
         }
 
         try {
             LocalDateTime dateTime = LocalDateTime.parse(date);
-            return this.eventService.getEventsByDate(dateTime);
+            List<Event> events = this.eventService.getEventsByDate(dateTime);
+            return events.stream().map(EventDTO::new).toList();
         } catch (DateTimeParseException dtpe) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST, "Invalid date format. Expected ISO-8601 format (e.g., 2024-12-01T14:30:00)", dtpe);
@@ -79,19 +82,22 @@ public class EventController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Event createEvent(@RequestBody @Valid Event event) {
-        return this.eventService.addNewEvent(event);
+    public EventDTO createEvent(@RequestBody @Valid Event event) {
+        Event createdEvent = this.eventService.addNewEvent(event);
+        return new EventDTO(createdEvent);
     }
 
 
     @GetMapping("/{id}")
-    public Event getEventByID(@PathVariable UUID id) {
-        return this.eventService.findEventByID(id);
+    public EventDTO getEventByID(@PathVariable UUID id) {
+        Event foundEvent = this.eventService.findEventByID(id);
+        return new EventDTO(foundEvent);
     }
 
 
     @DeleteMapping("/{id}")
-    public Event deleteEventByID(@PathVariable UUID id) {
-        return this.eventService.deleteEventByID(id);
+    public EventDTO deleteEventByID(@PathVariable UUID id) {
+        Event deletedEvent = this.eventService.deleteEventByID(id);
+        return new EventDTO(deletedEvent);
     }
 }
