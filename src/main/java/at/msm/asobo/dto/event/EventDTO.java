@@ -8,6 +8,7 @@ import at.msm.asobo.entities.Event;
 import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public class EventDTO {
@@ -48,10 +49,26 @@ public class EventDTO {
         this.date = event.getDate();
         this.creationDate = event.getCreationDate();
         this.modificationDate = event.getModificationDate();
-        this.media = event.getMedia().stream().map(MediumDTO::new).toList();
-        this.comments = event.getComments().stream().map(UserCommentDTO::new).toList();
+
+        this.media = Optional.ofNullable(event.getMedia())
+                .orElse(List.of()) // or Collections.emptyList()
+                .stream()
+                .map(MediumDTO::new)
+                .toList();
+
+        this.comments = Optional.ofNullable(event.getComments())
+                .orElse(List.of()) // or Collections.emptyList()
+                .stream()
+                .map(UserCommentDTO::new)
+                .toList();
+
         this.pictureURI = event.getPictureURI();
-        this.participants = event.getParticipants().stream().map(UserDTO::new).toList();
+
+        this.participants = Optional.ofNullable(event.getParticipants())
+                .orElse(List.of())
+                .stream()
+                .map(UserDTO::new)
+                .toList();
     }
 
     public UUID getId() {

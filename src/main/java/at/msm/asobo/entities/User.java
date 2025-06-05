@@ -1,5 +1,7 @@
 package at.msm.asobo.entities;
 
+import at.msm.asobo.dto.event.EventCreationDTO;
+import at.msm.asobo.dto.event.EventCreatorDTO;
 import at.msm.asobo.dto.user.UserDTO;
 import at.msm.asobo.dto.user.UserRegisterDTO;
 import com.fasterxml.jackson.annotation.JsonIgnore;

@@ -21,7 +21,7 @@ public class Medium {
 
     @ManyToOne
     @JoinColumn(name = "event_id")
-    @JsonBackReference
+    // @JsonBackReference
     private Event event;
 
     public Medium() {
@@ -33,12 +33,12 @@ public class Medium {
 
     public Medium(MediumCreationDTO creationDTO) {
         this.mediumURI = creationDTO.getMediumURI();
-        this.event = new Event(creationDTO.getEvent());
+        // this.event = new Event(creationDTO.getEvent());
     }
 
 
     public Medium(URI mediumURI) {
-        this.mediumURI=mediumURI;
+        this.mediumURI = mediumURI;
     }
 
     public URI getMediumURI() {

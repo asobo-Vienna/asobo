@@ -9,10 +9,9 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 
@@ -67,18 +66,33 @@ public class Event {
         this.description = eventCreationDTO.getTitle();
         this.date = eventCreationDTO.getDate();
         this.location = eventCreationDTO.getLocation();
-        this.participants = eventCreationDTO.getParticipants().stream().map(User::new).toList();//new ArrayList<User>();
+        this.creator = new User();
+        this.creator.setUsername(eventCreationDTO.getCreator().getUsername());
+        this.creator.setPictureURI(eventCreationDTO.getCreator().getPictureURI());
+
+        this.participants = Optional.ofNullable(eventCreationDTO.getParticipants())
+                .orElse(List.of())
+                .stream()
+                .map(User::new)
+                .toList();
+
         this.creationDate = LocalDateTime.now();
         this.modificationDate = null;
-        this.comments = new ArrayList<UserComment>();
-        this.media = new ArrayList<Medium>();
-        this.id = UUID.randomUUID();
 
-        try {
-            this.pictureURI = new URI("resources/static/images/");
-        } catch (URISyntaxException e) {
-            throw new RuntimeException(e);
-        }
+        this.comments = Optional.ofNullable(eventCreationDTO.getComments())
+                .orElse(List.of())
+                .stream()
+                .map(UserComment::new)
+                .toList();
+
+        this.media = Optional.ofNullable(eventCreationDTO.getMedia())
+                .orElse(List.of())
+                .stream()
+                .map(Medium::new)
+                .toList();
+
+        this.pictureURI = eventCreationDTO.getPictureURI();
+
     }
 
     public Event(EventDTO eventDTO){
@@ -86,11 +100,28 @@ public class Event {
         this.description = eventDTO.getTitle();
         this.date = eventDTO.getDate();
         this.location = eventDTO.getLocation();
-        this.participants = eventDTO.getParticipants().stream().map(User::new).toList();//new ArrayList<User>();
+
+        this.participants = Optional.ofNullable(eventDTO.getParticipants())
+                .orElse(List.of())
+                .stream()
+                .map(User::new)
+                .toList();
+
         this.creationDate = eventDTO.getCreationDate();
         this.modificationDate = eventDTO.getModificationDate();
-        this.comments = eventDTO.getComments().stream().map(UserComment::new).toList();
-        this.media = eventDTO.getMedia().stream().map(Medium::new).toList();
+
+        this.comments = Optional.ofNullable(eventDTO.getComments())
+                .orElse(List.of())
+                .stream()
+                .map(UserComment::new)
+                .toList();
+
+        this.media = Optional.ofNullable(eventDTO.getMedia())
+                .orElse(List.of())
+                .stream()
+                .map(Medium::new)
+                .toList();
+
         this.pictureURI = eventDTO.getPictureURI();
     }
 

@@ -3,8 +3,11 @@ package at.msm.asobo.services;
 import at.msm.asobo.dto.event.EventCreationDTO;
 import at.msm.asobo.dto.event.EventDTO;
 import at.msm.asobo.entities.Event;
+import at.msm.asobo.entities.User;
 import at.msm.asobo.exceptions.EventNotFoundException;
 import at.msm.asobo.repositories.EventRepository;
+import at.msm.asobo.repositories.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -16,9 +19,11 @@ import java.util.UUID;
 public class EventService {
 
     private final EventRepository eventRepository;
+    private final UserRepository userRepository;
 
-    public EventService(EventRepository eventRepository) {
+    public EventService(EventRepository eventRepository, UserRepository userRepository) {
         this.eventRepository = eventRepository;
+        this.userRepository = userRepository;
     }
 
 
@@ -35,7 +40,11 @@ public class EventService {
     }
 
     public EventDTO addNewEvent(EventCreationDTO eventCreationDTO) {
+
+        User user = userRepository.findById(eventCreationDTO.getCreator().getId())
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
         Event newEvent = new Event(eventCreationDTO);
+        newEvent.setCreator(user);
         return new EventDTO(this.eventRepository.save(newEvent));
     }
 

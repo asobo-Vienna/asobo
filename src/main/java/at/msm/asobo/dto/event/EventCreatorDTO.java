@@ -1,6 +1,7 @@
 package at.msm.asobo.dto.event;
 
 import at.msm.asobo.entities.User;
+import jakarta.validation.constraints.NotBlank;
 
 import java.net.URI;
 import java.util.UUID;
@@ -42,4 +43,5 @@ public class EventCreatorDTO {
     public void setPictureURI(URI pictureURI) {
         this.pictureURI = pictureURI;
     }
+
 }
