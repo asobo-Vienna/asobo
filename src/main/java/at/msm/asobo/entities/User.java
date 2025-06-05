@@ -1,23 +1,18 @@
 package at.msm.asobo.entities;
 
+import at.msm.asobo.dto.UserDTO;
 import at.msm.asobo.dto.UserRegisterDTO;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-
 import org.hibernate.annotations.CreationTimestamp;
-
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
-
-
 @Entity
 @Table(name="users")
-
 public class User {
 
     @Id
@@ -59,18 +54,25 @@ public class User {
     public User(){
     }
 
+    public User(UserDTO userDTO) {
+            this.username = userDTO.getUsername();
+            this.email = userDTO.getEmail();
+            this.password = userDTO.getPassword();
+            this.location = userDTO.getLocation();
+            this.registerDate = userDTO.getRegisterDate();
+            this.isActive = userDTO.isActive();
+            this.pictureURI = userDTO.getPictureURI();
+            this.salutation = userDTO.getSalutation();
+    }
+
     public User(UserRegisterDTO registerDTO) {
         this.username = registerDTO.getUsername();
         this.email = registerDTO.getEmail();
         this.password = registerDTO.getPassword();
-        this.location = "default";
+        this.location = registerDTO.getLocation();
         this.registerDate = LocalDateTime.now();
         this.isActive = true;
-        try {
-            this.pictureURI = new URI("resources/static/images/");
-        } catch (URISyntaxException e) {
-            throw new RuntimeException(e);
-        }
+        this.pictureURI = registerDTO.getPictureURI();
         this.salutation = registerDTO.getSalutation();
     }
 
@@ -114,12 +116,12 @@ public class User {
         this.pictureURI = pictureURI;
     }
 
-    public boolean getIsActive() {
+    public boolean isActive() {
         return this.isActive;
     }
 
-    public void setIsActive(boolean active) {
-        this.isActive = active;
+    public void setActive(boolean active) {
+        isActive = active;
     }
 
     public LocalDateTime getRegisterDate() {

@@ -1,5 +1,6 @@
 package at.msm.asobo.entities;
 
+import at.msm.asobo.dto.EventCreationDTO;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -60,12 +61,12 @@ public class Event {
     }
 
 
-    public Event(String title, String description, LocalDateTime date, String location){
-        this.title = title;
-        this.description = description;
-        this.date = date;
-        this.location = location;
-        this.participants = new ArrayList<User>();
+    public Event(EventCreationDTO eventCreationDTO){
+        this.title = eventCreationDTO.getTitle();
+        this.description = eventCreationDTO.getTitle();
+        this.date = eventCreationDTO.getDate();
+        this.location = eventCreationDTO.getLocation();
+        this.participants = eventCreationDTO.getParticipants().stream().map(User::new).toList();//new ArrayList<User>();
         this.creationDate = LocalDateTime.now();
         this.modificationDate = null;
         this.comments = new ArrayList<UserComment>();

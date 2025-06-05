@@ -1,5 +1,6 @@
 package at.msm.asobo.controllers;
 
+import at.msm.asobo.dto.EventCreationDTO;
 import at.msm.asobo.dto.EventDTO;
 import at.msm.asobo.entities.Event;
 import at.msm.asobo.services.EventService;
@@ -82,9 +83,8 @@ public class EventController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public EventDTO createEvent(@RequestBody @Valid Event event) {
-        Event createdEvent = this.eventService.addNewEvent(event);
-        return new EventDTO(createdEvent);
+    public EventDTO createEvent(@RequestBody @Valid EventCreationDTO eventCreationDTO) {
+        return this.eventService.addNewEvent(eventCreationDTO);
     }
 
 

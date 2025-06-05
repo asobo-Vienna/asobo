@@ -1,5 +1,7 @@
 package at.msm.asobo.services;
 
+import at.msm.asobo.dto.EventCreationDTO;
+import at.msm.asobo.dto.EventDTO;
 import at.msm.asobo.entities.Event;
 import at.msm.asobo.exceptions.EventNotFoundException;
 import at.msm.asobo.repositories.EventRepository;
@@ -32,8 +34,9 @@ public class EventService {
         return eventRepository.findEventsByLocation(location);
     }
 
-    public Event addNewEvent(Event event) {
-        return this.eventRepository.save(event);
+    public EventDTO addNewEvent(EventCreationDTO eventCreationDTO) {
+        Event newEvent = new Event(eventCreationDTO);
+        return new EventDTO(this.eventRepository.save(newEvent));
     }
 
 
