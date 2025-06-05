@@ -1,5 +1,6 @@
 package at.msm.asobo.controllers;
 
+import at.msm.asobo.dto.comment.UserCommentDTO;
 import at.msm.asobo.entities.UserComment;
 import at.msm.asobo.services.UserCommentService;
 import jakarta.validation.Valid;
@@ -18,18 +19,18 @@ public class UserCommentController {
     }
 
     @GetMapping
-    public List<UserComment> getAllUserComments(@PathVariable UUID eventId) {
+    public List<UserCommentDTO> getAllUserComments(@PathVariable UUID eventId) {
         return this.userCommentService.getUserCommentsByEventId(eventId);
     }
 
     @GetMapping("/{commentId}")
-    public UserComment getUserCommentById(@PathVariable UUID eventId, @PathVariable UUID commentId) {
+    public UserCommentDTO getUserCommentById(@PathVariable UUID eventId, @PathVariable UUID commentId) {
         return this.userCommentService.getUserCommentByEventIdAndCommentId(eventId, commentId);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public UserComment addNewComment(@PathVariable UUID eventId, @RequestBody @Valid UserComment comment) {
+    public UserCommentDTO addNewComment(@PathVariable UUID eventId, @RequestBody @Valid UserComment comment) {
         return this.userCommentService.addNewUserCommentToEventById(eventId, comment);
     }
 

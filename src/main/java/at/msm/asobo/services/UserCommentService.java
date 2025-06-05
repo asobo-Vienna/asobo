@@ -1,5 +1,6 @@
 package at.msm.asobo.services;
 
+import at.msm.asobo.dto.comment.UserCommentDTO;
 import at.msm.asobo.entities.Event;
 import at.msm.asobo.entities.User;
 import at.msm.asobo.entities.UserComment;
@@ -23,58 +24,61 @@ public class UserCommentService {
         this.userCommentRepository = userCommentRepository;
     }
 
-    public List<UserComment> getAllUserComments() {
-        return this.userCommentRepository.findAll();
+    public List<UserCommentDTO> getAllUserComments() {
+        return this.userCommentRepository.findAll().stream().map(UserCommentDTO::new).toList();
     }
 
-    public UserComment getUserCommentById(UUID id) {
-        return this.userCommentRepository.findById(id).orElseThrow(() -> new UserCommentNotFoundException(id));
+    public UserCommentDTO getUserCommentById(UUID id) {
+        UserComment userComment = this.userCommentRepository.findById(id).orElseThrow(() -> new UserCommentNotFoundException(id));
+        return new UserCommentDTO(userComment);
     }
 
-    public List<UserComment> getUserCommentsByCreationDate(LocalDateTime date) {
-        return this.userCommentRepository.findUserCommentsByCreationDate(date);
+    public List<UserCommentDTO> getUserCommentsByCreationDate(LocalDateTime date) {
+        return this.userCommentRepository.findUserCommentsByCreationDate(date).stream().map(UserCommentDTO::new).toList();
     }
 
-    public List<UserComment> getUserCommentsByAuthor(User author) {
-        return this.userCommentRepository.findUserCommentsByAuthor(author);
+    public List<UserCommentDTO> getUserCommentsByAuthor(User author) {
+        return this.userCommentRepository.findUserCommentsByAuthor(author).stream().map(UserCommentDTO::new).toList();
     }
 
-    public List<UserComment> getUserCommentsByEvent(Event event) {
-        return this.userCommentRepository.findUserCommentsByEvent(event);
+    public List<UserCommentDTO> getUserCommentsByEvent(Event event) {
+        return this.userCommentRepository.findUserCommentsByEvent(event).stream().map(UserCommentDTO::new).toList();
     }
 
-    public List<UserComment> getUserCommentsByEventId(UUID eventId) {
-        return this.userCommentRepository.findUserCommentsByEventId(eventId);
+    public List<UserCommentDTO> getUserCommentsByEventId(UUID eventId) {
+        return this.userCommentRepository.findUserCommentsByEventId(eventId).stream().map(UserCommentDTO::new).toList();
     }
 
-    public UserComment getUserCommentByEventIdAndCommentId(UUID eventId, UUID commentId) {
-        return this.userCommentRepository.findUserCommentByEventIdAndId(eventId, commentId).orElseThrow(() -> new UserCommentNotFoundException(commentId));
+    public UserCommentDTO getUserCommentByEventIdAndCommentId(UUID eventId, UUID commentId) {
+        UserComment userComment = this.userCommentRepository.findUserCommentByEventIdAndId(eventId, commentId).orElseThrow(() -> new UserCommentNotFoundException(commentId));
+        return new UserCommentDTO(userComment);
     }
 
-    public UserComment addNewUserCommentToEventById(UUID eventId, UserComment userComment) {
+    public UserCommentDTO addNewUserCommentToEventById(UUID eventId, UserCommentDTO userCommentDTO) {
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new EventNotFoundException(eventId));
 
-        userComment.setEvent(event);  // Set the owning side of the relationship
-        return this.userCommentRepository.save(userComment);
+        UserComment newComment = new UserComment(userCommentDTO);
+        newComment.setEvent(event);
+        return new UserCommentDTO(this.userCommentRepository.save(newComment));
     }
 
-    public UserComment updateUserCommentByEventIdAndCommentId(UUID eventId, UUID commentId, UserComment updatedComment) {
+    public UserCommentDTO updateUserCommentByEventIdAndCommentId(UUID eventId, UUID commentId, UserCommentDTO updatedCommentDTO) {
         UserComment existingComment = userCommentRepository.findUserCommentByEventIdAndId(eventId, commentId)
                 .orElseThrow(() -> new UserCommentNotFoundException(commentId));
 
-        // Copy over the fields you allow to be updated
-        existingComment.setText(updatedComment.getText());
+        existingComment.setText(updatedCommentDTO.getText());
         existingComment.setModificationDate(LocalDateTime.now());
-        existingComment.setAuthor(updatedComment.getAuthor());
+        existingComment.setAuthor(new User(updatedCommentDTO.getAuthor()));
 
-        return userCommentRepository.save(existingComment);
+        return new UserCommentDTO(userCommentRepository.save(existingComment));
     }
 
 
-    public UserComment deleteUserCommentByEventIdAndCommentId(UUID eventId, UUID commentId) {
-        UserComment userComment = this.getUserCommentByEventIdAndCommentId(eventId, commentId);
+    public UserCommentDTO deleteUserCommentByEventIdAndCommentId(UUID eventId, UUID commentId) {
+        UserCommentDTO userCommentDTO = this.getUserCommentByEventIdAndCommentId(eventId, commentId);
+        UserComment userComment = new UserComment(userCommentDTO);
         this.userCommentRepository.delete(userComment);
-        return userComment;
+        return userCommentDTO;
     }
 }
