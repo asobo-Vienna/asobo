@@ -1,5 +1,7 @@
 package at.msm.asobo.services;
 
+import at.msm.asobo.dto.UserDTO;
+import at.msm.asobo.dto.UserRegisterDTO;
 import at.msm.asobo.dto.UserUpdateDTO;
 import at.msm.asobo.entities.User;
 import at.msm.asobo.entities.UserComment;
@@ -33,23 +35,29 @@ public class UserService {
         return this.userRepository.findByUsername(username).orElseThrow(() -> new UserNotFoundException("User not found"));
     }
 
+    public UserDTO registerUser(UserRegisterDTO userRegisterDTO) {
+        User newUser = new User(userRegisterDTO);
+        User savedUser = this.userRepository.save(newUser);
+        return new UserDTO(savedUser);
+    }
+
     public User createUser(User user) {
         return this.userRepository.save(user);
     }
 
 
-    public User updateUserById(UUID userId, UserUpdateDTO userUpdateDTO) {
+    public UserDTO updateUserById(UUID userId, UserUpdateDTO userUpdateDTO) {
         User existingUser = userRepository.findUserById(userId)
                 .orElseThrow(() -> new UserNotFoundException(userId));
 
-        existingUser.setActive(userUpdateDTO.isActive());
+        existingUser.setIsActive(userUpdateDTO.isActive());
         existingUser.setEmail(userUpdateDTO.getEmail());
         existingUser.setLocation(userUpdateDTO.getLocation());
         existingUser.setPictureURI(userUpdateDTO.getPictureURI());
         existingUser.setUsername(userUpdateDTO.getUsername());
         existingUser.setPassword(userUpdateDTO.getPassword());
-
-        return userRepository.save(existingUser);
+        User updatedUser = userRepository.save(existingUser);
+        return new UserDTO(updatedUser);
     }
 
     public User deleteUserById(UUID id) {

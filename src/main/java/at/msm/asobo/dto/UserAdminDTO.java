@@ -33,7 +33,7 @@ public class UserAdminDTO {
         this.pictureURI = user.getPictureURI();
         this.location = user.getLocation();
         this.registerDate = user.getRegisterDate();
-        this.isActive = user.isActive();
+        this.isActive = user.getIsActive();
     }
 
     public UUID getId() {

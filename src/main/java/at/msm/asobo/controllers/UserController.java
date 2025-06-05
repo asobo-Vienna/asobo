@@ -1,6 +1,7 @@
 package at.msm.asobo.controllers;
 
 import at.msm.asobo.dto.UserDTO;
+import at.msm.asobo.dto.UserRegisterDTO;
 import at.msm.asobo.dto.UserUpdateDTO;
 import at.msm.asobo.entities.User;
 import at.msm.asobo.services.UserService;
@@ -42,15 +43,13 @@ public class UserController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public UserDTO createUser(@RequestBody @Valid User user) {
-        User savedUser = this.userService.createUser(user);
-        return new UserDTO(savedUser);
+    public UserDTO registerUser(@RequestBody @Valid UserRegisterDTO registerDTO) {
+        return this.userService.registerUser(registerDTO);
     }
 
     @PutMapping("/{id}")
     public UserDTO updateUser(@PathVariable UUID id, @RequestBody @Valid UserUpdateDTO userUpdateDTO) {
-        User updatedUser = this.userService.updateUserById(id, userUpdateDTO);
-        return new UserDTO(updatedUser);
+        return this.userService.updateUserById(id, userUpdateDTO);
     }
 
     @DeleteMapping("/{id}")

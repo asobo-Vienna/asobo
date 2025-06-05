@@ -1,5 +1,6 @@
 package at.msm.asobo.entities;
 
+import at.msm.asobo.dto.UserRegisterDTO;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -53,40 +54,24 @@ public class User {
 
     private boolean isActive;
 
+    private String salutation;
+
     public User(){
     }
 
-    public User(String email, String username, String password) {
-        this.email=email;
-        this.username=username;
-        this.password=password;
-        this.location="default";
-        this.registerDate=LocalDateTime.now();
-        this.id=UUID.randomUUID();
-        this.isActive=true;
+    public User(UserRegisterDTO registerDTO) {
+        this.username = registerDTO.getUsername();
+        this.email = registerDTO.getEmail();
+        this.password = registerDTO.getPassword();
+        this.location = "default";
+        this.registerDate = LocalDateTime.now();
+        this.isActive = true;
         try {
             this.pictureURI = new URI("resources/static/images/");
         } catch (URISyntaxException e) {
             throw new RuntimeException(e);
         }
-    }
-
-
-
-    public User(String email, String username, String password, String location) {
-        this(email, username, password);
-        this.location = location;
-    }
-
-    public User(String email, String username, String password, URI pictureURI) {
-        this(email, username, password);
-        this.pictureURI=pictureURI;
-    }
-
-    public User(String email, String username, String password, String location, URI pictureURI) {
-        this(email, username, password);
-        this.location = location;
-        this.pictureURI=pictureURI;
+        this.salutation = registerDTO.getSalutation();
     }
 
     public String getLocation() {
@@ -129,20 +114,20 @@ public class User {
         this.pictureURI = pictureURI;
     }
 
-    public boolean isActive() {
-        return isActive;
+    public boolean getIsActive() {
+        return this.isActive;
     }
 
-    public void setActive(boolean active) {
-        isActive = active;
+    public void setIsActive(boolean active) {
+        this.isActive = active;
     }
 
     public LocalDateTime getRegisterDate() {
-        return registerDate;
+        return this.registerDate;
     }
 
     public UUID getId() {
-        return id;
+        return this.id;
     }
 
     public void setRegisterDate(LocalDateTime registerDate) {
@@ -154,7 +139,7 @@ public class User {
     }
 
     public List<Event> getCreatedEvents() {
-        return createdEvents;
+        return this.createdEvents;
     }
 
     public void setCreatedEvents(List<Event> events) {
@@ -175,5 +160,13 @@ public class User {
 
     public void setAttendedEvents(List<Event> attendedEvents) {
         this.attendedEvents = attendedEvents;
+    }
+
+    public String getSalutation() {
+        return this.salutation;
+    }
+
+    public void setSalutation(String salutation) {
+        this.salutation = salutation;
     }
 }

@@ -48,11 +48,12 @@ public class UserControllerAdmin {
         return new UserAdminDTO(savedUser);
     }
 
-    @PutMapping("/{id}")
-    public UserAdminDTO updateUser(@PathVariable UUID id, @RequestBody @Valid UserUpdateDTO userUpdateDTO) {
-        User updatedUser = this.userService.updateUserById(id, userUpdateDTO);
-        return new UserAdminDTO(updatedUser);
-    }
+    // TODO create UserAdminService that returns UserAdminDTOs
+//    @PutMapping("/{id}")
+//    public UserAdminDTO updateUser(@PathVariable UUID id, @RequestBody @Valid UserUpdateDTO userUpdateDTO) {
+//        User updatedUser = this.userService.updateUserById(id, userUpdateDTO);
+//        return new UserAdminDTO(updatedUser);
+//    }
 
     @DeleteMapping("/{id}")
     public UserAdminDTO deleteUser(@PathVariable UUID id) {
