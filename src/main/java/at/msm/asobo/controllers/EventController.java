@@ -44,9 +44,7 @@ public class EventController {
 
     @GetMapping
     public List<EventDTO> getAllEvents() {
-        List<Event> events = eventService.getAllEvents();
-        List<EventDTO> eventDTOS = events.stream().map(EventDTO::new).toList();
-        return eventDTOS;
+        return this.eventService.getAllEvents();
     }
 
 
@@ -54,26 +52,22 @@ public class EventController {
     public List<EventDTO> getEventsByLocation(@RequestParam(required = false) String location) {
 
         if (location == null || location.isBlank()) {
-            List<Event> allEvents = eventService.getAllEvents();
-            return allEvents.stream().map(EventDTO::new).toList();
+            return this.eventService.getAllEvents();
         }
 
-        List<Event> events = this.eventService.getEventsByLocation(location);
-        return events.stream().map(EventDTO::new).toList();
+        return this.eventService.getEventsByLocation(location);
     }
 
 
     @GetMapping(params = "date")
     public List<EventDTO> getEventsByDate(@RequestParam(required = false) String date) {
         if (date == null || date.isBlank()) {
-            List<Event> allEvents = eventService.getAllEvents();
-            return allEvents.stream().map(EventDTO::new).toList();
+            return this.eventService.getAllEvents();
         }
 
         try {
             LocalDateTime dateTime = LocalDateTime.parse(date);
-            List<Event> events = this.eventService.getEventsByDate(dateTime);
-            return events.stream().map(EventDTO::new).toList();
+            return this.eventService.getEventsByDate(dateTime);
         } catch (DateTimeParseException dtpe) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST, "Invalid date format. Expected ISO-8601 format (e.g., 2024-12-01T14:30:00)", dtpe);

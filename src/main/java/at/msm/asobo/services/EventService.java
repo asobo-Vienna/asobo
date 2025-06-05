@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.UUID;
 
 
+
 @Service
 public class EventService {
 
@@ -27,20 +28,25 @@ public class EventService {
     }
 
 
-    public List<Event> getAllEvents(){
-        return eventRepository.findAll();
+    public List<EventDTO> getAllEvents() {
+        return eventRepository.findAll().stream()
+                .map(EventDTO::new)
+                .toList();
     }
 
-    public List<Event> getEventsByDate(LocalDateTime date) {
-        return eventRepository.findEventsByDate(date);
+    public List<EventDTO> getEventsByDate(LocalDateTime date) {
+        return eventRepository.findEventsByDate(date).stream()
+                .map(EventDTO::new)
+                .toList();
     }
 
-    public List<Event> getEventsByLocation(String location) {
-        return eventRepository.findEventsByLocation(location);
+    public List<EventDTO> getEventsByLocation(String location) {
+        return eventRepository.findEventsByLocation(location).stream()
+                .map(EventDTO::new)
+                .toList();
     }
 
     public EventDTO addNewEvent(EventCreationDTO eventCreationDTO) {
-
         User user = userRepository.findById(eventCreationDTO.getCreator().getId())
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
         Event newEvent = new Event(eventCreationDTO);
@@ -50,7 +56,8 @@ public class EventService {
 
 
     public Event findEventByID(UUID id) {
-        return eventRepository.findById(id).orElseThrow(() -> new EventNotFoundException(id));
+        return eventRepository.findById(id)
+                .orElseThrow(() -> new EventNotFoundException(id));
     }
 
     public List<Event> findEventsByTitle(String title) {
