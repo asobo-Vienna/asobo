@@ -2,7 +2,6 @@ package at.msm.asobo.entities;
 
 import at.msm.asobo.dto.medium.MediumCreationDTO;
 import at.msm.asobo.dto.medium.MediumDTO;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import java.net.URI;

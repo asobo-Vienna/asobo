@@ -43,5 +43,6 @@ public class MediumDTO {
     public URI getMediumURI() {
         return this.mediumURI;
     }
-
 }
+
+

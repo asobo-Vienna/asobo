@@ -1,6 +1,5 @@
 package at.msm.asobo.dto.medium;
 
-import at.msm.asobo.dto.event.EventDTO;
 import at.msm.asobo.entities.Medium;
 import java.net.URI;
 import java.util.UUID;

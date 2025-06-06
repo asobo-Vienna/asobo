@@ -5,7 +5,7 @@ import at.msm.asobo.dto.event.EventDTO;
 import at.msm.asobo.entities.Event;
 import at.msm.asobo.entities.User;
 import at.msm.asobo.exceptions.EventNotFoundException;
-import at.msm.asobo.mapper.EventDTOEventMapper;
+import at.msm.asobo.mappers.EventDTOEventMapper;
 import at.msm.asobo.repositories.EventRepository;
 import at.msm.asobo.repositories.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -61,8 +61,7 @@ public class EventService {
     }
 
     public EventDTO getEventDTOById(UUID id) {
-        Event event = this.eventRepository.findById(id)
-                .orElseThrow(() -> new EventNotFoundException(id));
+        Event event = this.getEventById(id);
         return this.eventDTOEventMapper.mapEventToEventDTO(event);
     }
 

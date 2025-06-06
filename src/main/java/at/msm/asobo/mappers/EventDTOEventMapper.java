@@ -1,14 +1,14 @@
-package at.msm.asobo.mapper;
+package at.msm.asobo.mappers;
 
 import at.msm.asobo.dto.event.EventCreationDTO;
 import at.msm.asobo.dto.event.EventDTO;
 import at.msm.asobo.entities.Event;
-import at.msm.asobo.mapper.helpers.EventMapperHelper;
+import at.msm.asobo.mappers.helpers.EventMapperHelper;
 import org.mapstruct.Mapper;
 import java.util.List;
 
 
-@Mapper(componentModel = "spring", uses = {UserDTOUserMapper.class, EventMapperHelper.class})
+@Mapper(componentModel = "spring", uses = {UserDTOUserMapper.class, MediumDTOMediumMapper.class, EventMapperHelper.class})
 public interface EventDTOEventMapper {
     EventDTO mapEventToEventDTO(Event event);
     Event mapEventDTOToEvent(EventDTO eventDTO);

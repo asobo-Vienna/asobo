@@ -1,9 +1,9 @@
-package at.msm.asobo.mapper;
+package at.msm.asobo.mappers;
 
 import at.msm.asobo.dto.user.UserDTO;
 import at.msm.asobo.dto.user.UserRegisterDTO;
 import at.msm.asobo.entities.User;
-import at.msm.asobo.mapper.helpers.UserMapperHelper;
+import at.msm.asobo.mappers.helpers.UserMapperHelper;
 import org.mapstruct.Mapper;
 
 import java.util.List;

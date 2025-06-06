@@ -1,4 +1,4 @@
-package at.msm.asobo.mapper.helpers;
+package at.msm.asobo.mappers.helpers;
 
 import at.msm.asobo.entities.User;
 import at.msm.asobo.services.UserService;

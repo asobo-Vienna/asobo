@@ -5,8 +5,7 @@ import at.msm.asobo.dto.user.UserRegisterDTO;
 import at.msm.asobo.dto.user.UserUpdateDTO;
 import at.msm.asobo.entities.User;
 import at.msm.asobo.exceptions.UserNotFoundException;
-import at.msm.asobo.mapper.UserDTOUserMapper;
-import at.msm.asobo.mapper.UserDTOUserMapperImpl;
+import at.msm.asobo.mappers.UserDTOUserMapper;
 import at.msm.asobo.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 

@@ -1,8 +1,6 @@
-package at.msm.asobo.mapper;
+package at.msm.asobo.mappers;
 
 import at.msm.asobo.dto.comment.UserCommentDTO;
-import at.msm.asobo.dto.user.UserDTO;
-import at.msm.asobo.entities.User;
 import at.msm.asobo.entities.UserComment;
 import org.mapstruct.Mapper;
 
