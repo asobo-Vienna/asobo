@@ -30,14 +30,12 @@ public class UserController {
 
     @GetMapping("/{id}")
     public UserDTO getUserById(@PathVariable UUID id) {
-        User foundUser = this.userService.getUserById(id);
-        return new UserDTO(foundUser);
+        return this.userService.getUserDTOById(id);
     }
 
     @GetMapping("/{username}")
     public UserDTO getUserByUsername(@PathVariable String username) {
-        User foundUser = this.userService.getUserByUsername(username);
-        return new UserDTO(foundUser);
+        return this.userService.getUserByUsername(username);
     }
 
     @PostMapping
@@ -53,7 +51,6 @@ public class UserController {
 
     @DeleteMapping("/{id}")
     public UserDTO deleteUser(@PathVariable UUID id) {
-        User deletedUser = this.userService.deleteUserById(id);
-        return new UserDTO(deletedUser);
+        return this.userService.deleteUserById(id);
     }
 }

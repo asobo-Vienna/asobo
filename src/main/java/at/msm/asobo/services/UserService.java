@@ -32,20 +32,28 @@ public class UserService {
         return this.userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
     }
 
-    public User getUserByUsername(String username) {
-        return this.userRepository.findByUsername(username).orElseThrow(() -> new UserNotFoundException("User not found"));
+    public UserDTO getUserDTOById(UUID id) {
+        User user = this.userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
+        return this.userDTOUserMapper.mapUserToUserDTO(user);
+    }
+
+    public UserDTO getUserByUsername(String username) {
+        User user = this.userRepository.findByUsername(username).orElseThrow(() -> new UserNotFoundException("User not found"));
+        return this.userDTOUserMapper.mapUserToUserDTO(user);
     }
 
     public UserDTO registerUser(UserRegisterDTO userRegisterDTO) {
         User newUser = new User(userRegisterDTO);
         User savedUser = this.userRepository.save(newUser);
-        return new UserDTO(savedUser);
+        return this.userDTOUserMapper.mapUserToUserDTO(savedUser);
     }
 
-    public User createUser(User user) {
-        return this.userRepository.save(user);
+    // in case we might need it later
+    public UserDTO createUser(UserDTO userDTO) {
+        User user = this.userDTOUserMapper.mapUserDTOToUser(userDTO);
+        User newUser = this.userRepository.save(user);
+        return this.userDTOUserMapper.mapUserToUserDTO(newUser);
     }
-
 
     public UserDTO updateUserById(UUID userId, UserUpdateDTO userUpdateDTO) {
         User existingUser = userRepository.findUserById(userId)
@@ -58,12 +66,12 @@ public class UserService {
         existingUser.setUsername(userUpdateDTO.getUsername());
         existingUser.setPassword(userUpdateDTO.getPassword());
         User updatedUser = userRepository.save(existingUser);
-        return new UserDTO(updatedUser);
+        return this.userDTOUserMapper.mapUserToUserDTO(updatedUser);
     }
 
-    public User deleteUserById(UUID id) {
+    public UserDTO deleteUserById(UUID id) {
         User userToDelete = this.getUserById(id);
         this.userRepository.delete(userToDelete);
-        return userToDelete;
+        return this.userDTOUserMapper.mapUserToUserDTO(userToDelete);
     }
 }

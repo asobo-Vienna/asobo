@@ -26,24 +26,24 @@ public class UserControllerAdmin {
         //return this.userService.getAllUsers();
     }*/
 
-    @GetMapping("/{id}")
-    public UserAdminDTO getUserById(@PathVariable UUID id) {
+    //@GetMapping("/{id}")
+    /*public UserAdminDTO getUserById(@PathVariable UUID id) {
         User foundUser = this.userService.getUserById(id);
         return new UserAdminDTO(foundUser);
-    }
+    }*/
 
-    @GetMapping("/{username}")
-    public UserAdminDTO getUserByUsername(@PathVariable String username) {
+    /*@GetMapping("/{username}")
+    /*public UserAdminDTO getUserByUsername(@PathVariable String username) {
         User foundUser = this.userService.getUserByUsername(username);
         return new UserAdminDTO(foundUser);
-    }
+    }*/
 
-    @PostMapping
+    /*@PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public UserAdminDTO createUser(@RequestBody @Valid User user) {
         User savedUser = this.userService.createUser(user);
         return new UserAdminDTO(savedUser);
-    }
+    }*/
 
     // TODO create UserAdminService that returns UserAdminDTOs
 //    @PutMapping("/{id}")
@@ -52,10 +52,10 @@ public class UserControllerAdmin {
 //        return new UserAdminDTO(updatedUser);
 //    }
 
-    @DeleteMapping("/{id}")
+    /*@DeleteMapping("/{id}")
     public UserAdminDTO deleteUser(@PathVariable UUID id) {
         User deletedUser = this.userService.deleteUserById(id);
         return new UserAdminDTO(deletedUser);
-    }
+    }*/
 
 }
