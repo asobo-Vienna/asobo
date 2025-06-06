@@ -84,7 +84,7 @@ public class EventController {
 
     @GetMapping("/{id}")
     public EventDTO getEventByID(@PathVariable UUID id) {
-        Event foundEvent = this.eventService.findEventByID(id);
+        Event foundEvent = this.eventService.getEventByID(id);
         return new EventDTO(foundEvent);
     }
 

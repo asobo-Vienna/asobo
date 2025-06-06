@@ -5,6 +5,8 @@ import at.msm.asobo.dto.user.UserRegisterDTO;
 import at.msm.asobo.dto.user.UserUpdateDTO;
 import at.msm.asobo.entities.User;
 import at.msm.asobo.exceptions.UserNotFoundException;
+import at.msm.asobo.mapper.UserDTOUserMapper;
+import at.msm.asobo.mapper.UserDTOUserMapperImpl;
 import at.msm.asobo.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 
@@ -15,13 +17,15 @@ import java.util.UUID;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final UserDTOUserMapper userDTOUserMapper;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, UserDTOUserMapper userDTOUserMapper) {
         this.userRepository = userRepository;
+        this.userDTOUserMapper = userDTOUserMapper;
     }
 
-    public List<User> getAllUsers() {
-        return this.userRepository.findAll();
+    public List<UserDTO> getAllUsers() {
+        return this.userDTOUserMapper.mapUsersToUserDTOs(this.userRepository.findAll());
     }
 
     public User getUserById(UUID id) {

@@ -33,11 +33,12 @@ public class EventService {
 
     public List<EventDTO> getAllEvents() {
         List<Event> events = eventRepository.findAll();
-        return eventDTOEventMapper.mapEventsToEventDTOs(events);
+        List<EventDTO> eventDTOS = eventDTOEventMapper.mapEventsToEventDTOs(events);
+        return eventDTOS;
 
-//        return eventRepository.findAll().stream()
-//                .map(eventDTOEventMapper::mapEventToEventDTO)
-//                .toList();
+        /*return eventRepository.findAll().stream()
+                .map(EventDTO::new)
+                .toList();*/
     }
 
     public List<EventDTO> getEventsByDate(LocalDateTime date) {
@@ -61,17 +62,22 @@ public class EventService {
     }
 
 
-    public Event findEventByID(UUID id) {
+    public Event getEventByID(UUID id) {
         return eventRepository.findById(id)
                 .orElseThrow(() -> new EventNotFoundException(id));
     }
 
-    public List<Event> findEventsByTitle(String title) {
+    /*public EventDOT getEventByID(UUID id) {
+        return eventRepository.findById(id)
+                .orElseThrow(() -> new EventNotFoundException(id));
+    }*/
+
+    public List<Event> getEventsByTitle(String title) {
         return eventRepository.findEventsByTitle(title);
     }
 
     public Event deleteEventByID(UUID id) {
-        Event eventToDelete = this.findEventByID(id);
+        Event eventToDelete = this.getEventByID(id);
         this.eventRepository.delete(eventToDelete);
         return eventToDelete;
     }

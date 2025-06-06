@@ -17,6 +17,42 @@ public class UserDTO {
 
     private String password;
 
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setRegisterDate(LocalDateTime registerDate) {
+        this.registerDate = registerDate;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
+    }
+
+    public void setPictureURI(URI pictureURI) {
+        this.pictureURI = pictureURI;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public void setSalutation(String salutation) {
+        this.salutation = salutation;
+    }
+
     private LocalDateTime registerDate;
 
     private boolean isActive;

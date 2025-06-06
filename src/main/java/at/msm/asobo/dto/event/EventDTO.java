@@ -7,6 +7,7 @@ import at.msm.asobo.entities.Event;
 
 import java.net.URI;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -38,6 +39,9 @@ public class EventDTO {
     private List<MediumDTO> media;
 
     public EventDTO() {
+        this.participants = new ArrayList<>();
+        this.comments = new ArrayList<>();
+        this.media = new ArrayList<>();
     }
 
     public EventDTO(Event event) {
@@ -69,6 +73,54 @@ public class EventDTO {
                 .stream()
                 .map(UserDTO::new)
                 .toList();
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setPictureURI(URI pictureURI) {
+        this.pictureURI = pictureURI;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public void setDate(LocalDateTime date) {
+        this.date = date;
+    }
+
+    public void setCreationDate(LocalDateTime creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    public void setModificationDate(LocalDateTime modificationDate) {
+        this.modificationDate = modificationDate;
+    }
+
+    public void setCreator(EventCreatorDTO creator) {
+        this.creator = creator;
+    }
+
+    public void setParticipants(List<UserDTO> participants) {
+        this.participants = participants;
+    }
+
+    public void setComments(List<UserCommentDTO> comments) {
+        this.comments = comments;
+    }
+
+    public void setMedia(List<MediumDTO> media) {
+        this.media = media;
     }
 
     public UUID getId() {

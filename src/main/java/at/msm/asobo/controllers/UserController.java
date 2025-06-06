@@ -25,8 +25,7 @@ public class UserController {
 
     @GetMapping
     public List<UserDTO> getAllUsers() {
-        List<User> allUsers = this.userService.getAllUsers();
-        return allUsers.stream().map(UserDTO::new).toList();
+        return this.userService.getAllUsers();
     }
 
     @GetMapping("/{id}")

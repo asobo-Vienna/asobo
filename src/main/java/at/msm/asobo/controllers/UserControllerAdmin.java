@@ -21,11 +21,10 @@ public class UserControllerAdmin {
         this.userService = userService;
     }
 
-    @GetMapping
+    /*@GetMapping
     public List<UserAdminDTO> getAllUsers() {
-        List<User> allUsers = this.userService.getAllUsers();
-        return allUsers.stream().map(UserAdminDTO::new).toList();
-    }
+        //return this.userService.getAllUsers();
+    }*/
 
     @GetMapping("/{id}")
     public UserAdminDTO getUserById(@PathVariable UUID id) {
