@@ -6,8 +6,12 @@ import at.msm.asobo.entities.User;
 import at.msm.asobo.entities.UserComment;
 import at.msm.asobo.exceptions.EventNotFoundException;
 import at.msm.asobo.exceptions.UserCommentNotFoundException;
+import at.msm.asobo.exceptions.UserNotFoundException;
+import at.msm.asobo.mapper.UserCommentDTOUserCommentMapper;
+import at.msm.asobo.mapper.UserDTOUserMapper;
 import at.msm.asobo.repositories.EventRepository;
 import at.msm.asobo.repositories.UserCommentRepository;
+import at.msm.asobo.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -18,10 +22,20 @@ import java.util.UUID;
 public class UserCommentService {
     private final UserCommentRepository userCommentRepository;
     private final EventRepository eventRepository;
+    private final UserService userService;
+    private final UserCommentDTOUserCommentMapper userCommentDTOUserCommentMapper;
+    private final UserDTOUserMapper userDTOUserMapper;
 
-    public UserCommentService(EventRepository eventRepository, UserCommentRepository userCommentRepository) {
+    public UserCommentService(EventRepository eventRepository,
+                              UserCommentRepository userCommentRepository,
+                              UserService userService,
+                              UserCommentDTOUserCommentMapper userCommentDTOUserCommentMapper,
+                              UserDTOUserMapper userDTOUserMapper) {
         this.eventRepository = eventRepository;
         this.userCommentRepository = userCommentRepository;
+        this.userService = userService;
+        this.userCommentDTOUserCommentMapper = userCommentDTOUserCommentMapper;
+        this.userDTOUserMapper = userDTOUserMapper;
     }
 
     public List<UserCommentDTO> getAllUserComments() {
@@ -58,7 +72,7 @@ public class UserCommentService {
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new EventNotFoundException(eventId));
 
-        UserComment newComment = new UserComment(userCommentDTO);
+        UserComment newComment = this.userCommentDTOUserCommentMapper.mapUserCommentDTOToUserComment(userCommentDTO);
         newComment.setEvent(event);
         return new UserCommentDTO(this.userCommentRepository.save(newComment));
     }
@@ -69,7 +83,8 @@ public class UserCommentService {
 
         existingComment.setText(updatedCommentDTO.getText());
         existingComment.setModificationDate(LocalDateTime.now());
-        existingComment.setAuthor(new User(updatedCommentDTO.getAuthor()));
+        UUID authorId = updatedCommentDTO.getAuthorId();
+        existingComment.setAuthor(this.userService.getUserById(authorId));
 
         return new UserCommentDTO(userCommentRepository.save(existingComment));
     }
@@ -77,7 +92,7 @@ public class UserCommentService {
 
     public UserCommentDTO deleteUserCommentByEventIdAndCommentId(UUID eventId, UUID commentId) {
         UserCommentDTO userCommentDTO = this.getUserCommentByEventIdAndCommentId(eventId, commentId);
-        UserComment userComment = new UserComment(userCommentDTO);
+        UserComment userComment = this.userCommentDTOUserCommentMapper.mapUserCommentDTOToUserComment(userCommentDTO);
         this.userCommentRepository.delete(userComment);
         return userCommentDTO;
     }

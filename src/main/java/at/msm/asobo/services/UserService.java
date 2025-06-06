@@ -43,7 +43,7 @@ public class UserService {
     }
 
     public UserDTO registerUser(UserRegisterDTO userRegisterDTO) {
-        User newUser = new User(userRegisterDTO);
+        User newUser = this.userDTOUserMapper.mapUserRegisterDTOToUser(userRegisterDTO);
         User savedUser = this.userRepository.save(newUser);
         return this.userDTOUserMapper.mapUserToUserDTO(savedUser);
     }

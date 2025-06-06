@@ -14,12 +14,12 @@ public class EventMapperHelper {
     @Autowired // consider removing this
     private EventService eventService;
 
-    @Named("uuidToUser")
+    @Named("uuidToEvent")
     public Event fromId(UUID id) {
         return eventService.getEventById(id);
     }
 
-    @Named("userToUuid")
+    @Named("eventToUuid")
     public UUID toId(Event event) {
         return event.getId();
     }

@@ -43,13 +43,6 @@ public class UserComment {
     public UserComment(){
     }
 
-    public UserComment(UserCommentDTO userCommentDTO) {
-        this.text = userCommentDTO.getText();
-        this.author = new User(userCommentDTO.getAuthor());
-        this.creationDate = userCommentDTO.getCreationDate();
-        this.modificationDate = userCommentDTO.getModificationDate();
-    }
-
     public String getText() {
         return text;
     }

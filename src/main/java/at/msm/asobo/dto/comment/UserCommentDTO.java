@@ -1,9 +1,6 @@
 package at.msm.asobo.dto.comment;
 
-import at.msm.asobo.dto.event.EventDTO;
-import at.msm.asobo.dto.user.UserDTO;
 import at.msm.asobo.entities.UserComment;
-
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -11,7 +8,7 @@ public class UserCommentDTO {
 
     private UUID id;
     private String text;
-    private UserDTO author;
+    private UUID authorId;
     private UUID eventId;
     private LocalDateTime creationDate;
     private LocalDateTime modificationDate;
@@ -23,7 +20,7 @@ public class UserCommentDTO {
     public UserCommentDTO(UserComment userComment) {
         this.id = userComment.getId();
         this.text = userComment.getText();
-        this.author = new UserDTO(userComment.getAuthor());
+        this.authorId = userComment.getAuthor().getId();
         this.eventId = userComment.getEvent().getId();
         this.creationDate = userComment.getCreationDate();
         this.modificationDate = userComment.getModificationDate();
@@ -45,10 +42,6 @@ public class UserCommentDTO {
         this.text = text;
     }
 
-    public void setAuthor(UserDTO author) {
-        this.author = author;
-    }
-
     public UUID getEventId() {
         return eventId;
     }
@@ -65,8 +58,12 @@ public class UserCommentDTO {
         this.modificationDate = modificationDate;
     }
 
-    public UserDTO getAuthor() {
-        return this.author;
+    public UUID getAuthorId() {
+        return authorId;
+    }
+
+    public void setAuthorId(UUID authorId) {
+        this.authorId = authorId;
     }
 
     public LocalDateTime getCreationDate() {

@@ -56,28 +56,6 @@ public class User {
     public User(){
     }
 
-    public User(UserDTO userDTO) {
-            this.username = userDTO.getUsername();
-            this.email = userDTO.getEmail();
-            this.password = userDTO.getPassword();
-            this.location = userDTO.getLocation();
-            this.registerDate = userDTO.getRegisterDate();
-            this.isActive = userDTO.isActive();
-            this.pictureURI = userDTO.getPictureURI();
-            this.salutation = userDTO.getSalutation();
-    }
-
-    public User(UserRegisterDTO registerDTO) {
-        this.username = registerDTO.getUsername();
-        this.email = registerDTO.getEmail();
-        this.password = registerDTO.getPassword();
-        this.location = registerDTO.getLocation();
-        this.registerDate = LocalDateTime.now();
-        this.isActive = true;
-        this.pictureURI = registerDTO.getPictureURI();
-        this.salutation = registerDTO.getSalutation();
-    }
-
     public String getLocation() {
         return location;
     }
