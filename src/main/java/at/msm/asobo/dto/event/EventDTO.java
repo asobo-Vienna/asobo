@@ -44,37 +44,6 @@ public class EventDTO {
         this.media = new ArrayList<>();
     }
 
-    public EventDTO(Event event) {
-        this.id = event.getId();
-        this.title = event.getTitle();
-        this.creator = new EventCreatorDTO(event.getCreator());
-        this.description = event.getDescription();
-        this.location = event.getLocation();
-        this.date = event.getDate();
-        this.creationDate = event.getCreationDate();
-        this.modificationDate = event.getModificationDate();
-
-        this.media = Optional.ofNullable(event.getMedia())
-                .orElse(List.of()) // or Collections.emptyList()
-                .stream()
-                .map(MediumDTO::new)
-                .toList();
-
-        this.comments = Optional.ofNullable(event.getComments())
-                .orElse(List.of()) // or Collections.emptyList()
-                .stream()
-                .map(UserCommentDTO::new)
-                .toList();
-
-        this.pictureURI = event.getPictureURI();
-
-        this.participants = Optional.ofNullable(event.getParticipants())
-                .orElse(List.of())
-                .stream()
-                .map(UserDTO::new)
-                .toList();
-    }
-
     public void setId(UUID id) {
         this.id = id;
     }

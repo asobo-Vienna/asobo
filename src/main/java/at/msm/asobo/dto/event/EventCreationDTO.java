@@ -36,18 +36,6 @@ public class EventCreationDTO {
 
     public EventCreationDTO() {}
 
-    public EventCreationDTO(Event event) {
-        this.title = event.getTitle();
-        this.creator = new EventCreatorDTO(event.getCreator());
-        this.description = event.getDescription();
-        this.location = event.getLocation();
-        this.date = event.getDate();
-        this.media = event.getMedia().stream().map(MediumDTO::new).toList();
-        this.comments = event.getComments().stream().map(UserCommentDTO::new).toList();
-        this.pictureURI = event.getPictureURI();
-        this.participants = event.getParticipants().stream().map(UserDTO::new).toList();
-    }
-
     public UUID getId() {
         return id;
     }

@@ -25,19 +25,6 @@ public class UserAdminDTO {
     public UserAdminDTO() {
     }
 
-    public UserAdminDTO(User user) {
-        this.id = user.getId();
-        this.email = user.getEmail();
-        this.username = user.getUsername();
-        this.createdEvents = user.getCreatedEvents().stream().map(EventDTO::new).toList();
-        this.attendedEvents = user.getAttendedEvents().stream().map(EventDTO::new).toList();
-        this.comments = user.getComments().stream().map(UserCommentDTO::new).toList();
-        this.pictureURI = user.getPictureURI();
-        this.location = user.getLocation();
-        this.registerDate = user.getRegisterDate();
-        this.isActive = user.isActive();
-    }
-
     public UUID getId() {
         return this.id;
     }

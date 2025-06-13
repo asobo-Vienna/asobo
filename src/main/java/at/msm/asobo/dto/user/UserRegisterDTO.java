@@ -29,15 +29,6 @@ public class UserRegisterDTO {
     public UserRegisterDTO() {
     }
 
-    public UserRegisterDTO(User user) {
-        this.username = user.getUsername();
-        this.email = user.getEmail();
-        this.password = user.getPassword();
-        this.pictureURI = user.getPictureURI();
-        this.location = user.getLocation();
-        this.salutation = user.getSalutation();
-    }
-
     public String getUsername() {
         return this.username;
     }

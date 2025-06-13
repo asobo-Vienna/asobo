@@ -14,12 +14,6 @@ public class EventCreatorDTO {
 
     public EventCreatorDTO() {}
 
-    public EventCreatorDTO(User user) {
-        this.id = user.getId();
-        this.username = user.getUsername();
-        this.pictureURI = user.getPictureURI();
-    }
-
     public UUID getId() {
         return this.id;
     }
