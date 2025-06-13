@@ -59,6 +59,7 @@ public class UserService {
 
         existingUser.setActive(userUpdateDTO.isActive());
         existingUser.setEmail(userUpdateDTO.getEmail());
+        existingUser.setSalutation(userUpdateDTO.getSalutation());
         existingUser.setLocation(userUpdateDTO.getLocation());
         existingUser.setPictureURI(userUpdateDTO.getPictureURI());
         existingUser.setUsername(userUpdateDTO.getUsername());
