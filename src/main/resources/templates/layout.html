@@ -15,13 +15,29 @@
     <link href="/css/event-list.css" rel="stylesheet">
 </head>
 <body class="d-flex flex-column min-vh-100">
+
 <nav class="navbar navbar-expand-lg bg-body-tertiary">
-    <div class="container-fluid">
-        <a class="navbar-brand" th:href="@{/}"><img src="/images/logo.png" alt="Logo" class="asobo-logo"></a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <div class="container-fluid d-flex align-items-center">
+        <a class="navbar-brand me-3" th:href="@{/}">
+            <img src="/images/logo.png" alt="Logo" class="asobo-logo">
+        </a>
+
+        <div class="search-bar d-flex align-items-center me-auto">
+            <!--<form class="d-flex w-100" th:action="@{/search}" method="get">-->
+            <div class="search-div d-flex w-100">
+                <input class="form-control" type="search" name="query" placeholder="Search for events" aria-label="Search">
+                <button class="btn-search btn" type="submit">
+                    <img class="btn-search-img" src="/images/icons/magnifying_glass_purple.png" alt="Search Button">
+                </button>
+            </div>
+        </div>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
+
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                 <li class="nav-item">
@@ -34,14 +50,13 @@
                     <a class="nav-link" th:href="@{/register}">Register</a>
                 </li>
                 <li class="nav-item d-flex align-items-center user-profile-thumbnail" id="user-nav-thumbnail">
-                    <a href="" alt="">
-                        <img src="/images/users/jane_doe.png" alt="User Thumbnail"
-                             class="user-thumbnail me-2">
+                    <a href="">
+                        <img src="/images/users/jane_doe.png" alt="User Thumbnail" class="user-thumbnail me-2">
                     </a>
                     <div class="d-flex flex-column justify-content-center">
                         <span class="username-thumbnail">Jane</span>
                         <span class="user-myprofile">
-                            <a href="" alt="">My Profile</a>
+                            <a href="">My Profile</a>
                         </span>
                     </div>
                 </li>
@@ -57,22 +72,24 @@
     </div>
 </nav>
 
+
+<!-- TODO this commented part below for events.html
 <div class="py-4">
     <div class="search-bar container d-flex justify-content-center">
-        <!--<form class="d-flex w-100" th:action="@{/search}" method="get">-->
+
         <div class="search-div dflex w-100">
             <input class="form-control" type="search" name="query" placeholder="Search for events" aria-label="Search">
             <button class="btn-search btn" type="submit"><img class="btn-search-img"
                                                               src="/images/icons/magnifying_glass_purple.png"
                                                               alt="Search Button"></button>
         </div>
-        <!--</form>-->
+
         <div class="search-sort">
             Order By
         </div>
     </div>
 </div>
-
+-->
 <main layout:fragment="content" class="container d-flex flex-column align-items-center mt-5 flex-grow-1">
     <h1 class="text-primary">Welcome to asobō!</h1>
     <p th:text="'Hello, ' + ${name} + '!'"></p>

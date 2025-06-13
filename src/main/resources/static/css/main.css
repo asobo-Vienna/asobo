@@ -1,6 +1,4 @@
-* {
-    color: #000000;
-}
+
 
 :root {
     --bs-primary-rgb: 105, 15, 147;
@@ -97,7 +95,7 @@ a.btn-purple {
     /*margin-left: 0;*/
 }
 
-.search-bar .search-div {
+.search-bar .search-div  {
     max-width: 37vw;
     display: flex;
 }
@@ -111,6 +109,18 @@ a.btn-purple {
 .btn-search-img {
     width: 25px;
     height: 25px;
+}
+.navbar .search-bar {
+    flex-grow: 1;
+    max-width: 450px;
+}
+
+.navbar .search-div {
+    width: 100%;
+}
+
+.navbar .form-control {
+    flex-grow: 1;
 }
 
 footer {
