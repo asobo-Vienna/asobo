@@ -1,12 +1,17 @@
 package at.msm.asobo.dto.medium;
 
 import at.msm.asobo.entities.Medium;
+import jakarta.validation.constraints.NotNull;
+
 import java.net.URI;
 import java.util.UUID;
 
 public class MediumCreationDTO {
 
+    @NotNull(message = "Event ID is mandatory for creating a new medium")
     protected UUID eventId;
+
+    @NotNull(message = "URI is mandatory for creating a new medium")
     protected URI mediumURI;
 
     public MediumCreationDTO() {
