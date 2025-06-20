@@ -4,20 +4,22 @@ import at.msm.asobo.config.FileStorageProperties;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
+import java.util.Arrays;
 import java.util.UUID;
 
 @Service
 public class FileStorageService {
-    private final Path baseStoragePath;
+    private final String baseStoragePath;
 
     public FileStorageService(FileStorageProperties fileStorageProperties) throws IOException {
-        this.baseStoragePath = Paths.get(fileStorageProperties.getBasePath());
-        Files.createDirectories(baseStoragePath);
+        this.baseStoragePath = fileStorageProperties.getBasePath();
+        Files.createDirectories(Path.of(baseStoragePath));
     }
 
     public String store(MultipartFile file) {
@@ -28,21 +30,25 @@ public class FileStorageService {
         String sanitizedFilename = file.getOriginalFilename().replaceAll("[^a-zA-Z0-9\\.\\-]", "_");
         String filename = UUID.randomUUID() + "_" + sanitizedFilename;
 
-        Path destinationPath = this.baseStoragePath;
+        String destinationPath = this.baseStoragePath;
         if (subFolderName != null && !subFolderName.isBlank()) {
-            destinationPath = destinationPath.resolve(subFolderName);
+            destinationPath = destinationPath + "/" + subFolderName;
             try {
-                Files.createDirectories(destinationPath); // Ensure subdirectory exists
+                Files.createDirectories(Path.of(destinationPath)); // Ensure subdirectory exists
             } catch (IOException e) {
                 throw new RuntimeException("Could not create subfolder: " + subFolderName, e);
             }
         }
 
-        Path targetFile = destinationPath.resolve(filename);
+        destinationPath = destinationPath.replace("\\", "/");
+        Path targetFile = Path.of(filename);
 
         try (InputStream in = file.getInputStream()) {
             Files.copy(in, targetFile, StandardCopyOption.REPLACE_EXISTING);
-            return destinationPath + "/" + URLEncoder.encode(filename, StandardCharsets.UTF_8);
+
+            String encodedFilename = URLEncoder.encode(filename, StandardCharsets.UTF_8).replace("+", "%20");
+
+            return "/" + destinationPath + "/" + encodedFilename;
         } catch (IOException e) {
             throw new RuntimeException("Failed to save file", e);
         }

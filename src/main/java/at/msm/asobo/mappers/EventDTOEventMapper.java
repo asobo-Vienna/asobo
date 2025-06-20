@@ -7,7 +7,6 @@ import at.msm.asobo.mappers.helpers.EventMapperHelper;
 import at.msm.asobo.mappers.helpers.UserPictureMapperHelper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-
 import java.util.List;
 
 
@@ -18,8 +17,12 @@ public interface EventDTOEventMapper {
     List<EventDTO> mapEventsToEventDTOs(List<Event> events);
     List<Event> mapEventDTOsToEvents(List<EventDTO> eventDTOs);
 
+    @Mapping(target = "eventPicture", ignore = true)
     EventCreationDTO mapEventToEventCreationDTO(Event event);
+
+    @Mapping(target = "pictureURI", ignore = true) // Ignore MultipartFile here
     Event mapEventCreationDTOToEvent(EventCreationDTO eventDTO);
+
     List<EventCreationDTO> mapEventsToEventCreationDTOs(List<Event> events);
     List<Event> mapEventCreationDTOsToEvents(List<EventDTO> eventDTOs);
 }

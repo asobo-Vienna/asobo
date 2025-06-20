@@ -18,12 +18,20 @@ public class UserPictureMapperHelper {
 
     private FileStorageProperties fileStorageProperties;
 
-    @Named("mapPicture")
-    public String map(MultipartFile picture) {
+    @Named("mapUserPicture")
+    public String mapUserPicture(MultipartFile picture) {
         if (picture == null || picture.isEmpty()) {
             return null;
         }
         return fileStorageService.store(picture, fileStorageProperties.getProfilePictureSubfolder());
+    }
+
+    @Named("mapEventPicture")
+    public String mapEventPicture(MultipartFile picture) {
+        if (picture == null || picture.isEmpty()) {
+            return null;
+        }
+        return fileStorageService.store(picture, fileStorageProperties.getEventCoverPictureSubfolder());
     }
 
     /*@Named("stringToUri")

@@ -17,7 +17,7 @@ $("#register-button").on("click", function (e) {
     }
 
     $.ajax({
-        url: "/users",
+        url: "/api/users",
         type: "POST",
         data: formData,
         processData: false,

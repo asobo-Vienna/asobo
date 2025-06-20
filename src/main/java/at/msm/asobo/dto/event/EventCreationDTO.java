@@ -5,6 +5,8 @@ import at.msm.asobo.dto.comment.UserCommentDTO;
 import at.msm.asobo.dto.user.UserDTO;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -19,7 +21,7 @@ public class EventCreationDTO {
     @NotBlank(message = "Description is mandatory for event creation")
     private String description;
 
-    private String pictureURI;
+    private MultipartFile eventPicture;
 
     @NotBlank(message = "Location is mandatory for event creation")
     private String location;
@@ -52,10 +54,6 @@ public class EventCreationDTO {
 
     public String getDescription() {
         return description;
-    }
-
-    public String getPictureURI() {
-        return pictureURI;
     }
 
     public String getLocation() {
@@ -102,9 +100,6 @@ public class EventCreationDTO {
         this.description = description;
     }
 
-    public void setPictureURI(String pictureURI) {
-        this.pictureURI = pictureURI;
-    }
 
     public void setLocation(String location) {
         this.location = location;
@@ -136,5 +131,13 @@ public class EventCreationDTO {
 
     public void setMedia(List<MediumDTO> media) {
         this.media = media;
+    }
+
+    public MultipartFile getEventPicture() {
+        return this.eventPicture;
+    }
+
+    public void setEventPicture(MultipartFile eventPicture) {
+        this.eventPicture = eventPicture;
     }
 }
