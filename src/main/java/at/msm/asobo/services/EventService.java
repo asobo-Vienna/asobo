@@ -8,8 +8,10 @@ import at.msm.asobo.exceptions.EventNotFoundException;
 import at.msm.asobo.mappers.EventDTOEventMapper;
 import at.msm.asobo.repositories.EventRepository;
 import at.msm.asobo.repositories.UserRepository;
+import at.msm.asobo.services.files.FileStorageService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -22,12 +24,20 @@ public class EventService {
 
     private final EventRepository eventRepository;
     private final UserRepository userRepository;
-    private final EventDTOEventMapper  eventDTOEventMapper;
+    private final EventDTOEventMapper eventDTOEventMapper;
+    private final FileStorageService fileStorageService;
 
-    public EventService(EventRepository eventRepository, UserRepository userRepository, EventDTOEventMapper eventDTOEventMapper) {
+    @Value("${app.file-storage.event-coverpicture-subfolder}")
+    private String profilePictureSubfolder;
+
+    public EventService(EventRepository eventRepository,
+                        UserRepository userRepository,
+                        EventDTOEventMapper eventDTOEventMapper,
+                        FileStorageService fileStorageService) {
         this.eventRepository = eventRepository;
         this.userRepository = userRepository;
         this.eventDTOEventMapper = eventDTOEventMapper;
+        this.fileStorageService = fileStorageService;
     }
 
     public List<EventDTO> getAllEvents() {
@@ -45,14 +55,22 @@ public class EventService {
         return this.eventDTOEventMapper.mapEventsToEventDTOs(events);
     }
 
+
     public EventDTO addNewEvent(EventCreationDTO eventCreationDTO) {
-        User user = this.userRepository.findById(eventCreationDTO.getCreator().getId())
-                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+//        User user = this.userRepository.findById(eventCreationDTO.getCreator().getId())
+//                .orElseThrow(() -> new EntityNotFoundException("User not found"));
         Event newEvent = this.eventDTOEventMapper.mapEventCreationDTOToEvent(eventCreationDTO);
-        newEvent.setCreator(user);
+        // newEvent.setCreator(user);
+
+        if (eventCreationDTO.getEventPicture() != null && !eventCreationDTO.getEventPicture().isEmpty()) {
+            String fileURI = fileStorageService.store(eventCreationDTO.getEventPicture(), this.profilePictureSubfolder);
+            newEvent.setPictureURI(fileURI);
+        }
+
         Event savedEvent = this.eventRepository.save(newEvent);
         return this.eventDTOEventMapper.mapEventToEventDTO(savedEvent);
     }
+
 
     public Event getEventById(UUID id) {
         Event event = this.eventRepository.findById(id)

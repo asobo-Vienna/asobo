@@ -80,7 +80,7 @@ public class EventController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public EventDTO createEvent(@RequestBody @Valid EventCreationDTO eventCreationDTO) {
+    public EventDTO createEvent(@ModelAttribute @Valid EventCreationDTO eventCreationDTO) {
         return this.eventService.addNewEvent(eventCreationDTO);
     }
 

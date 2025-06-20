@@ -4,13 +4,13 @@ import at.msm.asobo.dto.user.UserDTO;
 import at.msm.asobo.dto.user.UserRegisterDTO;
 import at.msm.asobo.entities.User;
 import at.msm.asobo.mappers.helpers.UserMapperHelper;
-import at.msm.asobo.mappers.helpers.UserPictureMapperHelper;
+import at.msm.asobo.mappers.helpers.PictureMapperHelper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring", uses = {UserMapperHelper.class, UserPictureMapperHelper.class})
+@Mapper(componentModel = "spring", uses = {UserMapperHelper.class, PictureMapperHelper.class})
 public interface UserDTOUserMapper {
 
     UserDTO mapUserToUserDTO(User user);

@@ -4,6 +4,7 @@ $("#submit-event-button").on("click", function (e) {
     let formData = new FormData();
     formData.append("category", $("input[name='category']").val());
     formData.append("title", $("input[name='title']").val());
+    formData.append("date", $("input[name='date']").val());
     formData.append("description", $("input[name='description']").val());
     formData.append("location", $("input[name='location']").val());
 

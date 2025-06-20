@@ -33,7 +33,7 @@ public class EventCreationDTO {
 
     private LocalDateTime modificationDate;
 
-    @NotNull(message = "Event creator is mandatory for event creation")
+    // @NotNull(message = "Event creator is mandatory for event creation")
     private EventCreatorDTO creator;
 
     private List<UserDTO> participants;
