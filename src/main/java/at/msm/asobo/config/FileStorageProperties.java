@@ -8,7 +8,8 @@ import org.springframework.stereotype.Component;
 public class FileStorageProperties {
     private String basePath;
     private String profilePictureSubfolder;
-    //private String eventPictureSubfolder;
+    private String eventCoverPictureSubfolder;
+    private String eventGalleriesSubfolder;
 
     public String getBasePath() {
         return basePath;
@@ -26,11 +27,19 @@ public class FileStorageProperties {
         this.profilePictureSubfolder = profilePictureSubfolder;
     }
 
-    /*public String getEventPictureSubfolder() {
-        return eventPictureSubfolder;
+    public String getEventCoverPictureSubfolder() {
+        return eventCoverPictureSubfolder;
     }
 
-    public void setEventPictureSubfolder(String eventPictureSubfolder) {
-        this.eventPictureSubfolder = eventPictureSubfolder;
-    }*/
+    public void setEventCoverPictureSubfolder(String eventPictureSubfolder) {
+        this.eventCoverPictureSubfolder = eventPictureSubfolder;
+    }
+
+    public String getEventGalleriesSubfolder() {
+        return eventGalleriesSubfolder;
+    }
+
+    public void setEventGalleriesSubfolder(String eventGalleriesSubfolder) {
+        this.eventGalleriesSubfolder = eventGalleriesSubfolder;
+    }
 }
