@@ -40,15 +40,16 @@ public class FileStorageService {
             }
         }
 
-        destinationPath = destinationPath.replace("\\", "/");
-        Path targetFile = Path.of(filename);
+        Path targetDir = Paths.get(destinationPath).toAbsolutePath();
+        Path targetFile = targetDir.resolve(filename);
+        System.out.println("targetFile: " + targetFile);
 
         try (InputStream in = file.getInputStream()) {
             Files.copy(in, targetFile, StandardCopyOption.REPLACE_EXISTING);
 
             String encodedFilename = URLEncoder.encode(filename, StandardCharsets.UTF_8).replace("+", "%20");
 
-            return "/" + destinationPath + "/" + encodedFilename;
+            return "/uploads/" + subFolderName + "/" + encodedFilename;
         } catch (IOException e) {
             throw new RuntimeException("Failed to save file", e);
         }

@@ -10,11 +10,14 @@
 
 <body>
 <main layout:fragment="content" class="mt-5 container d-flex flex-column align-items-center flex-grow-1">
-    <div class="container">
-        <h1>User Profile</h1>
-        <p>Name: <span th:text="${name}"></span></p>
-        <p>ID: <span th:text="${userId}"></span></p>
+    <div class="container" id="user-profile-page-container">
+
     </div>
 </main>
+
+<div layout:fragment="scripts">
+    <script th:src="@{/js/global.js}"></script>
+    <script th:src="@{/js/users.js}"></script>
+</div>
 </body>
 </html>

@@ -20,6 +20,6 @@ public class ThymeleafPageController {
 
     @GetMapping("/users/{id}")
     public String userProfile(@PathVariable String id, Model model) {
-        return "user-profile"; // maps to templates/users/user-profile.html
+        return "user-profile"; // maps to templates/user-profile.html
     }
 }

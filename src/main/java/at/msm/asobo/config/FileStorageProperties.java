@@ -3,8 +3,8 @@ package at.msm.asobo.config;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
-@Component
 @ConfigurationProperties(prefix = "app.file-storage")
+@Component
 public class FileStorageProperties {
     private String basePath;
     private String profilePictureSubfolder;

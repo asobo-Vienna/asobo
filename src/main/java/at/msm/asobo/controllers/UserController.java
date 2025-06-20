@@ -28,7 +28,9 @@ public class UserController {
         return this.userService.getAllUsers();
     }
 
-    @GetMapping("/{id}")
+    // we need "/id/ before the actual id, because otherwise
+    // /{id} and /{username} lead to ambiguity
+    @GetMapping("/id/{id}")
     public UserDTO getUserById(@PathVariable UUID id) {
         return this.userService.getUserDTOById(id);
     }
