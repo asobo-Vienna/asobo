@@ -16,12 +16,12 @@ function getAllEvents() {
 
 function appendEventToList(event) {
     const $eventList = $("#event-list");
-    const $createdEvent = createEventCard(event);
+    const $createdEvent = createEventItem(event);
     $eventList.append($createdEvent);
 }
 
 
-function createEventCard(event) {
+function createEventItem(event) {
     const $listItem = $('<li>');
 
     const $link = $('<a>')
@@ -41,8 +41,10 @@ function createEventCard(event) {
     const $cardBody = $('<div>').addClass('card-body');
 
     const $title = $('<h6>').addClass('card-title').text(event.title);
-    const $date = $('<div>').addClass('date-text text-muted').text(event.date);
-    const $time = $('<div>').addClass('date-text text-muted').text(event.time);
+    const formattedDate = moment(event.date).format('ddd, MMMM D, YYYY');
+    const $date = $('<div>').addClass('date-text text-muted').text(formattedDate);
+    const formattedTime = moment(event.date).format('h:mm a');
+    const $time = $('<div>').addClass('date-text text-muted').text(formattedTime);
     const $location = $('<div>').addClass('location-text text-muted mt-2').text('in ' + event.location);
 
     $cardBody.append($title, $date, $time, $location);
