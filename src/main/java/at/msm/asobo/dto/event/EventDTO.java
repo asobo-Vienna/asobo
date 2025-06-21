@@ -2,7 +2,7 @@ package at.msm.asobo.dto.event;
 
 import at.msm.asobo.dto.medium.MediumDTO;
 import at.msm.asobo.dto.comment.UserCommentDTO;
-import at.msm.asobo.dto.user.ParticipantDTO;
+import at.msm.asobo.dto.user.UserPublicDTO;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +28,7 @@ public class EventDTO {
 
     private EventCreatorDTO creator;
 
-    private List<ParticipantDTO> participants;
+    private List<UserPublicDTO> participants;
 
     private List<UserCommentDTO> comments;
 
@@ -76,7 +76,7 @@ public class EventDTO {
         this.creator = creator;
     }
 
-    public void setParticipants(List<ParticipantDTO> participants) {
+    public void setParticipants(List<UserPublicDTO> participants) {
         this.participants = participants;
     }
 
@@ -116,7 +116,7 @@ public class EventDTO {
         return creator;
     }
 
-    public List<ParticipantDTO> getParticipants() {
+    public List<UserPublicDTO> getParticipants() {
         return participants;
     }
 

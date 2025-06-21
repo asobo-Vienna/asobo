@@ -1,6 +1,6 @@
 package at.msm.asobo.mappers;
 
-import at.msm.asobo.dto.user.ParticipantDTO;
+import at.msm.asobo.dto.user.UserPublicDTO;
 import at.msm.asobo.dto.user.UserDTO;
 import at.msm.asobo.dto.user.UserRegisterDTO;
 import at.msm.asobo.entities.User;
@@ -20,6 +20,12 @@ public interface UserDTOUserMapper {
     List<UserDTO> mapUsersToUserDTOs(List<User> users);
     List<User> mapUserDTOsToUsers(List<UserDTO> userDTOs);
 
+    UserPublicDTO mapUserToUserPublicDTO(User user);
+    User mapUserPublicDTOToUser(UserPublicDTO userPublicDTO);
+
+    List<UserPublicDTO> mapUsersToUserPublicDTOs(List<User> users);
+    List<User> mapUserPublicDTOsToUsers(List<UserPublicDTO> userDTOs);
+
     @Mapping(target = "profilePicture", ignore = true)
     UserRegisterDTO mapUserToUserRegisterDTO(User user);
 
@@ -28,7 +34,4 @@ public interface UserDTOUserMapper {
 
     List<UserRegisterDTO> mapUsersToUserRegisterDTOs(List<User> users);
     List<User> mapUserRegisterDTOsToUsers(List<UserRegisterDTO> userDTOs);
-
-    ParticipantDTO mapUserToParticipantDTO(User user);
-    User mapParticipantDTOToUser(ParticipantDTO participantDTO);
 }

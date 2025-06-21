@@ -2,6 +2,7 @@ package at.msm.asobo.services;
 
 import at.msm.asobo.config.FileStorageProperties;
 import at.msm.asobo.dto.user.UserDTO;
+import at.msm.asobo.dto.user.UserPublicDTO;
 import at.msm.asobo.dto.user.UserRegisterDTO;
 import at.msm.asobo.dto.user.UserUpdateDTO;
 import at.msm.asobo.entities.User;
@@ -11,8 +12,6 @@ import at.msm.asobo.repositories.UserRepository;
 import at.msm.asobo.services.files.FileStorageService;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.net.URI;
 import java.util.List;
 import java.util.UUID;
 
@@ -31,25 +30,25 @@ public class UserService {
         this.fileStorageProperties = fileStorageProperties;
     }
 
-    public List<UserDTO> getAllUsers() {
-        return this.userDTOUserMapper.mapUsersToUserDTOs(this.userRepository.findAll());
+    public List<UserPublicDTO> getAllUsers() {
+        return this.userDTOUserMapper.mapUsersToUserPublicDTOs(this.userRepository.findAll());
     }
 
     public User getUserById(UUID id) {
         return this.userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
     }
 
-    public UserDTO getUserDTOById(UUID id) {
+    public UserPublicDTO getUserDTOById(UUID id) {
         User user = this.userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
-        return this.userDTOUserMapper.mapUserToUserDTO(user);
+        return this.userDTOUserMapper.mapUserToUserPublicDTO(user);
     }
 
-    public UserDTO getUserByUsername(String username) {
+    public UserPublicDTO getUserByUsername(String username) {
         User user = this.userRepository.findByUsername(username).orElseThrow(() -> new UserNotFoundException("User not found"));
-        return this.userDTOUserMapper.mapUserToUserDTO(user);
+        return this.userDTOUserMapper.mapUserToUserPublicDTO(user);
     }
 
-    public UserDTO registerUser(UserRegisterDTO userRegisterDTO) {
+    public UserPublicDTO registerUser(UserRegisterDTO userRegisterDTO) {
         User newUser = this.userDTOUserMapper.mapUserRegisterDTOToUser(userRegisterDTO);
 
         if (userRegisterDTO.getProfilePicture() != null && !userRegisterDTO.getProfilePicture().isEmpty()) {
@@ -58,17 +57,17 @@ public class UserService {
         }
 
         User savedUser = this.userRepository.save(newUser);
-        return this.userDTOUserMapper.mapUserToUserDTO(savedUser);
+        return this.userDTOUserMapper.mapUserToUserPublicDTO(savedUser);
     }
 
     // in case we might need it later
-    public UserDTO createUser(UserDTO userDTO) {
+    public UserPublicDTO createUser(UserDTO userDTO) {
         User user = this.userDTOUserMapper.mapUserDTOToUser(userDTO);
         User newUser = this.userRepository.save(user);
-        return this.userDTOUserMapper.mapUserToUserDTO(newUser);
+        return this.userDTOUserMapper.mapUserToUserPublicDTO(newUser);
     }
 
-    public UserDTO updateUserById(UUID userId, UserUpdateDTO userUpdateDTO) {
+    public UserPublicDTO updateUserById(UUID userId, UserUpdateDTO userUpdateDTO) {
         User existingUser = this.getUserById(userId);
 
         existingUser.setActive(userUpdateDTO.isActive());
@@ -86,12 +85,12 @@ public class UserService {
         }
 
         User updatedUser = userRepository.save(existingUser);
-        return this.userDTOUserMapper.mapUserToUserDTO(updatedUser);
+        return this.userDTOUserMapper.mapUserToUserPublicDTO(updatedUser);
     }
 
-    public UserDTO deleteUserById(UUID id) {
+    public UserPublicDTO deleteUserById(UUID id) {
         User userToDelete = this.getUserById(id);
         this.userRepository.delete(userToDelete);
-        return this.userDTOUserMapper.mapUserToUserDTO(userToDelete);
+        return this.userDTOUserMapper.mapUserToUserPublicDTO(userToDelete);
     }
 }

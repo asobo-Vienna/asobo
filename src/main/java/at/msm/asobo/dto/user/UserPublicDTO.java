@@ -3,7 +3,7 @@ package at.msm.asobo.dto.user;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-public class ParticipantDTO {
+public class UserPublicDTO {
 
     private UUID id;
 
@@ -13,7 +13,7 @@ public class ParticipantDTO {
 
     private LocalDateTime registerDate;
 
-    private boolean isActive;
+   //private boolean isActive;
 
     private String pictureURI;
 
@@ -21,7 +21,7 @@ public class ParticipantDTO {
 
     private String salutation;
 
-    public ParticipantDTO() {
+    public UserPublicDTO() {
     }
 
     public void setId(UUID id) {
@@ -48,10 +48,6 @@ public class ParticipantDTO {
         this.registerDate = registerDate;
     }
 
-    public void setActive(boolean active) {
-        isActive = active;
-    }
-
     public void setLocation(String location) {
         this.location = location;
     }
@@ -66,10 +62,6 @@ public class ParticipantDTO {
 
     public LocalDateTime getRegisterDate() {
         return registerDate;
-    }
-
-    public boolean isActive() {
-        return isActive;
     }
 
     public String getEmail() {

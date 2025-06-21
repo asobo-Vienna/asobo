@@ -1,6 +1,7 @@
 package at.msm.asobo.controllers;
 
 import at.msm.asobo.dto.user.UserDTO;
+import at.msm.asobo.dto.user.UserPublicDTO;
 import at.msm.asobo.dto.user.UserRegisterDTO;
 import at.msm.asobo.dto.user.UserUpdateDTO;
 import at.msm.asobo.entities.User;
@@ -24,35 +25,35 @@ public class UserController {
     }
 
     @GetMapping
-    public List<UserDTO> getAllUsers() {
+    public List<UserPublicDTO> getAllUsers() {
         return this.userService.getAllUsers();
     }
 
     // we need "/id/ before the actual id, because otherwise
     // /{id} and /{username} lead to ambiguity
     @GetMapping("/id/{id}")
-    public UserDTO getUserById(@PathVariable UUID id) {
+    public UserPublicDTO getUserById(@PathVariable UUID id) {
         return this.userService.getUserDTOById(id);
     }
 
     @GetMapping("/{username}")
-    public UserDTO getUserByUsername(@PathVariable String username) {
+    public UserPublicDTO getUserByUsername(@PathVariable String username) {
         return this.userService.getUserByUsername(username);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public UserDTO registerUser(@ModelAttribute @Valid UserRegisterDTO registerDTO) {
+    public UserPublicDTO registerUser(@ModelAttribute @Valid UserRegisterDTO registerDTO) {
         return this.userService.registerUser(registerDTO);
     }
 
     @PutMapping("/{id}")
-    public UserDTO updateUser(@PathVariable UUID id, @ModelAttribute @Valid UserUpdateDTO userUpdateDTO) {
+    public UserPublicDTO updateUser(@PathVariable UUID id, @ModelAttribute @Valid UserUpdateDTO userUpdateDTO) {
         return this.userService.updateUserById(id, userUpdateDTO);
     }
 
     @DeleteMapping("/{id}")
-    public UserDTO deleteUser(@PathVariable UUID id) {
+    public UserPublicDTO deleteUser(@PathVariable UUID id) {
         return this.userService.deleteUserById(id);
     }
 }
