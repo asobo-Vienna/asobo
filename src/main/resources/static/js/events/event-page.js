@@ -7,7 +7,7 @@ function getEvent() {
     $.getJSON('/api/events/' + eventID)
         .done(function (jsonData) {
             addEventToPage(jsonData);
-            showParticipants(jsonData.participants);
+            showParticipantsAvatars(jsonData.participants);
         })
         .fail(function (jqXHR, textStatus, errorThrown) {
             console.log('Error', textStatus, errorThrown);
@@ -61,8 +61,19 @@ function createBasicInfo(event) {
 }
 
 
-function showParticipants(participants) {
+function showParticipantsAvatars(participants) {
     participants.forEach(participant => {
-        console.log(participant);
+        createParticipantAvatar(participant);
     });
+}
+
+
+function createParticipantAvatar(participant) {
+    const $participantsAvatarContainer = $("#participants-avatar-container");
+    const $createdAvatar = $('<img>')
+        .addClass('user-avatar')
+        .attr('src', participant.pictureURI)
+        .attr('alt', participant.username);
+
+    $participantsAvatarContainer.append($createdAvatar);
 }
