@@ -1,0 +1,60 @@
+$(document).ready(getEvent);
+
+function getEvent() {
+    const urlElements = location.pathname.split('/');
+    const eventID = urlElements[urlElements.length-1];
+
+    $.getJSON('/api/events/' + eventID)
+        .done(function (jsonData) {
+            addEventToPage(jsonData);
+        })
+        .fail(function (jqXHR, textStatus, errorThrown) {
+            console.log('Error', textStatus, errorThrown);
+        });
+}
+
+
+function addEventToPage(event) {
+    const $eventImageContainer = $("#event-image-container");
+    const $createdEvent = createEventImage(event);
+    $eventImageContainer.append($createdEvent);
+
+    const $basicInfoContainer =  $("#event-basic-info-container");
+    const $createdBasicInfo = createBasicInfo(event);
+    $basicInfoContainer.append($createdBasicInfo);
+    
+    const $descriptionContainer = $("#event-description-container");
+    $descriptionContainer.text(event.description);
+}
+
+
+function createEventImage(event) {
+    const $image = $('<img>')
+        .addClass('card-img-top')
+        .attr('src', event.pictureURI)
+        .attr('alt', event.title);
+
+    return $image;
+}
+
+
+function createBasicInfo(event) {
+    const $container = $('<div>');
+
+    // Line 1: Title & Date
+    const $line1 = $('<div>').addClass('d-flex justify-content-between');
+    const $title = $('<span>').addClass('fw-bold').text(event.title);
+    const formattedDate = moment(event.date).format('ddd, MMMM D, YYYY');
+    const $date = $('<span>').addClass('date-font-color ms-1').text(formattedDate);
+    $line1.append($title, $date);
+
+    // Line 2: Location & Time
+    const $line2 = $('<div>').addClass('d-flex justify-content-between');
+    const $location = $('<span>').addClass('date-font-color').text("in " + event.location);
+    const formattedTime = moment(event.date).format('h:mm a');
+    const $time = $('<span>').addClass('date-font-color ms-5').text(formattedTime);
+    $line2.append($location, $time);
+
+    $container.append($line1, $line2);
+    return $container;
+}

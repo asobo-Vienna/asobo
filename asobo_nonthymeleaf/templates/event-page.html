@@ -14,8 +14,8 @@
 
 
     <div class="container">
-        <!-- First Row for Image -->
-        <div class="row text-start">
+        <!-- First Row for Image, JS targets the event-info-container and starts populating here -->
+        <div class="row text-start" id="event-info-container">
             <!-- Image column -->
             <div class="col-md-6">
                 <img src="/images/events/test_event/movie_night.jpg" class="card-img-top" alt="movie night picture">
@@ -114,7 +114,11 @@
 
     </div>
 
-
 </main>
+<div layout:fragment="scripts">
+    <script th:src="@{/js/global.js}"></script>
+    <script th:src="@{/js/events/event-page.js}"></script>
+
+</div>
 </body>
 </html>

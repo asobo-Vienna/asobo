@@ -33,6 +33,7 @@ public class EventCreationDTO {
 
     private LocalDateTime modificationDate;
 
+    // add this again as soon as we have logged-in users
     // @NotNull(message = "Event creator is mandatory for event creation")
     private EventCreatorDTO creator;
 

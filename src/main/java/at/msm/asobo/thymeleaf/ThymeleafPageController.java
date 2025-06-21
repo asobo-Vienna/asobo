@@ -22,4 +22,9 @@ public class ThymeleafPageController {
     public String userProfile(@PathVariable String id, Model model) {
         return "user-profile"; // maps to templates/user-profile.html
     }
+
+    @GetMapping("/events/{id}")
+    public String renderEventPage() {
+        return "event-page";
+    }
 }
