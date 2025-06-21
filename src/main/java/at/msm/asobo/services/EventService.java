@@ -9,7 +9,6 @@ import at.msm.asobo.mappers.EventDTOEventMapper;
 import at.msm.asobo.repositories.EventRepository;
 import at.msm.asobo.repositories.UserRepository;
 import at.msm.asobo.services.files.FileStorageService;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -25,6 +24,7 @@ public class EventService {
     private final EventRepository eventRepository;
     private final UserRepository userRepository;
     private final EventDTOEventMapper eventDTOEventMapper;
+    private final UserService userService;
     private final FileStorageService fileStorageService;
 
     @Value("${app.file-storage.event-coverpicture-subfolder}")
@@ -33,10 +33,12 @@ public class EventService {
     public EventService(EventRepository eventRepository,
                         UserRepository userRepository,
                         EventDTOEventMapper eventDTOEventMapper,
+                        UserService userService,
                         FileStorageService fileStorageService) {
         this.eventRepository = eventRepository;
         this.userRepository = userRepository;
         this.eventDTOEventMapper = eventDTOEventMapper;
+        this.userService = userService;
         this.fileStorageService = fileStorageService;
     }
 
@@ -70,6 +72,18 @@ public class EventService {
 
         Event savedEvent = this.eventRepository.save(newEvent);
         return this.eventDTOEventMapper.mapEventToEventDTO(savedEvent);
+    }
+
+    public EventDTO addParticipantToEvent(UUID eventId, UUID participantId) {
+        User participant = this.userService.getUserById(participantId);
+        Event event = this.getEventById(eventId);
+
+        List<User> participants = event.getParticipants();
+        participants.add(participant);
+        event.setParticipants(participants);
+
+        Event updatedEvent = this.eventRepository.save(event);
+        return this.eventDTOEventMapper.mapEventToEventDTO(updatedEvent);
     }
 
 

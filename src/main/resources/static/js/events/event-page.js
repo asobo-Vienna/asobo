@@ -7,6 +7,7 @@ function getEvent() {
     $.getJSON('/api/events/' + eventID)
         .done(function (jsonData) {
             addEventToPage(jsonData);
+            showParticipants(jsonData.participants);
         })
         .fail(function (jqXHR, textStatus, errorThrown) {
             console.log('Error', textStatus, errorThrown);
@@ -22,7 +23,7 @@ function addEventToPage(event) {
     const $basicInfoContainer =  $("#event-basic-info-container");
     const $createdBasicInfo = createBasicInfo(event);
     $basicInfoContainer.append($createdBasicInfo);
-    
+
     const $descriptionContainer = $("#event-description-container");
     $descriptionContainer.text(event.description);
 }
@@ -57,4 +58,11 @@ function createBasicInfo(event) {
 
     $container.append($line1, $line2);
     return $container;
+}
+
+
+function showParticipants(participants) {
+    participants.forEach(participant => {
+        console.log(participant);
+    });
 }

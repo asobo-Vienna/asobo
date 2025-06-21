@@ -24,7 +24,6 @@ public class Event {
     private User creator;
 
     @ManyToMany
-    @JoinTable(name = "participant_id")
     private List<User> participants;
 
     @NotBlank(message = "Title is mandatory")

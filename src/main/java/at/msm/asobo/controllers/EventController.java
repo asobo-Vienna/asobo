@@ -2,6 +2,8 @@ package at.msm.asobo.controllers;
 
 import at.msm.asobo.dto.event.EventCreationDTO;
 import at.msm.asobo.dto.event.EventDTO;
+import at.msm.asobo.dto.user.UserDTO;
+import at.msm.asobo.dto.user.UserUpdateDTO;
 import at.msm.asobo.services.EventService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -27,17 +29,6 @@ public class EventController {
     public EventController(EventService eventService){
         this.eventService = eventService;
     }
-
-    // TEST WITH STATIC HTML PAGES
-//    @GetMapping("/test")
-//    public String getEvents(Model model) {
-//        return "events";
-//    }
-//
-//    @GetMapping("/test/single-event")
-//    public String getSingleEvent(Model model) {
-//        return "event";
-//    }
 
 
     @GetMapping
@@ -77,11 +68,15 @@ public class EventController {
         }
     }
 
-
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public EventDTO createEvent(@ModelAttribute @Valid EventCreationDTO eventCreationDTO) {
         return this.eventService.addNewEvent(eventCreationDTO);
+    }
+
+    @PutMapping("/{id}")
+    public EventDTO addParticipantToEvent(@PathVariable UUID id, @RequestBody @Valid UserDTO participantDTO) {
+        return this.eventService.addParticipantToEvent(id, participantDTO.getId());
     }
 
 

@@ -4,7 +4,6 @@ function getAllEvents() {
     $.getJSON('/api/events')
         .done(function (jsonData) {
             jsonData.forEach(event => {
-                console.log(event);
                 appendEventToList(event);
             });
         })
