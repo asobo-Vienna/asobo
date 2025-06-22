@@ -22,12 +22,19 @@ public class UserService {
     private final UserDTOUserMapper userDTOUserMapper;
     private final FileStorageService fileStorageService;
     private final FileStorageProperties fileStorageProperties;
+    private final PasswordService passwordService;
 
-    public UserService(UserRepository userRepository, UserDTOUserMapper userDTOUserMapper, FileStorageService fileStorageService, FileStorageProperties fileStorageProperties) {
+    public UserService(UserRepository userRepository,
+                       UserDTOUserMapper userDTOUserMapper,
+                       FileStorageService fileStorageService,
+                       FileStorageProperties fileStorageProperties,
+                       PasswordService passwordService
+    ) {
         this.userRepository = userRepository;
         this.userDTOUserMapper = userDTOUserMapper;
         this.fileStorageService = fileStorageService;
         this.fileStorageProperties = fileStorageProperties;
+        this.passwordService = passwordService;
     }
 
     public List<UserPublicDTO> getAllUsers() {
@@ -51,8 +58,11 @@ public class UserService {
     public UserPublicDTO registerUser(UserRegisterDTO userRegisterDTO) {
         User newUser = this.userDTOUserMapper.mapUserRegisterDTOToUser(userRegisterDTO);
 
+        String hashedPassword = this.passwordService.hashPassword(userRegisterDTO.getPassword());
+        newUser.setPassword(hashedPassword);
+
         if (userRegisterDTO.getProfilePicture() != null && !userRegisterDTO.getProfilePicture().isEmpty()) {
-            String fileURI = fileStorageService.store(userRegisterDTO.getProfilePicture(), this.fileStorageProperties.getProfilePictureSubfolder());
+            String fileURI = this.fileStorageService.store(userRegisterDTO.getProfilePicture(), this.fileStorageProperties.getProfilePictureSubfolder());
             newUser.setPictureURI(fileURI);
         }
 
@@ -80,11 +90,11 @@ public class UserService {
         // Handle the picture if it is present
         MultipartFile picture = userUpdateDTO.getPicture();
         if (picture != null && !picture.isEmpty()) {
-            String pictureURI = fileStorageService.store(picture, this.fileStorageProperties.getProfilePictureSubfolder());
+            String pictureURI = this.fileStorageService.store(picture, this.fileStorageProperties.getProfilePictureSubfolder());
             existingUser.setPictureURI(pictureURI);
         }
 
-        User updatedUser = userRepository.save(existingUser);
+        User updatedUser = this.userRepository.save(existingUser);
         return this.userDTOUserMapper.mapUserToUserPublicDTO(updatedUser);
     }
 
