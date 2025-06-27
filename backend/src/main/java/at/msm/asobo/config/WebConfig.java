@@ -1,10 +1,10 @@
 package at.msm.asobo.config;
 
-import jakarta.annotation.PostConstruct;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 @Configuration
@@ -18,17 +18,14 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        String basePath = Paths.get(props.getBasePath()).toAbsolutePath().toString();
+        Path rootPath = Paths.get(System.getProperty("user.dir")).getParent(); // go up from 'backend'
 
-        System.out.println("basePath: " + basePath);
+        Path uploadPath = rootPath.resolve("uploads").normalize();
 
-        String resourceLocation = "file:" + basePath + "/";
+        String resourceLocation = "file:" + uploadPath + "/";
         System.out.println("Serving uploads from: " + resourceLocation);
-        registry.addResourceHandler("/uploads/**").addResourceLocations(resourceLocation);
-    }
 
-    @PostConstruct
-    public void init() {
-        System.out.println("WebConfig initialized");
+        registry.addResourceHandler("/uploads/**")
+                .addResourceLocations(resourceLocation);
     }
 }

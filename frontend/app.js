@@ -1,15 +1,21 @@
 const express = require('express');
+const { createProxyMiddleware } = require('http-proxy-middleware');
 const nunjucks = require('nunjucks');
 const path = require('path');
-const { createProxyMiddleware } = require('http-proxy-middleware');
 
 const app = express();
 
 // Proxy /uploads requests to Spring Boot backend
 app.use('/uploads', createProxyMiddleware({
-    target: 'http://localhost:8080',
+    target: 'http://localhost:8080/uploads',
     changeOrigin: true,
     logLevel: 'debug',
+    onProxyReq(proxyReq, req, res) {
+        console.log('[Proxy] Proxying request:', req.url);
+    },
+    onProxyRes(proxyRes, req, res) {
+        console.log('[Proxy] Received response with status:', proxyRes.statusCode);
+    },
 }));
 
 // Static files (CSS, JS, images)

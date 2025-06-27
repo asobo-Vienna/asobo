@@ -30,7 +30,7 @@ public class MediumController {
     }
 
     @PostMapping
-    public MediumDTO addMediumToEventById(@PathVariable UUID eventID, @RequestBody @Valid MediumCreationDTO medium) {
+    public MediumDTO addMediumToEventById(@PathVariable UUID eventID, @ModelAttribute @Valid MediumCreationDTO medium) {
         return this.mediumService.addMediumToEventById(eventID, medium);
     }
 
