@@ -24,7 +24,7 @@ function createEventItem(event) {
     const $listItem = $('<li>');
 
     const $link = $('<a>')
-        .attr('href', "/events/" + event.id);
+        .attr('href', "#event?id=" + event.id);
 
     const $card = $('<div>').addClass('card event-card');
 

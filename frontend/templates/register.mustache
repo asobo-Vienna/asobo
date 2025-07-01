@@ -1,0 +1,57 @@
+<h1 class="text-primary">Sign Up!</h1>
+<!--<form action="" method="post" enctype="multipart/form-data">-->
+
+<div class="register-form">
+
+    <div class="form-group">
+        <select class="form-control" name="salutation" id="salutation" required>
+            <option value="" disabled selected>Choose your Salutation</option>
+            <option value="male">Sir</option>
+            <option value="female">Madam</option>
+            <option value="other">Other</option>
+        </select>
+    </div>
+
+    <div class="form-group" id="salutation-other-group">
+        <input class="form-control" autofocus type="text" name="salutation-other" id="salutation-other"
+               placeholder="Other Salutation">
+    </div>
+
+    <div class="form-group">
+        <input class="form-control" autofocus type="text" name="username" placeholder="Username" required>
+    </div>
+
+    <div class="form-group position-relative">
+        <input id="register-email" class="form-control w-100 pe-5" type="email" name="email" placeholder="Email Address" required>
+        <small id="register-email-error" class="text-danger position-absolute">
+            Invalid email format
+        </small>
+    </div>
+
+    <div class="form-group">
+        <input class="form-control" type="password" name="register-password" id="register-password" placeholder="Password" required>
+    </div>
+
+    <div class="form-group position-relative">
+        <input class="form-control" type="password" name="register-password-conf" id="register-password-conf" placeholder="Confirm Password" required>
+        <small id="pw-notmatching-error" class="text-danger position-absolute">
+            Passwords do not match
+        </small>
+    </div>
+
+    <div class="form-group">
+        <input class="form-control" type="text" name="location" placeholder="City">
+    </div>
+
+    <div class="form-group">
+        <input class="form-control" type="file" name="profile_picture" placeholder="Profile Picture"
+               accept="image/*">
+    </div>
+
+    <div class="form-group d-flex justify-content-center">
+        <input class="btn btn-purple btn-primary mb-3" id="register-button" type="submit" value="Register">
+    </div>
+
+</div>
+
+Already have an account? <a href="#login">Log In here.</a>

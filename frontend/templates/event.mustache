@@ -1,0 +1,88 @@
+<div class="container">
+    <!-- First Row for Image -->
+    <div class="row text-start">
+        <!-- Image column -->
+        <div class="col-md-6" id="event-image-container"></div>
+
+        <!-- TODO make the join button work for the particular event! -->
+        <!-- Event Info Column -->
+        <div class="col-md-6 text-start">
+            <div class="mb-3">
+                <div class="row">
+                    <div class="col" id="event-basic-info-container"></div>
+                    <div class="col-md-4">
+                        <a href="" class="btn btn-purple imin-btn">I'm in!</a>
+                    </div>
+                    <div class="col-md-8"><!-- spacer --></div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-8">
+                    <div id="event-description-container" class="mb-3 p-3 infobox"></div>
+                </div>
+                <div class="col-md-4"><!-- spacer --></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TODO comment sections -->
+    <!-- Comment Box & Participants Row -->
+    <div class="row text-start mt-4 align-items-center gx-5">
+        <div class="col-md-6 d-flex gap-2">
+            <textarea name="content" class="form-control card" rows="1" placeholder="Your new comment goes here!"></textarea>
+            <input type="submit" value="Post!" class="btn btn-purple">
+        </div>
+
+        <!-- Participants -->
+        <div class="col-md-6 text-start">
+            <div class="fw-bold">Going</div>
+            <div class="mt-2" id="participants-avatar-container"></div>
+        </div>
+    </div>
+
+    <!-- Comments & Gallery Row -->
+    <div class="row text-start mt-3 gx-5">
+        <div class="col-md-6 text-start">
+            <div class="comments-list">
+                <!-- Comment 1 -->
+                <div class="comment-box">
+                    <div class="d-flex gap-3">
+                        <img src="https://randomuser.me/api/portraits/men/34.jpg" alt="User Avatar" class="user-avatar">
+                        <div class="flex-grow-1">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <h6 class="mb-0 comment-username">John Doe</h6>
+                                <span class="comment-time">2 hours ago</span>
+                            </div>
+                            <p class="mb-2">Thanks for the great time. I had so much fun at the movie night.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Comment 2 -->
+                <div class="comment-box">
+                    <div class="d-flex gap-3">
+                        <img src="https://randomuser.me/api/portraits/women/64.jpg" alt="User Avatar" class="user-avatar">
+                        <div class="flex-grow-1">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <h6 class="mb-0 comment-username">Lara Smith</h6>
+                                <span class="comment-time">1 hour ago</span>
+                            </div>
+                            <p class="mb-2">Totally! See you guys next time!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- GALLERY -->
+        <div class="col-md-6 mt-3 text-start">
+            <div class="fw-bold">Photos & Videos</div>
+            <div class="mt-2" id="media-thumbnail-container">
+                <img src="/images/events/test_event/gallery_item1.jpg" alt="Gallery item">
+                <img src="/images/events/test_event/gallery_item2.jpg" alt="Gallery item">
+            </div>
+        </div>
+    </div>
+
+</div>

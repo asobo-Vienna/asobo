@@ -1,8 +1,25 @@
 $(document).ready(getEvent);
 
 function getEvent() {
-    const urlElements = location.pathname.split('/');
-    const eventID = urlElements[urlElements.length-1];
+    let eventID = undefined;
+    if (window.location.port === "8080") {
+        const urlElements = location.pathname.split('/');
+        eventID = urlElements[urlElements.length - 1];
+    } else {
+        const url = new URL(window.location.href);
+        const urlHash = url.hash;
+        console.log("hash", urlHash);
+        console.log("startsWith", urlHash.startsWith("#event"));
+        if (urlHash.startsWith("#event")) {
+            //const params = new URLSearchParams(url.search);
+
+            console.log("url", url);
+            //console.log("params", params);
+            //eventID = params.get('id');
+            eventID = urlHash.split("=")[1];
+            console.log("eventID", eventID);
+        }
+    }
 
     $.getJSON('/api/events/' + eventID)
         .done(function (jsonData) {
