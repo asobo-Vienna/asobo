@@ -13,9 +13,30 @@ function setPageCSS(page) {
     if (page === 'about') {
         $('head').append('<link rel="stylesheet" href="css/about.css" class="page-css">');
     } else if (page === 'events') {
-        $('head').append('<link rel="stylesheet" href="css/event-list.css" class="page-css">');
+        $('head').append(
+            '<link rel="stylesheet" href="css/event-list.css" class="page-css">',
+        );
+    } else if (page === 'single-event') {
+        $('head').append('<link rel="stylesheet" href="css/single-event.css" class="page-css">');
     }
     // Add more page-specific CSS as needed
+}
+
+function setPageScript(page) {
+    $('body script.page-script').remove();
+
+    if (page === 'events') {
+        $('body').append('<script src="../js/events/events-list.js" class="page-script"></script>',);
+    } else if (page === 'single-event') {
+        $('body').append('<script src="../js/events/event-page.js" class="page-script"></script>');
+    } else if (page === 'create-event') {
+        $('body').append('<script src="../js/forms/submit-event.js" class="page-script"></script>');
+    }
+}
+
+function setPageStylesAndScripts(page) {
+    setPageCSS(page);
+    setPageScript(page);
 }
 
 function renderLayout(page, data = {}) {
@@ -31,7 +52,7 @@ function renderLayout(page, data = {}) {
         // Update document title
         document.title = data.pageTitle || 'asobō!';
 
-        setPageCSS(page);
+        setPageStylesAndScripts(page);
     });
 }
 
@@ -45,23 +66,42 @@ function parseHashAndQuery() {
     };
 }
 
-/*function navigateTo(page) {
-    let data = { pageTitle: capitalize(page) + ' - asobō!' };
+/*function navigateToFromHash() {
+    const { page, params } = parseHashAndQuery();
+    const data = { pageTitle: capitalize(page) + ' - asobō!' };
 
-    if (page === 'home') {
-        data.name = "Edmund Sackbauer";
+    if (page === 'events' && params.has('id')) {
+        const eventID = params.get('id');
+        console.log("events and id", eventID);
+        // Load the event detail Mustache template
+        $.when(
+            loadTemplate('header'),
+            loadTemplate('footer'),
+            loadTemplate('single-event')
+        ).done((headerTpl, footerTpl, eventTpl) => {
+            // Fetch the event data
+            $.getJSON(`/api/events/${eventID}`, function(jsonData) {
+                $('#header-container').html(Mustache.render(headerTpl[0], data));
+                $('#footer-container').html(Mustache.render(footerTpl[0], data));
+                $('#main-container').html(Mustache.render(eventTpl[0], jsonData));
+                setPageStylesAndScripts('single-event');
+            });
+            console.log("fetching done", eventTpl[0]);
+        });
+    } else {
+        // Just render the normal events list
+        renderLayout(page, data);
+        location.hash = page + (params.toString() ? '?' + params.toString() : '');
     }
-
-    renderLayout(page, data);
-    location.hash = page;  // Change URL hash (e.g. #about)
 }*/
+
 function navigateTo() {
     const { page, params } = parseHashAndQuery();
     let templateName = page;
 
     // Conditional rendering: if there's an id param on 'events', show a single event
     if (page === 'events' && params.has('id')) {
-        templateName = 'event'; // load event.mustache instead of events.mustache
+        templateName = 'single-event'; // load single-event.mustache instead of events.mustache
     }
 
     const data = {
@@ -74,24 +114,16 @@ function navigateTo() {
 }
 
 $(function () {
-    // On initial load, render page based on URL hash (or default to 'home')
-    //const initialPage = location.hash ? location.hash.substring(1) : 'home';
-    //navigateTo(initialPage);
     navigateTo();
 
-    // Handle navigation clicks on links with data-page attribute
     $(document).on('click', 'a[data-page]', function (e) {
         e.preventDefault();
-        //const page = $(this).data('page');
         const href = $(this).attr("href");
         location.hash = href;
-        //navigateTo(page);
     });
 
     // Handle back/forward navigation via hashchange event
     $(window).on('hashchange', function () {
-        //const page = location.hash ? location.hash.substring(1) : 'home';
-        //navigateTo(page);
         navigateTo();
     });
 });

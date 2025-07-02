@@ -3,13 +3,13 @@ $(document).ready(getEvent);
 function getEvent() {
     const hash = location.hash.substring(1); // remove '#'
     const [page, query] = hash.split('?');
-    if (page !== 'event') return; // not the right page
+    if (page !== 'events') return; // not the right page
 
     const params = new URLSearchParams(query);
     const eventID = params.get('id');
 
     if (!eventID) {
-        console.error('No event ID provided in URL');
+        console.log('No event ID provided in URL -> list all events instead.');
         return;
     }
 

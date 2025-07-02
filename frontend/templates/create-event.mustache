@@ -1,0 +1,37 @@
+<h1 class="text-primary">Create Event!</h1>
+<!--<form action="" method="post" enctype="multipart/form-data">-->
+
+<div class="register-form">
+
+    <div class="form-group">
+        <select class="form-control" name="category" id="category">
+            <option value="" disabled selected>Choose your Category</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <input class="form-control" autofocus type="text" name="title" placeholder="Event Title" required>
+    </div>
+
+    <div class="form-group">
+        <input class="form-control" type="datetime-local" name="date" placeholder="Date & Time" required>
+    </div>
+
+    <div class="form-group">
+        <input class="form-control" type="text" name="description" placeholder="Event Description" required>
+    </div>
+
+    <div class="form-group">
+        <input class="form-control" type="text" name="location" placeholder="City">
+    </div>
+
+    <div class="form-group">
+        <input class="form-control" type="file" name="event_picture" placeholder="Event Picture"
+               accept="image/*">
+    </div>
+
+    <div class="form-group d-flex justify-content-center">
+        <input class="btn btn-purple btn-primary mb-3" id="submit-event-button" type="submit" value="Submit">
+    </div>
+
+</div>
