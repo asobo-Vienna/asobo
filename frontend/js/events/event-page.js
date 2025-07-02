@@ -1,36 +1,29 @@
 $(document).ready(getEvent);
 
 function getEvent() {
-    let eventID = undefined;
-    if (window.location.port === "8080") {
-        const urlElements = location.pathname.split('/');
-        eventID = urlElements[urlElements.length - 1];
-    } else {
-        const url = new URL(window.location.href);
-        const urlHash = url.hash;
-        console.log("hash", urlHash);
-        console.log("startsWith", urlHash.startsWith("#event"));
-        if (urlHash.startsWith("#event")) {
-            //const params = new URLSearchParams(url.search);
+    const hash = location.hash.substring(1); // remove '#'
+    const [page, query] = hash.split('?');
+    if (page !== 'event') return; // not the right page
 
-            console.log("url", url);
-            //console.log("params", params);
-            //eventID = params.get('id');
-            eventID = urlHash.split("=")[1];
-            console.log("eventID", eventID);
-        }
+    const params = new URLSearchParams(query);
+    const eventID = params.get('id');
+
+    if (!eventID) {
+        console.error('No event ID provided in URL');
+        return;
     }
 
-    $.getJSON('/api/events/' + eventID)
+    $.getJSON(HOSTADDRESS + '/api/events/' + eventID)
         .done(function (jsonData) {
             addEventToPage(jsonData);
             showParticipantsAvatars(jsonData.participants);
             showMediaThumbnails(jsonData.media);
         })
         .fail(function (jqXHR, textStatus, errorThrown) {
-            console.log('Error', textStatus, errorThrown);
+            console.log('Error fetching event:', textStatus, errorThrown);
         });
 }
+
 
 
 function addEventToPage(event) {

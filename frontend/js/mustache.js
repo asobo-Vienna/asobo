@@ -35,7 +35,17 @@ function renderLayout(page, data = {}) {
     });
 }
 
-function navigateTo(page) {
+function parseHashAndQuery() {
+    const hash = location.hash.substring(1); // removes '#'
+    const [pagePart, queryPart] = hash.split('?');
+    const params = new URLSearchParams(queryPart || '');
+    return {
+        page: pagePart || 'home',
+        params: params
+    };
+}
+
+/*function navigateTo(page) {
     let data = { pageTitle: capitalize(page) + ' - asobō!' };
 
     if (page === 'home') {
@@ -44,23 +54,44 @@ function navigateTo(page) {
 
     renderLayout(page, data);
     location.hash = page;  // Change URL hash (e.g. #about)
+}*/
+function navigateTo() {
+    const { page, params } = parseHashAndQuery();
+    let templateName = page;
+
+    // Conditional rendering: if there's an id param on 'events', show a single event
+    if (page === 'events' && params.has('id')) {
+        templateName = 'event'; // load event.mustache instead of events.mustache
+    }
+
+    const data = {
+        pageTitle: capitalize(page) + ' - asobō!',
+        id: params.get('id') || null,
+        name: page === 'home' ? 'Edmund Sackbauer' : undefined
+    };
+
+    renderLayout(templateName, data);
 }
 
 $(function () {
     // On initial load, render page based on URL hash (or default to 'home')
-    const initialPage = location.hash ? location.hash.substring(1) : 'home';
-    navigateTo(initialPage);
+    //const initialPage = location.hash ? location.hash.substring(1) : 'home';
+    //navigateTo(initialPage);
+    navigateTo();
 
     // Handle navigation clicks on links with data-page attribute
     $(document).on('click', 'a[data-page]', function (e) {
         e.preventDefault();
-        const page = $(this).data('page');
-        navigateTo(page);
+        //const page = $(this).data('page');
+        const href = $(this).attr("href");
+        location.hash = href;
+        //navigateTo(page);
     });
 
     // Handle back/forward navigation via hashchange event
     $(window).on('hashchange', function () {
-        const page = location.hash ? location.hash.substring(1) : 'home';
-        navigateTo(page);
+        //const page = location.hash ? location.hash.substring(1) : 'home';
+        //navigateTo(page);
+        navigateTo();
     });
 });
