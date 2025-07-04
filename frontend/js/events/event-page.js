@@ -4,7 +4,7 @@ function getEvent() {
     const urlElements = location.pathname.split('/');
     const eventID = urlElements[urlElements.length-1];
 
-    $.getJSON('/api/events/' + eventID)
+    $.getJSON(HOSTADDRESS + '/api/events/' + eventID)
         .done(function (jsonData) {
             addEventToPage(jsonData);
             showParticipantsAvatars(jsonData.participants);
