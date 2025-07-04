@@ -2,10 +2,12 @@ $("#register-button").on("click", function (e) {
     e.preventDefault();
 
     let formData = new FormData();
-    let salutation = $("#salutation").val();
+    let salutation = $("#salutation").val() + ".";
     salutation === "Other" ? $("#salutation-other").val() : salutation;
     formData.append("salutation", salutation);
     formData.append("username", $("input[name='username']").val());
+    formData.append("firstName", $("input[name='firstname']").val());
+    formData.append("surname", $("input[name='surname']").val());
     formData.append("email", $("input[name='email']").val());
     formData.append("password", $("#register-password").val());
     //formData.append("passwordConf", $("#register-password-conf").val());
@@ -17,7 +19,7 @@ $("#register-button").on("click", function (e) {
     }
 
     $.ajax({
-        url: "/api/users",
+        url: HOSTADDRESS + "/api/users",
         type: "POST",
         data: formData,
         processData: false,

@@ -130,3 +130,14 @@ footer {
 footer .footer-content {
     justify-content: space-between;
 }
+
+.footer-icon {
+    color: #690F93;
+}
+
+.table-user-image {
+    border-radius: 50%;
+    object-fit: cover;
+    width: 40px;
+    height: 40px;
+}

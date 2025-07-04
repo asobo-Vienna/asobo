@@ -1,7 +1,7 @@
 $(document).ready(getUsers);
 
 function getUsers() {
-    $.getJSON(HOSTADDRESS + '/api/users')
+    $.getJSON(HOSTADDRESS + '/api/admin/users')
         .done(function (jsonData) {
             console.log("Fetch all users.");
             jsonData.forEach(user => {
@@ -14,47 +14,46 @@ function getUsers() {
 }
 
 function appendUserToList(user) {
-    const $userList = $("#user-list");
+    const $userList = $("#user-table");
     const $createdUserItem = createUserItem(user);
     $userList.append($createdUserItem);
 }
 
 
 function createUserItem(user) {
-    const $listItem = $('<li>');
+    const $listItem = $('<tr>');
 
     const $link = $('<a>')
         .attr('href', "#users?id=" + user.id);
 
-    const $card = $('<div>').addClass('card user-card');
-
     const $image = $('<img>')
-        .addClass('card-img-top')
+        .addClass('table-user-image')
         .attr('src', user.pictureURI)
         .attr('alt', 'Profile picture of user ' + user.username);
 
-    const $imageContainer = $('<div>')
-        .addClass('card-image-container')
-        .append($image);
+    $link.append($image);
 
-    const $cardBody = $('<div>').addClass('card-body');
+    const $imageContainer = $('<td>')
+        .addClass('table-user-image-container')
+        .append($link);
+
 
     // remove userID later, for now it is convenient for testing
-    const $userID = $('<div>').addClass('userID').text("UserID: " + user.id);
-    const $username = $('<h6>').addClass('card-title').text("Username: " + user.username);
-    const $firstName = $('<div>').addClass('user-firstname').text("First Name: " + user.firstName);
-    const $surname = $('<div>').addClass('user-surname').text("Surname: " + user.surname);
-    const $email = $('<div>').addClass('user-email').text("Email: " + user.email);
+    const $isActive = $('<td>').addClass('user-active').text(user.active);
+    const $userID = $('<td>').addClass('userID').text(user.id);
+    const $username = $('<td>').addClass('username').text(user.username);
+    const $salutation = $ ('<td>').addClass('user-salutation').text(user.salutation)
+    const $firstName = $('<td>').addClass('user-firstname').text(user.firstName);
+    const $surname = $('<td>').addClass('user-surname').text(user.surname);
+    const $email = $('<td>').addClass('user-email').text(user.email);
     const registerDate = moment(user.registerDate).format('ddd, MMMM D, YYYY');
-    const $date = $('<div>').addClass('date-text text-muted').text("Register Date: " + registerDate);
+    const $date = $('<td>').addClass('date-text text-muted').text(registerDate);
     //const formattedTime = moment(user.registerDate).format('h:mm a');
     //const $time = $('<div>').addClass('date-text text-muted').text(formattedTime);
-    const $location = $('<div>').addClass('location-text text-muted mt-2').text("Location: " + user.location);
+    const $location = $('<td>').addClass('location-text text-muted mt-2').text(user.location);
 
-    $cardBody.append($userID, $username, $firstName, $surname, $email, $date, $location);
-    $card.append($imageContainer, $cardBody);
-    $link.append($card);
-    $listItem.append($link);
+    $listItem.append($isActive, $imageContainer, $userID, $username,$salutation, $firstName, $surname, $email, $date, $location);
+
 
     return $listItem;
 }
