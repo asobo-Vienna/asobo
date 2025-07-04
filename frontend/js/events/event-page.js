@@ -100,9 +100,12 @@ function showMediaThumbnails(media) {
 
 function createMediaThumbnail(mediaItem) {
     const $mediaThumbnailContainer = $("#media-thumbnail-container");
+    const $singleMediaContainer = $('<div>')
+        .addClass('single-media-container');
     const $createdThumbnail = $('<img>')
-        .attr('src', mediaItem.pictureURI)
+        .attr('src', mediaItem.mediumURI)
         .attr('alt', mediaItem.id);
 
-    $mediaThumbnailContainer.append($createdThumbnail);
+    $singleMediaContainer.append($createdThumbnail);
+    $mediaThumbnailContainer.append($singleMediaContainer);
 }
