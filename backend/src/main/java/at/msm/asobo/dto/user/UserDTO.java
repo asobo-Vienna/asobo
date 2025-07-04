@@ -9,6 +9,10 @@ public class UserDTO {
 
     private String username;
 
+    private String firstName;
+
+    private String Surname;
+
     private String email;
 
     private String password;
@@ -31,6 +35,22 @@ public class UserDTO {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getSurname() {
+        return Surname;
+    }
+
+    public void setSurname(String surname) {
+        Surname = surname;
     }
 
     public void setEmail(String email) {

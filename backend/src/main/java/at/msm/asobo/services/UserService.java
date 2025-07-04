@@ -85,6 +85,8 @@ public class UserService {
         existingUser.setSalutation(userUpdateDTO.getSalutation());
         existingUser.setLocation(userUpdateDTO.getLocation());
         existingUser.setUsername(userUpdateDTO.getUsername());
+        existingUser.setFirstName(userUpdateDTO.getFirstName());
+        existingUser.setSurname(userUpdateDTO.getSurname());
         existingUser.setPassword(userUpdateDTO.getPassword());
 
         // Handle the picture if it is present

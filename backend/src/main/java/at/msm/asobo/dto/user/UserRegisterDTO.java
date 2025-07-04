@@ -11,6 +11,14 @@ public class UserRegisterDTO {
     @Size(min = 3, max = 50, message = "Username must be between 3 and 50 characters")
     private String username;
 
+    @NotBlank(message = "First name is mandatory for user registration")
+    @Size(min = 1, max = 50, message = "First name must be between 1 and 50 characters")
+    private String firstName;
+
+    @NotBlank(message = "Surname is mandatory for user registration")
+    @Size(min = 1, max = 80, message = "First name must be between 1 and 80 characters")
+    private String surname;
+
     @NotBlank(message = "Email is mandatory for user registration")
     @Email(message = "Email should be valid")
     private String email;
@@ -38,6 +46,22 @@ public class UserRegisterDTO {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getSurname() {
+        return surname;
+    }
+
+    public void setSurname(String surname) {
+        this.surname = surname;
     }
 
     public String getEmail() {

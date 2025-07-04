@@ -9,6 +9,10 @@ public class UserPublicDTO {
 
     private String username;
 
+    private String firstName;
+
+    private String surname;
+
     private String email;
 
     private LocalDateTime registerDate;
@@ -30,6 +34,22 @@ public class UserPublicDTO {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getSurname() {
+        return surname;
+    }
+
+    public void setSurname(String surname) {
+        this.surname = surname;
     }
 
     public void setEmail(String email) {

@@ -23,6 +23,14 @@ public class User {
     @Column(nullable = false, unique = true)
     private String username;
 
+    @NotBlank(message = "First name is mandatory")
+    @Column(nullable = false, unique = false)
+    private String firstName;
+
+    @NotBlank(message = "Surname is mandatory")
+    @Column(nullable = false, unique = false)
+    private String surname;
+
     @NotBlank(message = "Password is mandatory")
     private String password;
 
@@ -77,6 +85,22 @@ public class User {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getSurname() {
+        return surname;
+    }
+
+    public void setSurname(String surname) {
+        this.surname = surname;
     }
 
     public String getPassword() {

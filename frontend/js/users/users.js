@@ -42,6 +42,8 @@ function createUserItem(user) {
     // remove userID later, for now it is convenient for testing
     const $userID = $('<div>').addClass('userID').text("UserID: " + user.id);
     const $username = $('<h6>').addClass('card-title').text("Username: " + user.username);
+    const $firstName = $('<div>').addClass('user-firstname').text("First Name: " + user.firstName);
+    const $surname = $('<div>').addClass('user-surname').text("Surname: " + user.surname);
     const $email = $('<div>').addClass('user-email').text("Email: " + user.email);
     const registerDate = moment(user.registerDate).format('ddd, MMMM D, YYYY');
     const $date = $('<div>').addClass('date-text text-muted').text("Register Date: " + registerDate);
@@ -49,7 +51,7 @@ function createUserItem(user) {
     //const $time = $('<div>').addClass('date-text text-muted').text(formattedTime);
     const $location = $('<div>').addClass('location-text text-muted mt-2').text("Location: " + user.location);
 
-    $cardBody.append($userID, $username, $email, $date, $location);
+    $cardBody.append($userID, $username, $firstName, $surname, $email, $date, $location);
     $card.append($imageContainer, $cardBody);
     $link.append($card);
     $listItem.append($link);
