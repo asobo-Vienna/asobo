@@ -1,26 +1,28 @@
 package at.msm.asobo.controllers;
 
-
-import at.msm.asobo.dto.admin.UserAdminDTO;
-import at.msm.asobo.entities.User;
+import at.msm.asobo.dto.user.UserDTO;
 import at.msm.asobo.services.UserService;
-import jakarta.validation.Valid;
-import org.springframework.http.HttpStatus;
+import at.msm.asobo.services.UserServiceAdmin;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
-import java.util.UUID;
+
 
 @RestController
-@RequestMapping("admin/users")
+@RequestMapping("/api/admin/users")
 public class UserControllerAdmin {
 
-    private final UserService userService;
+    private final UserServiceAdmin userServiceAdmin;
 
-    public UserControllerAdmin(UserService userService) {
-        this.userService = userService;
+    public UserControllerAdmin(UserServiceAdmin userServiceAdmin) {
+
+        this.userServiceAdmin = userServiceAdmin;
     }
 
+
+    @GetMapping
+    public List<UserDTO> getAllUsers() {
+        return this.userServiceAdmin.getAllUsers();
+    }
     /*@GetMapping
     public List<UserAdminDTO> getAllUsers() {
         //return this.userService.getAllUsers();
