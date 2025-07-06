@@ -1,7 +1,7 @@
 $(document).ready(getAllUsers);
 
 async function getAllUsers() {
-    const url = HOSTADDRESS + '/api/users';
+    const url = HOSTADDRESS + '/api/admin/users';
 
     try {
         const response = await fetch(url);
@@ -43,7 +43,7 @@ function createUserItem(user) {
     const $link = $('<a>')
         .attr('href', "#users?id=" + user.id);
 
-    console.log("pic url: " + picUrl);
+    let picUrl = user.pictureURI;
 
     if (!picUrl) {
         picUrl = DEFAULT_USER_PIC;
@@ -76,7 +76,7 @@ function createUserItem(user) {
     const $location = $('<td>').addClass('location-text text-muted mt-2').text(user.location);
 
     $listItem.append($isActive, $imageContainer, $userID, $username,$salutation, $firstName, $surname, $email, $date, $location);
-
+    console.log(user.active);
 
     return $listItem;
 }
