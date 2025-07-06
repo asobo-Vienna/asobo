@@ -1,18 +1,34 @@
 $(document).ready(getUser);
 
-function getUser() {
+async function getUser() {
     const urlElements = location.pathname.split('/');
     const userID = urlElements[urlElements.length-1];
     console.log(location.pathname.split("/"));
     console.log("userID: " + userID)
-    $.getJSON(HOSTADDRESS + '/api/users/id/' + userID)
+
+    const url = HOSTADDRESS + '/api/users/id/' + userID;
+
+    try {
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error(`Response status: ${response.statusText}`);
+        }
+
+        const user = await response.json();
+        createUserProfileHtml(user);
+        console.log(`User ${user.username} loaded!`);
+    } catch (error) {
+        console.error(error.message);
+    }
+
+    /*$.getJSON(HOSTADDRESS + '/api/users/id/' + userID)
         .done(function (user) {
             console.log("Fetch single user.");
             createUserProfileHtml(user);
         })
         .fail(function (jqXHR, textStatus, errorThrown) {
             console.log('Error', textStatus, errorThrown);
-        });
+        });*/
 }
 
 function createUserProfileHtml(user) {

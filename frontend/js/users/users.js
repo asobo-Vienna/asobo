@@ -1,6 +1,23 @@
-$(document).ready(getUsers);
+$(document).ready(getAllUsers);
 
-function getUsers() {
+async function getAllUsers() {
+    const url = HOSTADDRESS + '/api/users';
+
+    try {
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error(`Response status: ${response.statusText}`);
+        }
+
+        const users = await response.json();
+        users.map(users => {appendUserToList(users);})
+        console.log('User list loaded!');
+    } catch (error) {
+        console.error('Error while fetching users: ' + error.message);
+    }
+}
+
+/*function getAllUsers() {
     $.getJSON(HOSTADDRESS + '/api/admin/users')
         .done(function (jsonData) {
             console.log("Fetch all users.");
@@ -11,7 +28,7 @@ function getUsers() {
         .fail(function (jqXHR, textStatus, errorThrown) {
             console.log('Error', textStatus, errorThrown);
         });
-}
+}*/
 
 function appendUserToList(user) {
     const $userList = $("#user-table");

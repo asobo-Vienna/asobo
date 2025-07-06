@@ -1,6 +1,6 @@
 $(document).ready(getEvent);
 
-function getEvent() {
+async function getEvent() {
     const hash = location.hash.substring(1); // remove '#'
     const [page, query] = hash.split('?');
     if (page !== 'events') return; // not the right page
@@ -13,7 +13,24 @@ function getEvent() {
         return;
     }
 
-    $.getJSON(HOSTADDRESS + '/api/events/' + eventID)
+    const url = HOSTADDRESS + '/api/events/' + eventID;
+
+    try {
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error(`Response status: ${response.statusText}`);
+        }
+
+        const event = await response.json();
+        addEventToPage(event);
+        showParticipantsAvatars(event.participants);
+        showMediaThumbnails(event.media);
+        console.log(`Event ${event.title} loaded!`);
+    } catch (error) {
+        console.error(error.message);
+    }
+
+    /*$.getJSON(HOSTADDRESS + '/api/events/' + eventID)
         .done(function (jsonData) {
             addEventToPage(jsonData);
             showParticipantsAvatars(jsonData.participants);
@@ -21,9 +38,8 @@ function getEvent() {
         })
         .fail(function (jqXHR, textStatus, errorThrown) {
             console.log('Error fetching event:', textStatus, errorThrown);
-        });
+        });*/
 }
-
 
 
 function addEventToPage(event) {
@@ -31,7 +47,7 @@ function addEventToPage(event) {
     const $createdEvent = createEventImage(event);
     $eventImageContainer.append($createdEvent);
 
-    const $basicInfoContainer =  $("#event-basic-info-container");
+    const $basicInfoContainer = $("#event-basic-info-container");
     const $createdBasicInfo = createBasicInfo(event);
     $basicInfoContainer.append($createdBasicInfo);
 
