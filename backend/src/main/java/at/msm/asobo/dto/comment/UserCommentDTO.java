@@ -1,6 +1,5 @@
 package at.msm.asobo.dto.comment;
 
-import at.msm.asobo.entities.UserComment;
 import java.time.LocalDateTime;
 import java.util.UUID;
 

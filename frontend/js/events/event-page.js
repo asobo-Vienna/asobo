@@ -14,7 +14,7 @@ $("#media-thumbnail-container").on("change", "#media-input", async function (e) 
     }
 
     const eventID = getParamFromURL('id');
-    const url = HOSTADDRESS + '/api/events/' + eventID + '/media';
+    const url = EVENTSADDRESS + eventID + '/media';
 
     try {
         const response = await fetch(url, {
@@ -28,7 +28,7 @@ $("#media-thumbnail-container").on("change", "#media-input", async function (e) 
         }
 
         const data = await response.json();
-        console.log("Media upload:", data);
+        // console.log("Media upload:", data);
 
         const $singleMediaContainer = createMediaThumbnail(data);
         const $mediaThumbnailContainer = $("#media-thumbnail-container .single-media-container:last-child");
@@ -41,24 +41,9 @@ $("#media-thumbnail-container").on("change", "#media-input", async function (e) 
 });
 
 
-function getParamFromURL(param) {
-    const hash = location.hash.substring(1); // remove '#'
-    const [page, query] = hash.split('?');
-    if (page !== 'events') return; // not the right page
-
-    const params = new URLSearchParams(query);
-    const eventParam = params.get(param);
-
-    if (!eventParam) {
-        console.log(`No event parameter ${param} provided in URL.`);
-        return;
-    }
-    return eventParam;
-}
-
 async function getEvent() {
     const eventID = getParamFromURL('id');
-    const url = HOSTADDRESS + '/api/events/' + eventID;
+    const url = EVENTSADDRESS + eventID;
 
     try {
         const response = await fetch(url);

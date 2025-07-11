@@ -98,9 +98,12 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 5rem;
+    font-size: 6rem;
     font-weight: bold;
     background-color: var(--asobo-light-gray);
     color: var(--asobo-purple);
     cursor: pointer;
+    line-height: 1;
+    font-family: Arial, sans-serif;
 }
+

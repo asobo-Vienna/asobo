@@ -3,19 +3,18 @@ package at.msm.asobo.mappers.helpers;
 import at.msm.asobo.config.FileStorageProperties;
 import at.msm.asobo.services.files.FileStorageService;
 import org.mapstruct.Named;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 
 @Component
 public class PictureMapperHelper {
-    @Autowired
-    private FileStorageService fileStorageService;
 
+    private final FileStorageService fileStorageService;
     private final FileStorageProperties fileStorageProperties;
 
-    public PictureMapperHelper(FileStorageProperties fileStorageProperties) {
+    public PictureMapperHelper(FileStorageProperties fileStorageProperties, FileStorageService fileStorageService) {
+        this.fileStorageService = fileStorageService;
         this.fileStorageProperties = fileStorageProperties;
     }
 

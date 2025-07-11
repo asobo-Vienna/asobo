@@ -1,6 +1,5 @@
 package at.msm.asobo.entities;
 
-import at.msm.asobo.dto.comment.UserCommentDTO;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -27,7 +26,7 @@ public class UserComment {
     @JoinColumn(name = "author_id")
     private User author;
 
-    @ManyToOne//(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "event_id")
     @JsonIgnore
     private Event event;
@@ -88,5 +87,6 @@ public class UserComment {
     }
 
     public void setEvent(Event event) {
+        this.event = event;
     }
 }

@@ -1,6 +1,7 @@
 // TODO: this is just for development purposes,
 // needs to be deleted once the site is fully functioning
 const HOSTADDRESS = "http://127.0.0.1:8080";
+const EVENTSADDRESS = HOSTADDRESS + '/api/events/'
 const DEFAULT_USER_PIC = "uploads/profile-pictures/default.png";
 
 $(document).ready(function () {
@@ -24,3 +25,19 @@ $(document).ready(function () {
         console.warn("Thumbnail element with ID 'user-nav-thumbnail' not found.");
     }
 });
+
+
+function getParamFromURL(param) {
+    const hash = location.hash.substring(1); // remove '#'
+    const [page, query] = hash.split('?');
+    if (page !== 'events') return; // not the right page
+
+    const params = new URLSearchParams(query);
+    const eventParam = params.get(param);
+
+    if (!eventParam) {
+        console.log(`No event parameter ${param} provided in URL.`);
+        return;
+    }
+    return eventParam;
+}

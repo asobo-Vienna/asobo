@@ -77,6 +77,10 @@ public class UserCommentService {
 
         UserComment newComment = this.userCommentDTOUserCommentMapper.mapUserCommentDTOToUserComment(userCommentDTO);
         newComment.setEvent(event);
+
+        User author = userService.getUserById(userCommentDTO.getAuthorId());
+        newComment.setAuthor(author);
+
         UserComment savedComment = userCommentRepository.save(newComment);
         return this.userCommentDTOUserCommentMapper.mapUserCommentToUserCommentDTO(savedComment);
     }

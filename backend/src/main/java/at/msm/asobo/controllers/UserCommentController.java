@@ -1,7 +1,6 @@
 package at.msm.asobo.controllers;
 
 import at.msm.asobo.dto.comment.UserCommentDTO;
-import at.msm.asobo.entities.UserComment;
 import at.msm.asobo.services.UserCommentService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -10,7 +9,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/events/{eventId}/comments")
+@RequestMapping("/api/events/{eventId}/comments")
 public class UserCommentController {
     private UserCommentService userCommentService;
 
