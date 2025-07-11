@@ -153,8 +153,9 @@ a.btn-purple {
     object-fit: cover; /* Make sure it fills the box without distortion */
 }
 
-#profile-pic-input {
+#profile-pic-input, #event-pic-input {
     pointer-events: none;
+    display: none;
 }
 
 .create-event-form div.form-group {
@@ -180,10 +181,6 @@ a.btn-purple {
     width: 100%;
     height: 100%;
     object-fit: cover; /* Make sure it fills the box without distortion */
-}
-
-#event-pic-input {
-    pointer-events: none;
 }
 
 .login-text-link, .signup-text-link {
