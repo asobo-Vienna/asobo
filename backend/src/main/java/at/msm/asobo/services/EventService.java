@@ -1,5 +1,6 @@
 package at.msm.asobo.services;
 
+import at.msm.asobo.config.FileStorageProperties;
 import at.msm.asobo.dto.event.EventCreationDTO;
 import at.msm.asobo.dto.event.EventDTO;
 import at.msm.asobo.entities.Event;
@@ -28,7 +29,7 @@ public class EventService {
     private final FileStorageService fileStorageService;
 
     @Value("${app.file-storage.event-coverpicture-subfolder}")
-    private String profilePictureSubfolder;
+    private String eventCoverPictureSubfolder;
 
     public EventService(EventRepository eventRepository,
                         UserRepository userRepository,
@@ -65,8 +66,10 @@ public class EventService {
         Event newEvent = this.eventDTOEventMapper.mapEventCreationDTOToEvent(eventCreationDTO);
         // newEvent.setCreator(user);
 
+
+
         if (eventCreationDTO.getEventPicture() != null && !eventCreationDTO.getEventPicture().isEmpty()) {
-            String fileURI = fileStorageService.store(eventCreationDTO.getEventPicture(), this.profilePictureSubfolder);
+            String fileURI = fileStorageService.store(eventCreationDTO.getEventPicture(), this.eventCoverPictureSubfolder);
             newEvent.setPictureURI(fileURI);
         }
 

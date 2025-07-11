@@ -14,7 +14,13 @@
     </div>
 
     <div class="form-group">
-        <input class="form-control" type="datetime-local" name="date" placeholder="Date & Time" required>
+        <label for="datePart">Event Date</label>
+        <input class="form-control" type="date" name="datePart" id="datePart" required>
+    </div>
+
+    <div class="form-group">
+        <label for="timePart">Event Time</label>
+        <input class="form-control" type="time" name="timePart" id="timePart" required>
     </div>
 
     <div class="form-group">
@@ -26,7 +32,7 @@
     </div>
 
     <div class="form-group">
-        <input class="form-control" type="file" name="event_picture" placeholder="Event Picture"
+        <input class="form-control" type="file" name="eventPicture" placeholder="Event Picture"
                accept="image/*">
     </div>
 
