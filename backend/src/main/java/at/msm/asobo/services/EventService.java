@@ -66,8 +66,6 @@ public class EventService {
         Event newEvent = this.eventDTOEventMapper.mapEventCreationDTOToEvent(eventCreationDTO);
         // newEvent.setCreator(user);
 
-
-
         if (eventCreationDTO.getEventPicture() != null && !eventCreationDTO.getEventPicture().isEmpty()) {
             String fileURI = fileStorageService.store(eventCreationDTO.getEventPicture(), this.eventCoverPictureSubfolder);
             newEvent.setPictureURI(fileURI);

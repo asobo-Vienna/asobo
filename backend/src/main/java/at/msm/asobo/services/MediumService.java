@@ -7,6 +7,8 @@ import at.msm.asobo.entities.Medium;
 import at.msm.asobo.exceptions.MediumNotFoundException;
 import at.msm.asobo.mappers.MediumDTOMediumMapper;
 import at.msm.asobo.repositories.MediumRepository;
+import at.msm.asobo.services.files.FileStorageService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.UUID;
@@ -18,12 +20,19 @@ public class MediumService {
     private final MediumRepository mediumRepository;
     private final EventService eventService;
     private final MediumDTOMediumMapper mediumDTOMediumMapper;
+    private final FileStorageService fileStorageService;
 
+    @Value("${app.file-storage.event-galleries-subfolder}")
+    private String eventMediaSubfolder;
 
-    public MediumService(MediumRepository mediumRepository, EventService eventService,  MediumDTOMediumMapper mediumDTOMediumMapper) {
+    public MediumService(MediumRepository mediumRepository,
+                         EventService eventService,
+                         MediumDTOMediumMapper mediumDTOMediumMapper,
+                         FileStorageService fileStorageService) {
         this.mediumRepository = mediumRepository;
         this.eventService = eventService;
         this.mediumDTOMediumMapper = mediumDTOMediumMapper;
+        this.fileStorageService = fileStorageService;
     }
 
 
@@ -49,6 +58,11 @@ public class MediumService {
         Event event = eventService.getEventById(eventID);
         Medium newMedium = this.mediumDTOMediumMapper.mapMediumCreationDTOToMedium(creationDTO);
         newMedium.setEvent(event);
+
+        if (creationDTO.getMediumFile() != null && !creationDTO.getMediumFile().isEmpty()) {
+            String fileURI = fileStorageService.store(creationDTO.getMediumFile(), this.eventMediaSubfolder + "/" + eventID);
+            newMedium.setMediumURI(fileURI);
+        }
 
         Medium savedMedium = this.mediumRepository.save(newMedium);
         return this.mediumDTOMediumMapper.mapMediumToMediumDTO(savedMedium);

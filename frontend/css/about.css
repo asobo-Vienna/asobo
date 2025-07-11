@@ -24,7 +24,7 @@
 }
 
 .about-main-section {
-    background: linear-gradient(276deg, #9643b8 0%, #690F93 100% );
+    background: linear-gradient(276deg, #9643b8 0%, var(--asobo-purple) 100% );
     width: 100%;
     padding: 3rem 1rem;
     border-radius: 15px;
