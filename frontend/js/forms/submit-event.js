@@ -1,4 +1,4 @@
-$("#submit-event-button").on("click", function (e) {
+$("#submit-event-button").on("click", async function (e) {
     e.preventDefault();
 
     let formData = new FormData();
@@ -13,7 +13,26 @@ $("#submit-event-button").on("click", function (e) {
         formData.append("eventPicture", fileInput.files[0]);
     }
 
-    $.ajax({
+    const url = HOSTADDRESS + '/api/events';
+
+    try {
+        const response = await fetch(url, {
+            method: "POST",
+            body: formData
+        });
+
+        if (!response.ok) {
+            throw new Error(`Response status: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        $(".register-form").html(`Event: ${data.title} created successfully`);
+        console.log("Created event:", data);
+    } catch (error) {
+        console.error('Error while creating event: ' + error.message);
+    }
+
+    /*$.ajax({
         url: "/api/events",
         type: "POST",
         data: formData,
@@ -25,5 +44,5 @@ $("#submit-event-button").on("click", function (e) {
         error: function (xhr) {
             console.error("Error:", xhr.responseText);
         }
-    });
+    });*/
 });
