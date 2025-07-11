@@ -1,7 +1,28 @@
-<h1 class="text-primary">Sign Up!</h1>
 <!--<form action="" method="post" enctype="multipart/form-data">-->
+<div class="registration-wrapper">
+    <h1 class="text-primary text-center mb-4">Sign Up!</h1>
 
-<div class="register-form">
+    <div class="register-form">
+    <div class="form-group">
+        <div class="profile-picture-box">
+            <!-- This is your hidden input -->
+            <input
+                    type="file"
+                    id=""
+                    name="profile_picture"
+                    placeholder="Profile Picture"
+                    accept="image/*"
+                    style="display: none;"
+            >
+
+            <!-- This is your visible upload button -->
+            <div type="button"
+                 id="uploadProfilePicBtn"
+                 class="register-profile-picture-button">
+                Add profile picture
+            </div>
+        </div>
+    </div>
 
     <div class="form-group">
         <select class="form-control" name="salutation" id="salutation" required>
@@ -56,25 +77,6 @@
                accept="image/*">
     </div> -->
 
-    <div class="form-group profile-picture-box">
-        <!-- This is your hidden input -->
-        <input
-                type="file"
-                id=""
-                name="profile_picture"
-                placeholder="Profile Picture"
-                accept="image/*"
-                style="display: none;"
-        >
-
-        <!-- This is your visible upload button -->
-        <div type="button"
-                id="uploadProfilePicBtn"
-                class="register-profile-picture-button">
-            Add profile picture
-        </div>
-    </div>
-
     <div class="form-group d-flex justify-content-center">
         <input class="btn btn-purple btn-primary mb-3" id="register-button" type="submit" value="Register">
     </div>
@@ -84,4 +86,5 @@
     <div class="form-group d-flex justify-content-center">
         <a href="#login">Log In here.</a>
     </div>
+</div>
 </div>
