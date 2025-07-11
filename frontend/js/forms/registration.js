@@ -15,6 +15,7 @@ $(function () {
         }
 
         const reader = new FileReader();
+
         reader.onload = function (e) {
             $("#profile-pic-preview")
                 .attr("src", e.target.result)

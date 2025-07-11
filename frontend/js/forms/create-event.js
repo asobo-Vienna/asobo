@@ -1,4 +1,36 @@
 $(function () {
+    $("#event-picture-box").on("click", function (e) {
+        if (e.target.id !== "event-pic-input") {
+            $("#event-pic-input").trigger("click");
+        }
+    });
+
+    $("#event-pic-input").on("change", function (event) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        if (!file.type.startsWith("image/")) {
+            alert("Please select an image.");
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            $("#event-pic-preview")
+                .attr("src", e.target.result)
+                .show();
+
+            $(".event-picture-box .create-event-picture-button").remove();
+
+            $(".event-picture-box").css({
+                "border": "none",
+                "background-color": "transparent"
+            });
+
+        };
+        reader.readAsDataURL(file);
+    });
+
     $("#submit-event-button").on("click", async function (e) {
         e.preventDefault();
 

@@ -111,14 +111,17 @@ a.btn-purple {
     padding: 1rem;
 }
 
-.profile-picture-box {
-    width: 100%;
-    max-width: 250px;
-    aspect-ratio: 1 / 1;
+.add-picture-plus {
+    color: var(--asobo-purple);
+    font-size: 5rem;
+    font-weight: bold;
+}
+
+.profile-picture-box, .event-picture-box {
     margin: 0 auto;
-    border: 2px dashed #888;
+    border: 2px dashed var(--asobo-purple);
     border-radius: 8px;
-    background-color: #f8f8f8;
+    background-color: color-mix(in srgb, var(--asobo-purple) 7%, transparent);;
     cursor: pointer;
     overflow: hidden;
     display: flex;
@@ -127,9 +130,15 @@ a.btn-purple {
     position: relative;
 }
 
-.register-profile-picture-button {
+.profile-picture-box {
+    width: 100%;
+    max-width: 250px;
+    aspect-ratio: 1 / 1;
+}
+
+.register-profile-picture-button, .create-event-picture-button {
     text-align: center;
-    color: #555;
+    color: var(--asobo-purple);
     font-size: 1.2rem;
     line-height: 1.2;
     z-index: 1;
@@ -144,8 +153,44 @@ a.btn-purple {
     object-fit: cover; /* Make sure it fills the box without distortion */
 }
 
-#profile-pic-input {
+#profile-pic-input, #event-pic-input {
     pointer-events: none;
+    display: none;
+}
+
+.create-event-form div.form-group {
+    margin: 0.7em;
+    width: 100%;
+    margin-left: 0;
+}
+
+.create-event-form .btn-purple {
+    width: 60%;
+}
+
+.event-picture-box {
+    width: 35vw;
+    /*max-width: 250px;*/
+    aspect-ratio: 16 / 9;
+}
+
+.event-picture-box img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Make sure it fills the box without distortion */
+}
+
+.login-text-link, .signup-text-link {
+    color: var(--asobo-purple);
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.login-text-link:hover, .signup-text-link:hover {
+    text-decoration: underline;
 }
 
 .search-bar {

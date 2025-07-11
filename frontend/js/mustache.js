@@ -31,7 +31,7 @@ function setPageScript(page) {
         $('body').append('<script src="../js/events/event-page.js" class="page-script"></script>');
         $('body').append('<script src="../js/comments/comments.js" class="page-script"></script>');
     } else if (page === 'create-event') {
-        $('body').append('<script src="../js/forms/submit-event.js" class="page-script"></script>');
+        $('body').append('<script src="../js/forms/create-event.js" class="page-script"></script>');
     } else if (page === 'users') {
         $('body').append('<script src="../js/users/users.js" class="page-script"></script>');
     } else if (page === 'register') {
