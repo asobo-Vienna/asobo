@@ -101,6 +101,21 @@ a.btn-purple {
     white-space: nowrap;
 }
 
+.profile-pic-box {
+    position: relative;
+    width: 100%;
+    max-width: 300px;      /* or any size you prefer */
+    aspect-ratio: 1 / 1;   /* makes it a square */
+    border: 2px dashed #888;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: auto;
+    background-color: #f8f8f8;
+    overflow: hidden;
+}
+
 .search-bar {
     justify-content: space-between !important;
     /*margin-left: 0;*/

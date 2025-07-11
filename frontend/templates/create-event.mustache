@@ -14,13 +14,26 @@
     </div>
 
     <div class="form-group">
+        <div class="form-floating">
+        <input type="date" class="form-control"
+                id="datePart"  name="datePart"
+                placeholder="Event Date" required>
         <label for="datePart">Event Date</label>
-        <input class="form-control" type="date" name="datePart" id="datePart" required>
+        </div>
     </div>
 
-    <div class="form-group">
-        <label for="timePart">Event Time</label>
-        <input class="form-control" type="time" name="timePart" id="timePart" required>
+    <div class="form-group mb-3">
+        <div class="form-floating mb-3">
+            <input
+                    type="time"
+                    class="form-control"
+                    id="timePart"
+                    name="timePart"
+                    placeholder=" "
+                    required
+            >
+            <label for="timePart">Event Time</label>
+        </div>
     </div>
 
     <div class="form-group">
@@ -32,7 +45,7 @@
     </div>
 
     <div class="form-group">
-        <input class="form-control" type="file" name="eventPicture" placeholder="Event Picture"
+        <input class="form-control" type="file" accept="image/*" name="eventPicture" placeholder="Event Picture"
                accept="image/*">
     </div>
 
