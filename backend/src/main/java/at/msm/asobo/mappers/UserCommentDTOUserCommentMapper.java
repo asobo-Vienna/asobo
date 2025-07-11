@@ -14,10 +14,12 @@ public interface UserCommentDTOUserCommentMapper {
 
     @Mapping(source = "author", target = "authorId", qualifiedByName = "userToUuid")
     @Mapping(source = "event", target = "eventId", qualifiedByName = "eventToUuid")
+    @Mapping(source = "author.username", target = "username")
     UserCommentDTO mapUserCommentToUserCommentDTO(UserComment userComment);
 
     @Mapping(source = "authorId", target = "author", qualifiedByName = "uuidToUser")
     @Mapping(source = "eventId", target = "event", qualifiedByName = "uuidToEvent")
+    @Mapping(source = "username", target = "author.username")
     UserComment mapUserCommentDTOToUserComment(UserCommentDTO userCommentDTO);
 
     List<UserCommentDTO> mapUserCommentsToUserCommentDTOs(List<UserComment> userComments);

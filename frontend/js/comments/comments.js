@@ -12,44 +12,60 @@ async function getAllComments() {
 
         const comments = await response.json();
         console.log(comments);
-        comments.map(event => {appendCommentToList(comment);})
+        comments.forEach(comment => {
+            $('#comments-list').append(createCommentElement(comment));
+        })
     } catch (error) {
         console.error('Error while fetching events: ' + error.message);
     }
 }
 
+function appendCommentToList(comment) {
+    /* <div class="comment-box">
+        <div class="d-flex gap-3">
+            <img src="https://randomuser.me/api/portraits/men/34.jpg" alt="User Avatar" class="user-avatar">
+                <div class="flex-grow-1">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h6 class="mb-0 comment-username">John Doe</h6>
+                        <span class="comment-time">2 hours ago</span>
+                    </div>
+                    <p class="mb-2">Thanks for the great time. I had so much fun at the movie night.</p>
+                </div>
+        </div>
+    </div> */
+    const $commentBox = $('div')
+        .addClass('comment-box');
+
+    const $userAvatarContainer = $('div')
+        .addClass('d-flex', 'gap-3');
+
+    const $image = $('img')
+        .addClass('user-avatar')
+        .attr('src', comment.pictureURI);
+
+    const $commentContainer = $('div')
+        .addClass('flex-grow-1');
+
+    const $usernameContainer = $('div')
+        .addClass('d-flex', 'justify-content-between', 'align-items-center', 'mb-2');
 
 
-function createCommentItem(comment) {
-    const $listItem = $('<li>');
+}
 
-    const $link = $('<a>')
-        .attr('href', "#events?id=" + event.id);
 
-    const $card = $('<div>').addClass('card event-card');
+function createCommentElement(comment) {
+    const frag = document.getElementById('comment-tpl')
+        .content
+        .cloneNode(true);
 
-    const $image = $('<img>')
-        .addClass('card-img-top')
-        .attr('src', event.pictureURI)
-        .attr('alt', event.title);
+    const formattedDate = moment(comment.creationDate).format('MMMM D, YYYY, h:mm a');
 
-    const $imageContainer = $('<div>')
-        .addClass('card-image-container')
-        .append($image);
+    frag.querySelector('.user-avatar').src         = comment.pictureURI;
+    frag.querySelector('.user-avatar').alt         = `${comment.username}’s avatar`;
+    frag.querySelector('.comment-username').textContent = comment.username;
+    frag.querySelector('.comment-time').textContent     = formattedDate;
+    frag.querySelector('p').textContent                  = comment.text;
 
-    const $cardBody = $('<div>').addClass('card-body');
-
-    const $title = $('<h6>').addClass('card-title').text(event.title);
-    const formattedDate = moment(event.date).format('ddd, MMMM D, YYYY');
-    const $date = $('<div>').addClass('date-text text-muted').text(formattedDate);
-    const formattedTime = moment(event.date).format('h:mm a');
-    const $time = $('<div>').addClass('date-text text-muted').text(formattedTime);
-    const $location = $('<div>').addClass('location-text text-muted mt-2').text('in ' + event.location);
-
-    $cardBody.append($title, $date, $time, $location);
-    $card.append($imageContainer, $cardBody);
-    $link.append($card);
-    $listItem.append($link);
-
-    return $listItem;
+    // return the actual element, not the <template> itself
+    return frag;
 }

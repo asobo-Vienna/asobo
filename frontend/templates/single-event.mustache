@@ -44,21 +44,23 @@
     <!-- Comments & Gallery Row -->
     <div class="row text-start mt-3 gx-5">
         <div class="col-md-6 text-start">
-            <div class="comments-list">
-                <!-- Comment 1 -->
+
+            <template id="comment-tpl">
                 <div class="comment-box">
                     <div class="d-flex gap-3">
-                        <img src="https://randomuser.me/api/portraits/men/34.jpg" alt="User Avatar" class="user-avatar">
+                        <img class="user-avatar" src="" alt="User Avatar" />
                         <div class="flex-grow-1">
                             <div class="d-flex justify-content-between align-items-center mb-2">
-                                <h6 class="mb-0 comment-username">John Doe</h6>
-                                <span class="comment-time">2 hours ago</span>
+                                <h6 class="mb-0 comment-username"></h6>
+                                <span class="comment-time"></span>
                             </div>
-                            <p class="mb-2">Thanks for the great time. I had so much fun at the movie night.</p>
+                            <p class="mb-2"></p>
                         </div>
                     </div>
                 </div>
+            </template>
 
+            <div id="comments-list" class="comments-list">
                 <!-- Comment 2 -->
                 <div class="comment-box">
                     <div class="d-flex gap-3">

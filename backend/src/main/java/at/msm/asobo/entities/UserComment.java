@@ -31,6 +31,9 @@ public class UserComment {
     @JsonIgnore
     private Event event;
 
+    @Column(length = 4096)
+    private String pictureURI;
+
     @CreationTimestamp
     private LocalDateTime creationDate;
 
@@ -88,5 +91,13 @@ public class UserComment {
 
     public void setEvent(Event event) {
         this.event = event;
+    }
+
+    public String getPictureURI() {
+        return pictureURI;
+    }
+
+    public void setPictureURI(String pictureURI) {
+        this.pictureURI = pictureURI;
     }
 }

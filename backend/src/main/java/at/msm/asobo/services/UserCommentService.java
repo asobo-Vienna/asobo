@@ -19,21 +19,18 @@ import java.util.UUID;
 @Service
 public class UserCommentService {
     private final UserCommentRepository userCommentRepository;
-    private final EventRepository eventRepository;
     private final UserService userService;
     private final UserCommentDTOUserCommentMapper userCommentDTOUserCommentMapper;
-    private final UserDTOUserMapper userDTOUserMapper;
+    private final EventService eventService;
 
-    public UserCommentService(EventRepository eventRepository,
-                              UserCommentRepository userCommentRepository,
+    public UserCommentService(UserCommentRepository userCommentRepository,
                               UserService userService,
                               UserCommentDTOUserCommentMapper userCommentDTOUserCommentMapper,
-                              UserDTOUserMapper userDTOUserMapper) {
-        this.eventRepository = eventRepository;
+                              EventService eventService) {
         this.userCommentRepository = userCommentRepository;
         this.userService = userService;
         this.userCommentDTOUserCommentMapper = userCommentDTOUserCommentMapper;
-        this.userDTOUserMapper = userDTOUserMapper;
+        this.eventService = eventService;
     }
 
     public List<UserCommentDTO> getAllUserComments() {
@@ -72,14 +69,14 @@ public class UserCommentService {
     }
 
     public UserCommentDTO addNewUserCommentToEventById(UUID eventId, UserCommentDTO userCommentDTO) {
-        Event event = eventRepository.findById(eventId)
-                .orElseThrow(() -> new EventNotFoundException(eventId));
+        Event event = eventService.getEventById(eventId);
 
         UserComment newComment = this.userCommentDTOUserCommentMapper.mapUserCommentDTOToUserComment(userCommentDTO);
         newComment.setEvent(event);
 
         User author = userService.getUserById(userCommentDTO.getAuthorId());
         newComment.setAuthor(author);
+        newComment.setPictureURI(author.getPictureURI());
 
         UserComment savedComment = userCommentRepository.save(newComment);
         return this.userCommentDTOUserCommentMapper.mapUserCommentToUserCommentDTO(savedComment);

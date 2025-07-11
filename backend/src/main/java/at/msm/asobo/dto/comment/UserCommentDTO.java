@@ -6,9 +6,11 @@ import java.util.UUID;
 public class UserCommentDTO {
 
     private UUID id;
+    private String username;
     private String text;
     private UUID authorId;
     private UUID eventId;
+    private String pictureURI;
     private LocalDateTime creationDate;
     private LocalDateTime modificationDate;
     // private File file;
@@ -62,5 +64,21 @@ public class UserCommentDTO {
 
     public LocalDateTime getModificationDate() {
         return this.modificationDate;
+    }
+
+    public String getPictureURI() {
+        return pictureURI;
+    }
+
+    public void setPictureURI(String pictureURI) {
+        this.pictureURI = pictureURI;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 }
