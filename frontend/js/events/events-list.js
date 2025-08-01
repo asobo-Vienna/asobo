@@ -1,8 +1,7 @@
 $(document).ready(getAllEvents);
 
 async function getAllEvents() {
-    const url = HOSTADDRESS + '/api/events';
-
+    url = EVENTSADDRESS;
     try {
         const response = await fetch(url);
         if (!response.ok) {

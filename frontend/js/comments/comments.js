@@ -4,7 +4,7 @@ $(document).ready(postComment());
 
 async function getAllComments() {
     const eventId = getParamFromURL('id');
-    const url = EVENTSADDRESS + eventId + '/comments';
+    const url = EVENTSADDRESS + '/' + eventId + '/comments';
 
     try {
         const response = await fetch(url);
@@ -39,8 +39,8 @@ function createCommentElement(comment) {
 
 
 async function postComment() {
-    const url = `${EVENTSADDRESS}${eventId}/comments`;
     const eventId = getParamFromURL('id');
+    const url = `${EVENTSADDRESS}/${eventId}/comments`;
     // TODO change this as soon as we have login, this is just a test user ID
     const authorId = '7767118c-19bd-4c28-8129-c0abda74b46c';
 

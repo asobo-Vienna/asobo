@@ -84,8 +84,37 @@
         <!-- GALLERY -->
         <div class="col-md-6 mt-3 text-start">
             <div class="fw-bold">Photos & Videos</div>
-            <div class="mt-2" id="media-thumbnail-container"></div>
-        </div>
-    </div>
 
+            <div class="mt-2" id="media-thumbnail-container">
+                <!-- All media thumbnails go here -->
+
+                <!-- Hidden input + visible "+" button -->
+                <div class="single-media-container">
+
+                    <div id="add-media-container" class="single-media-container add-media-button">
+                        +
+                        <input
+                                type="file"
+                                id="media-input"
+                                name="mediumFile"
+                                accept="image/*,video/*"
+                                hidden
+                        />
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <template id="media-thumbnail-template">
+            <div class="single-media-container"></div>
+        </template>
+
+
+
+
+
+    </div>
 </div>
