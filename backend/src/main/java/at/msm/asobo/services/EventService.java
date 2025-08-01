@@ -106,6 +106,7 @@ public class EventService {
 
     public EventDTO deleteEventById(UUID id) {
         Event eventToDelete = this.getEventById(id);
+        this.fileStorageService.delete(eventToDelete.getPictureURI());
         this.eventRepository.delete(eventToDelete);
         return this.eventDTOEventMapper.mapEventToEventDTO(eventToDelete);
     }

@@ -102,7 +102,9 @@ public class UserService {
 
     public UserPublicDTO deleteUserById(UUID id) {
         User userToDelete = this.getUserById(id);
+        this.fileStorageService.delete(userToDelete.getPictureURI());
         this.userRepository.delete(userToDelete);
+
         return this.userDTOUserMapper.mapUserToUserPublicDTO(userToDelete);
     }
 }

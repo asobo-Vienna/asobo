@@ -3,15 +3,13 @@ package at.msm.asobo.services.files;
 import at.msm.asobo.config.FileStorageProperties;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
-import java.util.Arrays;
 import java.util.UUID;
+import static java.nio.file.Files.*;
 
 @Service
 public class FileStorageService {
@@ -19,7 +17,7 @@ public class FileStorageService {
 
     public FileStorageService(FileStorageProperties fileStorageProperties) throws IOException {
         this.baseStoragePath = fileStorageProperties.getBasePath();
-        Files.createDirectories(Path.of(baseStoragePath));
+        createDirectories(Path.of(baseStoragePath));
     }
 
     public String store(MultipartFile file) {
@@ -42,6 +40,8 @@ public class FileStorageService {
 
         Path targetDir = Paths.get(destinationPath).toAbsolutePath();
         Path targetFile = targetDir.resolve(filename);
+        System.out.println("Storing file " + filename + " to " + targetFile);
+        System.out.println("basePath: " + baseStoragePath);
 
         try (InputStream in = file.getInputStream()) {
             Files.copy(in, targetFile, StandardCopyOption.REPLACE_EXISTING);
@@ -51,6 +51,19 @@ public class FileStorageService {
             return "/uploads/" + subFolderName + "/" + encodedFilename;
         } catch (IOException e) {
             throw new RuntimeException("Failed to save file", e);
+        }
+    }
+
+    public void delete(String filename) {
+        // get current directory
+        Path targetDir = Paths.get(".").toAbsolutePath().normalize();
+        // get rid of "/" at the beginning
+        Path deletionPath = targetDir.resolve(filename.substring(1));
+
+        try {
+            Files.delete(deletionPath);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to delete file: " + filename, e);
         }
     }
 }

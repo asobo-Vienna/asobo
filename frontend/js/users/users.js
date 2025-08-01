@@ -62,7 +62,17 @@ function createUserItem(user) {
 
 
     // remove userID later, for now it is convenient for testing
-    const $isActive = $('<td>').addClass('user-active').text(user.active);
+    let $isActive = $('<td>').addClass('user-active');
+    let $activeImage = $('<img>')
+        .attr('src', '../../images/icons/active-icon-solid.png')
+        .attr('alt', `Status of user ${user.username} is ${user.active}`);
+
+    if (!user.active) {
+        $activeImage.attr('src', '../../images/icons/inactive-icon-red.png')
+    }
+
+    $isActive.append($activeImage);
+
     const $userID = $('<td>').addClass('userID').text(user.id);
     const $username = $('<td>').addClass('username').text(user.username);
     const $salutation = $ ('<td>').addClass('user-salutation').text(user.salutation)

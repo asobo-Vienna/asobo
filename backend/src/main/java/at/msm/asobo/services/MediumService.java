@@ -70,9 +70,10 @@ public class MediumService {
 
 
     public MediumDTO deleteMediumById(UUID eventID, UUID id) {
-        Medium medium = this.getMediumByEventIdAndMediumId(eventID, id);
-        mediumRepository.delete(medium);
-        return this.mediumDTOMediumMapper.mapMediumToMediumDTO(medium);
+        Medium mediumToDelete = this.getMediumByEventIdAndMediumId(eventID, id);
+        this.fileStorageService.delete(mediumToDelete.getMediumURI());
+        mediumRepository.delete(mediumToDelete);
+        return this.mediumDTOMediumMapper.mapMediumToMediumDTO(mediumToDelete);
     }
 
     // TODO update Media???
