@@ -1,3 +1,24 @@
+<template id="user-row-template">
+    <tr>
+        <td class="user-active">
+            <img src="" alt="">
+        </td>
+        <td class="table-user-image-container">
+            <a href="">
+                <img class="table-user-image" src="" alt="">
+            </a>
+        </td>
+        <td class="userID"></td>
+        <td class="username"></td>
+        <td class="user-salutation"></td>
+        <td class="user-firstname"></td>
+        <td class="user-surname"></td>
+        <td class="user-email"></td>
+        <td class="date-text text-muted"></td>
+        <td class="location-text text-muted mt-2"></td>
+    </tr>
+</template>
+
 <table class="table table-hover table-striped align-middle">
     <thead class="table-light">
     <tr>
@@ -13,8 +34,6 @@
         <th>Location</th>
     </tr>
     </thead>
-
     <tbody id="user-table">
     </tbody>
-
 </table>

@@ -23,7 +23,10 @@ async function getAllComments() {
 
 
 function createCommentElement(comment) {
-    const $template = $('#comment-template').contents().clone();
+    const $template = $('#comment-template')
+        .contents()
+        .clone();
+
     const formattedDate = moment(comment.creationDate).format('MMMM D, YYYY, h:mm a');
 
     $template.find('.user-avatar')

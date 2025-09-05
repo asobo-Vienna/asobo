@@ -65,7 +65,10 @@ async function getAndShowEvent() {
 
 
 function addEventToPage(event) {
-    const $template = $('#event-template').contents().clone();
+    const $template = $('#event-template')
+        .contents()
+        .clone();
+
     $template.find('.event-image-container img')
         .attr('src', event.pictureURI)
         .attr('alt', event.title);
@@ -119,7 +122,9 @@ function showMediaThumbnails(media) {
 
 
 function createMediaThumbnail(mediaItem) {
-    const $template = $('#media-thumbnail-template').contents().clone();
+    const $template = $('#media-thumbnail-template')
+        .contents()
+        .clone();
 
     let $createdThumbnail;
     if (/\.(mp4|webm|ogg)$/i.test(mediaItem.mediumURI)) {
