@@ -24,7 +24,9 @@ function appendEventToList(event) {
 
 
 function createEventItem(event) {
-    const $template = $('#event-template').contents().clone();
+    const $template = $('#event-template')
+        .contents()
+        .clone();
 
     $template.find('a')
         .attr('href', "#events?id=" + event.id);
