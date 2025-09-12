@@ -89,7 +89,7 @@ public class UserService {
         if (user.getPassword().equals(hashedPassword)) {
             // TODO: return JWT token?
         }
-        
+
         throw new RuntimeException("Invalid credentials");
     }
 
