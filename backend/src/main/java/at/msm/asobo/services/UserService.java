@@ -1,10 +1,7 @@
 package at.msm.asobo.services;
 
 import at.msm.asobo.config.FileStorageProperties;
-import at.msm.asobo.dto.user.UserDTO;
-import at.msm.asobo.dto.user.UserPublicDTO;
-import at.msm.asobo.dto.user.UserRegisterDTO;
-import at.msm.asobo.dto.user.UserUpdateDTO;
+import at.msm.asobo.dto.user.*;
 import at.msm.asobo.entities.User;
 import at.msm.asobo.exceptions.UserNotFoundException;
 import at.msm.asobo.mappers.UserDTOUserMapper;
@@ -59,7 +56,7 @@ public class UserService {
     public UserPublicDTO registerUser(UserRegisterDTO userRegisterDTO) {
         Optional<User> existingUser = userRepository.findByEmail(userRegisterDTO.getEmail());
         if (existingUser.isPresent()) {
-            throw new RuntimeException("User already exists!");
+            throw new RuntimeException("A User with this email already exists!");
         }
 
         Optional<User> existingUsername = userRepository.findByUsername(userRegisterDTO.getEmail());
@@ -82,6 +79,18 @@ public class UserService {
         // TODO: generate (and return?) JWT token
 
         return this.userDTOUserMapper.mapUserToUserPublicDTO(savedUser);
+    }
+
+    public UserPublicDTO loginUser(UserLoginDTO userLoginDTO) {
+        User user = userRepository.findByEmailOrUsername(userLoginDTO.getEmail(), userLoginDTO.getUsername()).orElseThrow(() -> new UserNotFoundException("A user with this email or username does not exist!"));
+
+        String hashedPassword = this.passwordService.hashPassword(userLoginDTO.getPassword());
+
+        if (user.getPassword().equals(hashedPassword)) {
+            // TODO: return JWT token?
+        }
+        
+        throw new RuntimeException("Invalid credentials");
     }
 
     // in case we might need it later
