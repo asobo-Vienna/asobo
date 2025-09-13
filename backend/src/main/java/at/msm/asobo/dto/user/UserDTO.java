@@ -11,7 +11,7 @@ public class UserDTO {
 
     private String firstName;
 
-    private String Surname;
+    private String surname;
 
     private String email;
 
@@ -46,11 +46,11 @@ public class UserDTO {
     }
 
     public String getSurname() {
-        return Surname;
+        return surname;
     }
 
     public void setSurname(String surname) {
-        Surname = surname;
+        this.surname = surname;
     }
 
     public void setEmail(String email) {

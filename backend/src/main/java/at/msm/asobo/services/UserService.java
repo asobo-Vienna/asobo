@@ -53,7 +53,7 @@ public class UserService {
         return this.userDTOUserMapper.mapUserToUserPublicDTO(user);
     }
 
-    public UserPublicDTO registerUser(UserRegisterDTO userRegisterDTO) {
+    public UserDTO registerUser(UserRegisterDTO userRegisterDTO) {
         Optional<User> existingUser = userRepository.findByEmail(userRegisterDTO.getEmail());
         if (existingUser.isPresent()) {
             throw new RuntimeException("A User with this email already exists!");
@@ -78,7 +78,7 @@ public class UserService {
 
         // TODO: generate (and return?) JWT token
 
-        return this.userDTOUserMapper.mapUserToUserPublicDTO(savedUser);
+        return this.userDTOUserMapper.mapUserToUserDTO(savedUser);
     }
 
     public UserPublicDTO loginUser(UserLoginDTO userLoginDTO) {

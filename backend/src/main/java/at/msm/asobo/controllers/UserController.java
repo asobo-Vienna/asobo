@@ -1,9 +1,13 @@
 package at.msm.asobo.controllers;
 
+import at.msm.asobo.dto.user.UserDTO;
 import at.msm.asobo.dto.user.UserPublicDTO;
 import at.msm.asobo.dto.user.UserRegisterDTO;
 import at.msm.asobo.dto.user.UserUpdateDTO;
+import at.msm.asobo.mappers.UserDTOToUserPublicDTOMapper;
+import at.msm.asobo.services.PasswordService;
 import at.msm.asobo.services.UserService;
+import at.msm.asobo.services.files.FileStorageService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -17,9 +21,11 @@ import java.util.UUID;
 public class UserController {
 
     private final UserService userService;
+    private final UserDTOToUserPublicDTOMapper userDTOToUserPublicDTOMapper;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, UserDTOToUserPublicDTOMapper userDTOToUserPublicDTOMapper) {
         this.userService = userService;
+        this.userDTOToUserPublicDTOMapper = userDTOToUserPublicDTOMapper;
     }
 
     @GetMapping
@@ -42,7 +48,8 @@ public class UserController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public UserPublicDTO registerUser(@ModelAttribute @Valid UserRegisterDTO registerDTO) {
-        return this.userService.registerUser(registerDTO);
+        UserDTO userDTO = this.userService.registerUser(registerDTO);
+        return this.userDTOToUserPublicDTOMapper.mapUserDTOToUserPublicDTO(userDTO);
     }
 
     @PutMapping("/{id}")

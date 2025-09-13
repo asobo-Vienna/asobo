@@ -7,6 +7,14 @@ public class TokenRequestDTO {
     private String password;
     private UUID userID;
 
+    public TokenRequestDTO() {}
+
+    public TokenRequestDTO(UUID userID, String username, String password) {
+        this.username = username;
+        this.password = password;
+        this.userID = userID;
+    }
+
     public UUID getUserID() {
         return userID;
     }

@@ -5,6 +5,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.UUID;
+
 public class UserRegisterDTO {
 
     @NotBlank(message = "Username is mandatory for user registration")
@@ -38,7 +40,6 @@ public class UserRegisterDTO {
     private String salutation;
 
     private String salutationOther;
-
 
     public String getUsername() {
         return username;

@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.token.TokenService;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -15,6 +16,11 @@ import java.util.List;
 
 @Component
 public class TokenAuthenticationFilter extends OncePerRequestFilter {
+    private final JwtUtil jwtUtil;
+
+    public TokenAuthenticationFilter(JwtUtil jwtUtil) {
+        this.jwtUtil = jwtUtil;
+    }
 
     @Override
     protected void doFilterInternal(
@@ -25,16 +31,17 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
         System.out.println("Check Token here!");
         System.out.println(request.getHeader("Authorization"));
 
+        String requestURI = request.getRequestURI();
+        String authHeader = request.getHeader("Authorization");
+
         // check JWT, if valid read user data and create authentication
 
-        if (null == request.getHeader("Authorization")) {
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        String userId = request
-                .getHeader("Authorization")
-                .replace("Bearer ", "");
+        String userId = authHeader.replace("Bearer ", "");
         Authentication authentication = new UserPrincipalAuthenticationToken(
                 new UserPrincipal(
                         userId,

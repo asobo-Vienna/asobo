@@ -186,4 +186,9 @@ public class User {
     public void setSalutation(String salutation) {
         this.salutation = salutation;
     }
+
+    public String getRole() {
+        // TODO
+        return "role placeholder";
+    }
 }
