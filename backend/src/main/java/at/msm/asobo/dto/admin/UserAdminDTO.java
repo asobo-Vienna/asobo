@@ -2,9 +2,7 @@ package at.msm.asobo.dto.admin;
 
 import at.msm.asobo.dto.comment.UserCommentDTO;
 import at.msm.asobo.dto.event.EventDTO;
-import at.msm.asobo.entities.User;
 
-import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;

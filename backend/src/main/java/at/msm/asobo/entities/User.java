@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 import org.hibernate.annotations.CreationTimestamp;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -59,6 +60,9 @@ public class User {
 
     @NotBlank(message = "Salutation is mandatory")
     private String salutation;
+
+    @ManyToMany
+    private Set<Role> roles;
 
     public User(){
     }
