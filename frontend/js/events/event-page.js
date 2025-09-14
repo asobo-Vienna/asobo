@@ -1,6 +1,17 @@
 $(document).ready(getAndShowEvent);
 
+// eliminate warning when working with bootstrap modals and hidden
+window.addEventListener('hide.bs.modal', event => {
+    event.target.inert = true
+})
+window.addEventListener('show.bs.modal', event => {
+    event.target.inert = false
+})
+
+let currentMedia = [];
+
 $("#media-thumbnail-container").on('click', '#add-media-container', function (e) {
+    e.stopPropagation();
     if (e.target !== this) return;
     $('#media-input')[0].click();
 });
@@ -44,6 +55,55 @@ $("#media-thumbnail-container").on("change", "#media-input", async function (e) 
 });
 
 
+$("#media-thumbnail-container").on("click", ".single-media-container", function(e) {
+    // IF clicked element is not the "+" button: → Build carousel → Open modal
+    // Ignore the "+" button
+    if ($(this).is("#add-media-container")) {
+        console.log("Adding media");
+        return;
+    }
+
+    // At this point, a real media thumbnail was clicked
+    console.log("Thumbnail clicked:", this);
+    const mediaId = $(this).data('id');
+
+    // Clear existing carousel slides
+    const $carouselInner = $('#media-carousel .carousel-inner');
+    $carouselInner.empty();
+
+    // Build carousel slides for all media items
+    currentMedia.forEach((mediaItem, i) => {
+        const $slide = $('#carousel-slide-template').contents().clone();
+
+        // Handle images and videos
+        if (/\.(mp4|webm|ogg)$/i.test(mediaItem.mediumURI)) {
+            // It's a video → remove the img element
+            $slide.find('img').remove();
+            $slide.find('video')
+                .attr('src', mediaItem.mediumURI)
+                .removeAttr('hidden');
+        } else {
+            // It's an image → remove the video element
+            $slide.find('video').remove();
+            $slide.find('img')
+                .attr('src', mediaItem.mediumURI)
+                .removeAttr('hidden');
+        }
+
+        // Mark the clicked thumbnail's slide as active
+        if (mediaItem.id === mediaId) {
+            $slide.addClass('active');
+        }
+
+        $carouselInner.append($slide);
+    });
+
+    // Show the modal
+    const mediaModal = new bootstrap.Modal(document.getElementById('media-modal'));
+    mediaModal.show();
+});
+
+
 async function getAndShowEvent() {
     const eventId = getParamFromURL('id');
     const url = EVENTSADDRESS + '/' + eventId;
@@ -58,6 +118,7 @@ async function getAndShowEvent() {
         addEventToPage(event);
         showParticipantsAvatars(event.participants);
         showMediaThumbnails(event.media);
+        currentMedia = event.media;
     } catch (error) {
         console.error(error.message);
     }
@@ -115,8 +176,12 @@ function createUserAvatar(participant) {
 
 function showMediaThumbnails(media) {
     media.forEach(mediaItem => {
-        const $mediaThumbnailContainer = $('#media-thumbnail-container');
-        $mediaThumbnailContainer.append(createMediaThumbnail(mediaItem));
+        const $thumbnail = createMediaThumbnail(mediaItem);
+
+        // add data attribute here so you know which item it is
+        $thumbnail.attr('data-id', mediaItem.id);
+
+        $('#media-thumbnail-container').append($thumbnail);
     });
 }
 
