@@ -1,4 +1,4 @@
-INSERT INTO public.users (is_active,register_date,id,pictureuri,email,first_name,"location",old_password,"password",salutation,surname,username) VALUES
+INSERT INTO users (is_active,register_date,id,pictureuri,email,first_name,"location",old_password,"password",salutation,surname,username) VALUES
 	 (true,'2025-06-21 12:28:08.064861','7da69d8e-55c7-4a96-ac6d-cb207e4e8a21'::uuid,'/uploads/profile-pictures/4f4c9853-29e5-4d05-95c7-d85efc034fe8_harley.jpg','harley@haha.com','Harleen','Brooklyn, NY',NULL,'$2a$10$pPa/hEuxrOOfAOga7LBU4uXhL7n6zb/tHzuLHZzAeREBrGATRfH8i','female','Quinzel','harley'),
 	 (true,'2025-06-21 11:04:07.308963','cb0d70b4-8ac6-4045-8a77-55be2583f2a8'::uuid,'/uploads/profile-pictures/6eaaa0c2-0e78-4171-a069-5e5fda5794d8_batman.jpg','batman@batcave.com','Bruce','Gotham City, NJ',NULL,'$2a$10$N6nFSk2YPQlytdFhnVxFQuzvx9007B8mw3NeHHfsSh2bQM35Ae11C','male','Wayne','Batman'),
 	 (true,'2025-06-21 12:48:46.048244','7767118c-19bd-4c28-8129-c0abda74b46c'::uuid,'/uploads/profile-pictures/67314290-8700-4f0f-94f4-0da7ed05dbf4_gg.jpg','gg@ggallin.com','GG','Lancaster, NH',NULL,'$2a$10$D8rKBvbxlFu6aqbGBJhO1edbYgGL61uqxnbKqEeKnvOuX4PcWZbZK','male','Allin','ggallin'),
@@ -7,22 +7,22 @@ INSERT INTO public.users (is_active,register_date,id,pictureuri,email,first_name
 	 (true,'2025-07-04 15:40:49.970751','f75d02b0-ca03-4c0d-af93-acae8aea85f7'::uuid,'/uploads/profile-pictures/bcf033ff-550f-49c4-9159-41ae727b1e02_HarryP.jpg','potter@gmail.com','Harry','Hogwards',NULL,'$2a$10$U55TomzFrmV1TPeePlE5tOKMCKPmg1xfq.O4epCRBHyN/2r6uX196','Mr.','Potter','HarryP'),
 	 (true,'2025-07-06 23:47:48.970154','9d6fa8e4-fd6d-4c25-9439-8ee91077cf47'::uuid,'/uploads/profile-pictures/0d317296-297b-4108-aa10-ab24a7553d9e_ninahagen.jpg','nina@hagen.de','Nina','Berlin',NULL,'$2a$10$AwHbljp9L7wcild0/GxlsO3ITwliOIWSYCjzan50ne54QQlxAsbai','Ms.','Hagen','ninahagen'),
 	 (true,'2025-07-06 23:54:56.253414','d8c038cc-4965-437f-ac37-4865ba4510dd'::uuid,'/uploads/profile-pictures/a8ea86eb-dc39-4742-8a7e-1808f4f48c75_Alex_DeLarge.jpg','alex@clockwork.com','Alex','London',NULL,'$2a$10$x.gojVvrzlQXOcspeMFYUecS.1xpwqeVvwW8JjTGUvcJm/JeEbOf.','Mr.','DeLarge','alexlikesmolokoplus'),
-	 (false,'2025-07-06 23:59:05.635171','f18e96c7-6416-4f51-87d5-4cd229715933'::uuid,NULL,'knight@black.co.uk','Black','Wales',NULL,'$2a$10$lBe.qZNR.IS/Ip31bpy8xOKJIV/2XfOqvQPa//LbsdO1DEtSwX.YO','Mr.','Knight','blackknight'),
+	 (false,'2025-07-06 23:59:05.635171','f18e96c7-6416-4f51-87d5-4cd229715933'::uuid,'/uploads/profile-pictures/f18e96c7-6416-4f51-87d5-4cd229715933_blackknight.jpg','knight@black.co.uk','Black','Wales',NULL,'$2a$10$lBe.qZNR.IS/Ip31bpy8xOKJIV/2XfOqvQPa//LbsdO1DEtSwX.YO','Mr.','Knight','blackknight'),
 	 (false,'2025-07-07 00:04:49.973131','3fb77b1c-8670-40a2-929b-2b021f6e3e61'::uuid,'/uploads/profile-pictures/0c6e58ad-9426-46ef-8762-b8050317485e_waynearnold.jpg','wayne@arnold.com','Wayne','Sunnyville',NULL,'$2a$10$9Tqu555n4L68wU.udzoHWuXDk0sNAvH51tbMWMXvJ8tI/lbeF7frS','Mr.','Arnold','wayne');
 	 (false,'2025-07-11 18:18:58.15966','91740f77-0b27-4db8-a4b8-5b2b62a25664'::uuid,'/uploads/profile-pictures/911ae559-2c12-44d3-bd50-9b556e6d3885_franzi.jpg','fuenfer@wienerlinien.at','Franzi','Wien',NULL,'$2a$10$uyXmB1DHWATPdC/m.cbVTuUFD.i23TJUt50G7j9lZ5GMinW59WXIO','Mr.','Mayerhofer','5er');
 
-INSERT INTO public."event" (creation_date,"date",modification_date,creator_id,id,pictureuri,description,"location",title) VALUES
+INSERT INTO event (creation_date,"date",modification_date,creator_id,id,pictureuri,description,"location",title) VALUES
 	 ('2025-05-21 13:59:21.048244','2025-06-21 20:00:00',NULL,'7767118c-19bd-4c28-8129-c0abda74b46c'::uuid,'aaed8676-8b38-4c7a-b8b1-66dd683a1a96'::uuid,'/uploads/event-cover-pictures/f40bf03b-c55b-4c6a-801b-9b764fc99262_movie_night.jpg','Join us for the most bestest and extravagant movie night ever! Yeah! Bring your friends and don’t forget your own popcorn, nachos and booze...','San Juan Capistrano, CA','Movie Night'),
 	 ('2025-06-22 19:59:21.048244','2025-07-04 17:00:00',NULL,'cb0d70b4-8ac6-4045-8a77-55be2583f2a8'::uuid,'045fbc61-736a-4be1-baa3-070748e07f17'::uuid,'/uploads/event-cover-pictures/55daceaa-0a26-407d-b709-d1df1cdd91f5_cooking.jpg','Cooking together brings people closer through creativity, teamwork, and shared joy — turning simple ingredients into lasting memories.','Vienna, AT','Cooking!'),
 	 ('2025-07-11 10:38:08.360601','2025-07-12 12:00:00',NULL,NULL,'ccc5d4bc-8d66-4d1a-87e7-a7b18b6c8773'::uuid,'/uploads/event-cover-pictures/d2dbe905-ee05-4b93-99e1-f438fb253c53_ozzy_bat.jpg','A delicious feast with the one and only Ozzy Osbourne','Birmingham','Bat Eating with Ozzy'),
 	 ('2025-07-11 10:55:03.235106','2025-07-13 17:00:00',NULL,NULL,'40a7f446-78e6-4383-b1cb-84d8f121011f'::uuid,'/uploads/event-cover-pictures/b6db941d-3c12-4519-8018-7a906e4b9bf6_bachlstmarx.jpg','Dope skate session at St. Marx skatepark','Vienna','Skateboarding St. Marx'),
 	 ('2025-07-11 19:33:23.682237','2025-07-13 13:00:00',NULL,NULL,'de32052d-645f-41d1-b43c-70621565ff7a'::uuid,'/uploads/event-cover-pictures/aaf0a06d-8f4a-4dca-ae8d-7d881882abd4_franzi.jpg','Cosplaying as a Viennese tram with the master cosplayer Franzi a.k.a. 5er','Vienna','Tram Cosplaying');
 
-INSERT INTO public.event_participants (attended_events_id,participants_id) VALUES
+INSERT INTO event_participants (attended_events_id,participants_id) VALUES
 	 ('045fbc61-736a-4be1-baa3-070748e07f17'::uuid,'7767118c-19bd-4c28-8129-c0abda74b46c'::uuid);
 	 ('045fbc61-736a-4be1-baa3-070748e07f17'::uuid,'7da69d8e-55c7-4a96-ac6d-cb207e4e8a21'::uuid);
 
-INSERT INTO public.medium (event_id,id,mediumuri) VALUES
+INSERT INTO medium (event_id,id,mediumuri) VALUES
 	 ('045fbc61-736a-4be1-baa3-070748e07f17'::uuid,'1e76e3cc-97d5-4aa9-8ea2-05769f6ba2b7'::uuid,'/uploads/event-galleries/045fbc61-736a-4be1-baa3-070748e07f17/4c1753f6-59e6-4c91-847f-937a9bcd0bfc_hulk.jpg'),
 	 ('045fbc61-736a-4be1-baa3-070748e07f17'::uuid,'726d5b62-ab54-41f0-bae7-c6da1fb07ef9'::uuid,'/uploads/event-galleries/045fbc61-736a-4be1-baa3-070748e07f17/3c583915-7f51-4909-96da-b2a154bae1ed_therock.jpg'),
 	 ('045fbc61-736a-4be1-baa3-070748e07f17'::uuid,'055fcc61-736b-8be1-baa3-080748e06f19'::uuid,'/uploads/event-galleries/045fbc61-736a-4be1-baa3-070748e07f17/55daceaa-0a26-407d-b709-d1df1cdd91f5_bandb.jpg'),
@@ -31,5 +31,5 @@ INSERT INTO public.medium (event_id,id,mediumuri) VALUES
 	 ('aaed8676-8b38-4c7a-b8b1-66dd683a1a96'::uuid,'788a945c-ca64-4d06-9b63-c859c35ec04c'::uuid,'/uploads/event-galleries/aaed8676-8b38-4c7a-b8b1-66dd683a1a96/e09be568-9b41-4e3d-a5b0-5476252f16dc_undertaker.jpg'),
 	 ('ccc5d4bc-8d66-4d1a-87e7-a7b18b6c8773'::uuid,'c6b61a02-4956-4bbc-b6b4-d9b271dcda40'::uuid,'/uploads/event-galleries/ccc5d4bc-8d66-4d1a-87e7-a7b18b6c8773/c58a412a-09fb-4f16-938f-910e5fc6f646_bat.jpg');
 
-INSERT INTO public.user_comment (creation_date,modification_date,author_id,event_id,id,"text",pictureuri) VALUES
+INSERT INTO user_comment (creation_date,modification_date,author_id,event_id,id,"text",pictureuri) VALUES
 	 ('2025-07-11 19:39:34.391567',NULL,'7da69d8e-55c7-4a96-ac6d-cb207e4e8a21'::uuid,'aaed8676-8b38-4c7a-b8b1-66dd683a1a96'::uuid,'34e14c80-41db-4de1-8e3f-fa7243bd0ff9'::uuid,'aaaaahhhhhhh!','/uploads/profile-pictures/4f4c9853-29e5-4d05-95c7-d85efc034fe8_harley.jpg');

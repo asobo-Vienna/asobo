@@ -85,8 +85,6 @@
         <div class="col-md-6 mt-3 text-start">
             <div class="fw-bold">Photos & Videos</div>
             <div class="mt-2" id="media-thumbnail-container">
-                <!-- All media thumbnails go here -->
-
                 <!-- Hidden input + visible "+" button -->
                 <div class="single-media-container">
                     <div id="add-media-container" class="single-media-container add-media-button">
@@ -100,6 +98,7 @@
                         />
                     </div>
                 </div>
+                <!-- All media thumbnails go here, target media-thumbnail-container -->
             </div>
         </div>
 
@@ -107,4 +106,31 @@
             <div class="single-media-container"></div>
         </template>
     </div>
+
+    <!-- CAROUSEL/MODAL FOR MEDIA -->
+    <div class="modal fade" id="media-modal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-body p-0">
+                    <div id="media-carousel" class="carousel slide">
+                        <div class="carousel-inner"></div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#media-carousel" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#media-carousel" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <template id="carousel-slide-template">
+        <div class="carousel-item">
+            <img class="d-block w-100" hidden>
+            <video class="d-block w-100" controls hidden></video>
+        </div>
+    </template>
+
 </div>
