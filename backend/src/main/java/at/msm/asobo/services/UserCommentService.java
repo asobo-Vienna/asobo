@@ -88,8 +88,9 @@ public class UserCommentService {
 
         existingComment.setText(updatedCommentDTO.getText());
         existingComment.setModificationDate(LocalDateTime.now());
-        UUID authorId = updatedCommentDTO.getAuthorId();
-        existingComment.setAuthor(this.userService.getUserById(authorId));
+        // Had to remove this because we can't update comments (frontend doesn't know the author yet)
+        // UUID authorId = updatedCommentDTO.getAuthorId();
+        // existingComment.setAuthor(this.userService.getUserById(authorId));
         UserComment savedExistingComment = userCommentRepository.save(existingComment);
 
         return this.userCommentDTOUserCommentMapper.mapUserCommentToUserCommentDTO(savedExistingComment);
