@@ -24,11 +24,12 @@ public class CustomUserDetailsService implements UserDetailsService {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException(username));
 
-        return new UserPrincipal(
-                user.getId(),
-                user.getUsername(),
-                user.getPassword(),
-                List.of(new SimpleGrantedAuthority(user.getRole())) // TODO: add user roles (Role -> Entity)!!!
-        );
+        return null;
+//        return new UserPrincipal(
+//                user.getId(),
+//                user.getUsername(),
+//                user.getPassword(),
+//                List.of(new SimpleGrantedAuthority(user.getRole())) // TODO: add user roles (Role -> Entity)!!!
+//        );
     }
 }
