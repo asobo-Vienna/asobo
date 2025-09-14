@@ -59,7 +59,7 @@ public class UserCommentService {
     }
 
     public List<UserCommentDTO> getUserCommentsByEventId(UUID eventId) {
-        List<UserComment> userComments = this.userCommentRepository.findUserCommentsByEventId(eventId);
+        List<UserComment> userComments = this.userCommentRepository.findUserCommentsByEventIdOrderByCreationDate(eventId);
         return this.userCommentDTOUserCommentMapper.mapUserCommentsToUserCommentDTOs(userComments);
     }
 

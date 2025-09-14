@@ -33,3 +33,5 @@ INSERT INTO medium (event_id,id,mediumuri) VALUES
 
 INSERT INTO user_comment (creation_date,modification_date,author_id,event_id,id,"text",pictureuri) VALUES
 	 ('2025-07-11 19:39:34.391567',NULL,'7da69d8e-55c7-4a96-ac6d-cb207e4e8a21'::uuid,'aaed8676-8b38-4c7a-b8b1-66dd683a1a96'::uuid,'34e14c80-41db-4de1-8e3f-fa7243bd0ff9'::uuid,'aaaaahhhhhhh!','/uploads/profile-pictures/4f4c9853-29e5-4d05-95c7-d85efc034fe8_harley.jpg');
+	 ('2025-07-20 16:48:43.222211',NULL,'7767118c-19bd-4c28-8129-c0abda74b46c'::uuid,'ccc5d4bc-8d66-4d1a-87e7-a7b18b6c8773'::uuid,'193a835b-ce74-4af6-8bda-4302b99a6f4c'::uuid,'Well that was a fun night!','/uploads/profile-pictures/67314290-8700-4f0f-94f4-0da7ed05dbf4_gg.jpg'),
+	 ('2025-09-14 19:18:15.024199',NULL,'7767118c-19bd-4c28-8129-c0abda74b46c'::uuid,'aaed8676-8b38-4c7a-b8b1-66dd683a1a96'::uuid,'631ec747-5460-4657-b57b-84435b8ab4b3'::uuid,'hi','/uploads/profile-pictures/67314290-8700-4f0f-94f4-0da7ed05dbf4_gg.jpg');

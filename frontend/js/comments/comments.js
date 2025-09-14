@@ -1,6 +1,6 @@
-$(document).ready(getAllComments());
-$(document).ready(postComment());
-
+$(document).ready(getAllComments);
+$(document).ready(postComment);
+$(document).ready(removeComment);
 
 async function getAllComments() {
     const eventId = getParamFromURL('id');
@@ -36,6 +36,7 @@ function createCommentElement(comment) {
     $template.find('.comment-username').text(comment.username);
     $template.find('.comment-time').text(formattedDate);
     $template.find('p').text(comment.text);
+    $template.find('.remove-comment-btn').data('comment-id', comment.id);
 
     return $template;
 }
@@ -61,13 +62,13 @@ async function postComment() {
                 body: JSON.stringify({authorId, eventId, text})
             });
 
-        if (!response.ok) {
-            throw new Error(`Error while creating comment: ${response.statusText}`);
-        }
+            if (!response.ok) {
+                throw new Error(`Error while creating comment: ${response.statusText}`);
+            }
 
-        const newComment = await response.json();
-        $('#comments-list').append(createCommentElement(newComment));
-        $('#new-comment-content').val('');          // clear comment box
+            const newComment = await response.json();
+            $('#comments-list').append(createCommentElement(newComment));
+            $('#new-comment-content').val('');          // clear comment box
 
         } catch (err) {
             console.error('Error posting comment: ', err);
@@ -75,3 +76,31 @@ async function postComment() {
         }
     });
 }
+
+    async function removeComment() {
+        const eventId = getParamFromURL('id');
+
+        $(document).on('click', '.remove-comment-btn', async function (event) {
+            event.preventDefault();
+
+            const commentId = $(this).data('comment-id'); // get comment ID from the button
+            const url = `${EVENTSADDRESS}/${eventId}/comments/${commentId}`; // pass comment ID in URL
+
+            try {
+                const response = await fetch(url, {
+                    method: 'DELETE',
+                    headers: {'Content-Type': 'application/json'}
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Error while deleting comment: ${response.statusText}`);
+                }
+
+                // Optionally remove the comment from the DOM
+                $(this).closest('.comment-box').remove();
+
+            } catch (err) {
+                console.error(err);
+            }
+        });
+    }

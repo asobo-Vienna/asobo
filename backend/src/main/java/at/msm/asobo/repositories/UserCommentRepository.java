@@ -19,7 +19,7 @@ public interface UserCommentRepository extends JpaRepository<UserComment, UUID> 
 
     List<UserComment> findUserCommentsByEvent(Event event);
 
-    List<UserComment> findUserCommentsByEventId(UUID eventId);
+    List<UserComment> findUserCommentsByEventIdOrderByCreationDate(UUID eventId);
 
     Optional<UserComment> findUserCommentByEventIdAndId(UUID eventId, UUID commentId);
 }
