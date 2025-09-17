@@ -1,3 +1,75 @@
-:host {
-  color: yellowgreen;
+@use '../../../styles/variables' as *;
+
+.asobo-logo {
+  height: auto;
+  max-width: 100%;     /* prevents overflow on small screens */
+  width: 80px;         /* base size for desktop */
 }
+
+@media (max-width: 768px) {
+  .asobo-logo {
+    width: 60px;      /* smaller logo on mobile */
+  }
+}
+
+.search-button {
+  color: $asobo-purple;
+  border-color: $asobo-purple;
+}
+
+.btn-search-img {
+  width: 25px;
+  height: 25px;
+}
+
+.search-bar {
+  justify-content: space-between !important;
+  /*margin-left: 0;*/
+}
+
+.search-bar .search-div  {
+  max-width: 37vw;
+  display: flex;
+}
+
+.search-bar .btn-search {
+  transform: translateX(-100%);
+  border: none;
+  padding-right: 8px;
+}
+
+.btn-search-img {
+  width: 25px;
+  height: 25px;
+}
+
+.navbar .search-bar {
+  flex-grow: 1;
+  max-width: 450px;
+}
+
+.navbar .search-div {
+  width: 100%;
+}
+
+.navbar .form-control {
+  flex-grow: 1;
+}
+
+#user-nav-thumbnail {
+  display: none !important;
+}
+
+#create-event-nav-anchor {
+  list-style: none;
+}
+
+.add-event-plus {
+  font-size: 1.5em;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  transform: translateY(-2px);
+}
+
+

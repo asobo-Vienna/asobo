@@ -1,0 +1,95 @@
+@use 'variables' as *;
+
+.btn-purple {
+  color: white;
+  background-color: $asobo-purple !important;
+  border-color: $asobo-purple !important;
+  width: auto;
+
+  &:hover {
+    background-color: $asobo-purple !important;
+  }
+}
+
+a.btn-purple {
+  color: #ffffff !important;
+  text-decoration: none;
+}
+
+.user-thumbnail {
+  /*height: 40px;
+  width: 40px;*/
+  border-radius: 50%;
+  filter: drop-shadow(2px 2px 3px gray);
+}
+
+.user-profile-thumbnail {
+  padding-right: var(--bs-navbar-nav-link-padding-x);
+  padding-left: var(--bs-navbar-nav-link-padding-x);
+}
+
+.username-thumbnail {
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.user-myprofile {
+  display: inline-flex;
+}
+
+.user-myprofile a {
+  font-size: 0.75rem;
+  color: gray;
+  text-decoration: none;
+}
+
+.profile-picture-box, .event-picture-box {
+  margin: 0 auto;
+  border: 2px dashed $asobo-purple;
+  border-radius: 8px;
+  background-color: color-mix(in srgb, $asobo-purple 7%, transparent);
+  cursor: pointer;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.profile-picture-box {
+  width: 100%;
+  max-width: 250px;
+  aspect-ratio: 1 / 1;
+}
+
+.register-profile-picture-button, .create-event-picture-button {
+  text-align: center;
+  color: $asobo-purple;
+  font-size: 1.2rem;
+  line-height: 1.2;
+  z-index: 1;
+}
+
+#profile-pic-input, #event-pic-input {
+  pointer-events: none;
+  display: none;
+}
+
+.login-text-link, .signup-text-link {
+  color: var(--asobo-purple);
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.login-text-link:hover, .signup-text-link:hover {
+  text-decoration: underline;
+}
+
+.table-user-image {
+  border-radius: 50%;
+  object-fit: cover;
+  width: 40px;
+  height: 40px;
+}
+
+

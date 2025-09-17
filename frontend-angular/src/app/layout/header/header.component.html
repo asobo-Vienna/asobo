@@ -1,6 +1,62 @@
-<p>header works!</p>
-<div class="container-fluid d-flex align-items-center">
-  <a class="navbar-brand me-3" routerLink="/">
-    <img src="images/logo.png" alt="Logo" class="asobo-logo">
-  </a>
-</div>
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+  <div class="container-fluid d-flex align-items-center">
+    <a class="navbar-brand me-3" routerLink="/">
+      <img src="images/logo.png" alt="Logo" class="asobo-logo">
+    </a>
+
+    <div class="search-bar d-flex align-items-center me-auto">
+      <!--<form class="d-flex w-100" th:action="@{/search}" method="get">-->
+      <div class="search-div d-flex w-100">
+        <input class="form-control" type="search" name="query" placeholder="Search for events" aria-label="Search">
+        <button class="btn-search btn" type="submit">
+          <img class="btn-search-img" src="images/icons/magnifying_glass_purple.png" alt="Search Button">
+        </button>
+      </div>
+    </div>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+            data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+            aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="d-flex">
+      <a routerLink="/create-event" class="btn form-control me-2 d-flex align-items-center btn-purple btn-primary" id="create-event-nav-anchor">
+        <span class="add-event-plus">+</span>
+        <span class="ms-1">Event</span>
+      </a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a routerLink="/about" class="nav-link">About</a>
+        </li>
+        <li class="nav-item">
+          <a routerLink="/events" class="nav-link active" aria-current="page">Events</a>
+        </li>
+        <li class="nav-item">
+          <a routerLink="/register" class="nav-link">Register</a>
+        </li>
+        <li class="nav-item d-flex align-items-center user-profile-thumbnail" id="user-nav-thumbnail">
+          <a routerLink="#">
+            <img src="/images/users/jane_doe.png" alt="User Thumbnail" class="user-thumbnail me-2">
+          </a>
+          <div class="d-flex flex-column justify-content-center">
+            <span class="username-thumbnail">Jane</span>
+            <span class="user-myprofile">
+                            <a href="">My Profile</a>
+                        </span>
+          </div>
+        </li>
+        <li class="nav-item">
+          <div class="d-flex ms-2">
+            <button class="btn form-control me-2 d-flex btn-purple btn-primary" type="button">
+              <a routerLink="/login" class="btn-purple" id="login-nav-anchor">Log In</a>
+            </button>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
