@@ -4,10 +4,9 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.token.TokenService;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -16,6 +15,7 @@ import java.util.List;
 
 @Component
 public class TokenAuthenticationFilter extends OncePerRequestFilter {
+
     private final JwtUtil jwtUtil;
 
     public TokenAuthenticationFilter(JwtUtil jwtUtil) {
@@ -28,30 +28,42 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
             HttpServletResponse response,
             FilterChain filterChain
     ) throws ServletException, IOException {
-        System.out.println("Check Token here!");
-        System.out.println(request.getHeader("Authorization"));
-
         String requestURI = request.getRequestURI();
-        String authHeader = request.getHeader("Authorization");
+        System.out.println(">>> TokenAuthenticationFilter: " + request.getMethod() + " " + requestURI);
+        System.out.println(">>> TokenAuthenticationFilter: URI = " + requestURI);
 
-        // check JWT, if valid read user data and create authentication
-
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+        // Skip all /api/auth/** endpoints
+        if (requestURI.startsWith("/api/auth/")) {
+            System.out.println(">>> Skipping JWT check for: " + requestURI);
             filterChain.doFilter(request, response);
             return;
         }
 
-        String userId = authHeader.replace("Bearer ", "");
-        Authentication authentication = new UserPrincipalAuthenticationToken(
-                new UserPrincipal(
-                        userId,
-                        "testuser",
-                        "",
-                        List.of(new SimpleGrantedAuthority("ROLE_USER"))
-                )
-        );
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+        String authHeader = request.getHeader("Authorization");
 
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            String token = authHeader.substring(7);
+
+            if (jwtUtil.validateToken(token)) {
+                // extract info from token
+                String username = jwtUtil.getUsernameFromToken(token);
+                String userId = jwtUtil.getUserIdFromToken(token);
+
+                UserPrincipal userPrincipal = new UserPrincipal(
+                        userId,
+                        username,
+                        "", // no password here
+                        List.of(new SimpleGrantedAuthority("ROLE_USER")) // adjust roles as needed
+                );
+
+                UserPrincipalAuthenticationToken authentication =
+                        new UserPrincipalAuthenticationToken(userPrincipal);
+
+                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
+        }
 
         filterChain.doFilter(request, response);
     }

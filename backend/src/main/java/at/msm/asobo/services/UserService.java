@@ -1,12 +1,20 @@
 package at.msm.asobo.services;
 
 import at.msm.asobo.config.FileStorageProperties;
+import at.msm.asobo.dto.auth.LoginResponseDTO;
 import at.msm.asobo.dto.user.*;
 import at.msm.asobo.entities.User;
 import at.msm.asobo.exceptions.UserNotFoundException;
 import at.msm.asobo.mappers.UserDTOUserMapper;
 import at.msm.asobo.repositories.UserRepository;
+import at.msm.asobo.security.JwtUtil;
+import at.msm.asobo.security.UserPrincipal;
 import at.msm.asobo.services.files.FileStorageService;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
@@ -21,18 +29,24 @@ public class UserService {
     private final FileStorageService fileStorageService;
     private final FileStorageProperties fileStorageProperties;
     private final PasswordService passwordService;
+    private final JwtUtil jwtUtil;
+    private final AuthenticationManager authenticationManager;
 
     public UserService(UserRepository userRepository,
                        UserDTOUserMapper userDTOUserMapper,
                        FileStorageService fileStorageService,
                        FileStorageProperties fileStorageProperties,
-                       PasswordService passwordService
+                       PasswordService passwordService,
+                       JwtUtil jwtUtil,
+                       AuthenticationManager authenticationManager
     ) {
         this.userRepository = userRepository;
         this.userDTOUserMapper = userDTOUserMapper;
         this.fileStorageService = fileStorageService;
         this.fileStorageProperties = fileStorageProperties;
         this.passwordService = passwordService;
+        this.jwtUtil = jwtUtil;
+        this.authenticationManager = authenticationManager;
     }
 
     public List<UserPublicDTO> getAllUsers() {
@@ -53,7 +67,7 @@ public class UserService {
         return this.userDTOUserMapper.mapUserToUserPublicDTO(user);
     }
 
-    public UserDTO registerUser(UserRegisterDTO userRegisterDTO) {
+    public LoginResponseDTO registerUser(UserRegisterDTO userRegisterDTO) {
         Optional<User> existingUser = userRepository.findByEmail(userRegisterDTO.getEmail());
         if (existingUser.isPresent()) {
             throw new RuntimeException("A User with this email already exists!");
@@ -76,21 +90,40 @@ public class UserService {
 
         User savedUser = this.userRepository.save(newUser);
 
-        // TODO: generate (and return?) JWT token
+        UserPrincipal userPrincipal = new UserPrincipal(
+                savedUser.getId().toString(),
+                savedUser.getUsername(),
+                savedUser.getPassword(),
+                List.of(new SimpleGrantedAuthority("ROLE_USER"))
+        );
 
-        return this.userDTOUserMapper.mapUserToUserDTO(savedUser);
+        String token = jwtUtil.generateToken(userPrincipal);
+
+        return new LoginResponseDTO(token, this.userDTOUserMapper.mapUserToUserPublicDTO(savedUser));
     }
 
-    public UserPublicDTO loginUser(UserLoginDTO userLoginDTO) {
-        User user = userRepository.findByEmailOrUsername(userLoginDTO.getEmail(), userLoginDTO.getUsername()).orElseThrow(() -> new UserNotFoundException("A user with this email or username does not exist!"));
+    public LoginResponseDTO loginUser(UserLoginDTO userLoginDTO) {
+        UsernamePasswordAuthenticationToken authToken =
+                new UsernamePasswordAuthenticationToken(
+                        userLoginDTO.getIdentifier(),
+                        userLoginDTO.getPassword()
+                );
 
-        String hashedPassword = this.passwordService.hashPassword(userLoginDTO.getPassword());
+        Authentication authentication = authenticationManager.authenticate(authToken);
 
-        if (user.getPassword().equals(hashedPassword)) {
-            // TODO: return JWT token?
-        }
+        SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        throw new RuntimeException("Invalid credentials");
+        // Get the authenticated principal
+        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+
+        String token = jwtUtil.generateToken(userPrincipal);
+
+        User user = userRepository.findById(UUID.fromString(userPrincipal.getUserId()))
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
+
+        UserPublicDTO userPublicDTO = this.userDTOUserMapper.mapUserToUserPublicDTO(user);
+
+        return new LoginResponseDTO(token, userPublicDTO);
     }
 
     // in case we might need it later

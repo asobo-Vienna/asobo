@@ -39,6 +39,7 @@ function setPageScript(page) {
         $('body').append('<script src="../js/forms/registration.js" class="page-script"></script>');
     } else if (page === 'login') {
         $('body').append('<script src="../js/forms/form-logic.js" class="page-script"></script>');
+        $('body').append('<script src="../js/forms/login.js" class="page-script"></script>');
     }
 }
 

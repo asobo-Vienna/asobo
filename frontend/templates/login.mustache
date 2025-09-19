@@ -1,22 +1,22 @@
 <h1 class="text-primary">Login</h1>
 <!--<form action="" method="post" enctype="multipart/form-data">-->
 
-<div class="register-form">
+<div class="login-form">
 
     <div class="form-group">
-        <input id="login-username" class="form-control" autofocus type="text" name="username" placeholder="Username or Email" required>
+        <input id="login-username" class="form-control" autofocus type="text" name="identifier" placeholder="Username or Email" required>
         <small id="login-username-error" class="text-danger position-absolute">
             Invalid email format
         </small>
     </div>
 
     <div class="form-group">
-        <input class="form-control" type="password" name="password" placeholder="Password" required>
+        <input class="form-control" type="password" name="login-password" id="login-password" placeholder="Password" required>
     </div>
 
 
     <div class="form-group d-flex justify-content-center">
-        <input class="btn btn-purple btn-primary mb-3" type="submit" value="Login">
+        <input class="btn btn-purple btn-primary mb-3" id="login-button" type="submit" value="Login">
     </div>
 
     <div class="form-group d-flex flex-column justify-content-center align-items-center">

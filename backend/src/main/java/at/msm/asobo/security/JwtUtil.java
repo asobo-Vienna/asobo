@@ -1,6 +1,6 @@
 package at.msm.asobo.security;
 
-import at.msm.asobo.dto.token.TokenRequestDTO;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,28 +16,50 @@ public class JwtUtil {
     @Value("${jwt.secret}")
     private String SECRET;
 
+    @Value("${jwt.expiration-ms}")
+    private long EXPIRATION_MS;
+
     private SecretKey getSigningKey() {
         // must be at least 32 chars (256 bits) for HS256
         return Keys.hmacShaKeyFor(SECRET.getBytes(StandardCharsets.UTF_8));
     }
 
-    public String generateToken(String username) {
+    public String generateToken(UserPrincipal userPrincipal) {
         return Jwts.builder()
-                .subject(username)   // preferred modern API
+                .subject(userPrincipal.getUsername())
+                .claim("userId", userPrincipal.getUserId())// preferred modern API
                 .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60))
+                .expiration(new Date(System.currentTimeMillis() + EXPIRATION_MS))
                 .signWith(getSigningKey())
                 .compact();
     }
 
-    public String extractEmail(String token) {
+    public String getUsernameFromToken(String token) {
+        Claims claims = Jwts.parser()
+                .verifyWith(getSigningKey())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
+        return claims.getSubject();
+    }
+
+    public String getUserIdFromToken(String token) {
+        Claims claims = Jwts.parser()
+                .verifyWith(getSigningKey())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
+        return claims.get("userId", String.class);
+    }
+
+    private Claims parseClaims(String token) {
         return Jwts.parser()
                 .verifyWith(getSigningKey())
                 .build()
                 .parseSignedClaims(token)
-                .getPayload()
-                .getSubject();
+                .getPayload();
     }
+
 
     public boolean validateToken(String token) {
         try {

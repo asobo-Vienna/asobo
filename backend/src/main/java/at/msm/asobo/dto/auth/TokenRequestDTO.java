@@ -1,4 +1,4 @@
-package at.msm.asobo.dto.token;
+package at.msm.asobo.dto.auth;
 
 import java.util.UUID;
 

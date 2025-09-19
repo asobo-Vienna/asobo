@@ -82,13 +82,13 @@ a.btn-purple {
     border-color: var(--asobo-purple);
 }
 
-.register-form div.form-group {
+.register-form div.form-group, login-form div.form-group {
     margin: 0.7em;
     width: 100%;
     margin-left: 0;
 }
 
-.register-form .btn-purple {
+.register-form .btn-purple, login-form .btn-purple {
     width: 60%;
 }
 

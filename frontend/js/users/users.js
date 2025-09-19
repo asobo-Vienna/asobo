@@ -1,10 +1,18 @@
 $(document).ready(getAllUsers);
 
 async function getAllUsers() {
-    const url = HOSTADDRESS + '/api/admin/users';
+    const url = HOSTADDRESS + '/api/users';
+    const token = localStorage.getItem("jwt"); // get JWT from localStorage
 
     try {
-        const response = await fetch(url);
+        const response = await fetch(url, {
+            method: "GET",
+            headers: {
+                "Authorization": `Bearer ${token}`, // send token
+                "Content-Type": "application/json"
+            }
+        });
+
         if (!response.ok) {
             throw new Error(`Response status: ${response.statusText}`);
         }
@@ -16,19 +24,6 @@ async function getAllUsers() {
         console.error('Error while fetching users: ' + error.message);
     }
 }
-
-/*function getAllUsers() {
-    $.getJSON(HOSTADDRESS + '/api/admin/users')
-        .done(function (jsonData) {
-            console.log("Fetch all users.");
-            jsonData.forEach(user => {
-                appendUserToList(user);
-            });
-        })
-        .fail(function (jqXHR, textStatus, errorThrown) {
-            console.log('Error', textStatus, errorThrown);
-        });
-}*/
 
 function appendUserToList(user) {
     const $userList = $("#user-table");
