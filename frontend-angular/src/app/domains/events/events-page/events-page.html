@@ -1,0 +1,14 @@
+<ul id="event-list" class="list-unstyled">
+  @for (event of events; track event.id) {
+    <li>
+      <app-event-card
+        [title]="event.title"
+        [pictureURI]="event.pictureURI"
+        [date]="event.date"
+        [time]="event.time"
+        [location]="event.location"
+        [link]="'#events?id=' + event.id">
+      </app-event-card>
+    </li>
+  }
+</ul>

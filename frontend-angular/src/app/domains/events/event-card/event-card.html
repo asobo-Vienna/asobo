@@ -1,0 +1,13 @@
+<a [href]="link || '#'">
+  <div class="card event-card">
+    <div class="card-image-container">
+      <img class="card-img-top" [src]="pictureURI" alt="{{ title }}">
+    </div>
+    <div class="card-body">
+      <h6 class="card-title">{{ title }}</h6>
+      <div class="card-date date-text text-muted">{{ date }}</div>
+      <div class="card-time date-text text-muted">{{ time }}</div>
+      <div class="card-location location-text text-muted mt-2">in {{ location }}</div>
+    </div>
+  </div>
+</a>

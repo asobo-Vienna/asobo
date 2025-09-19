@@ -55,6 +55,7 @@ public class SecurityConfig {
 
         http.authorizeHttpRequests(
                 registry -> registry
+                        .requestMatchers("/events/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/users").permitAll()
                         .requestMatchers("/auth/token/**").permitAll()
                         .requestMatchers("/swagger-ui/**").permitAll()
