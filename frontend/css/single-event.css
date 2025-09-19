@@ -109,6 +109,10 @@
     object-fit: cover;
 }
 
+.single-media-container video {
+    pointer-events: none;       /* click on video thumbnail passes through */
+}
+
 .carousel-item img,
 .carousel-item video {
     width: 100%;

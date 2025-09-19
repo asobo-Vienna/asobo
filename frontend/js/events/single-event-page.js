@@ -81,6 +81,7 @@ $("#media-thumbnail-container").on("click", ".single-media-container", function(
             $slide.find('img').remove();
             $slide.find('video')
                 .attr('src', mediaItem.mediumURI)
+                .attr('controls', true)
                 .removeAttr('hidden');
         } else {
             // It's an image → remove the video element
