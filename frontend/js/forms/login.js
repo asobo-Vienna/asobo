@@ -30,9 +30,25 @@ $(function () {
             localStorage.setItem("jwt", data.token);
 
             $(".login-form").html(`User: ${data.user.username} logged in successfully`);
+
+            //createHeaderUserThumbnail(data);
             console.log("Logged in user:", data);
         } catch (error) {
             console.error('Error while logging in user: ' + error.message);
         }
     });
 });
+
+/*function createHeaderUserThumbnail(data) {
+    const $profilePic = $('<img>')
+        .addClass('user-profile-picture')
+        .addClass('user-thumbnail')
+        .addClass('me-2')
+        .attr('src', data.user.pictureURI || DEFAULT_USER_PIC)
+        .attr('alt', 'Profile picture of ' + (data.user?.username || 'Unknown user'));
+
+    let $headerProfileLink = $("#header-profile-link");
+    $headerProfileLink.append($profilePic);
+    $headerProfileLink.attr("href", `${USERADDRESS}/${data.user.username}`);
+
+}*/

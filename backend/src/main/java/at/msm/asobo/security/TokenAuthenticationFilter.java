@@ -52,8 +52,8 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
                 UserPrincipal userPrincipal = new UserPrincipal(
                         userId,
                         username,
-                        "", // no password here
-                        List.of(new SimpleGrantedAuthority("ROLE_USER")) // adjust roles as needed
+                        "",
+                        List.of(new SimpleGrantedAuthority("ROLE_USER")) // adjust roles later
                 );
 
                 UserPrincipalAuthenticationToken authentication =

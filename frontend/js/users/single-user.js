@@ -20,15 +20,6 @@ async function getUser() {
     } catch (error) {
         console.error(error.message);
     }
-
-    /*$.getJSON(HOSTADDRESS + '/api/users/id/' + userID)
-        .done(function (user) {
-            console.log("Fetch single user.");
-            createUserProfileHtml(user);
-        })
-        .fail(function (jqXHR, textStatus, errorThrown) {
-            console.log('Error', textStatus, errorThrown);
-        });*/
 }
 
 function createUserProfileHtml(user) {
@@ -36,7 +27,7 @@ function createUserProfileHtml(user) {
     const $profilePic = $('<img>')
         .addClass('user-profile-picture')
         .attr('src', user.pictureURI)
-        .attr('alt', user.username);
+        .attr('alt', 'Profile picture of '+ user.username);
     const $userName = $('<div>').addClass("user-profile-name").text(user.username);
     const $userEmail = $('<div>').addClass("user-profile-email").text(user.email);
     const $userLocation = $('<div>').addClass("user-profile-location").text(user.location);

@@ -1,9 +1,8 @@
 $(document).ready(getAllEvents);
 
 async function getAllEvents() {
-    url = EVENTSADDRESS;
     try {
-        const response = await fetch(url);
+        const response = await fetch(EVENTSADDRESS);
         if (!response.ok) {
             throw new Error(`Response status: ${response.statusText}`);
         }

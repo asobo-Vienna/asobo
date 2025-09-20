@@ -1,6 +1,3 @@
-const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const USERNAME_REGEX = /^[a-zA-Z0-9._-]{3,20}$/;
-
 // event listener for salutation selection
 $(function () {
     const $toggleSalutationSelect = $('#salutation');

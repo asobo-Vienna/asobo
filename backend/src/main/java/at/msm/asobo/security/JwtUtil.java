@@ -20,14 +20,13 @@ public class JwtUtil {
     private long EXPIRATION_MS;
 
     private SecretKey getSigningKey() {
-        // must be at least 32 chars (256 bits) for HS256
         return Keys.hmacShaKeyFor(SECRET.getBytes(StandardCharsets.UTF_8));
     }
 
     public String generateToken(UserPrincipal userPrincipal) {
         return Jwts.builder()
                 .subject(userPrincipal.getUsername())
-                .claim("userId", userPrincipal.getUserId())// preferred modern API
+                .claim("userId", userPrincipal.getUserId())
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + EXPIRATION_MS))
                 .signWith(getSigningKey())
@@ -59,7 +58,6 @@ public class JwtUtil {
                 .parseSignedClaims(token)
                 .getPayload();
     }
-
 
     public boolean validateToken(String token) {
         try {
