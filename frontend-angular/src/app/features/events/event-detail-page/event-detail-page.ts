@@ -6,6 +6,8 @@ import {DatePipe} from '@angular/common';
 import {NewComment} from "../new-comment/new-comment";
 import {Participants} from '../participants/participants';
 import {CommentsList} from '../comments-list/comments-list';
+import {CommentService} from '../comment-service';
+import {Comment} from '../models/comment';
 
 @Component({
   selector: 'app-event-detail-page',
@@ -27,8 +29,11 @@ export class EventDetailPage {
   location!: string;
   description?: string;
 
+  comments: Comment[] = [];
+
   constructor(private route: ActivatedRoute,
-              private eventService: EventService) {
+              private eventService: EventService,
+              private commentService: CommentService) {
   }
 
   ngOnInit(): void {
@@ -36,6 +41,7 @@ export class EventDetailPage {
       if (eventId) {
         this.id = eventId;
         this.loadEvent(eventId);
+        this.getAllComments(eventId);
       }
   }
 
@@ -51,5 +57,18 @@ export class EventDetailPage {
         },
         error: (err) => console.error('Error fetching event:', err)
       });
+  }
+
+  getAllComments(eventId: string): void {
+    this.commentService.getAll(eventId).subscribe({
+      next: (comments: Comment[]) => { this.comments = comments
+        console.log(comments);
+      },
+      error: (err) => console.error('Error fetching comments:', err)
+    });
+  }
+
+  onCommentCreated(comment: Comment) {
+    this.comments.push(comment);
   }
 }
