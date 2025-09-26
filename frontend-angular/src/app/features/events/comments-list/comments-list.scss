@@ -1,0 +1,54 @@
+@use 'variables' as *;
+
+.comment-box {
+  background: white;
+  border-radius: 10px;
+  padding: 10px;
+  border: 1px solid #E9ECEF;
+}
+.comment-box:not(:last-child) {
+  margin-bottom: 20px;
+}
+
+.comment-username {
+  color: $asobo-purple;
+  font-weight: bold;
+}
+
+.comment-time {
+  color: $grayish-blue;
+  font-size: 0.85rem;
+}
+
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 0.5rem;
+  filter: drop-shadow(2px 2px 3px gray);
+}
+
+.comments-list {
+  font-size: 0.9rem;
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 15px;
+  background-color: $asobo-light-gray;
+  border-radius: 15px;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+}
+
+.edit-comment-btn {
+  font-size: 0.8rem;
+  color: white;
+  margin: 0.2rem;
+}
+.edit-comment-btn:hover {
+  color: white;           /* stays white when hovering */
+}
+
+.remove-comment-btn {
+  font-size: 0.8rem;
+  margin: 0.2rem;
+}

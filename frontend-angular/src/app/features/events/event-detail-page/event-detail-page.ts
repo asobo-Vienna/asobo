@@ -4,13 +4,17 @@ import {Event} from '../models/event';
 import {ActivatedRoute} from '@angular/router';
 import {DatePipe} from '@angular/common';
 import {NewComment} from "../new-comment/new-comment";
+import {Participants} from '../participants/participants';
+import {CommentsList} from '../comments-list/comments-list';
 
 @Component({
   selector: 'app-event-detail-page',
-    imports: [
-        DatePipe,
-        NewComment
-    ],
+  imports: [
+    DatePipe,
+    NewComment,
+    Participants,
+    CommentsList
+  ],
   templateUrl: './event-detail-page.html',
   styleUrl: './event-detail-page.scss'
 })
@@ -23,16 +27,16 @@ export class EventDetailPage {
   location!: string;
   description?: string;
 
-  constructor(private route: ActivatedRoute, private eventService: EventService) {
+  constructor(private route: ActivatedRoute,
+              private eventService: EventService) {
   }
 
   ngOnInit(): void {
-    this.route.paramMap.subscribe(params => {
-      const eventId = params.get('id');
+    const eventId: string | null = this.route.snapshot.paramMap.get('id');
       if (eventId) {
+        this.id = eventId;
         this.loadEvent(eventId);
       }
-    });
   }
 
   loadEvent(eventId: string) {
