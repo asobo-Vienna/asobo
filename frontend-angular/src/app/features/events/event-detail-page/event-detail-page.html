@@ -36,16 +36,22 @@
   </div>
 </div>
 
-<!-- Comment Box & Participants Row -->
+
 <div class="row text-start mt-4 align-items-center gx-5">
+  <!-- Comment Box for new comment -->
     <div class="col-md-6">
-        <app-new-comment></app-new-comment>
+      <app-new-comment (commentCreated)="onCommentCreated($event)"></app-new-comment>
     </div>
-      <!-- Participants -->
-      <div class="col-md-6 text-start">
-        <div class="fw-bold">Going</div>
-        <div class="mt-2" id="participants-avatar-container">
-            <img class="user-avatar" src="" alt="" />
-        </div>
-      </div>
+
+    <!-- Participants -->
+    <div class="col-md-6 text-start">
+      <app-participants/>
+    </div>
+</div>
+
+<!-- Existing comments list -->
+<div class="row text-start mt-3 gx-5">
+  <div class="col-md-6 text-start">
+    <app-comments-list [comments]="comments"/>
+  </div>
 </div>

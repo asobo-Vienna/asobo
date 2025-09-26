@@ -4,13 +4,19 @@ import {Event} from '../models/event';
 import {ActivatedRoute} from '@angular/router';
 import {DatePipe} from '@angular/common';
 import {NewComment} from "../new-comment/new-comment";
+import {Participants} from '../participants/participants';
+import {CommentsList} from '../comments-list/comments-list';
+import {CommentService} from '../comment-service';
+import {Comment} from '../models/comment';
 
 @Component({
   selector: 'app-event-detail-page',
-    imports: [
-        DatePipe,
-        NewComment
-    ],
+  imports: [
+    DatePipe,
+    NewComment,
+    Participants,
+    CommentsList
+  ],
   templateUrl: './event-detail-page.html',
   styleUrl: './event-detail-page.scss'
 })
@@ -23,16 +29,20 @@ export class EventDetailPage {
   location!: string;
   description?: string;
 
-  constructor(private route: ActivatedRoute, private eventService: EventService) {
+  comments: Comment[] = [];
+
+  constructor(private route: ActivatedRoute,
+              private eventService: EventService,
+              private commentService: CommentService) {
   }
 
   ngOnInit(): void {
-    this.route.paramMap.subscribe(params => {
-      const eventId = params.get('id');
+    const eventId: string | null = this.route.snapshot.paramMap.get('id');
       if (eventId) {
+        this.id = eventId;
         this.loadEvent(eventId);
+        this.getAllComments(eventId);
       }
-    });
   }
 
   loadEvent(eventId: string) {
@@ -47,5 +57,18 @@ export class EventDetailPage {
         },
         error: (err) => console.error('Error fetching event:', err)
       });
+  }
+
+  getAllComments(eventId: string): void {
+    this.commentService.getAll(eventId).subscribe({
+      next: (comments: Comment[]) => { this.comments = comments
+        console.log(comments);
+      },
+      error: (err) => console.error('Error fetching comments:', err)
+    });
+  }
+
+  onCommentCreated(comment: Comment) {
+    this.comments.push(comment);
   }
 }
