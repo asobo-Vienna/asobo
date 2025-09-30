@@ -1,3 +1,6 @@
+import {Participant} from './participant';
+import {Comment} from './comment';
+
 export interface Event {
   id: string;
   title: string;
@@ -6,4 +9,6 @@ export interface Event {
   time: string;
   location: string;
   description: string;
+  participants: Participant[];
+  comments: Comment[];
 }

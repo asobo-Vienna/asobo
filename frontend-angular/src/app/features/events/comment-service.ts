@@ -14,7 +14,7 @@ export class CommentService {
   constructor(private http: HttpClient) {}
 
 
-  getAll(eventId: string): Observable<Comment[]> {
+  getAllByEventId(eventId: string): Observable<Comment[]> {
     return this.http.get<Comment[]>(`${this.baseUrl}/${eventId}/comments`);
   }
 

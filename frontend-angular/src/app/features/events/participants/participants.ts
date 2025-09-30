@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import {Component, Input} from '@angular/core';
+import {Participant} from '../models/participant';
 
 @Component({
   selector: 'app-participants',
@@ -7,5 +8,5 @@ import { Component } from '@angular/core';
   styleUrl: './participants.scss'
 })
 export class Participants {
-
+  @Input() participants!: Participant[];
 }
