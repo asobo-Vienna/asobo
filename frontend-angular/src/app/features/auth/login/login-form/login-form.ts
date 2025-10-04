@@ -1,7 +1,7 @@
-import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/core';
+import {Component, ViewEncapsulation} from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {CommonModule} from '@angular/common';
-import {Router} from '@angular/router';  // Add this import
+import {ActivatedRoute, Router, RouterLink} from '@angular/router';
 import {environment} from '../../../../../environments/environment';
 import {AuthService} from '../../auth-service';
 import {PasswordModule} from "primeng/password";
@@ -14,6 +14,7 @@ import {ButtonModule} from "primeng/button";
     ReactiveFormsModule,
     PasswordModule,
     ButtonModule,
+    RouterLink,
   ],
   templateUrl: './login-form.html',
   styleUrl: './login-form.scss',
@@ -25,7 +26,8 @@ export class LoginForm {
   constructor(
       private formBuilder: FormBuilder,
       public authService: AuthService,
-      private router: Router
+      private router: Router,
+      private route: ActivatedRoute,
   ) {
     this.loginForm = this.formBuilder.group({
       identifier: ['', [
@@ -48,7 +50,8 @@ export class LoginForm {
     this.authService.login(this.loginForm.value).subscribe({
       next: (response) => {
         console.log('Login successful:', response);
-        this.router.navigate(['/dashboard']); // TODO: decide where to navigate to after login
+        const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/dashboard';
+        this.router.navigate([returnUrl]); // TODO: decide where to navigate to after login
       },
       error: (err) => {
         console.error('Login failed:', err);
@@ -61,5 +64,4 @@ export class LoginForm {
     return this.loginForm.controls;
   }
 
-  protected readonly environment = environment;
 }

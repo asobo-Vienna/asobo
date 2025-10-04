@@ -20,12 +20,15 @@
       <span class="navbar-toggler-icon"></span>
     </button>
 
-    <div class="d-flex">
-      <a routerLink="/create-event" class="btn form-control me-2 d-flex align-items-center btn-purple btn-primary" id="create-event-nav-anchor">
-        <span class="add-event-plus">+</span>
-        <span class="ms-1">Event</span>
-      </a>
-    </div>
+    <!-- TODO: also check if user has permission to add event -->
+    @if (this.authService.isLoggedIn()) {
+      <div class="d-flex">
+        <a routerLink="/create-event" class="btn form-control me-2 d-flex align-items-center btn-purple btn-primary" id="create-event-nav-anchor">
+          <span class="add-event-plus">+</span>
+          <span class="ms-1">Event</span>
+        </a>
+      </div>
+    }
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
@@ -40,14 +43,14 @@
         </li>
         @if (this.authService.isLoggedIn()) {
           <li class="nav-item d-flex align-items-center user-profile-thumbnail" id="user-nav-thumbnail">
-            <a routerLink="#">
-              <img src="/images/users/jane_doe.png" alt="User Thumbnail" class="user-thumbnail me-2">
+            <a [routerLink]="this.userProfile.userProfileUrl">
+              <img [src]="this.userProfile.pictureUrl" [alt]="this.userProfile.pictureAlt" class="user-thumbnail me-2">
             </a>
             <div class="d-flex flex-column justify-content-center">
-              <span class="username-thumbnail">Jane</span>
+              <span class="username-thumbnail">{{ this.userProfile.username}}</span>
               <span class="user-myprofile">
-                              <a href="">My Profile</a>
-                          </span>
+                <a href="">My Profile</a>
+              </span>
             </div>
           </li>
         }

@@ -1,0 +1,3 @@
+@if (this.authService.isLoggedIn()) {
+  <p>Profile of {{ this.authService.currentUser()?.username }}</p>
+}

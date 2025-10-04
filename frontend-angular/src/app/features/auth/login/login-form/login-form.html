@@ -59,6 +59,11 @@
             </button>
         </div>
     </form>
+
+  <div class="form-group d-flex flex-column justify-content-center align-items-center">
+    <span>Wanna get an account?</span>
+    <a routerLink="/register" class="signup-text-link">Sign up here.</a>
+  </div>
 } @else {
   <div class="alert alert-success mt-3 text-center">
     Hi <span class="fw-bold">{{this.authService.currentUser()?.username}}</span> you are logged in!

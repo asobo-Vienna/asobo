@@ -56,9 +56,10 @@
   flex-grow: 1;
 }
 
-/*#user-nav-thumbnail {
-  display: none !important;
-}*/
+#user-nav-thumbnail .user-thumbnail {
+  width: 40px;
+  height: 40px;
+}
 
 #create-event-nav-anchor {
   list-style: none;
