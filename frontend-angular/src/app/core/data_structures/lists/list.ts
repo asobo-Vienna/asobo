@@ -4,6 +4,7 @@ class List<T> {
   constructor(items: T[]) {
     this.addAll(items);
   }
+  
   // Add item
   add(item: T): void {
     this.items.push(item);
