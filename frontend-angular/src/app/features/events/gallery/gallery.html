@@ -1,0 +1,23 @@
+<div class="fw-bold">Photos & Videos</div>
+<div class="mt-2" id="media-thumbnail-container">
+
+  @for (mediaitem of mediaItems; track mediaitem.id) {
+    <div class="single-media-container">
+      <img [src]="UrlUtilService.getMediaUrl(mediaitem.mediumURI)" alt="{{ mediaitem }}">
+    </div>
+  }
+
+  <div class="single-media-container">
+    <div id="add-media-container" class="single-media-container add-media-button" (click)="fileInput.click()">
+      +
+      <input
+        #fileInput
+        type="file"
+        accept="image/*,video/*"
+        hidden
+        (change)="onFileSelected($event)"
+      />
+    </div>
+  </div>
+
+</div>

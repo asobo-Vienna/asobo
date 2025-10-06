@@ -28,11 +28,6 @@
                 "glob": "**/*",
                 "input": "public",
                 "output": "/"
-              },
-              {
-                "glob": "**/*",
-                "input": "uploads",
-                "output": "/uploads/"
               }
             ],
             "styles": [

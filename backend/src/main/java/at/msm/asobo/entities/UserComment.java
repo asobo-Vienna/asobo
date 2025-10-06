@@ -28,7 +28,7 @@ public class UserComment {
 
     @ManyToOne
     @JoinColumn(name = "event_id")
-    @JsonIgnore
+    // @JsonIgnore
     private Event event;
 
     @Column(length = 4096)

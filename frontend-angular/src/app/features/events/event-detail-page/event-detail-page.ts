@@ -1,13 +1,20 @@
 import {Component} from '@angular/core';
-import {EventService} from '../event-service';
+import {EventService} from '../services/event-service';
 import {Event} from '../models/event';
 import {ActivatedRoute} from '@angular/router';
 import {DatePipe} from '@angular/common';
 import {NewComment} from "../new-comment/new-comment";
 import {Participants} from '../participants/participants';
 import {CommentsList} from '../comments-list/comments-list';
-import {CommentService} from '../comment-service';
+import {CommentService} from '../services/comment-service';
 import {Comment} from '../models/comment';
+import {Participant} from '../models/participant';
+import {Observable} from 'rxjs';
+import {Gallery} from '../gallery/gallery';
+import {MediaService} from '../services/media-service';
+import {MediaItem} from '../models/media-item';
+import {List} from '../../../core/data_structures/lists/list';
+import {UrlUtilService} from '../../../shared/utils/url/url-util-service';
 
 @Component({
   selector: 'app-event-detail-page',
@@ -15,7 +22,8 @@ import {Comment} from '../models/comment';
     DatePipe,
     NewComment,
     Participants,
-    CommentsList
+    CommentsList,
+    Gallery,
   ],
   templateUrl: './event-detail-page.html',
   styleUrl: './event-detail-page.scss'
@@ -28,47 +36,91 @@ export class EventDetailPage {
   time!: string;
   location!: string;
   description?: string;
-
-  comments: Comment[] = [];
+  comments: List<Comment> = new List<Comment>([]);
+  participants: List<Participant> = new List<Participant>([]);
+  mediaItems: List<MediaItem> = new List<MediaItem>([]);
 
   constructor(private route: ActivatedRoute,
               private eventService: EventService,
-              private commentService: CommentService) {
+              private commentService: CommentService,
+              private mediaService: MediaService) {
   }
+
 
   ngOnInit(): void {
-    const eventId: string | null = this.route.snapshot.paramMap.get('id');
-      if (eventId) {
-        this.id = eventId;
-        this.loadEvent(eventId);
-        this.getAllComments(eventId);
-      }
-  }
-
-  loadEvent(eventId: string) {
-      this.eventService.getEventById(eventId).subscribe({
-        next: (event: Event) => {
-          this.title = event.title;
-          this.pictureURI = event.pictureURI;
-          this.date = event.date;
-          this.time = event.date;
-          this.location = event.location;
-          this.description = event.description;
-        },
+    const eventId = this.route.snapshot.paramMap.get('id');
+    if (eventId) {
+      this.loadEvent(eventId).subscribe({
+        next: (event) => this.populateEvent(event),
         error: (err) => console.error('Error fetching event:', err)
       });
+    }
   }
 
-  getAllComments(eventId: string): void {
-    this.commentService.getAll(eventId).subscribe({
-      next: (comments: Comment[]) => { this.comments = comments
-        console.log(comments);
-      },
-      error: (err) => console.error('Error fetching comments:', err)
+  loadEvent(eventId: string): Observable<Event> {
+    return this.eventService.getEventById(eventId);
+  }
+
+  private populateEvent(event: Event): void {
+    this.id = event.id;
+    this.title = event.title;
+    this.pictureURI = event.pictureURI;
+    this.date = event.date;
+    this.time = event.date;
+    this.location = event.location;
+    this.description = event.description;
+    this.participants = event.participants;
+
+    this.commentService.getAllByEventId(event.id).subscribe((comments: List<Comment>) => {
+      this.comments = comments;
+    });
+    this.mediaService.getAllByEventId(event.id).subscribe((mediaItems: List<MediaItem>) => {
+      this.mediaItems = mediaItems;
     });
   }
 
+
   onCommentCreated(comment: Comment) {
-    this.comments.push(comment);
+    this.comments.add(comment);
   }
+
+
+  deleteComment(comment: Comment) {
+    this.commentService.delete(comment).subscribe({
+      next: () => {
+        this.comments.remove(comment);
+      },
+      error: (err) => {
+        console.error('Failed to delete comment!', err);
+      }
+    });
+  }
+
+
+  editComment(comment: Comment) {
+    this.commentService.edit(comment).subscribe({
+      next: () => {
+        console.log('edit comment:', comment);
+      },
+      error: (err) => {
+        console.error('Failed to edit comment!:', err);
+      }
+    });
+  }
+
+  uploadMedia(file: File) {
+    this.mediaService.upload(this.id, file).subscribe({
+      next: (mediaItem) => this.mediaItems.add(mediaItem),
+      error: (err) => console.error('Upload failed', err)
+    });
+  }
+
+  // deleteMedia(file: File) {
+  //   this.mediaService.delete(this.id, file).subscribe({
+  //     next: (mediaItem) => this.mediaItems = this.mediaItems.filter(c => c.id !== mediaItem.id),
+  //     error: (err) => console.error('Delete failed', err)
+  //   });
+  // }
+
+  protected readonly UrlUtilService = UrlUtilService;
 }

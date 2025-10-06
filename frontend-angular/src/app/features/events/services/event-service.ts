@@ -1,9 +1,8 @@
 import {Injectable} from '@angular/core';
-import {environment} from '../../../environments/environment';
+import {environment} from '../../../../environments/environment';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
-import {Event} from './models/event'
-
+import {Event} from '../models/event'
 
 @Injectable({
   providedIn: 'root'
@@ -17,6 +16,6 @@ export class EventService {
   }
 
   public getEventById(id: string): Observable<Event> {
-    return this.http.get<Event>(environment.eventsAddress + '/' + id);
+    return this.http.get<Event>(`${environment.eventsAddress}/${id}`);
   }
 }
