@@ -4,6 +4,8 @@ import {List} from "../../../core/data_structures/lists/list";
 import {UrlUtilService} from '../../../shared/utils/url/url-util-service';
 import {Carousel} from 'primeng/carousel';
 import {PrimeTemplate} from 'primeng/api';
+import {MatIcon} from '@angular/material/icon';
+import {MatIconButton} from '@angular/material/button';
 
 
 @Component({
@@ -12,14 +14,16 @@ import {PrimeTemplate} from 'primeng/api';
   styleUrl: './gallery.scss',
   imports: [
     Carousel,
-    PrimeTemplate
+    PrimeTemplate,
+    MatIcon,
+    MatIconButton
   ]
 })
 
 export class Gallery {
   @Input() mediaItems: List<MediaItem> = new List([]);
   @Output() mediaAdded = new EventEmitter<File>();
-  @Output() mediaDeleted = new EventEmitter<File>();
+  @Output() mediaDeleted = new EventEmitter<MediaItem>();
   protected readonly UrlUtilService = UrlUtilService;
 
   showCarousel = false;

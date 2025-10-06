@@ -116,8 +116,8 @@ export class EventDetailPage {
     });
   }
 
-  deleteMedia(file: File) {
-    this.mediaService.delete(this.id, file).subscribe({
+  deleteMedia(item: MediaItem) {
+    this.mediaService.delete(this.id, item).subscribe({
       next: (mediaItem) => this.mediaItems.remove(mediaItem),
       error: (err) => console.error('Failed to delete media!', err)
     });

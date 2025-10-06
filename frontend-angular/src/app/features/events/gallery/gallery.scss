@@ -8,8 +8,13 @@
 }
 
 .single-media-container {
+  position: relative;
   width: 7vw;
   height: 7vw;
+}
+
+.single-media-container:hover .delete-media-button {
+  display: flex;
 }
 
 .single-media-container img {
@@ -39,13 +44,27 @@
   font-family: Arial, sans-serif;
 }
 
+.delete-media-button {
+  display: none;                                 // hidden by default
+  position: absolute;
+  background: rgba(210,210,210,0.8);
+  width: clamp(2rem, 5vw, 4rem);
+  height: clamp(2rem, 5vw, 4rem);
+  font-size: clamp(1.5rem, 3vw, 3rem);
+  top: 10%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  justify-content: center;
+  align-items: center;
+}
+
 .carousel-overlay {
   position: fixed;
   inset: 0;
   background: rgba(0,0,0,0.8);
   display: flex;
   justify-content: center;
-  // align-items: center;
+  align-items: center;
   z-index: 1050;  /* above all content */
 }
 
