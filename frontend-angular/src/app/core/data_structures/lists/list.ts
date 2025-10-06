@@ -1,8 +1,23 @@
-class List<T> {
+export class List<T> implements Iterable<T> {
   private items: T[] = [];
 
   constructor(items: T[]) {
     this.addAll(items);
+  }
+
+  [Symbol.iterator](): Iterator<T, any, any> {
+    let index = 0;
+    const items = this.items;
+
+    return {
+      next(): IteratorResult<T> {
+        if (index < items.length) {
+          return { value: items[index++], done: false };
+        } else {
+          return { value: undefined, done: true };
+        }
+      }
+    };
   }
 
   // Add item

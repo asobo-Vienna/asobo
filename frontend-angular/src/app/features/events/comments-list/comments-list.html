@@ -2,17 +2,25 @@
   @for (comment of comments; track comment.id) {
     <div class="comment-box">
       <div class="d-flex gap-3">
-        <img class="user-avatar" [src]="comment.pictureURI" alt="{{comment.username}}'s avatar">
+        <img class="user-avatar" [src]="UrlUtilService.getMediaUrl(comment.pictureURI || '/uploads/profile-pictures/default.png')" alt="{{comment.username}}'s avatar">
         <div class="flex-grow-1">
-          <div class="d-flex justify-content-between align-items-center mb-2">
-            <h6 class="mb-0">{{ comment.username }}</h6>
+          <div class="d-flex justify-content-between align-items-center">
+            <h6 class="mb-0 comment-username">{{ comment.username }}</h6>
             <span class="comment-time">{{ comment.creationDate | date:'short' }}</span>
           </div>
-          <p class="mb-0">{{ comment.text }}</p>
-          <div class="d-flex justify-content-end">
-            <button class="btn btn-warning edit-comment-btn">Edit</button>
-            <button class="btn btn-danger remove-comment-btn">Remove</button>
+
+          <div class="d-flex align-items-start">
+            <p class="mt-2 flex-grow-1">{{ comment.text }}</p>
+            <div class="comment-actions">
+              <button mat-icon-button aria-label="Edit" (click)="commentEdited.emit(comment)">
+                <mat-icon class="mat-icon-custom">edit</mat-icon>
+              </button>
+              <button mat-icon-button aria-label="Delete" (click)="commentDeleted.emit(comment)">
+                <mat-icon class="mat-icon-custom">delete_forever</mat-icon>
+              </button>
+            </div>
           </div>
+
         </div>
       </div>
     </div>

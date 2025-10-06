@@ -1,6 +1,7 @@
 import {Component, Input} from '@angular/core';
 import {DatePipe} from '@angular/common';
 import {RouterLink} from '@angular/router';
+import {UrlUtilService} from '../../../shared/utils/url/url-util-service';
 
 @Component({
   selector: 'app-event-card',
@@ -19,6 +20,7 @@ export class EventCard {
   @Input() time!: string;
   @Input() location!: string;
   @Input() link?: string;
+  protected readonly UrlUtilService = UrlUtilService;
 }
 
 

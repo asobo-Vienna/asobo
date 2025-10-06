@@ -1,4 +1,6 @@
 @use 'variables' as *;
+@use '@angular/material' as mat;
+
 
 .btn-purple {
   color: white;
@@ -14,6 +16,11 @@
 a.btn-purple {
   color: #ffffff !important;
   text-decoration: none;
+}
+
+.mat-icon-custom {
+  color: $asobo-purple;          /* base color */
+  transition: color 0.2s;       /* smooth hover */
 }
 
 .user-thumbnail {
@@ -91,5 +98,4 @@ a.btn-purple {
   width: 40px;
   height: 40px;
 }
-
 
