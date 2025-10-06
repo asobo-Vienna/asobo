@@ -1,17 +1,17 @@
 import {Component} from '@angular/core';
-import {EventService} from '../event-service';
+import {EventService} from '../services/event-service';
 import {Event} from '../models/event';
 import {ActivatedRoute} from '@angular/router';
 import {DatePipe} from '@angular/common';
 import {NewComment} from "../new-comment/new-comment";
 import {Participants} from '../participants/participants';
 import {CommentsList} from '../comments-list/comments-list';
-import {CommentService} from '../comment-service';
+import {CommentService} from '../services/comment-service';
 import {Comment} from '../models/comment';
 import {Participant} from '../models/participant';
 import {Observable} from 'rxjs';
 import {Gallery} from '../gallery/gallery';
-import {MediaService} from '../media-service';
+import {MediaService} from '../services/media-service';
 import {MediaItem} from '../models/media-item';
 import {List} from '../../../core/data_structures/lists/list';
 import {UrlUtilService} from '../../../shared/utils/url/url-util-service';
@@ -109,6 +109,7 @@ export class EventDetailPage {
     });
   }
 
+
   uploadMedia(file: File) {
     this.mediaService.upload(this.id, file).subscribe({
       next: (mediaItem) => this.mediaItems.add(mediaItem),
@@ -116,12 +117,14 @@ export class EventDetailPage {
     });
   }
 
+
   deleteMedia(item: MediaItem) {
+    this.mediaItems.remove(item);       // remove immediately
     this.mediaService.delete(this.id, item).subscribe({
-      next: (mediaItem) => this.mediaItems.remove(mediaItem),
-      error: (err) => console.error('Failed to delete media!', err)
+      error: (err) => {
+        console.error('Failed to delete media!', err);
+        this.mediaItems.add(item);     // revert if backend fails
+      }
     });
   }
-
-
 }

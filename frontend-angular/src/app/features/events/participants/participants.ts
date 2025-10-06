@@ -5,7 +5,6 @@ import {UrlUtilService} from '../../../shared/utils/url/url-util-service';
 
 @Component({
   selector: 'app-participants',
-  imports: [],
   templateUrl: './participants.html',
   styleUrl: './participants.scss'
 })

@@ -1,9 +1,9 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {environment} from '../../../environments/environment';
-import {MediaItem} from './models/media-item';
+import {environment} from '../../../../environments/environment';
+import {MediaItem} from '../models/media-item';
 import {map, Observable} from 'rxjs';
-import {List} from '../../core/data_structures/lists/list';
+import {List} from '../../../core/data_structures/lists/list';
 
 @Injectable({
   providedIn: 'root'
@@ -27,8 +27,7 @@ export class MediaService {
   }
 
 
-  delete(eventId: string, item: MediaItem) {
-    console.log('deleting file');
-    return this.http.delete<MediaItem>(`${environment.eventsAddress}/${eventId}/media/${item}`);
+  delete(eventId: string, item: MediaItem): Observable<MediaItem> {
+    return this.http.delete<MediaItem>(`${environment.eventsAddress}/${eventId}/media/${item.id}`);
   }
 }

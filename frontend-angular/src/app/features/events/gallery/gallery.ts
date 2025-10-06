@@ -7,7 +7,6 @@ import {PrimeTemplate} from 'primeng/api';
 import {MatIcon} from '@angular/material/icon';
 import {MatIconButton} from '@angular/material/button';
 
-
 @Component({
   selector: 'app-gallery',
   templateUrl: './gallery.html',

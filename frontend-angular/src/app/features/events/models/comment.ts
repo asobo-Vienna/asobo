@@ -3,7 +3,7 @@ export interface Comment {
   text: string;
   authorId: string;
   username?: string;
-  eventId?: string;
+  eventId: string;
   creationDate?: Date;
   pictureURI?: string;
 }

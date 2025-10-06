@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {EventCard} from '../event-card/event-card';
-import {EventService} from '../event-service';
+import {EventService} from '../services/event-service';
 import {Event} from '../models/event'
 
 @Component({
