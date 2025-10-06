@@ -2,7 +2,7 @@
 <div class="row text-start">
   <!-- Image column -->
   <div class="col-md-6 event-image-container">
-    <img class="card-img-top" [src]="UrlUtilService.getMediaUrl(pictureURI)" alt="{{ title }}" />
+    <img class="card-img-top" [src]="UrlUtilService.getMediaUrl(pictureURI || '/uploads/event-cover-pictures/default.png')" alt="{{ title }}" />
   </div>
 
   <!-- TODO make the join button work for that particular event! -->

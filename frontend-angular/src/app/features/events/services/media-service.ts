@@ -1,9 +1,9 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {environment} from '../../../environments/environment';
-import {MediaItem} from './models/media-item';
+import {environment} from '../../../../environments/environment';
+import {MediaItem} from '../models/media-item';
 import {map, Observable} from 'rxjs';
-import {List} from '../../core/data_structures/lists/list';
+import {List} from '../../../core/data_structures/lists/list';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +15,7 @@ export class MediaService {
 
   getAllByEventId(eventId: string): Observable<List<MediaItem>> {
     return this.http
-      .get<MediaItem[]>(`${environment.eventsAddress}/${eventId}/media`)
+      .get<MediaItem[]>(`${this.getMediaUrl(eventId)}`)
       .pipe(map(items => new List<MediaItem>(items)));
   }
 
@@ -23,11 +23,16 @@ export class MediaService {
   upload(eventId: string, file: File): Observable<MediaItem> {
     const form = new FormData();
     form.append('mediumFile', file);
-    return this.http.post<MediaItem>(`${environment.eventsAddress}/${eventId}/media`, form);
+    return this.http.post<MediaItem>(`${this.getMediaUrl(eventId)}`, form);
   }
 
 
   delete(eventId: string, file: File) {
     console.log('deleting file');
+  }
+
+
+  private getMediaUrl(eventId: string): string {
+    return `${environment.eventsAddress}/${eventId}/media`;
   }
 }

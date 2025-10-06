@@ -12,6 +12,7 @@ export class Gallery {
   @Input() mediaItems!: List<MediaItem>;
   @Output() mediaAdded = new EventEmitter<File>();
   @Output() mediaDeleted = new EventEmitter<File>();
+  protected readonly UrlUtilService = UrlUtilService;
 
   onFileSelected(event: Event) {
     const input = event.target as HTMLInputElement;
@@ -21,6 +22,4 @@ export class Gallery {
     this.mediaAdded.emit(file);
     input.value = '';
   }
-
-  protected readonly UrlUtilService = UrlUtilService;
 }

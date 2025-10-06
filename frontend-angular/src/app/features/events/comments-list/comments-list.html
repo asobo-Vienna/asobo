@@ -2,7 +2,7 @@
   @for (comment of comments; track comment.id) {
     <div class="comment-box">
       <div class="d-flex gap-3">
-        <img class="user-avatar" [src]="UrlUtilService.getMediaUrl(comment.pictureURI ?? 'default.png')" alt="{{comment.username}}'s avatar">
+        <img class="user-avatar" [src]="UrlUtilService.getMediaUrl(comment.pictureURI || '/uploads/profile-pictures/default.png')" alt="{{comment.username}}'s avatar">
         <div class="flex-grow-1">
           <div class="d-flex justify-content-between align-items-center">
             <h6 class="mb-0 comment-username">{{ comment.username }}</h6>

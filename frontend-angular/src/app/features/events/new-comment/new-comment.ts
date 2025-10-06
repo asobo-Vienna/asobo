@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Output} from '@angular/core';
 import {FormsModule} from '@angular/forms';
-import {CommentService} from '../comment-service';
+import {CommentService} from '../services/comment-service';
 import {ActivatedRoute} from '@angular/router';
 import {Comment} from '../models/comment';
 

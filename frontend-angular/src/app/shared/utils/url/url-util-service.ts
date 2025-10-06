@@ -26,7 +26,7 @@ export class UrlUtilService {
     return this.getParams([param]).get(param) ?? null;
   }
 
-  static getMediaUrl(path: string) {
-    return `${environment.backendUrl}${path}`;
+  static getMediaUrl(relativePath: string) {
+    return `${environment.backendUrl}${relativePath}`;
   }
 }
