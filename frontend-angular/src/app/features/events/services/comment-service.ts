@@ -4,6 +4,7 @@ import {Comment} from '../models/comment'
 import {HttpClient} from '@angular/common/http';
 import {map, Observable} from 'rxjs';
 import {List} from '../../../core/data_structures/lists/list';
+import {CreateComment} from '../models/create-comment';
 
 @Injectable({
   providedIn: 'root'
@@ -20,14 +21,8 @@ export class CommentService {
   }
 
 
-  create(comment: Comment): Observable<Comment> {
-    const createdComment = {
-      'text': comment.text.trim(),
-      'authorId': comment.authorId,
-      'eventId': comment.eventId
-    };
-
-    return this.http.post<Comment>(`${environment.eventsAddress}/${comment.eventId}/comments`, createdComment);
+  create(comment: CreateComment): Observable<Comment> {
+    return this.http.post<Comment>(`${environment.eventsAddress}/${comment.eventId}/comments`, comment);
   }
 
 

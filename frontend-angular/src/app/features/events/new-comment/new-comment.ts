@@ -29,7 +29,7 @@ export class NewComment {
       return;
 
     this.commentService.create({
-      text: this.text,
+      text: this.text.trim(),
       authorId: this.authorId,
       eventId: eventId
     }).subscribe({
