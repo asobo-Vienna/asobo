@@ -1,4 +1,4 @@
-import {Component, ViewEncapsulation} from '@angular/core';
+import {Component, ViewEncapsulation, inject} from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {CommonModule} from '@angular/common';
 import {ActivatedRoute, Router, RouterLink} from '@angular/router';
@@ -22,11 +22,12 @@ export class LoginForm {
   loginForm: FormGroup;
   loginFailed: boolean;
 
+  private formBuilder = inject(FormBuilder);
+  public authService = inject(AuthService);
+  private router = inject(Router);
+  private route = inject(ActivatedRoute);
+
   constructor(
-      private formBuilder: FormBuilder,
-      public authService: AuthService,
-      private router: Router,
-      private route: ActivatedRoute,
   ) {
     this.loginFailed = false;
     this.loginForm = this.formBuilder.group({
