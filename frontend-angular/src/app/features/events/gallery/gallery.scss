@@ -80,7 +80,8 @@
   object-fit: contain;
 }
 
-::ng-deep .p-carousel-prev-button,
-::ng-deep .p-carousel-next-button {
+.p-carousel .p-carousel-prev-button .p-icon,
+.p-carousel .p-carousel-next-button .p-icon {
   color: rgba(255, 255, 255, 0.7);
+  height: 2rem;
 }

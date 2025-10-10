@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Component, EventEmitter, Input, Output, ViewEncapsulation} from '@angular/core';
 import {MediaItem} from '../models/media-item';
 import {List} from "../../../core/data_structures/lists/list";
 import {UrlUtilService} from '../../../shared/utils/url/url-util-service';
@@ -11,6 +11,7 @@ import {MatIconButton} from '@angular/material/button';
   selector: 'app-gallery',
   templateUrl: './gallery.html',
   styleUrl: './gallery.scss',
+  encapsulation: ViewEncapsulation.None,
   imports: [
     Carousel,
     PrimeTemplate,
