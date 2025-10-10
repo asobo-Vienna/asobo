@@ -8,7 +8,7 @@ import {RouterLink} from "@angular/router";
     imports: [
         Password,
         ReactiveFormsModule,
-        RouterLink
+        RouterLink,
     ],
   templateUrl: './register-page.html',
   styleUrl: './register-page.scss'
