@@ -10,6 +10,8 @@ export const routes: Routes = [
   // public routes
   { path: 'login', component: LoginPage },
   { path: 'register', component: RegisterPage },
+  { path: 'events', component: EventsPage },
+  { path: 'events/:id', component: EventDetailPage },
 
   // everything else needs authentication
   {
@@ -17,8 +19,6 @@ export const routes: Routes = [
     canActivate: [authGuard],
     children: [
       { path: 'user/:username', component: UserProfile },
-      { path: 'events', component: EventsPage },
-      { path: 'events/:id', component: EventDetailPage },
       { path: '', redirectTo: '/events', pathMatch: 'full' },
     ]
   },

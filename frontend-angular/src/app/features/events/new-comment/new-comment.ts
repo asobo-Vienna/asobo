@@ -1,8 +1,10 @@
-import {Component, EventEmitter, Output} from '@angular/core';
+import {Component, EventEmitter, inject, Input, Output} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {CommentService} from '../services/comment-service';
 import {ActivatedRoute} from '@angular/router';
 import {Comment} from '../models/comment';
+import {CreateComment} from '../models/create-comment';
+import {User} from '../../auth/login/models/user';
 
 @Component({
   selector: 'app-new-comment',
@@ -13,24 +15,21 @@ import {Comment} from '../models/comment';
   styleUrl: './new-comment.scss'
 })
 export class NewComment {
+  private commentService = inject(CommentService);
+  private route = inject(ActivatedRoute);
 
+  @Input() author!: User | null ;
   @Output() commentCreated: EventEmitter<Comment> = new EventEmitter<Comment>();
   text: string = '';
-  // TODO remove hardcoded ID here!!!
-  authorId: string = '7da69d8e-55c7-4a96-ac6d-cb207e4e8a21';
-
-  constructor(private commentService: CommentService,
-              private route: ActivatedRoute) {
-  }
 
   async submit(): Promise<void> {
     const eventId: string | null = this.route.snapshot.paramMap.get('id');
-    if (!eventId || !this.text.trim())
+    if (!eventId || !this.text.trim() || !this.author)
       return;
 
     this.commentService.create({
       text: this.text.trim(),
-      authorId: this.authorId,
+      authorId: this.author.id,
       eventId: eventId
     }).subscribe({
       next: (newComment: Comment) => {

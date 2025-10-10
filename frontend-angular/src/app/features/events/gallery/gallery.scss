@@ -13,7 +13,7 @@
 }
 
 .single-media-container:hover .delete-media-button {
-  display: flex;
+  display: flex !important;
 }
 
 .single-media-container img {
@@ -44,14 +44,13 @@
 }
 
 .delete-media-button {
-  display: none; // hidden by default
+  display: none !important; // hidden by default
   background: rgba(210, 210, 210, 0.8);
   font-size: 0.8rem;
   justify-content: center;
   align-items: center;
   margin: 0 auto 0 auto;
 }
-
 
 .carousel-overlay {
   position: fixed;

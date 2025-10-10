@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, inject} from '@angular/core';
 import {EventService} from '../services/event-service';
 import {Event} from '../models/event';
 import {ActivatedRoute} from '@angular/router';
@@ -15,6 +15,8 @@ import {MediaService} from '../services/media-service';
 import {MediaItem} from '../models/media-item';
 import {List} from '../../../core/data_structures/lists/list';
 import {UrlUtilService} from '../../../shared/utils/url/url-util-service';
+import {AuthService} from '../../auth/auth-service';
+import {User} from '../../auth/login/models/user';
 
 @Component({
   selector: 'app-event-detail-page',
@@ -29,6 +31,12 @@ import {UrlUtilService} from '../../../shared/utils/url/url-util-service';
   styleUrl: './event-detail-page.scss'
 })
 export class EventDetailPage {
+  private route = inject(ActivatedRoute);
+  private eventService =  inject(EventService);
+  private commentService =  inject(CommentService);
+  private mediaService =  inject(MediaService);
+  authService =  inject(AuthService);
+
   id!: string;
   title!: string;
   pictureURI!: string;
@@ -39,13 +47,8 @@ export class EventDetailPage {
   comments: List<Comment> = new List<Comment>([]);
   participants: List<Participant> = new List<Participant>([]);
   mediaItems: List<MediaItem> = new List<MediaItem>([]);
+  currentUser: User | null = this.authService.currentUser();
   protected readonly UrlUtilService = UrlUtilService;
-
-  constructor(private route: ActivatedRoute,
-              private eventService: EventService,
-              private commentService: CommentService,
-              private mediaService: MediaService) {
-  }
 
 
   ngOnInit(): void {
@@ -82,6 +85,12 @@ export class EventDetailPage {
 
 
   onCommentCreated(comment: Comment) {
+    if (this.currentUser === null) {
+      return;
+    }
+    comment.authorId = this.currentUser.id;
+    comment.username = this.currentUser.username;
+    comment.pictureURI = this.currentUser.pictureURI;
     this.comments.add(comment);
   }
 

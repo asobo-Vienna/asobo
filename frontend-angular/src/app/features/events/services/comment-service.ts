@@ -1,9 +1,10 @@
 import {Injectable} from '@angular/core';
-import {environment} from '../../../environments/environment';
-import {Comment} from '../events/models/comment'
+import {environment} from '../../../../environments/environment';
+import {Comment} from '../models/comment';
 import {HttpClient} from '@angular/common/http';
 import {map, Observable} from 'rxjs';
-import {List} from '../../core/data_structures/lists/list';
+import {List} from '../../../core/data_structures/lists/list';
+import {CreateComment} from '../models/create-comment';
 
 @Injectable({
   providedIn: 'root'
@@ -26,7 +27,7 @@ export class CommentService {
 
 
   delete(comment: Comment): Observable<Comment> {
-    return this.http.delete<Comment>(`${environment.eventsAddress}/${comment.eventId}/comments/${comment.id}`);
+    return this.http.delete<Comment>(`${this.getCommentsUrl(comment.eventId)}/${comment.id}`);
   }
 
 
