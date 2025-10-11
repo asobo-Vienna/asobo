@@ -19,7 +19,7 @@ export class EventCard {
   @Input() date!: string;
   @Input() time!: string;
   @Input() location!: string;
-  @Input() link?: string;
+  @Input() link!: string;
   protected readonly UrlUtilService = UrlUtilService;
 }
 
