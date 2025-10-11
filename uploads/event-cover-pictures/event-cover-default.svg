@@ -1,0 +1,38 @@
+<svg viewBox="0 0 1200 400" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#690F93;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#4a0a66;stop-opacity:1" />
+    </linearGradient>
+    <pattern id="dots" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1.5" fill="rgba(255,255,255,0.1)" />
+    </pattern>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1200" height="400" fill="url(#bgGradient)" />
+  <rect width="1200" height="400" fill="url(#dots)" />
+  
+  <!-- Decorative shapes -->
+  <circle cx="100" cy="80" r="60" fill="rgba(255,255,255,0.08)" />
+  <circle cx="1100" cy="320" r="80" fill="rgba(255,255,255,0.08)" />
+  <rect x="900" y="50" width="120" height="120" rx="20" fill="rgba(255,255,255,0.06)" transform="rotate(15 960 110)" />
+  
+  <!-- Calendar icon -->
+  <g transform="translate(500, 120)">
+    <rect x="0" y="10" width="200" height="180" rx="12" fill="rgba(255,255,255,0.15)" />
+    <rect x="0" y="10" width="200" height="50" rx="12" fill="rgba(255,255,255,0.25)" />
+    <rect x="40" y="0" width="20" height="30" rx="4" fill="rgba(255,255,255,0.9)" />
+    <rect x="140" y="0" width="20" height="30" rx="4" fill="rgba(255,255,255,0.9)" />
+    
+    <!-- Calendar grid -->
+    <circle cx="50" cy="100" r="8" fill="rgba(255,255,255,0.5)" />
+    <circle cx="100" cy="100" r="8" fill="rgba(255,255,255,0.5)" />
+    <circle cx="150" cy="100" r="8" fill="rgba(255,255,255,0.5)" />
+    <circle cx="50" cy="140" r="8" fill="rgba(255,255,255,0.5)" />
+    <circle cx="100" cy="140" r="8" fill="rgba(255,255,255,0.7)" />
+    <circle cx="150" cy="140" r="8" fill="rgba(255,255,255,0.5)" />
+  </g>
+  
+
+</svg>
