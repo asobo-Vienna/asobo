@@ -4,6 +4,7 @@ package at.msm.asobo.services;
 import at.msm.asobo.dto.user.UserPublicDTO;
 import at.msm.asobo.entities.Event;
 import at.msm.asobo.entities.User;
+import at.msm.asobo.exceptions.UserAlreadyJoinedException;
 import at.msm.asobo.mappers.UserDTOUserMapper;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -33,8 +34,12 @@ public class ParticipantService {
     public UserPublicDTO addParticipantToEvent(UUID eventId, UUID participantId) {
         User participant = this.userService.getUserById(participantId);
         Event event = this.eventService.getEventById(eventId);
-
         List<User> participants = event.getParticipants();
+
+        if (participants.contains(participant)) {
+            throw new UserAlreadyJoinedException();
+        }
+
         participants.add(participant);
         event.setParticipants(participants);
 
