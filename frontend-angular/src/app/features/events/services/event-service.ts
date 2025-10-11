@@ -1,15 +1,17 @@
-import {Injectable} from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import {environment} from '../../../../environments/environment';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {Event} from '../models/event'
+import {User} from '../../auth/login/models/user';
+import {Participant} from '../models/participant';
 
 @Injectable({
   providedIn: 'root'
 })
 
 export class EventService {
-  constructor(private http: HttpClient) {}
+  private http = inject(HttpClient);
 
   public getAllEvents(): Observable<Event[]> {
     return this.http.get<Event[]>(environment.eventsAddress);

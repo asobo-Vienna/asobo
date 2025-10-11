@@ -4,7 +4,6 @@ import at.msm.asobo.config.FileStorageProperties;
 import at.msm.asobo.dto.event.EventCreationDTO;
 import at.msm.asobo.dto.event.EventDTO;
 import at.msm.asobo.entities.Event;
-import at.msm.asobo.entities.User;
 import at.msm.asobo.exceptions.EventNotFoundException;
 import at.msm.asobo.mappers.EventDTOEventMapper;
 import at.msm.asobo.repositories.EventRepository;
@@ -75,19 +74,6 @@ public class EventService {
         return this.eventDTOEventMapper.mapEventToEventDTO(savedEvent);
     }
 
-    public EventDTO addParticipantToEvent(UUID eventId, UUID participantId) {
-        User participant = this.userService.getUserById(participantId);
-        Event event = this.getEventById(eventId);
-
-        List<User> participants = event.getParticipants();
-        participants.add(participant);
-        event.setParticipants(participants);
-
-        Event updatedEvent = this.eventRepository.save(event);
-        return this.eventDTOEventMapper.mapEventToEventDTO(updatedEvent);
-    }
-
-
     public Event getEventById(UUID id) {
         Event event = this.eventRepository.findById(id)
                 .orElseThrow(() -> new EventNotFoundException(id));
@@ -109,5 +95,10 @@ public class EventService {
         this.fileStorageService.delete(eventToDelete.getPictureURI());
         this.eventRepository.delete(eventToDelete);
         return this.eventDTOEventMapper.mapEventToEventDTO(eventToDelete);
+    }
+
+    public EventDTO updateEvent(Event event) {
+        Event eventToUpdate = this.eventRepository.save(event);
+        return this.eventDTOEventMapper.mapEventToEventDTO(eventToUpdate);
     }
 }

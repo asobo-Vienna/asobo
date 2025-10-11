@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, inject} from '@angular/core';
 import {EventService} from '../services/event-service';
 import {Event} from '../models/event';
 import {ActivatedRoute} from '@angular/router';
@@ -15,6 +15,9 @@ import {MediaService} from '../services/media-service';
 import {MediaItem} from '../models/media-item';
 import {List} from '../../../core/data_structures/lists/list';
 import {UrlUtilService} from '../../../shared/utils/url/url-util-service';
+import {AuthService} from '../../auth/auth-service';
+import {User} from '../../auth/login/models/user';
+import {ParticipantService} from '../services/participant-service';
 
 @Component({
   selector: 'app-event-detail-page',
@@ -29,6 +32,9 @@ import {UrlUtilService} from '../../../shared/utils/url/url-util-service';
   styleUrl: './event-detail-page.scss'
 })
 export class EventDetailPage {
+  private authService = inject(AuthService);
+  private participantService = inject(ParticipantService);
+
   id!: string;
   title!: string;
   pictureURI!: string;
@@ -36,9 +42,10 @@ export class EventDetailPage {
   time!: string;
   location!: string;
   description?: string;
-  comments: List<Comment> = new List<Comment>([]);
   participants: List<Participant> = new List<Participant>([]);
+  comments: List<Comment> = new List<Comment>([]);
   mediaItems: List<MediaItem> = new List<MediaItem>([]);
+  currentUser: User | null = this.authService.currentUser();
 
   constructor(private route: ActivatedRoute,
               private eventService: EventService,
@@ -69,7 +76,10 @@ export class EventDetailPage {
     this.time = event.date;
     this.location = event.location;
     this.description = event.description;
-    this.participants = event.participants;
+
+    this.participantService.getAllByEventId(event.id).subscribe((participants: List<Participant>) => {
+      this.participants = participants;
+    });
 
     this.commentService.getAllByEventId(event.id).subscribe((comments: List<Comment>) => {
       this.comments = comments;
@@ -123,4 +133,15 @@ export class EventDetailPage {
   // }
 
   protected readonly UrlUtilService = UrlUtilService;
+
+  joinEvent() {
+    if (!this.currentUser) {
+      return;
+    }
+
+    this.participantService.joinEvent(this.id, this.currentUser).subscribe({
+      next: (participant: Participant) => this.participants.add(participant),
+      error: (err) => console.error('Error joining event:', err)
+    });
+  }
 }
