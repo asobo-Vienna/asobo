@@ -3,7 +3,7 @@ import {EventService} from '../services/event-service';
 import {Event} from '../models/event';
 import {ActivatedRoute} from '@angular/router';
 import {DatePipe} from '@angular/common';
-import {NewComment} from "../new-comment/new-comment";
+import {CreateComment} from "../create-comment/create-comment";
 import {Participants} from '../participants/participants';
 import {CommentsList} from '../comments-list/comments-list';
 import {CommentService} from '../services/comment-service';
@@ -22,7 +22,7 @@ import {User} from '../../auth/login/models/user';
   selector: 'app-event-detail-page',
   imports: [
     DatePipe,
-    NewComment,
+    CreateComment,
     Participants,
     CommentsList,
     Gallery,

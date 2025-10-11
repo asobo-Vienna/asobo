@@ -3,7 +3,6 @@ import {FormsModule} from '@angular/forms';
 import {CommentService} from '../services/comment-service';
 import {ActivatedRoute} from '@angular/router';
 import {Comment} from '../models/comment';
-import {CreateComment} from '../models/create-comment';
 import {User} from '../../auth/login/models/user';
 
 @Component({
@@ -11,10 +10,10 @@ import {User} from '../../auth/login/models/user';
   imports: [
     FormsModule
   ],
-  templateUrl: './new-comment.html',
-  styleUrl: './new-comment.scss'
+  templateUrl: './create-comment.html',
+  styleUrl: './create-comment.scss'
 })
-export class NewComment {
+export class CreateComment {
   private commentService = inject(CommentService);
   private route = inject(ActivatedRoute);
 
