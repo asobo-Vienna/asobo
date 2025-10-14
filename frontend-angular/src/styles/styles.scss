@@ -116,3 +116,22 @@ app-register-page {
 .p-password:has(.p-password-clear-icon):has(.p-password-toggle-mask-icon) .p-password-input {
   padding-inline-end: calc(var(--p-icon-size) * 2 + 3px) !important;
 }
+
+.p-checkbox.p-checkbox-checked .p-checkbox-box,
+.p-checkbox.p-highlight .p-checkbox-box {
+  border-color: #690F93 !important;
+  background-color: #690F93 !important;
+}
+
+// Hover state
+.p-checkbox:not(.p-disabled):hover .p-checkbox-box.p-checkbox-checked,
+.p-checkbox:not(.p-disabled):hover .p-checkbox.p-highlight .p-checkbox-box {
+  border-color: #8a13c0 !important;
+  background-color: #8a13c0 !important;
+}
+
+// Focus state
+.p-checkbox:not(.p-disabled) .p-checkbox-input:focus-visible ~ .p-checkbox-box {
+  border-color: #690F93 !important;
+  box-shadow: 0 0 0 0.2rem rgba(105, 15, 147, 0.2) !important;
+}

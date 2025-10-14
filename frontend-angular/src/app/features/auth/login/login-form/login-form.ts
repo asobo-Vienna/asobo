@@ -5,6 +5,7 @@ import {ActivatedRoute, Router, RouterLink} from '@angular/router';
 import {AuthService} from '../../auth-service';
 import {PasswordModule} from "primeng/password";
 import {ButtonModule} from "primeng/button";
+import {CheckboxModule} from 'primeng/checkbox';
 
 @Component({
   selector: 'app-login-form',
@@ -13,6 +14,7 @@ import {ButtonModule} from "primeng/button";
     ReactiveFormsModule,
     PasswordModule,
     ButtonModule,
+    CheckboxModule,
   ],
   templateUrl: './login-form.html',
   styleUrl: './login-form.scss',
