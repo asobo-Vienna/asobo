@@ -6,6 +6,8 @@ import at.msm.asobo.dto.auth.UserLoginDTO;
 import at.msm.asobo.dto.user.*;
 import at.msm.asobo.entities.User;
 import at.msm.asobo.exceptions.UserNotFoundException;
+import at.msm.asobo.exceptions.registration.EmailAlreadyExistsException;
+import at.msm.asobo.exceptions.registration.UsernameAlreadyExistsException;
 import at.msm.asobo.mappers.UserDTOUserMapper;
 import at.msm.asobo.repositories.UserRepository;
 import at.msm.asobo.security.JwtUtil;
@@ -18,6 +20,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 import java.util.Optional;
@@ -72,14 +75,14 @@ public class UserService {
     }
 
     public LoginResponseDTO registerUser(UserRegisterDTO userRegisterDTO) {
-        Optional<User> existingUser = userRepository.findByEmail(userRegisterDTO.getEmail());
-        if (existingUser.isPresent()) {
-            throw new RuntimeException("A User with this email already exists!");
+        boolean emailExists = this.isEmailAlreadyTaken(userRegisterDTO.getEmail());
+        if (emailExists) {
+            throw new EmailAlreadyExistsException(userRegisterDTO.getEmail());
         }
 
-        Optional<User> existingUsername = userRepository.findByUsername(userRegisterDTO.getEmail());
-        if (existingUsername.isPresent()) {
-            throw new RuntimeException("Username already exists!");
+        boolean userExists = this.isUsernameAlreadyTaken(userRegisterDTO.getUsername());
+        if (userExists) {
+            throw new UsernameAlreadyExistsException(userRegisterDTO.getUsername());
         }
 
         User newUser = this.userDTOUserMapper.mapUserRegisterDTOToUser(userRegisterDTO);
@@ -171,5 +174,13 @@ public class UserService {
         this.userRepository.delete(userToDelete);
 
         return this.userDTOUserMapper.mapUserToUserPublicDTO(userToDelete);
+    }
+
+    public boolean isUsernameAlreadyTaken(String username) {
+        return this.userRepository.findByUsername(username).isPresent();
+    }
+
+    public boolean isEmailAlreadyTaken(String email) {
+        return userRepository.findByEmail(email).isPresent();
     }
 }

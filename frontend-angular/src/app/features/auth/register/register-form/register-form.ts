@@ -7,6 +7,7 @@ import {PasswordModule} from "primeng/password";
 import {ButtonModule} from "primeng/button";
 import {SelectModule} from 'primeng/select';
 import {FormUtilService} from '../../../../shared/utils/form/form-util-service';
+import {debounceTime, distinctUntilChanged, filter, switchMap} from 'rxjs';
 
 @Component({
   selector: 'app-register-form',
@@ -25,6 +26,8 @@ export class RegisterForm {
   registerForm: FormGroup;
   salutations: string[];
   showCustomSalutation: boolean;
+  usernameExists: boolean;
+  emailExists: boolean;
 
   private formBuilder = inject(FormBuilder);
   public authService = inject(AuthService);
@@ -36,6 +39,8 @@ export class RegisterForm {
   constructor() {
     this.salutations = ['Mr.', 'Ms.', 'Other'];
     this.showCustomSalutation = false;
+    this.usernameExists = false;
+    this.emailExists = false;
 
     this.registerForm = this.formBuilder.group({
       salutation: ['',
@@ -50,6 +55,7 @@ export class RegisterForm {
       ]],
       username: ['', [
         Validators.required,
+        Validators.minLength(3),
       ]],
       email: ['', [
         Validators.required,
@@ -79,6 +85,30 @@ export class RegisterForm {
 
       customSalutationControl?.updateValueAndValidity();
     });
+
+    // Check username availability while typing
+    this.registerForm.get('username')?.valueChanges
+      .pipe(
+        filter(username => username.length >= 3),
+        debounceTime(500), // Wait 800ms after typing stops
+        distinctUntilChanged(), // Only if value actually changed
+        switchMap(username => this.authService.checkUsernameAvailability(username))
+      )
+      .subscribe(isAvailable => {
+        this.usernameExists = !isAvailable;
+      });
+
+    // Check email availability while typing
+    this.registerForm.get('email')?.valueChanges
+      .pipe(
+        filter(() => this.registerForm.get('email')?.valid === true), // Only if valid
+        debounceTime(500),
+        distinctUntilChanged(),
+        switchMap(email => this.authService.checkEmailAvailability(email))
+      )
+      .subscribe(isAvailable => {
+        this.emailExists = !isAvailable;
+      });
   }
 
   onProfileBoxClick(event: MouseEvent) {
@@ -116,8 +146,10 @@ export class RegisterForm {
     reader.readAsDataURL(file);
   }
 
+
+
   onSubmit() {
-    if (this.registerForm.invalid) {
+    if (this.registerForm.invalid || this.usernameExists || this.emailExists) {
       this.registerForm.markAllAsTouched();
       return;
     }
@@ -141,11 +173,25 @@ export class RegisterForm {
     this.authService.register(formData).subscribe({
       next: (response) => {
         console.log('Registration successful:', response);
+        this.usernameExists = false;
+        this.emailExists = false;
         const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/dashboard';
         this.router.navigate([returnUrl]);
       },
       error: (err) => {
-        console.error('Registration failed:', err);
+        console.error('Registration failed with status code:', err.status);
+        // TODO: Show error message to user
+        if (err.status === 409) {
+          console.log("409 conflict");
+          const errorResponse = err.error;
+          if (errorResponse.code === 'EMAIL_EXISTS') {
+            console.error('Email already exists');
+            this.emailExists = true;
+          } else if (errorResponse.code === 'USERNAME_EXISTS') {
+            console.error('Username already taken');
+            this.usernameExists = true;
+          }
+        }
       }
     });
   }

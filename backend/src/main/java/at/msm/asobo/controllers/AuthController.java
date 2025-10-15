@@ -27,4 +27,14 @@ public class AuthController {
         System.out.println(">>> Login request: " + userLoginDTO.getIdentifier());
         return this.userService.loginUser(userLoginDTO);
     }
+
+    @GetMapping("/check-username/{username}")
+    public boolean checkUsernameAvailability(@PathVariable String username) {
+        return !this.userService.isUsernameAlreadyTaken(username);
+    }
+
+    @GetMapping("/check-email/{email}")
+    public boolean checkEmailAvailability(@PathVariable String email) {
+        return !this.userService.isEmailAlreadyTaken(email);
+    }
 }

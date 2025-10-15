@@ -165,6 +165,14 @@ export class AuthService {
     }
   }
 
+  checkUsernameAvailability(username: string): Observable<boolean> {
+    return this.http.get<boolean>(`${environment.apiBaseUrl}/auth/check-username/${username}`);
+  }
+
+  checkEmailAvailability(email: string): Observable<boolean> {
+    return this.http.get<boolean>(`${environment.apiBaseUrl}/auth/check-email/${email}`);
+  }
+
   // Refresh user data from backend
   /*refreshUser(): Observable<User> {
     return this.http.get<User>('/api/auth/me')
