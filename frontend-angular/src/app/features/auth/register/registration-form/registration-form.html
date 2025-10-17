@@ -106,16 +106,16 @@
       autofocus
     >
 
-     @if (this.getFormControls['username'].touched && this.getFormControls['username'].invalid) {
-       <small class="error-message">
-         @if (this.getFormControls['username'].errors?.['required']) {
-           <span>Username is required.</span>
-         }
-         @if (this.getFormControls['username'].errors?.['minlength']) {
-           <span>Must be at least 3 characters.</span>
-         }
-       </small>
-     }
+    @if (this.getFormControls['username'].touched && this.getFormControls['username'].invalid) {
+      <small class="error-message">
+        @if (this.getFormControls['username'].errors?.['required']) {
+          <span>Username is required.</span>
+        }
+        @if (this.getFormControls['username'].errors?.['minlength']) {
+          <span>Must be at least 3 characters.</span>
+        }
+      </small>
+    }
 
     @if (this.usernameExists) {
       <div class="error-message">
@@ -174,22 +174,21 @@
     }
   </div>
 
-  <div class="form-group register-password form-control">
+  <!-- Password Field with Requirements -->
+  <div class="form-group register-password form-control position-relative">
     <p-password
       [toggleMask]="true"
-      [feedback]="true"
+      [feedback]="false"
       [showClear]="getFormControls['password'].value?.length > 0"
       placeholder="Password"
       formControlName="password"
       id="register-password"
       fluid
-      promptLabel="Choose a password"
-      weakLabel="Too simple"
-      mediumLabel="Average complexity"
-      strongLabel="Complex password"
+      (onFocus)="toggleRequirements()"
+      (onBlur)="toggleRequirements()"
     />
 
-    <!-- Password validation -->
+    <!-- Password validation errors -->
     @if (this.getFormControls['password'].touched && this.getFormControls['password'].invalid) {
       <small class="error-message">
         @if (this.getFormControls['password'].errors?.['required']) {
@@ -197,9 +196,35 @@
         }
       </small>
     }
+
+    <!-- Real-time Password Requirements Checklist -->
+    @if (showPasswordRequirements && getFormControls['password'].value) {
+      <div class="requirements-checklist">
+        <!-- Password Strength Display -->
+        <div class="strength-indicator">
+          <div class="strength-meter">
+            <div class="strength-bar" [ngClass]="getPasswordStrength()"></div>
+          </div>
+          <p class="strength-label">{{ getPasswordStrengthLabel() }}</p>
+        </div>
+
+        <p class="requirements-title">Password Requirements:</p>
+        <ul>
+          @for (req of passwordRequirements; track req.key) {
+            <li [class.met]="req.met">
+              <span class="requirement-icon">
+                {{ req.met ? '✓' : '○' }}
+              </span>
+              {{ req.label }}
+            </li>
+          }
+        </ul>
+      </div>
+    }
   </div>
 
-  <div class="form-group register-password form-control">
+  <!-- Confirm Password Field -->
+  <div class="form-group register-password form-control position-relative">
     <p-password
       [toggleMask]="true"
       [feedback]="false"
@@ -210,12 +235,19 @@
       fluid
     />
 
-    <!-- Password validation -->
+    <!-- Password confirmation validation -->
     @if (this.getFormControls['passwordConfirmation'].touched && this.getFormControls['passwordConfirmation'].invalid) {
       <small class="error-message">
         @if (this.getFormControls['passwordConfirmation'].errors?.['required']) {
           <span>Password confirmation is required.</span>
         }
+      </small>
+    }
+
+    <!-- Password mismatch error -->
+    @if (registerForm.hasError('passwordMismatch') && getFormControls['passwordConfirmation'].touched) {
+      <small class="error-message">
+        <span>Passwords do not match!</span>
       </small>
     }
   </div>

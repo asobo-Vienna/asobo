@@ -63,6 +63,7 @@
     height: 40px;
     animation: transform .2s;
     aspect-ratio: 1/1;
+    object-fit: cover;
   }
 
   .user-thumbnail:hover {
