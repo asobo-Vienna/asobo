@@ -48,7 +48,10 @@ export class List<T> implements Iterable<T> {
   }
 
   // Check if contains item
-  contains(item: T): boolean {
+  contains(item: T, compareFn?: (a: T, b: T) => boolean): boolean {
+    if (compareFn) {
+      return this.items.some(i => compareFn(i, item));
+    }
     return this.items.includes(item);
   }
 

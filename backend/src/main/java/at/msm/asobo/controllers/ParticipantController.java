@@ -1,6 +1,5 @@
 package at.msm.asobo.controllers;
 
-import at.msm.asobo.dto.event.EventDTO;
 import at.msm.asobo.dto.user.UserPublicDTO;
 import at.msm.asobo.services.ParticipantService;
 import jakarta.validation.Valid;
@@ -18,9 +17,10 @@ public class ParticipantController {
         this.participantService = participantService;
     }
 
+    // returns updated participants list
     @PostMapping()
-    public UserPublicDTO addParticipantToEvent(@PathVariable UUID eventId, @RequestBody @Valid UserPublicDTO participantDTO) {
-        return this.participantService.addParticipantToEvent(eventId, participantDTO.getId());
+    public List<UserPublicDTO> toggleParticipantInEvent(@PathVariable UUID eventId, @RequestBody @Valid UserPublicDTO participantDTO) {
+        return this.participantService.toggleParticipantInEvent(eventId, participantDTO.getId());
     }
 
     @GetMapping()

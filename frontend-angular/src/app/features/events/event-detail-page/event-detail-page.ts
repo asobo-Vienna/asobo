@@ -1,4 +1,4 @@
-import {Component, inject} from '@angular/core';
+import {Component, inject, signal} from '@angular/core';
 import {EventService} from '../services/event-service';
 import {Event} from '../models/event';
 import {ActivatedRoute} from '@angular/router';
@@ -18,6 +18,7 @@ import {UrlUtilService} from '../../../shared/utils/url/url-util-service';
 import {AuthService} from '../../auth/auth-service';
 import {User} from '../../auth/login/models/user';
 import {ParticipantService} from '../services/participant-service';
+import {LambdaFunctions} from '../../../shared/utils/lambda-functions';
 
 @Component({
   selector: 'app-event-detail-page',
@@ -50,6 +51,7 @@ export class EventDetailPage {
   participants: List<Participant> = new List<Participant>([]);
   mediaItems: List<MediaItem> = new List<MediaItem>([]);
   currentUser: User | null = this.authService.currentUser();
+  isUserAlreadyPartOfEvent = signal(false);
   protected readonly UrlUtilService = UrlUtilService;
 
 
@@ -143,13 +145,28 @@ export class EventDetailPage {
   }
 
 
-  joinEvent() {
+  joinOrLeaveEvent() {
     if (!this.currentUser) {
       return;
     }
 
-    this.participantService.joinEvent(this.id, this.currentUser).subscribe({
-      next: (participant: Participant) => this.participants.add(participant),
+    this.participantService.joinOrLeaveEvent(this.id, this.currentUser).subscribe({
+      next: (participants: List<Participant>) => {
+        if (!this.currentUser) {
+          return;
+        }
+        const participantToJoin = {
+          id: this.currentUser.id,
+          name: this.currentUser.username,
+          pictureURI: this.currentUser.pictureURI
+        };
+
+        this.participants = participants;
+        // compare by ID function passed into List.contains() method
+        this.isUserAlreadyPartOfEvent.set(
+          this.participants.contains(participantToJoin, LambdaFunctions.compareById)
+        );
+      },
       error: (err) => {
         alert(err.error.message);
         console.error('Error joining event:', err); }
