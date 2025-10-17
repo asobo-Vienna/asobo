@@ -1,17 +1,17 @@
-import {Injectable} from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import {environment} from '../../../../environments/environment';
-import {Comment} from '../models/comment'
+import {Comment} from '../models/comment';
 import {HttpClient} from '@angular/common/http';
 import {map, Observable} from 'rxjs';
 import {List} from '../../../core/data_structures/lists/list';
+import {NewComment} from '../models/new-comment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CommentService {
 
-  constructor(private http: HttpClient) {}
-
+  private http = inject(HttpClient);
 
   getAllByEventId(eventId: string): Observable<List<Comment>> {
     return this.http
@@ -20,13 +20,8 @@ export class CommentService {
   }
 
 
-  create(comment: Comment): Observable<Comment> {
-    const createdComment = {
-      'text': comment.text.trim(),
-      'authorId': comment.authorId,
-      'eventId': comment.eventId
-    };
-    return this.http.post<Comment>(this.getCommentsUrl(comment.eventId), createdComment);
+  create(comment: NewComment): Observable<Comment> {
+    return this.http.post<Comment>(this.getCommentsUrl(comment.eventId), comment);
   }
 
 

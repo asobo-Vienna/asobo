@@ -27,8 +27,8 @@ export class MediaService {
   }
 
 
-  delete(eventId: string, file: File) {
-    console.log('deleting file');
+  delete(eventId: string, item: MediaItem): Observable<MediaItem> {
+    return this.http.delete<MediaItem>(`${environment.eventsAddress}/${eventId}/media/${item.id}`);
   }
 
 

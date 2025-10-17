@@ -1,9 +1,9 @@
-import {Component} from '@angular/core';
+import {Component, inject} from '@angular/core';
 import {EventService} from '../services/event-service';
 import {Event} from '../models/event';
 import {ActivatedRoute} from '@angular/router';
 import {DatePipe} from '@angular/common';
-import {NewComment} from "../new-comment/new-comment";
+import {CreateComment} from "../create-comment/create-comment";
 import {Participants} from '../participants/participants';
 import {CommentsList} from '../comments-list/comments-list';
 import {CommentService} from '../services/comment-service';
@@ -15,12 +15,14 @@ import {MediaService} from '../services/media-service';
 import {MediaItem} from '../models/media-item';
 import {List} from '../../../core/data_structures/lists/list';
 import {UrlUtilService} from '../../../shared/utils/url/url-util-service';
+import {AuthService} from '../../auth/auth-service';
+import {User} from '../../auth/models/user';
 
 @Component({
   selector: 'app-event-detail-page',
   imports: [
     DatePipe,
-    NewComment,
+    CreateComment,
     Participants,
     CommentsList,
     Gallery,
@@ -29,6 +31,12 @@ import {UrlUtilService} from '../../../shared/utils/url/url-util-service';
   styleUrl: './event-detail-page.scss'
 })
 export class EventDetailPage {
+  private route = inject(ActivatedRoute);
+  private eventService =  inject(EventService);
+  private commentService =  inject(CommentService);
+  private mediaService =  inject(MediaService);
+  authService =  inject(AuthService);
+
   id!: string;
   title!: string;
   pictureURI!: string;
@@ -39,12 +47,8 @@ export class EventDetailPage {
   comments: List<Comment> = new List<Comment>([]);
   participants: List<Participant> = new List<Participant>([]);
   mediaItems: List<MediaItem> = new List<MediaItem>([]);
-
-  constructor(private route: ActivatedRoute,
-              private eventService: EventService,
-              private commentService: CommentService,
-              private mediaService: MediaService) {
-  }
+  currentUser: User | null = this.authService.currentUser();
+  protected readonly UrlUtilService = UrlUtilService;
 
 
   ngOnInit(): void {
@@ -81,6 +85,12 @@ export class EventDetailPage {
 
 
   onCommentCreated(comment: Comment) {
+    if (this.currentUser === null) {
+      return;
+    }
+    comment.authorId = this.currentUser.id;
+    comment.username = this.currentUser.username;
+    comment.pictureURI = this.currentUser.pictureURI;
     this.comments.add(comment);
   }
 
@@ -103,24 +113,27 @@ export class EventDetailPage {
         console.log('edit comment:', comment);
       },
       error: (err) => {
-        console.error('Failed to edit comment!:', err);
+        console.error('Failed to edit comment!', err);
       }
     });
   }
 
+
   uploadMedia(file: File) {
     this.mediaService.upload(this.id, file).subscribe({
       next: (mediaItem) => this.mediaItems.add(mediaItem),
-      error: (err) => console.error('Upload failed', err)
+      error: (err) => console.error('Failed to upload media!', err)
     });
   }
 
-  // deleteMedia(file: File) {
-  //   this.mediaService.delete(this.id, file).subscribe({
-  //     next: (mediaItem) => this.mediaItems = this.mediaItems.filter(c => c.id !== mediaItem.id),
-  //     error: (err) => console.error('Delete failed', err)
-  //   });
-  // }
 
-  protected readonly UrlUtilService = UrlUtilService;
+  deleteMedia(item: MediaItem) {
+    this.mediaItems.remove(item);       // remove immediately
+    this.mediaService.delete(this.id, item).subscribe({
+      error: (err) => {
+        console.error('Failed to delete media!', err);
+        this.mediaItems.add(item);     // revert if backend fails
+      }
+    });
+  }
 }

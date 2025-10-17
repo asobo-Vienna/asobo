@@ -1,14 +1,24 @@
 <div class="fw-bold">Photos & Videos</div>
-<div class="mt-2" id="media-thumbnail-container">
+<div class="mt-2 media-thumbnail-container">
 
-  @for (mediaitem of mediaItems; track mediaitem.id) {
-    <div class="single-media-container">
-      <img [src]="UrlUtilService.getMediaUrl(mediaitem.mediumURI)" alt="{{ mediaitem }}">
+  @for (item of mediaItems; track item.id; let i = $index) {
+    <div class="single-media-container" (click)="openCarousel(i)">
+      @if (MediaUtilService.isVideo(item.mediumURI)) {
+        <video [src]="UrlUtilService.getMediaUrl(item.mediumURI)"></video>
+      } @else {
+        <img [src]="UrlUtilService.getMediaUrl(item.mediumURI)"
+             alt="{{ item.caption }}">
+      }
+
+      <button mat-icon-button class="delete-media-button" (click)="mediaDeleted.emit(item);
+      $event.stopPropagation();" aria-label="Delete media">
+        <mat-icon class="mat-icon-custom">delete_forever</mat-icon>
+      </button>
     </div>
   }
 
   <div class="single-media-container">
-    <div id="add-media-container" class="single-media-container add-media-button" (click)="fileInput.click()">
+    <div class="single-media-container add-media-button" (click)="fileInput.click()">
       +
       <input
         #fileInput
@@ -19,5 +29,33 @@
       />
     </div>
   </div>
-
 </div>
+
+    <!-- CAROUSEL MODAL -->
+    @if (showCarousel) {
+      <div class="carousel-overlay" (click)="closeCarousel()">
+        <div class="carousel-content" (click)="$event.stopPropagation()">
+          <p-carousel [value]="mediaItems.toArray()"
+                      [numVisible]="1"
+                      [numScroll]="1"
+                      [circular]="true"
+                      [page]="activeSlideIndex">
+            <ng-template let-item pTemplate="item">
+              <div class="media-slide">
+                @if(MediaUtilService.isVideo(item.mediumURI)) {
+                  <video [src]="UrlUtilService.getMediaUrl(item.mediumURI)" controls></video>
+                } @else {
+                  <img [src]="UrlUtilService.getMediaUrl(item.mediumURI)" alt="{{ item.caption }}" />
+                }
+              </div>
+            </ng-template>
+          </p-carousel>
+        </div>
+      </div>
+  }
+
+
+
+
+
+
