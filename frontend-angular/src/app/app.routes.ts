@@ -5,12 +5,12 @@ import {LoginPage} from './features/auth/login/login-page/login-page';
 import {HomePage} from './core/home/home-page/home-page';
 import {authGuard} from './features/auth/auth.guard';
 import {UserProfile} from './features/users/user-profile/user-profile';
-import {RegisterPage} from './features/auth/register/register-page/register-page';
+import {RegistrationPage} from './features/auth/register/registration-page/registration-page';
 
 export const routes: Routes = [
   // public routes
   { path: 'login', component: LoginPage },
-  { path: 'register', component: RegisterPage },
+  { path: 'register', component: RegistrationPage },
   { path: 'events/:id', component: EventDetailPage },
   { path: '', component: HomePage },
 

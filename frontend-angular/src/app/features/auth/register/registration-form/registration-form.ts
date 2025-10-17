@@ -10,7 +10,7 @@ import {FormUtilService} from '../../../../shared/utils/form/form-util-service';
 import {debounceTime, distinctUntilChanged, filter, switchMap} from 'rxjs';
 
 @Component({
-  selector: 'app-register-form',
+  selector: 'app-registration-form',
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -18,11 +18,11 @@ import {debounceTime, distinctUntilChanged, filter, switchMap} from 'rxjs';
     ButtonModule,
     SelectModule,
   ],
-  templateUrl: './register-form.html',
-  styleUrl: './register-form.scss',
+  templateUrl: './registration-form.html',
+  styleUrl: './registration-form.scss',
   encapsulation: ViewEncapsulation.None,
 })
-export class RegisterForm {
+export class RegistrationForm {
   registerForm: FormGroup;
   salutations: string[];
   showCustomSalutation: boolean;

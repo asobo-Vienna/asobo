@@ -1,20 +1,20 @@
 import { Component, inject, OnInit } from '@angular/core';
 import {ReactiveFormsModule} from "@angular/forms";
-import {RegisterForm} from '../register-form/register-form';
+import {RegistrationForm} from '../registration-form/registration-form';
 import {RouterLink, Router} from "@angular/router";
 import {AuthService} from '../../auth-service';
 
 @Component({
-  selector: 'app-register-page',
+  selector: 'app-registration-page',
   imports: [
     ReactiveFormsModule,
-    RegisterForm,
+    RegistrationForm,
     RouterLink,
   ],
-  templateUrl: './register-page.html',
-  styleUrl: './register-page.scss'
+  templateUrl: './registration-page.html',
+  styleUrl: './registration-page.scss'
 })
-export class RegisterPage implements OnInit {
+export class RegistrationPage implements OnInit {
   authService = inject(AuthService);
   router = inject(Router);
 
