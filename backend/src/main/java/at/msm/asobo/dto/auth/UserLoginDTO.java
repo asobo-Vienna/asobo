@@ -1,4 +1,4 @@
-package at.msm.asobo.dto.user;
+package at.msm.asobo.dto.auth;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -13,14 +13,18 @@ public class UserLoginDTO {
     @Size(min = 6, message = "Password must be at least 6 characters")
     private String password;
 
+    private boolean rememberMe;
+
     // TODO: decide if inactive users can log in
     private boolean active;
 
     public String getIdentifier() {
-        return identifier;
+        return this.identifier;
     }
 
     public String getPassword() {
-        return password;
+        return this.password;
     }
+
+    public boolean isRememberMe() { return this.rememberMe; }
 }

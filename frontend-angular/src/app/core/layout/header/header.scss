@@ -1,9 +1,14 @@
 @use '../../../../styles/variables' as *;
 
-.asobo-logo {
+/*.navbar {
+  background-color: color-mix(in srgb, $asobo-purple 5%, transparent) !important ;
+}*/
+
+#asobo-header-logo {
   height: auto;
   max-width: 100%;     /* prevents overflow on small screens */
   width: 80px;         /* base size for desktop */
+  cursor: pointer;
 }
 
 @media (max-width: 768px) {
@@ -56,9 +61,18 @@
   flex-grow: 1;
 }
 
-#user-nav-thumbnail .user-thumbnail {
-  width: 40px;
-  height: 40px;
+#user-nav-thumbnail {
+  .user-thumbnail {
+    width: 40px;
+    height: 40px;
+    animation: transform .2s;
+    aspect-ratio: 1/1;
+    object-fit: cover;
+  }
+
+  .user-thumbnail:hover {
+      transform: scale(1.05);
+  }
 }
 
 #create-event-nav-anchor {
@@ -72,5 +86,3 @@
   align-items: center;
   transform: translateY(-2px);
 }
-
-

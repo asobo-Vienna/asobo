@@ -16,19 +16,16 @@ public class JwtUtil {
     @Value("${jwt.secret}")
     private String SECRET;
 
-    @Value("${jwt.expiration-ms}")
-    private long EXPIRATION_MS;
-
     private SecretKey getSigningKey() {
         return Keys.hmacShaKeyFor(SECRET.getBytes(StandardCharsets.UTF_8));
     }
 
-    public String generateToken(UserPrincipal userPrincipal) {
+    public String generateToken(UserPrincipal userPrincipal, long expirationTime) {
         return Jwts.builder()
                 .subject(userPrincipal.getUsername())
                 .claim("userId", userPrincipal.getUserId())
                 .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + EXPIRATION_MS))
+                .expiration(new Date(System.currentTimeMillis() + expirationTime))
                 .signWith(getSigningKey())
                 .compact();
     }

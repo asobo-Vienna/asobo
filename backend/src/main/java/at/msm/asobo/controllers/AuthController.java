@@ -1,7 +1,7 @@
 package at.msm.asobo.controllers;
 
 import at.msm.asobo.dto.auth.LoginResponseDTO;
-import at.msm.asobo.dto.user.UserLoginDTO;
+import at.msm.asobo.dto.auth.UserLoginDTO;
 import at.msm.asobo.dto.user.UserRegisterDTO;
 import at.msm.asobo.services.UserService;
 import jakarta.validation.Valid;
@@ -18,7 +18,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public LoginResponseDTO register(@RequestBody @Valid UserRegisterDTO userRegisterDTO) {
+    public LoginResponseDTO register(@ModelAttribute @Valid UserRegisterDTO userRegisterDTO) {
         return this.userService.registerUser(userRegisterDTO);
     }
 
@@ -26,5 +26,15 @@ public class AuthController {
     public LoginResponseDTO login(@RequestBody @Valid UserLoginDTO userLoginDTO) {
         System.out.println(">>> Login request: " + userLoginDTO.getIdentifier());
         return this.userService.loginUser(userLoginDTO);
+    }
+
+    @GetMapping("/check-username/{username}")
+    public boolean checkUsernameAvailability(@PathVariable String username) {
+        return !this.userService.isUsernameAlreadyTaken(username);
+    }
+
+    @GetMapping("/check-email/{email}")
+    public boolean checkEmailAvailability(@PathVariable String email) {
+        return !this.userService.isEmailAlreadyTaken(email);
     }
 }

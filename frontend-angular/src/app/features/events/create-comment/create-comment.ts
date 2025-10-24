@@ -3,7 +3,7 @@ import {FormsModule} from '@angular/forms';
 import {CommentService} from '../services/comment-service';
 import {ActivatedRoute} from '@angular/router';
 import {Comment} from '../models/comment';
-import {User} from '../../auth/login/models/user';
+import {User} from '../../auth/models/user';
 
 @Component({
   selector: 'app-new-comment',

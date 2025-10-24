@@ -1,7 +1,7 @@
 <a [routerLink]="['/events', id]">
   <div class="card event-card">
     <div class="card-image-container">
-      <img class="card-img-top" [src]="UrlUtilService.getMediaUrl(pictureURI || '/uploads/event-cover-pictures/default.png')" alt="{{ title }}">
+      <img class="card-img-top" [src]="UrlUtilService.getMediaUrl(pictureURI || '/uploads/event-cover-pictures/event-cover-default.svg')" alt="{{ title }}">
     </div>
     <div class="card-body">
       <h6 class="card-title">{{ title }}</h6>

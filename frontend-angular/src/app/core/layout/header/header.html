@@ -1,7 +1,7 @@
-<nav class="navbar navbar-expand-lg bg-body-tertiary">
+<nav class="navbar navbar-expand-lg bg-body-tertiary border-bottom">
   <div class="container-fluid d-flex align-items-center">
-    <a class="navbar-brand me-3" routerLink="/">
-      <img src="images/logo.png" alt="Logo" class="asobo-logo">
+    <a class="navbar-brand me-3" (click)="goHome()">
+      <img src="images/logo.png" alt="Logo" id="asobo-header-logo">
     </a>
 
     <div class="search-bar d-flex align-items-center me-auto">
@@ -38,10 +38,12 @@
         <li class="nav-item">
           <a routerLink="/events" class="nav-link active" aria-current="page">Events</a>
         </li>
+        @if (!authService.isLoggedIn()) {
         <li class="nav-item">
           <a routerLink="/register" class="nav-link">Register</a>
         </li>
-        @if (this.authService.isLoggedIn()) {
+        }
+        @if (authService.isLoggedIn()) {
           <li class="nav-item d-flex align-items-center user-profile-thumbnail" id="user-nav-thumbnail">
             <a [routerLink]="this.userProfile.userProfileUrl">
               <img [src]="this.userProfile.pictureUrl" [alt]="this.userProfile.pictureAlt" class="user-thumbnail me-2">

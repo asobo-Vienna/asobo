@@ -1,7 +1,6 @@
 @use 'variables' as *;
 @use '@angular/material' as mat;
 
-
 .btn-purple {
   color: white;
   background-color: $asobo-purple !important;
@@ -10,6 +9,7 @@
 
   &:hover {
     background-color: $asobo-purple !important;
+    color: white;
   }
 }
 
@@ -50,7 +50,7 @@ a.btn-purple {
   text-decoration: none;
 }
 
-.profile-picture-box, .event-picture-box {
+.event-picture-box {
   margin: 0 auto;
   border: 2px dashed $asobo-purple;
   border-radius: 8px;
@@ -61,12 +61,6 @@ a.btn-purple {
   align-items: center;
   justify-content: center;
   position: relative;
-}
-
-.profile-picture-box {
-  width: 100%;
-  max-width: 250px;
-  aspect-ratio: 1 / 1;
 }
 
 .register-profile-picture-button, .create-event-picture-button {
@@ -82,20 +76,15 @@ a.btn-purple {
   display: none;
 }
 
-.login-text-link {
-  color: var(--asobo-purple);
-  text-decoration: none;
-  font-weight: bold;
-}
-
-.login-text-link:hover, .signup-text-link:hover {
-  text-decoration: underline;
-}
-
-app-login-page {
+app-login-page, app-registration-page {
   width: 25%;
   margin: 0 auto;
   min-width: 180px;
+}
+
+app-registration-page {
+  width: 30%;
+  min-width: 220px;
 }
 
 .table-user-image {
@@ -105,3 +94,44 @@ app-login-page {
   height: 40px;
 }
 
+.error-message {
+  position: absolute;
+  top: 50%;
+  left: 100%;
+  margin-left: 10px;
+  transform: translateY(-50%);
+  color: red;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.p-password-clear-icon {
+  top: 42% !important;
+}
+
+.p-password:has(.p-password-toggle-mask-icon) .p-password-clear-icon {
+  inset-inline-end: calc(var(--p-icon-size) + 3px) !important;
+}
+
+.p-password:has(.p-password-clear-icon):has(.p-password-toggle-mask-icon) .p-password-input {
+  padding-inline-end: calc(var(--p-icon-size) * 2 + 3px) !important;
+}
+
+.p-checkbox.p-checkbox-checked .p-checkbox-box,
+.p-checkbox.p-highlight .p-checkbox-box {
+  border-color: #690F93 !important;
+  background-color: #690F93 !important;
+}
+
+// Hover state
+.p-checkbox:not(.p-disabled):hover .p-checkbox-box.p-checkbox-checked,
+.p-checkbox:not(.p-disabled):hover .p-checkbox.p-highlight .p-checkbox-box {
+  border-color: #8a13c0 !important;
+  background-color: #8a13c0 !important;
+}
+
+// Focus state
+.p-checkbox:not(.p-disabled) .p-checkbox-input:focus-visible ~ .p-checkbox-box {
+  border-color: #690F93 !important;
+  box-shadow: 0 0 0 0.2rem rgba(105, 15, 147, 0.2) !important;
+}

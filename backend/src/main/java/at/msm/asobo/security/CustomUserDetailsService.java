@@ -1,6 +1,7 @@
 package at.msm.asobo.security;
 
 import at.msm.asobo.entities.User;
+import at.msm.asobo.exceptions.UserNotFoundException;
 import at.msm.asobo.repositories.UserRepository;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,9 +21,10 @@ public class CustomUserDetailsService implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException(username));
+    public UserDetails loadUserByUsername(String identifier) throws UsernameNotFoundException {
+        User user = userRepository.findByUsername(identifier)
+                .orElseGet(() -> userRepository.findByEmail(identifier)
+                        .orElseThrow(() -> new UserNotFoundException("User not found with identifier: " + identifier)));
 
         return new UserPrincipal(
                 user.getId().toString(),

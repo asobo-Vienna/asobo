@@ -5,4 +5,9 @@
   object-fit: cover;
   margin-right: 0.5rem;
   filter: drop-shadow(2px 2px 3px gray);
+  transition: transform .2s;
+}
+
+.user-avatar:hover {
+  transform: scale(1.1);
 }

@@ -1,19 +1,12 @@
 @use 'variables' as *;
 
 .login-form .form-group {
-  margin: 0.7em;
   width: 100%;
-  margin-left: 0;
+  margin: 0.7em 0.7em 0.7em 0;
 }
 
 .login-form .btn-purple {
   width: 60%;
-}
-
-.login-text-link {
-  color: var(--asobo-purple);
-  text-decoration: none;
-  font-weight: bold;
 }
 
 .login-password {
@@ -27,8 +20,10 @@
 }
 
 .login-password .p-password input {
-  width: 89%;
-  padding-right: 2.5rem;
+  width: 100%;
+  border: none;
+  padding: 0;
+  box-shadow: none;
 }
 
 .login-password .p-password input::placeholder,
@@ -41,23 +36,12 @@
 }
 
 .login-password .p-password-toggle-mask-icon {
-  inset-inline-end: 0rem !important;
+  inset-inline-end: 0 !important;
   top: 50% !important;
   margin-top: 0 !important;
   transform: translateY(-50%) !important;
   position: absolute;
   cursor: pointer;
-
-}
-
-.signup-text-link {
-  color: $asobo-purple;
-  text-decoration: none;
-  font-weight: bold;
-}
-
-.signup-text-link:hover {
-  text-decoration: underline;
 }
 
 .form-control {
@@ -69,15 +53,16 @@
   border: none;
 }
 
-.error-message {
-  position: absolute;
-  top: 50%;
-  left: 100%;
-  margin-left: 10px;
-  transform: translateY(-50%);
-  color: red;
-  white-space: nowrap;
-  pointer-events: none;
+.checkbox-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  justify-content: center;
+
+  label {
+    margin: 0;
+    cursor: pointer;
+  }
 }
 
 .login-failed {
@@ -86,5 +71,3 @@
   pointer-events: none;
   text-align: center;
 }
-
-

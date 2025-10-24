@@ -2,20 +2,25 @@ package at.msm.asobo.services;
 
 import at.msm.asobo.config.FileStorageProperties;
 import at.msm.asobo.dto.auth.LoginResponseDTO;
+import at.msm.asobo.dto.auth.UserLoginDTO;
 import at.msm.asobo.dto.user.*;
 import at.msm.asobo.entities.User;
 import at.msm.asobo.exceptions.UserNotFoundException;
+import at.msm.asobo.exceptions.registration.EmailAlreadyExistsException;
+import at.msm.asobo.exceptions.registration.UsernameAlreadyExistsException;
 import at.msm.asobo.mappers.UserDTOUserMapper;
 import at.msm.asobo.repositories.UserRepository;
 import at.msm.asobo.security.JwtUtil;
 import at.msm.asobo.security.UserPrincipal;
 import at.msm.asobo.services.files.FileStorageService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 import java.util.Optional;
@@ -23,6 +28,11 @@ import java.util.UUID;
 
 @Service
 public class UserService {
+    @Value("${jwt.expiration-ms}")
+    private long EXPIRATION_MS;
+
+    @Value("${jwt.remember-me-expiration-ms}")
+    private long REMEMBER_ME_EXPIRATION_MS;
 
     private final UserRepository userRepository;
     private final UserDTOUserMapper userDTOUserMapper;
@@ -68,14 +78,14 @@ public class UserService {
     }
 
     public LoginResponseDTO registerUser(UserRegisterDTO userRegisterDTO) {
-        Optional<User> existingUser = userRepository.findByEmail(userRegisterDTO.getEmail());
-        if (existingUser.isPresent()) {
-            throw new RuntimeException("A User with this email already exists!");
+        boolean emailExists = this.isEmailAlreadyTaken(userRegisterDTO.getEmail());
+        if (emailExists) {
+            throw new EmailAlreadyExistsException(userRegisterDTO.getEmail());
         }
 
-        Optional<User> existingUsername = userRepository.findByUsername(userRegisterDTO.getEmail());
-        if (existingUsername.isPresent()) {
-            throw new RuntimeException("Username already exists!");
+        boolean userExists = this.isUsernameAlreadyTaken(userRegisterDTO.getUsername());
+        if (userExists) {
+            throw new UsernameAlreadyExistsException(userRegisterDTO.getUsername());
         }
 
         User newUser = this.userDTOUserMapper.mapUserRegisterDTOToUser(userRegisterDTO);
@@ -97,7 +107,7 @@ public class UserService {
                 List.of(new SimpleGrantedAuthority("ROLE_USER"))
         );
 
-        String token = jwtUtil.generateToken(userPrincipal);
+        String token = jwtUtil.generateToken(userPrincipal, EXPIRATION_MS);
 
         return new LoginResponseDTO(token, this.userDTOUserMapper.mapUserToUserPublicDTO(savedUser));
     }
@@ -116,7 +126,12 @@ public class UserService {
         // Get the authenticated principal
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
 
-        String token = jwtUtil.generateToken(userPrincipal);
+        long expirationTime = EXPIRATION_MS;
+        if (userLoginDTO.isRememberMe()) {
+            expirationTime = REMEMBER_ME_EXPIRATION_MS; // 30 days;
+        }
+
+        String token = jwtUtil.generateToken(userPrincipal, expirationTime);
 
         User user = userRepository.findById(UUID.fromString(userPrincipal.getUserId()))
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
@@ -162,5 +177,13 @@ public class UserService {
         this.userRepository.delete(userToDelete);
 
         return this.userDTOUserMapper.mapUserToUserPublicDTO(userToDelete);
+    }
+
+    public boolean isUsernameAlreadyTaken(String username) {
+        return this.userRepository.findByUsername(username).isPresent();
+    }
+
+    public boolean isEmailAlreadyTaken(String email) {
+        return userRepository.findByEmail(email).isPresent();
     }
 }

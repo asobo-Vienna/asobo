@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import {RouterLink} from '@angular/router';
+import { Component, inject } from '@angular/core';
+import {RouterLink, Router} from '@angular/router';
 import {AuthService} from '../../../features/auth/auth-service';
 import {environment} from '../../../../environments/environment';
 import {UrlUtilService} from '../../../shared/utils/url/url-util-service';
@@ -13,7 +13,12 @@ import {UrlUtilService} from '../../../shared/utils/url/url-util-service';
   styleUrl: './header.scss'
 })
 export class Header {
-  constructor(public authService: AuthService,) {
+  private router = inject(Router);
+  authService = inject(AuthService);
+
+  goHome() {
+    console.log('Logo clicked');  // 🔹 add this to test
+    this.router.navigate(['/']);
   }
 
   get userProfile() {

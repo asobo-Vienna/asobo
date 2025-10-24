@@ -1,16 +1,16 @@
-@use 'variables' as *;
+@use '../../../../../styles/variables' as *;
 
 h1 {
   text-align: center;
   color: $asobo-purple !important;
 }
 
-.signup-text-link {
+.login-text-link {
   color: $asobo-purple;
   text-decoration: none;
   font-weight: bold;
 }
 
-.signup-text-link:hover {
+.login-text-link:hover {
   text-decoration: underline;
 }

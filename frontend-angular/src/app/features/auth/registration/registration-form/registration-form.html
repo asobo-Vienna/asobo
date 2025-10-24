@@ -1,0 +1,269 @@
+<!--@if (!this.authService.isLoggedIn()) {-->
+<form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="register-form">
+  <div class="form-group position-relative">
+    <div class="profile-picture-box" id="profile-picture-box" (click)="onProfileBoxClick($event)">
+      <input
+        type="file"
+        id="profile-pic-input"
+        name="profile_picture"
+        accept="image/*"
+        (change)="onFileSelected($event)"
+        hidden
+      />
+
+      @if (previewUrl()) {
+        <img [src]="previewUrl()" id="profile-pic-preview" alt="Preview" />
+      } @else {
+        <div class="register-profile-picture-button">
+          <svg class="add-picture-plus" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <line x1="50" y1="20" x2="50" y2="80" stroke="currentColor" stroke-width="10" stroke-linecap="round"/>
+            <line x1="20" y1="50" x2="80" y2="50" stroke="currentColor" stroke-width="10" stroke-linecap="round"/>
+          </svg>
+          <span class="picture-label">Add profile picture</span>
+        </div>
+      }
+    </div>
+  </div>
+
+  <div class="form-group position-relative">
+    <p-select
+      [options]="salutations"
+      formControlName="salutation"
+      placeholder="Select your Salutation"
+      class="w-full md:w-56"
+    />
+
+    @if (this.getFormControls['salutation'].touched && this.getFormControls['salutation'].invalid) {
+      <small class="error-message">
+        @if (this.getFormControls['salutation'].errors?.['required']) {
+          <span>Salutation is required.</span>
+        }
+      </small>
+    }
+  </div>
+
+  @if (showCustomSalutation) {
+    <div class="form-group position-relative">
+      <input
+        type="text"
+        placeholder="Other Salutation"
+        formControlName="customSalutation"
+        class="form-control"
+        id="register-custom-salutation"
+      >
+
+      @if (this.getFormControls['customSalutation'].touched && this.getFormControls['customSalutation'].invalid) {
+        <small class="error-message">
+          @if (this.getFormControls['customSalutation'].errors?.['required']) {
+            <span>Please specify your salutation.</span>
+          }
+        </small>
+      }
+    </div>
+  }
+
+  <div class="form-group position-relative">
+    <input
+      type="text"
+      placeholder="First Name "
+      formControlName="firstName"
+      class="form-control"
+      id="register-firstname"
+      autofocus
+    >
+
+    @if (this.getFormControls['firstName'].touched && this.getFormControls['firstName'].invalid) {
+      <small class="error-message">
+        @if (this.getFormControls['firstName'].errors?.['required']) {
+          <span>First name is required.</span>
+        }
+      </small>
+    }
+  </div>
+
+  <div class="form-group position-relative">
+    <input
+      type="text"
+      placeholder="Surname"
+      formControlName="surname"
+      class="form-control"
+      id="register-surname"
+      autofocus
+    >
+
+    @if (this.getFormControls['surname'].touched && this.getFormControls['surname'].invalid) {
+      <small class="error-message">
+        @if (this.getFormControls['surname'].errors?.['required']) {
+          <span>Surname is required.</span>
+        }
+      </small>
+    }
+  </div>
+
+  <div class="form-group position-relative">
+    <input
+      type="text"
+      placeholder="Username"
+      formControlName="username"
+      class="form-control"
+      id="register-username"
+      autofocus
+    >
+
+    @if (this.getFormControls['username'].touched && this.getFormControls['username'].invalid) {
+      <small class="error-message">
+        @if (this.getFormControls['username'].errors?.['required']) {
+          <span>Username is required.</span>
+        }
+        @if (this.getFormControls['username'].errors?.['minlength']) {
+          <span>Must be at least 3 characters.</span>
+        }
+      </small>
+    }
+
+    @if (this.usernameExists) {
+      <div class="error-message">
+        <small>Username is already taken. Please choose another one.</small>
+      </div>
+    }
+  </div>
+
+  <div class="form-group position-relative">
+    <input
+      type="text"
+      placeholder="Email Address"
+      formControlName="email"
+      class="form-control"
+      id="register-email"
+      autofocus
+    >
+
+    @if (this.getFormControls['email'].touched && this.getFormControls['email'].invalid) {
+      <small class="error-message">
+        @if (this.getFormControls['email'].errors?.['required']) {
+          <span>Email address is required.</span>
+        }
+        @if (this.getFormControls['email'].errors?.['minlength']) {
+          <span>Must be at least 3 characters.</span>
+        }
+        @if (this.getFormControls['email'].errors?.['email']) {
+          <span>Invalid email format.</span>
+        }
+      </small>
+    }
+
+    @if (this.emailExists) {
+      <div class="error-message">
+        <small>A user with this email address already exists.</small>
+      </div>
+    }
+  </div>
+
+  <div class="form-group position-relative">
+    <input
+      type="text"
+      placeholder="City"
+      formControlName="location"
+      class="form-control"
+      id="register-city"
+      autofocus
+    >
+
+    @if (this.getFormControls['location'].touched && this.getFormControls['location'].invalid) {
+      <small class="error-message">
+        @if (this.getFormControls['location'].errors?.['required']) {
+          <span>City is required.</span>
+        }
+      </small>
+    }
+  </div>
+
+  <!-- Password Field with Requirements -->
+  <div class="form-group register-password form-control position-relative">
+    <p-password
+      [toggleMask]="true"
+      [feedback]="false"
+      [showClear]="getFormControls['password'].value?.length > 0"
+      placeholder="Password"
+      formControlName="password"
+      id="register-password"
+      fluid
+      (onFocus)="toggleRequirements()"
+      (onBlur)="toggleRequirements()"
+    />
+
+    <!-- Password validation errors -->
+    @if (this.getFormControls['password'].touched && this.getFormControls['password'].invalid) {
+      <small class="error-message">
+        @if (this.getFormControls['password'].errors?.['required']) {
+          <span>Password is required.</span>
+        }
+      </small>
+    }
+
+    <!-- Real-time Password Requirements Checklist -->
+    @if (showPasswordRequirements && getFormControls['password'].value) {
+      <div class="requirements-checklist">
+        <!-- Password Strength Display -->
+        <div class="strength-indicator">
+          <div class="strength-meter">
+            <div class="strength-bar" [ngClass]="getPasswordStrength()"></div>
+          </div>
+          <p class="strength-label">{{ getPasswordStrengthLabel() }}</p>
+        </div>
+
+        <p class="requirements-title">Password Requirements:</p>
+        <ul>
+          @for (requirement of passwordRequirements; track requirement.key) {
+            <li [class.met]="requirement.met">
+              <span class="requirement-icon">
+                {{ requirement.met ? '✓' : '○' }}
+              </span>
+              {{ requirement.label }}
+            </li>
+          }
+        </ul>
+      </div>
+    }
+  </div>
+
+  <!-- Confirm Password Field -->
+  <div class="form-group register-password form-control position-relative">
+    <p-password
+      [toggleMask]="true"
+      [feedback]="false"
+      [showClear]="getFormControls['passwordConfirmation'].value?.length > 0"
+      placeholder="Confirm Password"
+      formControlName="passwordConfirmation"
+      id="register-password-confirmation"
+      fluid
+    />
+
+    <!-- Password confirmation validation -->
+    @if (this.getFormControls['passwordConfirmation'].touched && this.getFormControls['passwordConfirmation'].invalid) {
+      <small class="error-message">
+        @if (this.getFormControls['passwordConfirmation'].errors?.['required']) {
+          <span>Password confirmation is required.</span>
+        }
+      </small>
+    }
+
+    <!-- Password mismatch error -->
+    @if (registerForm.hasError('passwordMismatch') && getFormControls['passwordConfirmation'].touched) {
+      <small class="error-message">
+        <span>Passwords do not match!</span>
+      </small>
+    }
+  </div>
+
+  <div class="form-group d-flex justify-content-center">
+    <button class="btn btn-purple btn-primary mb-3" id="register-button" type="submit">
+      Register
+    </button>
+  </div>
+</form>
+<!-- } @else {
+  <div class="alert alert-success mt-3 text-center">
+    Hi <span class="fw-bold">{{this.authService.currentUser()?.username}}</span> you are logged in!
+  </div>
+}-->
