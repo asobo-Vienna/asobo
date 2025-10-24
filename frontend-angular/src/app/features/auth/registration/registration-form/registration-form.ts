@@ -59,7 +59,7 @@ export class RegistrationForm {
       firstName: ['', [Validators.required]],
       surname: ['', [Validators.required]],
       username: ['', [Validators.required, Validators.minLength(3)]],
-      email: ['', [Validators.required, FormUtilService.strictEmailValidator]],
+      email: ['', [Validators.required, FormUtilService.validateEmailCustom]],
       location: ['', [Validators.required]],
       password: [
         '',

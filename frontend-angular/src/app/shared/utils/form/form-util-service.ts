@@ -6,7 +6,7 @@ import { AbstractControl, ValidationErrors } from '@angular/forms';
 })
 export class FormUtilService {
 
-  static strictEmailValidator(control: AbstractControl): ValidationErrors | null {
+  static validateEmailCustom(control: AbstractControl): ValidationErrors | null {
     if (!control.value) {
       return null;
     }
