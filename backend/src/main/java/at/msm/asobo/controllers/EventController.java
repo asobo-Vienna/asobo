@@ -2,18 +2,14 @@ package at.msm.asobo.controllers;
 
 import at.msm.asobo.dto.event.EventCreationDTO;
 import at.msm.asobo.dto.event.EventDTO;
-import at.msm.asobo.dto.user.UserDTO;
-import at.msm.asobo.dto.user.UserUpdateDTO;
 import at.msm.asobo.services.EventService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.UUID;
-
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -73,12 +69,6 @@ public class EventController {
     public EventDTO createEvent(@ModelAttribute @Valid EventCreationDTO eventCreationDTO) {
         return this.eventService.addNewEvent(eventCreationDTO);
     }
-
-    @PutMapping("/{id}")
-    public EventDTO addParticipantToEvent(@PathVariable UUID id, @RequestBody @Valid UserDTO participantDTO) {
-        return this.eventService.addParticipantToEvent(id, participantDTO.getId());
-    }
-
 
     @GetMapping("/{id}")
     public EventDTO getEventById(@PathVariable UUID id) {

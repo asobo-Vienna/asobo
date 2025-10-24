@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import {environment} from '../../../../environments/environment';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
@@ -9,7 +9,7 @@ import {Event} from '../models/event'
 })
 
 export class EventService {
-  constructor(private http: HttpClient) {}
+  private http = inject(HttpClient);
 
   public getAllEvents(): Observable<Event[]> {
     return this.http.get<Event[]>(environment.eventsAddress);

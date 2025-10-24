@@ -1,4 +1,4 @@
-import {Component, inject} from '@angular/core';
+import {Component, inject, signal} from '@angular/core';
 import {EventService} from '../services/event-service';
 import {Event} from '../models/event';
 import {ActivatedRoute} from '@angular/router';
@@ -17,6 +17,8 @@ import {List} from '../../../core/data_structures/lists/list';
 import {UrlUtilService} from '../../../shared/utils/url/url-util-service';
 import {AuthService} from '../../auth/auth-service';
 import {User} from '../../auth/models/user';
+import {ParticipantService} from '../services/participant-service';
+import {LambdaFunctions} from '../../../shared/utils/lambda-functions';
 
 @Component({
   selector: 'app-event-detail-page',
@@ -36,6 +38,7 @@ export class EventDetailPage {
   private commentService =  inject(CommentService);
   private mediaService =  inject(MediaService);
   authService =  inject(AuthService);
+  participantService =  inject(ParticipantService);
 
   id!: string;
   title!: string;
@@ -48,6 +51,7 @@ export class EventDetailPage {
   participants: List<Participant> = new List<Participant>([]);
   mediaItems: List<MediaItem> = new List<MediaItem>([]);
   currentUser: User | null = this.authService.currentUser();
+  isUserAlreadyPartOfEvent = signal(false);
   protected readonly UrlUtilService = UrlUtilService;
 
 
@@ -73,7 +77,10 @@ export class EventDetailPage {
     this.time = event.date;
     this.location = event.location;
     this.description = event.description;
-    this.participants = event.participants;
+
+    this.participantService.getAllByEventId(event.id).subscribe((participants: List<Participant>) => {
+      this.participants = participants;
+    });
 
     this.commentService.getAllByEventId(event.id).subscribe((comments: List<Comment>) => {
       this.comments = comments;
@@ -134,6 +141,35 @@ export class EventDetailPage {
         console.error('Failed to delete media!', err);
         this.mediaItems.add(item);     // revert if backend fails
       }
+    });
+  }
+
+
+  joinOrLeaveEvent() {
+    if (!this.currentUser) {
+      return;
+    }
+
+    this.participantService.joinOrLeaveEvent(this.id, this.currentUser).subscribe({
+      next: (participants: List<Participant>) => {
+        if (!this.currentUser) {
+          return;
+        }
+        const participantToJoin = {
+          id: this.currentUser.id,
+          name: this.currentUser.username,
+          pictureURI: this.currentUser.pictureURI
+        };
+
+        this.participants = participants;
+        // compare by ID function passed into List.contains() method
+        this.isUserAlreadyPartOfEvent.set(
+          this.participants.contains(participantToJoin, LambdaFunctions.compareById)
+        );
+      },
+      error: (err) => {
+        alert(err.error.message);
+        console.error('Error joining event:', err); }
     });
   }
 }

@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {environment} from '../../../../environments/environment';
 import {MediaItem} from '../models/media-item';
@@ -9,8 +9,7 @@ import {List} from '../../../core/data_structures/lists/list';
   providedIn: 'root'
 })
 export class MediaService {
-
-  constructor(private http: HttpClient) {}
+  private http = inject(HttpClient);
 
 
   getAllByEventId(eventId: string): Observable<List<MediaItem>> {

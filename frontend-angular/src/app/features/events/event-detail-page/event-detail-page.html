@@ -5,6 +5,7 @@
     <img class="card-img-top" [src]="UrlUtilService.getMediaUrl(pictureURI || '/uploads/event-cover-pictures/event-cover-default.svg')" alt="{{ title }}" />
   </div>
 
+  <!-- TODO make the join button work for that particular event! -->
   <!-- Event Info Column -->
   <div class="col-md-6 text-start">
     <div class="mb-3">
@@ -21,7 +22,11 @@
         </div>
         <div class="col-md-4">
           @if(authService.isLoggedIn()) {
-            <a href="" class="btn btn-purple imin-btn">I'm in!</a>
+            @if(isUserAlreadyPartOfEvent()) {
+              <a class="btn btn-purple imin-btn" (click)="joinOrLeaveEvent()">I'm out!</a>
+            } @else {
+              <a class="btn btn-purple imin-btn" (click)="joinOrLeaveEvent()">I'm in!</a>
+            }
           }
         </div>
         <div class="col-md-8"><!-- spacer --></div>
@@ -61,7 +66,7 @@
   <!-- Photos & Video -->
   <div class="col-md-6 mt-3 text-start">
     <app-gallery [mediaItems]="mediaItems"
-    (mediaAdded)="uploadMedia($event)"
-    (mediaDeleted)="deleteMedia($event)" />
+    (mediaAdded)="uploadMedia($event)" />
+    <!--(mediaDeleted)="deleteMedia($event)"/> -->
   </div>
 </div>
