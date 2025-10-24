@@ -15,7 +15,6 @@
         <img [src]="previewUrl()" id="profile-pic-preview" alt="Preview" />
       } @else {
         <div class="register-profile-picture-button">
-          <!--<span class="add-picture-plus">✚</span>-->
           <svg class="add-picture-plus" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
             <line x1="50" y1="20" x2="50" y2="80" stroke="currentColor" stroke-width="10" stroke-linecap="round"/>
             <line x1="20" y1="50" x2="80" y2="50" stroke="currentColor" stroke-width="10" stroke-linecap="round"/>
@@ -215,12 +214,12 @@
 
         <p class="requirements-title">Password Requirements:</p>
         <ul>
-          @for (req of passwordRequirements; track req.key) {
-            <li [class.met]="req.met">
+          @for (requirement of passwordRequirements; track requirement.key) {
+            <li [class.met]="requirement.met">
               <span class="requirement-icon">
-                {{ req.met ? '✓' : '○' }}
+                {{ requirement.met ? '✓' : '○' }}
               </span>
-              {{ req.label }}
+              {{ requirement.label }}
             </li>
           }
         </ul>
