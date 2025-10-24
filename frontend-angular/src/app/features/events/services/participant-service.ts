@@ -1,4 +1,4 @@
-import {User} from '../../auth/login/models/user';
+import {User} from '../../auth/models/user';
 import {map, Observable} from 'rxjs';
 import {Participant} from '../models/participant';
 import {environment} from '../../../../environments/environment';
