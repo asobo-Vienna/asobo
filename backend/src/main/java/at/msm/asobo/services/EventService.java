@@ -5,13 +5,10 @@ import at.msm.asobo.dto.event.EventCreationDTO;
 import at.msm.asobo.dto.event.EventDTO;
 import at.msm.asobo.dto.event.EventUpdateDTO;
 import at.msm.asobo.entities.Event;
+import at.msm.asobo.entities.User;
 import at.msm.asobo.exceptions.EventNotFoundException;
-import at.msm.asobo.mappers.EventDTOEventMapper;
-import at.msm.asobo.mappers.MediumDTOMediumMapper;
-import at.msm.asobo.mappers.UserCommentDTOUserCommentMapper;
-import at.msm.asobo.mappers.UserDTOUserMapper;
+import at.msm.asobo.mappers.*;
 import at.msm.asobo.repositories.EventRepository;
-import at.msm.asobo.repositories.UserRepository;
 import at.msm.asobo.services.files.FileStorageService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,12 +24,11 @@ import java.util.UUID;
 public class EventService {
 
     private final EventRepository eventRepository;
-    private final UserRepository userRepository;
+    private final UserService userService;
     private final EventDTOEventMapper eventDTOEventMapper;
     private final UserDTOUserMapper userDTOUserMapper;
     private final UserCommentDTOUserCommentMapper userCommentDTOUserCommentMapper;
     private final MediumDTOMediumMapper mediumDTOMediumMapper;
-    private final UserService userService;
     private final FileStorageService fileStorageService;
     private final FileStorageProperties fileStorageProperties;
 
@@ -40,18 +36,17 @@ public class EventService {
     private String eventCoverPictureSubfolder;
 
     public EventService(EventRepository eventRepository,
-                        UserRepository userRepository,
-                        EventDTOEventMapper eventDTOEventMapper,
                         UserService userService,
+                        EventDTOEventMapper eventDTOEventMapper,
                         FileStorageService fileStorageService,
                         FileStorageProperties fileStorageProperties,
                         UserDTOUserMapper userDTOUserMapper,
                         UserCommentDTOUserCommentMapper userCommentDTOUserCommentMapper,
                         MediumDTOMediumMapper mediumDTOMediumMapper) {
         this.eventRepository = eventRepository;
-        this.userRepository = userRepository;
-        this.eventDTOEventMapper = eventDTOEventMapper;
         this.userService = userService;
+        this.eventDTOEventMapper = eventDTOEventMapper;
+
         this.fileStorageService = fileStorageService;
         this.fileStorageProperties = fileStorageProperties;
         this.userDTOUserMapper = userDTOUserMapper;
@@ -76,11 +71,10 @@ public class EventService {
 
 
     public EventDTO addNewEvent(EventCreationDTO eventCreationDTO) {
-        // ADD this again as soon as we have logged-in users
-        // User user = this.userRepository.findById(eventCreationDTO.getCreator().getId())
-                // .orElseThrow(() -> new EntityNotFoundException("User not found"));
+        User user = this.userService.getUserById(eventCreationDTO.getCreator().getId());
+
         Event newEvent = this.eventDTOEventMapper.mapEventCreationDTOToEvent(eventCreationDTO);
-        // newEvent.setCreator(user);
+        newEvent.setCreator(user);
 
         if (eventCreationDTO.getEventPicture() != null && !eventCreationDTO.getEventPicture().isEmpty()) {
             String fileURI = fileStorageService.store(eventCreationDTO.getEventPicture(), this.eventCoverPictureSubfolder);
@@ -121,9 +115,12 @@ public class EventService {
         existingEvent.setDescription(eventUpdateDTO.getDescription());
         existingEvent.setLocation(eventUpdateDTO.getLocation());
         existingEvent.setDate(eventUpdateDTO.getDate());
-        existingEvent.setParticipants(userDTOUserMapper.mapUserPublicDTOsToUsers(eventUpdateDTO.getParticipants()));
-        existingEvent.setComments(userCommentDTOUserCommentMapper.mapUserCommentDTOsToUserComments(eventUpdateDTO.getComments()));
-        existingEvent.setMedia(mediumDTOMediumMapper.mapMediumDTOsToMediumList(eventUpdateDTO.getMedia()));
+
+        if (eventUpdateDTO.getParticipants() != null) {
+            existingEvent.setParticipants(
+                    userDTOUserMapper.mapUserPublicDTOsToUsers(eventUpdateDTO.getParticipants())
+            );
+        }
 
         MultipartFile picture = eventUpdateDTO.getPicture();
         if (picture != null && !picture.isEmpty()) {
@@ -131,7 +128,7 @@ public class EventService {
             existingEvent.setPictureURI(pictureURI);
         }
 
-        Event eventToUpdate = this.eventRepository.save(existingEvent);
-        return this.eventDTOEventMapper.mapEventToEventDTO(eventToUpdate);
+        Event savedEvent = this.eventRepository.save(existingEvent);
+        return this.eventDTOEventMapper.mapEventToEventDTO(savedEvent);
     }
 }

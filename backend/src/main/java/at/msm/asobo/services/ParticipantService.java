@@ -1,5 +1,6 @@
 package at.msm.asobo.services;
 
+import at.msm.asobo.dto.event.EventDTO;
 import at.msm.asobo.dto.user.UserPublicDTO;
 import at.msm.asobo.entities.Event;
 import at.msm.asobo.entities.User;
@@ -50,8 +51,7 @@ public class ParticipantService {
             participants.add(participant);
         }
 
-        event.setParticipants(participants);
-        this.eventService.updateEvent(this.eventDTOEventMapper.mapEventToEventUpdateDTO(event));
-        return this.userDTOUserMapper.mapUsersToUserPublicDTOs(participants);
+        EventDTO updatedEventDTO = this.eventService.updateEvent(this.eventDTOEventMapper.mapEventToEventUpdateDTO(event));
+        return updatedEventDTO.getParticipants();
     }
 }
