@@ -7,6 +7,7 @@ import {IconField} from 'primeng/iconfield';
 import {InputIcon} from 'primeng/inputicon';
 import {InputText} from 'primeng/inputtext';
 import {FormsModule} from '@angular/forms';
+import {FloatLabel} from 'primeng/floatlabel';
 
 @Component({
   selector: 'app-user-profile',
@@ -15,10 +16,11 @@ import {FormsModule} from '@angular/forms';
     IconField,
     InputIcon,
     InputText,
-    FormsModule
+    FormsModule,
+    FloatLabel
   ],
   templateUrl: './user-profile.html',
-  styleUrl: './user-profile.scss'
+  styleUrl: './user-profile.scss',
 })
 export class UserProfile {
   private userProfileService = inject(UserProfileService);
@@ -31,16 +33,24 @@ export class UserProfile {
   selectedImageUrl = computed(() => this.userProfile().pictureUrl);
   displayImage = computed(() => this.previewUrl() || this.selectedImageUrl());
 
+  isEditingUsername = signal(false);
   isEditingFirstName = signal(false);
   isEditingSurname = signal(false);
+  isEditingLocation = signal(false);
+  username = signal('')
   firstName = signal('');
   surname = signal('');
+  location = signal('');
 
-  toggleEdit(field: 'firstName' | 'surname') {
-    if (field === 'firstName') {
+  toggleEdit(field: 'username' | 'firstName' | 'surname' | 'location') {
+    if (field === 'username') {
+      this.isEditingUsername.set(!this.isEditingUsername)
+    } else if (field === 'firstName') {
       this.isEditingFirstName.set(!this.isEditingFirstName());
-    } else {
+    } else if (field === 'surname') {
       this.isEditingSurname.set(!this.isEditingSurname());
+    } else if (field === 'location') {
+      this.isEditingLocation.set(!this.isEditingLocation());
     }
   }
 

@@ -1,22 +1,33 @@
-p-iconfield input:disabled {
-  background-color: #f8f9fa;
-  border-color: #dee2e6;
-  color: #6c757d;
-  cursor: not-allowed;
-  opacity: 1; // Override default opacity
+@use '../../../../styles/variables' as *;
+
+.profile-section {
+  --p-floatlabel-focus-color: $asobo-purple;
+  --p-floatlabel-color: $asobo-purple;
+  --p-inputtext-focus-border-color: $asobo-purple;
 }
 
-// Or make it look completely normal when disabled
-p-iconfield input:disabled {
-  background-color: white;
-  border-color: #ced4da;
-  color: #212529;
-  opacity: 1;
+.p-floatlabel:has(input.p-filled) label {
+  color: $asobo-purple;
 }
 
-// Make it blend in more
+.p-floatlabel:has(input:focus) label {
+  color: $asobo-purple;
+}
+
+p-iconfield input:focus {
+  border: 2px solid color-mix(in srgb, $asobo-purple 80%, transparent);
+  color: $asobo-purple;
+}
+
+p-iconfield label {
+  color: #64748b;
+  font-weight: normal;
+}
+
 p-iconfield input:disabled {
   background-color: transparent;
   border: 1px solid #e9ecef;
   color: #495057;
+  cursor: not-allowed;
+  opacity: 1;
 }

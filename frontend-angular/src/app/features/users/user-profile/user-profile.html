@@ -6,16 +6,36 @@
       (fileSelected)="handleFileSelected($event)"
     />
 
-    <div class="d-flex justify-content-center mt-5">
-      <div class="d-flex flex-column gap-4">
+    <div class="d-flex justify-content-center mt-5 profile-section">
+      <div class="d-flex flex-column gap-3">
         <p-iconfield>
-          <input
-            type="text"
-            pInputText
-            placeholder="First Name"
-            [(ngModel)]="firstName"
-            [disabled]="!isEditingFirstName()"
+          <p-float-label variant="on">
+            <input
+              type="text"
+              pInputText
+              placeholder="Username"
+              [(ngModel)]="username"
+              [disabled]="!isEditingUsername()"
+            />
+            <label for="profile-username">Username</label>
+          </p-float-label>
+          <p-inputicon
+            class="pi {{ !isEditingUsername() ? 'pi-pen-to-square' : '' }}"
+            (click)="toggleEdit('username')"
+            style="cursor: pointer;"
           />
+        </p-iconfield>
+
+        <p-iconfield>
+          <p-float-label variant="on">
+            <input
+              type="text"
+              pInputText
+              [(ngModel)]="firstName"
+              [disabled]="!isEditingFirstName()"
+            />
+            <label for="profile-firstname">First Name</label>
+          </p-float-label>
           <p-inputicon
             class="pi {{ !isEditingFirstName() ? 'pi-pen-to-square' : '' }}"
             (click)="toggleEdit('firstName')"
@@ -24,16 +44,37 @@
         </p-iconfield>
 
         <p-iconfield>
-          <input
-            type="text"
-            pInputText
-            placeholder="Surname"
-            [(ngModel)]="surname"
-            [disabled]="!isEditingSurname()"
-          />
+          <p-float-label variant="on">
+            <input
+              type="text"
+              pInputText
+              [(ngModel)]="surname"
+              [disabled]="!isEditingSurname()"
+            />
+            <label for="profile-surname">Surname</label>
+          </p-float-label>
           <p-inputicon
             class="pi {{ !isEditingSurname() ? 'pi-pen-to-square' : '' }}"
             (click)="toggleEdit('surname')"
+            style="cursor: pointer;"
+          />
+        </p-iconfield>
+
+        <p-iconfield>
+          <p-float-label variant="on">
+            <input
+              type="text"
+              id="profile-location"
+              pInputText
+
+              [(ngModel)]="location"
+              [disabled]="!isEditingLocation()"
+            />
+            <label for="profile-location">Location</label>
+          </p-float-label>
+          <p-inputicon
+            class="pi {{ !isEditingLocation() ? 'pi-pen-to-square' : '' }}"
+            (click)="toggleEdit('location')"
             style="cursor: pointer;"
           />
         </p-iconfield>
