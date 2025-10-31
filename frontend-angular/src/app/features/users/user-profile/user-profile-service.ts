@@ -51,6 +51,7 @@ export class UserProfileService {
     this.viewedUserSignal.set(user);
   }
 
+  // TODO: still needs to be implemented correctly
   updateField(fieldName: string, value: any): Observable<User> {
     return this.http.patch<User>(`${this.apiUrl}/profile`, { [fieldName]: value })
       .pipe(
@@ -66,10 +67,12 @@ export class UserProfileService {
       );
   }
 
+  // TODO: still needs to be implemented correctly
   updatePassword(password: string): Observable<any> {
     return this.http.patch(`${this.apiUrl}/password`, { password });
   }
 
+  // TODO: still needs to be implemented correctly
   updateProfilePicture(formData: FormData): Observable<User> {
     return this.http.post<User>(`${this.apiUrl}/profile-picture`, formData)
       .pipe(
