@@ -13,6 +13,7 @@ export class ProfilePictureUpload {
 
   currentImage = input<string | ArrayBuffer | null>(null);
   showPlusBeforeUpload = input<boolean>(false);
+  disabled = input<boolean>(false);
   fileSelected = output<File>();
   preview = signal<string | null>(null);
 

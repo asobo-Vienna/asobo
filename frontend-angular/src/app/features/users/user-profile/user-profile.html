@@ -1,13 +1,21 @@
 @if (this.authService.isLoggedIn()) {
   <p>Profile of {{ userProfile().username }}</p>
+
+  @if (!isOwnProfile()) {
+    <p class="text-muted">Viewing profile (read-only)</p>
+  }
+
   <div class="form-group position-relative">
     <app-profile-picture-upload
       [currentImage]="displayImage()"
       (fileSelected)="handleFileSelected($event)"
+      [disabled]="!isOwnProfile()"
     />
 
     <div class="d-flex justify-content-center mt-5 profile-section">
-      <div class="d-flex flex-column gap-3">
+      <div class="d-flex flex-column gap-3 profile-section-forms">
+
+        <!-- Username -->
         <p-iconfield>
           <p-inputgroup>
             <p-inputgroup-addon>
@@ -18,19 +26,24 @@
                 type="text"
                 id="profile-username"
                 pInputText
-                [(ngModel)]="username"
-                [disabled]="!isEditingUsername()"
+                [ngModel]="username()"
+                (ngModelChange)="username.set($event)"
+                (blur)="saveField('username', username())"
+                [disabled]="!isEditingUsername() || !isOwnProfile()"
               />
               <label for="profile-username">Username</label>
             </p-float-label>
           </p-inputgroup>
-          <p-inputicon
-            class="pi {{ !isEditingUsername() ? 'pi-pen-to-square' : '' }}"
-            (click)="toggleEdit('username')"
-            style="cursor: pointer;"
-          />
+          @if (isOwnProfile()) {
+            <p-inputicon
+              [class]="isEditingUsername() ? 'pi pi-check' : 'pi pi-pen-to-square'"
+              (click)="toggleEdit('username')"
+              style="cursor: pointer;"
+            />
+          }
         </p-iconfield>
 
+        <!-- First Name -->
         <p-iconfield>
           <p-inputgroup>
             <p-inputgroup-addon>
@@ -41,19 +54,24 @@
                 type="text"
                 id="profile-firstname"
                 pInputText
-                [(ngModel)]="firstName"
-                [disabled]="!isEditingFirstName()"
+                [ngModel]="firstName()"
+                (ngModelChange)="firstName.set($event)"
+                (blur)="saveField('firstName', firstName())"
+                [disabled]="!isEditingFirstName() || !isOwnProfile()"
               />
               <label for="profile-firstname">First Name</label>
             </p-float-label>
           </p-inputgroup>
-          <p-inputicon
-            class="pi {{ !isEditingFirstName() ? 'pi-pen-to-square' : '' }}"
-            (click)="toggleEdit('firstName')"
-            style="cursor: pointer;"
-          />
+          @if (isOwnProfile()) {
+            <p-inputicon
+              [class]="isEditingFirstName() ? 'pi pi-check' : 'pi pi-pen-to-square'"
+              (click)="toggleEdit('firstName')"
+              style="cursor: pointer;"
+            />
+          }
         </p-iconfield>
 
+        <!-- Surname -->
         <p-iconfield>
           <p-inputgroup>
             <p-inputgroup-addon>
@@ -64,19 +82,24 @@
                 type="text"
                 id="profile-surname"
                 pInputText
-                [(ngModel)]="surname"
-                [disabled]="!isEditingSurname()"
+                [ngModel]="surname()"
+                (ngModelChange)="surname.set($event)"
+                (blur)="saveField('surname', surname())"
+                [disabled]="!isEditingSurname() || !isOwnProfile()"
               />
               <label for="profile-surname">Surname</label>
             </p-float-label>
           </p-inputgroup>
-          <p-inputicon
-            class="pi {{ !isEditingSurname() ? 'pi-pen-to-square' : '' }}"
-            (click)="toggleEdit('surname')"
-            style="cursor: pointer;"
-          />
+          @if (isOwnProfile()) {
+            <p-inputicon
+              [class]="isEditingSurname() ? 'pi pi-check' : 'pi pi-pen-to-square'"
+              (click)="toggleEdit('surname')"
+              style="cursor: pointer;"
+            />
+          }
         </p-iconfield>
 
+        <!-- Location -->
         <p-iconfield>
           <p-inputgroup>
             <p-inputgroup-addon>
@@ -87,19 +110,24 @@
                 type="text"
                 id="profile-location"
                 pInputText
-                [(ngModel)]="location"
-                [disabled]="!isEditingLocation()"
+                [ngModel]="location()"
+                (ngModelChange)="location.set($event)"
+                (blur)="saveField('location', location())"
+                [disabled]="!isEditingLocation() || !isOwnProfile()"
               />
               <label for="profile-location">Location</label>
             </p-float-label>
           </p-inputgroup>
+          @if (isOwnProfile()) {
             <p-inputicon
-              class="pi {{ !isEditingLocation() ? 'pi-pen-to-square' : '' }}"
+              [class]="isEditingLocation() ? 'pi pi-check' : 'pi pi-pen-to-square'"
               (click)="toggleEdit('location')"
               style="cursor: pointer;"
             />
+          }
         </p-iconfield>
 
+        <!-- Email -->
         <p-iconfield>
           <p-inputgroup>
             <p-inputgroup-addon>
@@ -110,41 +138,79 @@
                 type="email"
                 id="profile-email"
                 pInputText
-                [(ngModel)]="email"
-                [disabled]="!isEditingEmail()"
+                [ngModel]="email()"
+                (ngModelChange)="email.set($event)"
+                (blur)="saveField('email', email())"
+                [disabled]="!isEditingEmail() || !isOwnProfile()"
               />
               <label for="profile-email">Email</label>
             </p-float-label>
           </p-inputgroup>
-          <p-inputicon
-            class="pi {{ !isEditingEmail() ? 'pi-pen-to-square' : '' }}"
-            (click)="toggleEdit('email')"
-            style="cursor: pointer;"
-          />
+          @if (isOwnProfile()) {
+            <p-inputicon
+              [class]="isEditingEmail() ? 'pi pi-check' : 'pi pi-pen-to-square'"
+              (click)="toggleEdit('email')"
+              style="cursor: pointer;"
+            />
+          }
         </p-iconfield>
 
-        <p-iconfield>
-          <p-inputgroup>
-            <p-inputgroup-addon>
-              <i class="pi pi-lock"></i>
-            </p-inputgroup-addon>
-            <span class="p-float-label">
-        <p-password
-          [toggleMask]="true"
-          [feedback]="false"
-          [showClear]="getFormControls['password'].value?.length > 0"
-          placeholder="Password"
-          formControlName="password"
-          id="register-password"
-          fluid
-          (onFocus)="toggleRequirements()"
-          (onBlur)="toggleRequirements()"
-          inputStyleClass="w-100"
-        />
-        <label for="profile-password">Password</label>
-      </span>
-          </p-inputgroup>
-        </p-iconfield>
+        <!-- Password Section (only for own profile) -->
+        @if (isOwnProfile()) {
+          <p-iconfield>
+            <p-inputgroup>
+              <p-inputgroup-addon>
+                <i class="pi pi-lock"></i>
+              </p-inputgroup-addon>
+              <p-float-label variant="on">
+                <p-password
+                  id="profile-password"
+                  [ngModel]="password()"
+                  (ngModelChange)="password.set($event)"
+                  [toggleMask]="true"
+                  [feedback]="true"
+                  (onFocus)="onPasswordFocus()"
+                  (onBlur)="onPasswordBlur()"
+                />
+                <label for="profile-password">New Password</label>
+              </p-float-label>
+            </p-inputgroup>
+          </p-iconfield>
+
+          <!-- Password Confirmation (shown when password has value) -->
+          @if (password() && isEditingPassword()) {
+            <p-iconfield>
+              <p-inputgroup>
+                <p-inputgroup-addon>
+                  <i class="pi pi-lock"></i>
+                </p-inputgroup-addon>
+                <p-float-label variant="on">
+                  <p-password
+                    id="profile-password-confirm"
+                    [ngModel]="passwordConfirmation()"
+                    (ngModelChange)="passwordConfirmation.set($event)"
+                    [toggleMask]="true"
+                    [feedback]="false"
+                  />
+                  <label for="profile-password-confirm">Confirm Password</label>
+                </p-float-label>
+              </p-inputgroup>
+            </p-iconfield>
+
+            <!-- Password Update Buttons -->
+            <div class="d-flex gap-2 mt-2 m-auto">
+              <button
+                class="btn btn-purple btn-primary mb-3"
+                (click)="updatePassword()"
+                [disabled]="!password() || password().length < 8 || password() !== passwordConfirmation()">
+                Update Password
+              </button>
+              <button class="btn btn-purple btn-primary mb-3" (click)="cancelPasswordEdit()">
+                  Cancel
+              </button>
+            </div>
+          }
+        }
 
       </div>
     </div>

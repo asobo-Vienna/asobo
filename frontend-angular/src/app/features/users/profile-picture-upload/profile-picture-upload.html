@@ -6,6 +6,7 @@
     class="profile-pic-input"
     name="profile_picture"
     (change)="onFileSelected($event)"
+    [disabled]="disabled()"
     hidden
   />
 
