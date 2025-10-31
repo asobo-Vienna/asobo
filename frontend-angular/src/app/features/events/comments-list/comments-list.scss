@@ -10,13 +10,13 @@
   margin-bottom: 20px;
 }
 
-.comment-username, .comment-username a {
+.comment-username {
   color: $asobo-purple;
   font-weight: bold;
   text-decoration: none;
 }
 
-.comment-username a:hover {
+.comment-username:hover {
   text-decoration: underline;
 }
 

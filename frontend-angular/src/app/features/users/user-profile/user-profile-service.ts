@@ -1,6 +1,6 @@
 import { Injectable, inject, computed, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, tap } from 'rxjs';
+import {Observable, of, tap} from 'rxjs';
 import { AuthService } from '../../auth/services/auth-service';
 import { UrlUtilService } from '../../../shared/utils/url/url-util-service';
 import { environment } from '../../../../environments/environment';
@@ -13,12 +13,12 @@ import { User } from '../../auth/models/user';
 export class UserProfileService {
   private authService = inject(AuthService);
   private http = inject(HttpClient);
-  private apiUrl = `${environment.apiBaseUrl}/users`;
+  private apiUrl = `${environment.usersEndpoint}`;
 
   private viewedUserSignal = signal<User | null>(null);
 
   userProfile = computed<UserProfile>(() => {
-    const user = this.viewedUserSignal(); // ✅ Now based on viewed user
+    const user = this.viewedUserSignal();
     return {
       userProfileUrl: user?.username
         ? `${environment.userProfileBaseUrl}${user.username}`
@@ -33,15 +33,18 @@ export class UserProfileService {
     };
   });
 
-  getCurrentUser(): Observable<User> {
-    return this.http.get<User>(`${this.apiUrl}/profile`);
-  }
-
   getUserByUsername(username: string): Observable<User> {
+    const loggedInUser = this.authService.currentUser();
+
+    if (loggedInUser?.username === username) {
+      // Viewing own profile - use AuthService data
+      this.viewedUserSignal.set(loggedInUser);
+      return of(loggedInUser);
+    }
+
+    // Viewing someone else's profile - fetch from backend
     return this.http.get<User>(`${this.apiUrl}/${username}`)
-      .pipe(
-        tap(user => this.viewedUserSignal.set(user)) // Update the viewed user signal
-      );
+      .pipe(tap(user => this.viewedUserSignal.set(user)));
   }
 
   setViewedUser(user: User): void {

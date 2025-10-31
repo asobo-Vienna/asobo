@@ -35,6 +35,6 @@ export class ParticipantService {
   }
 
   private getEventParticipantsUrl(eventId: string): string {
-    return `${environment.eventsAddress}/${eventId}/participants`;
+    return `${environment.eventsEndpoint}/${eventId}/participants`;
   }
 }

@@ -11,6 +11,7 @@ import { FloatLabel } from 'primeng/floatlabel';
 import { InputGroup } from 'primeng/inputgroup';
 import { InputGroupAddon } from 'primeng/inputgroupaddon';
 import { Password } from 'primeng/password';
+import {environment} from '../../../../environments/environment';
 
 @Component({
   selector: 'app-user-profile',
@@ -154,7 +155,6 @@ export class UserProfile implements OnInit {
     });
   }
 
-  // Profile picture handling
   handleFileSelected(file: File) {
     if (!this.isOwnProfile()) {
       console.error('Cannot edit another user\'s profile picture');
@@ -225,8 +225,8 @@ export class UserProfile implements OnInit {
     const pwd = this.password();
     const confirm = this.passwordConfirmation();
 
-    if (!pwd || pwd.length < 8) {
-      console.error('Password must be at least 8 characters');
+    if (!pwd || pwd.length < environment.minPWLength) {
+      console.error(`Password must be at least ${environment.minPWLength} characters`);
       return;
     }
 

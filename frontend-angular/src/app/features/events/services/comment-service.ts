@@ -37,7 +37,7 @@ export class CommentService {
 
 
   private getCommentsUrl(eventId: string): string {
-    return `${environment.eventsAddress}/${eventId}/comments`;
+    return `${environment.eventsEndpoint}/${eventId}/comments`;
   }
 }
 

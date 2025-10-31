@@ -16,14 +16,15 @@ import {UserProfileService} from '../../../features/users/user-profile/user-prof
 export class Header {
   private router = inject(Router);
   authService = inject(AuthService);
-  private userProfileService = inject(UserProfileService);
 
   goHome() {
     console.log('Logo clicked');
     this.router.navigate(['/']);
   }
 
-  get userProfile() {
-    return this.userProfileService.userProfile()
+  get loggedInUserProfile() {
+    return this.authService.loggedInUserFormatted();
   }
+
+  protected readonly environment = environment;
 }
