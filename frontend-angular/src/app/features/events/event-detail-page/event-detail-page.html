@@ -66,7 +66,6 @@
   <!-- Photos & Video -->
   <div class="col-md-6 mt-3 text-start">
     <app-gallery [mediaItems]="mediaItems"
-    (mediaAdded)="uploadMedia($event)" />
-    <!--(mediaDeleted)="deleteMedia($event)"/> -->
+    (mediaAdded)="uploadMedia($event)" (mediaDeleted)="deleteMedia($event)"/>
   </div>
 </div>

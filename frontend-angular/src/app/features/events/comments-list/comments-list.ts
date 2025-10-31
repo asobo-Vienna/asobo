@@ -6,6 +6,8 @@ import {MatIconButton} from '@angular/material/button';
 import {MatIcon} from '@angular/material/icon';
 import {List} from '../../../core/data_structures/lists/list';
 import {UrlUtilService} from '../../../shared/utils/url/url-util-service';
+import {environment} from '../../../../environments/environment';
+import {RouterLink} from '@angular/router';
 
 @Component({
   selector: 'app-comments-list',
@@ -13,7 +15,8 @@ import {UrlUtilService} from '../../../shared/utils/url/url-util-service';
     FormsModule,
     DatePipe,
     MatIconButton,
-    MatIcon
+    MatIcon,
+    RouterLink
   ],
   templateUrl: './comments-list.html',
   styleUrl: './comments-list.scss'
@@ -23,4 +26,5 @@ export class CommentsList {
   @Output() commentDeleted = new EventEmitter<Comment>();
   @Output() commentEdited = new EventEmitter<Comment>();
   protected readonly UrlUtilService = UrlUtilService;
+  protected readonly environment = environment;
 }

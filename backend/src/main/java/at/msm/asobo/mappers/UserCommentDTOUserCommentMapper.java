@@ -1,27 +1,58 @@
 package at.msm.asobo.mappers;
 
 import at.msm.asobo.dto.comment.UserCommentDTO;
+import at.msm.asobo.entities.Event;
+import at.msm.asobo.entities.User;
 import at.msm.asobo.entities.UserComment;
-import at.msm.asobo.mappers.helpers.EventMapperHelper;
-import at.msm.asobo.mappers.helpers.UserMapperHelper;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-
+import org.springframework.stereotype.Component;
 import java.util.List;
+import java.util.stream.Collectors;
 
-@Mapper(componentModel = "spring", uses = {UserMapperHelper.class, EventMapperHelper.class})
-public interface UserCommentDTOUserCommentMapper {
+@Component
+public class UserCommentDTOUserCommentMapper {
 
-    @Mapping(source = "author", target = "authorId", qualifiedByName = "userToUuid")
-    @Mapping(source = "event", target = "eventId", qualifiedByName = "eventToUuid")
-    @Mapping(source = "author.username", target = "username")
-    UserCommentDTO mapUserCommentToUserCommentDTO(UserComment userComment);
+    public UserCommentDTO mapUserCommentToUserCommentDTO(UserComment entity) {
+        if (entity == null) {
+            return null;
+        }
 
-    @Mapping(source = "authorId", target = "author", qualifiedByName = "uuidToUser")
-    @Mapping(source = "eventId", target = "event", qualifiedByName = "uuidToEvent")
-    @Mapping(source = "username", target = "author.username")
-    UserComment mapUserCommentDTOToUserComment(UserCommentDTO userCommentDTO);
+        UserCommentDTO dto = new UserCommentDTO();
+        dto.setId(entity.getId());
+        dto.setText(entity.getText());
+        dto.setCreationDate(entity.getCreationDate());
+        dto.setModificationDate(entity.getModificationDate());
+        dto.setPictureURI(entity.getPictureURI());
 
-    List<UserCommentDTO> mapUserCommentsToUserCommentDTOs(List<UserComment> userComments);
-    List<UserComment> mapUserCommentDTOsToUserComments(List<UserCommentDTO> userCommentDTOs);
+        if (entity.getAuthor() != null) {
+            dto.setAuthorId(entity.getAuthor().getId());
+            dto.setUsername(entity.getAuthor().getUsername());
+        }
+
+        if (entity.getEvent() != null) {
+            dto.setEventId(entity.getEvent().getId());
+        }
+        return dto;
+    }
+
+    public UserComment mapUserCommentDTOToUserComment(UserCommentDTO dto, User author, Event event) {
+        if (dto == null) {
+            return null;
+        }
+
+        UserComment entity = new UserComment();
+        entity.setId(dto.getId());
+        entity.setText(dto.getText());
+        entity.setAuthor(author);
+        entity.setEvent(event);
+        entity.setPictureURI(author.getPictureURI());
+        entity.setCreationDate(dto.getCreationDate());
+        entity.setModificationDate(dto.getModificationDate());
+        return entity;
+    }
+
+    public List<UserCommentDTO> mapUserCommentsToUserCommentDTOs(List<UserComment> comments) {
+        return comments.stream()
+                .map(this::mapUserCommentToUserCommentDTO)
+                .collect(Collectors.toList());
+    }
 }

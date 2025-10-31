@@ -2,12 +2,13 @@ package at.msm.asobo.dto.event;
 
 import at.msm.asobo.dto.medium.MediumDTO;
 import at.msm.asobo.dto.comment.UserCommentDTO;
+import at.msm.asobo.dto.user.EventCreatorDTO;
 import at.msm.asobo.dto.user.UserDTO;
+import at.msm.asobo.dto.user.UserPublicDTO;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -35,7 +36,9 @@ public class EventCreationDTO {
 
     // add this again as soon as we have logged-in users
     // @NotNull(message = "Event creator is mandatory for event creation")
-    private EventCreatorDTO creator;
+    // TODO change this to EventCreatorDTO when we have factory instead of mapper ticket #37
+    // private EventCreatorDTO creator;
+    private UserPublicDTO creator;
 
     private List<UserDTO> participants;
 
@@ -73,7 +76,7 @@ public class EventCreationDTO {
         return modificationDate;
     }
 
-    public EventCreatorDTO getCreator() {
+    public UserPublicDTO getCreator() {
         return creator;
     }
 
@@ -118,7 +121,7 @@ public class EventCreationDTO {
         this.modificationDate = modificationDate;
     }
 
-    public void setCreator(EventCreatorDTO creator) {
+    public void setCreator(UserPublicDTO creator) {
         this.creator = creator;
     }
 

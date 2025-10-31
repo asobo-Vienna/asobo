@@ -1,9 +1,5 @@
-package at.msm.asobo.dto.event;
+package at.msm.asobo.dto.user;
 
-import at.msm.asobo.entities.User;
-import jakarta.validation.constraints.NotBlank;
-
-import java.net.URI;
 import java.util.UUID;
 
 public class EventCreatorDTO {

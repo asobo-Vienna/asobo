@@ -20,7 +20,7 @@ public class ParticipantController {
     // returns updated participants list
     @PostMapping()
     public List<UserPublicDTO> toggleParticipantInEvent(@PathVariable UUID eventId, @RequestBody @Valid UserPublicDTO participantDTO) {
-        return this.participantService.toggleParticipantInEvent(eventId, participantDTO.getId());
+        return this.participantService.toggleParticipantInEvent(eventId, participantDTO);
     }
 
     @GetMapping()

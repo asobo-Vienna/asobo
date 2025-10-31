@@ -1,5 +1,5 @@
 export interface Participant {
   id: string;
-  name: string;
+  username: string;
   pictureURI: string;
 }

@@ -5,7 +5,7 @@ import {environment} from '../../../../environments/environment';
 import {inject, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {List} from '../../../core/data_structures/lists/list';
-import {Comment} from '../models/comment';
+
 
 @Injectable({
   providedIn: 'root'
@@ -24,6 +24,14 @@ export class ParticipantService {
     const allParticipants = this.http.post<Participant[]>(this.getEventParticipantsUrl(eventId), user)
       .pipe(map(participants => new List<Participant>(participants)));
     return allParticipants;
+  }
+
+  mapUserToParticipant(user: User): Participant {
+    return {
+      id: user.id,
+      username: user.username,
+      pictureURI: user.pictureURI
+    };
   }
 
   private getEventParticipantsUrl(eventId: string): string {

@@ -2,6 +2,7 @@ package at.msm.asobo.dto.event;
 
 import at.msm.asobo.dto.medium.MediumDTO;
 import at.msm.asobo.dto.comment.UserCommentDTO;
+import at.msm.asobo.dto.user.EventCreatorDTO;
 import at.msm.asobo.dto.user.UserPublicDTO;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -26,7 +27,8 @@ public class EventDTO {
 
     private LocalDateTime modificationDate;
 
-    private EventCreatorDTO creator;
+    // TODO refactor to a new DTO EventCreator (after refactoring mappers to factories) private EventCreatorDTO creator;
+    private UserPublicDTO creator;
 
     private List<UserPublicDTO> participants;
 
@@ -72,7 +74,7 @@ public class EventDTO {
         this.modificationDate = modificationDate;
     }
 
-    public void setCreator(EventCreatorDTO creator) {
+    public void setCreator(UserPublicDTO creator) {
         this.creator = creator;
     }
 
@@ -112,7 +114,7 @@ public class EventDTO {
         return creationDate;
     }
 
-    public EventCreatorDTO getCreator() {
+    public UserPublicDTO getCreator() {
         return creator;
     }
 

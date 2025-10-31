@@ -48,6 +48,7 @@ export class EventDetailPage {
   location!: string;
   description?: string;
   comments: List<Comment> = new List<Comment>([]);
+  // TODO? make participants list a signal and use computed so we don't have to manually check in a couple places???
   participants: List<Participant> = new List<Participant>([]);
   mediaItems: List<MediaItem> = new List<MediaItem>([]);
   currentUser: User | null = this.authService.currentUser();
@@ -80,6 +81,12 @@ export class EventDetailPage {
 
     this.participantService.getAllByEventId(event.id).subscribe((participants: List<Participant>) => {
       this.participants = participants;
+      if (this.currentUser) {
+        const participant = this.participantService.mapUserToParticipant(this.currentUser);
+        this.isUserAlreadyPartOfEvent.set(
+          participants.contains(participant, LambdaFunctions.compareById)
+        );
+      }
     });
 
     this.commentService.getAllByEventId(event.id).subscribe((comments: List<Comment>) => {
@@ -155,13 +162,10 @@ export class EventDetailPage {
         if (!this.currentUser) {
           return;
         }
-        const participantToJoin = {
-          id: this.currentUser.id,
-          name: this.currentUser.username,
-          pictureURI: this.currentUser.pictureURI
-        };
 
+        const participantToJoin = this.participantService.mapUserToParticipant(this.currentUser);
         this.participants = participants;
+
         // compare by ID function passed into List.contains() method
         this.isUserAlreadyPartOfEvent.set(
           this.participants.contains(participantToJoin, LambdaFunctions.compareById)
