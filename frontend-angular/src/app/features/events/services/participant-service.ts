@@ -29,7 +29,7 @@ export class ParticipantService {
   mapUserToParticipant(user: User): Participant {
     return {
       id: user.id,
-      name: user.username,
+      username: user.username,
       pictureURI: user.pictureURI
     };
   }

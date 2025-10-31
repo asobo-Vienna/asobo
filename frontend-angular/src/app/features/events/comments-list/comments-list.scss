@@ -10,9 +10,14 @@
   margin-bottom: 20px;
 }
 
-.comment-username {
+.comment-username, .comment-username a {
   color: $asobo-purple;
   font-weight: bold;
+  text-decoration: none;
+}
+
+.comment-username a:hover {
+  text-decoration: underline;
 }
 
 .comment-time {
@@ -28,6 +33,11 @@
   object-fit: cover;
   margin-right: 0.5rem;
   filter: drop-shadow(2px 2px 3px gray);
+  transition: transform .2s;
+}
+
+.user-avatar:hover {
+  transform: scale(1.1);
 }
 
 .comments-list {

@@ -2,10 +2,15 @@
   @for (comment of comments; track comment.id) {
     <div class="comment-box">
       <div class="d-flex gap-3">
-        <img class="user-avatar" [src]="UrlUtilService.getMediaUrl(comment.pictureURI || '/uploads/profile-pictures/default.png')" alt="{{comment.username}}'s avatar">
+        <a [routerLink]="`${environment.userProfileBaseUrl}${comment.username}`">
+          <img class="user-avatar" [src]="UrlUtilService.getMediaUrl(comment.pictureURI || '/uploads/profile-pictures/default.png')" alt="{{comment.username}}'s avatar">
+        </a>
         <div class="flex-grow-1">
           <div class="d-flex justify-content-between align-items-center">
-            <h6 class="mb-0 comment-username">{{ comment.username }}</h6>
+            <!-- replace link with userProfileService userProfile.userProfileUrl-->
+            <h6 class="mb-0 comment-username">
+              <a [routerLink]="`${environment.userProfileBaseUrl}${comment.username}`">{{ comment.username }}</a>
+            </h6>
             <span class="comment-time">{{ comment.creationDate | date:'short' }}</span>
           </div>
 
