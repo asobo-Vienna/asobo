@@ -26,9 +26,6 @@ export class AuthService {
   private router = inject(Router);
 
   constructor() {
-    // Check token validity on app load
-    this.checkTokenValidity();
-
     // Start periodic token check
     this.startTokenValidityCheck();
   }
@@ -64,19 +61,18 @@ export class AuthService {
     this.currentUserSignal.set(authResult.user);
   }
 
-  logout(): void {
+  logout(navigate: boolean = true): void {
     // Clear storage
     localStorage.removeItem(this.TOKEN_KEY);
     localStorage.removeItem(this.USER_KEY);
 
-    // Update signal
     this.currentUserSignal.set(null);
 
-    // Stop token check
     this.stopTokenValidityCheck();
 
-    // Navigate to login
-    this.router.navigate(['/login']);
+    if (navigate) {
+      this.router.navigate(['/login']);
+    }
   }
 
   getToken(): string | null {
@@ -130,39 +126,36 @@ export class AuthService {
   }
 
   private startTokenValidityCheck(): void {
-    // Clear any existing interval
     this.stopTokenValidityCheck();
 
-    // Check more frequently - every 10 seconds
-    this.tokenCheckInterval = setInterval(() => {
-      const token = this.getToken();
+    if (this.isTokenExpired()) {
+      this.logout(false); // Add false here to prevent navigation on app init
+      return;
+    }
 
-      if (!token) {
-        this.logout();
+    this.tokenCheckInterval = setInterval(() => {
+      if (!this.getToken()) {
+        this.logout(); // Keep default (true) here for active expiration
         return;
       }
 
+      // Get time until expiry for warning
+      const token = this.getToken()!;
       try {
         const decoded: any = jwtDecode(token);
-        const currentTime = Date.now() / 1000;
-        const timeUntilExpiry = decoded.exp - currentTime;
+        const timeUntilExpiry = decoded.exp - (Date.now() / 1000);
 
-        // Warning 1 minute (60 seconds) before expiration
-        if (timeUntilExpiry <= 60 && timeUntilExpiry > 0) {
+        if (0 < timeUntilExpiry && timeUntilExpiry <= 60) {
           console.warn(`Token expiring in ${Math.floor(timeUntilExpiry)} seconds!`);
-          // You can show a toast/notification here
-        }
-
-        // Logout if expired
-        if (timeUntilExpiry <= 0) {
-          console.log('Token expired, logging out...');
-          this.logout();
         }
       } catch (error) {
         console.error('Error checking token validity:', error);
-        this.logout();
       }
-    }, 10000); // Check every 10 seconds instead of 60
+
+      if (this.isTokenExpired()) {
+        this.logout(); // Keep default (true) here for active expiration
+      }
+    }, 10000);
   }
 
   private stopTokenValidityCheck(): void {
