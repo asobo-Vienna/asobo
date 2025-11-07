@@ -10,6 +10,7 @@ export interface Event {
   time: string;
   location: string;
   description: string;
+  isPrivate: boolean;
   participants: List<Participant>;
   comments: List<Comment>;
 }

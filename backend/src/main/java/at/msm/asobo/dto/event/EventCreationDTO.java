@@ -27,6 +27,8 @@ public class EventCreationDTO {
     @NotBlank(message = "Location is mandatory for event creation")
     private String location;
 
+    private boolean isPrivate;
+
     @NotNull(message = "Date is mandatory for event creation")
     private LocalDateTime date;
 
@@ -49,47 +51,47 @@ public class EventCreationDTO {
     public EventCreationDTO() {}
 
     public UUID getId() {
-        return id;
+        return this.id;
     }
 
     public String getTitle() {
-        return title;
+        return this.title;
     }
 
     public String getDescription() {
-        return description;
+        return this.description;
     }
 
     public String getLocation() {
-        return location;
+        return this.location;
     }
 
     public LocalDateTime getDate() {
-        return date;
+        return this.date;
     }
 
     public LocalDateTime getCreationDate() {
-        return creationDate;
+        return this.creationDate;
     }
 
     public LocalDateTime getModificationDate() {
-        return modificationDate;
+        return this.modificationDate;
     }
 
     public UserPublicDTO getCreator() {
-        return creator;
+        return this.creator;
     }
 
     public List<UserDTO> getParticipants() {
-        return participants;
+        return this.participants;
     }
 
     public List<UserCommentDTO> getComments() {
-        return comments;
+        return this.comments;
     }
 
     public List<MediumDTO> getMedia() {
-        return media;
+        return this.media;
     }
 
     public void setId(UUID id) {
@@ -103,7 +105,6 @@ public class EventCreationDTO {
     public void setDescription(String description) {
         this.description = description;
     }
-
 
     public void setLocation(String location) {
         this.location = location;
@@ -123,6 +124,14 @@ public class EventCreationDTO {
 
     public void setCreator(UserPublicDTO creator) {
         this.creator = creator;
+    }
+
+    public boolean isPrivate() {
+        return this.isPrivate;
+    }
+
+    public void setPrivate(boolean isPrivate) {
+        this.isPrivate = isPrivate;
     }
 
     public void setParticipants(List<UserDTO> participants) {

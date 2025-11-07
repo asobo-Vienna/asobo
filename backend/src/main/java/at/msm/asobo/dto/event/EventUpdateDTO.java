@@ -23,6 +23,8 @@ public class EventUpdateDTO {
 
     private LocalDateTime date;
 
+    private boolean isPrivate;
+
     private List<UserPublicDTO> participants;
 
     private List<UserCommentDTO> comments;
@@ -72,38 +74,46 @@ public class EventUpdateDTO {
     }
 
     public UUID getId() {
-        return id;
+        return this.id;
     }
 
     public String getTitle() {
-        return title;
+        return this.title;
     }
 
     public String getDescription() {
-        return description;
+        return this.description;
     }
 
     public String getLocation() {
-        return location;
+        return this.location;
     }
 
     public LocalDateTime getDate() {
-        return date;
+        return this.date;
+    }
+
+    public boolean isPrivate() {
+        return this.isPrivate;
+    }
+
+    public void setPrivate(boolean isPrivate) {
+        this.isPrivate = isPrivate;
     }
 
     public List<UserPublicDTO> getParticipants() {
-        return participants;
+        return this.participants;
     }
 
     public MultipartFile getPicture() {
-        return picture;
+        return this.picture;
     }
 
     public List<UserCommentDTO> getComments() {
-        return comments;
+        return this.comments;
     }
 
     public List<MediumDTO> getMedia() {
-        return media;
+        return this.media;
     }
 }

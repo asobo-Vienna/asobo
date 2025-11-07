@@ -53,11 +53,14 @@ public class Event {
     @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Medium> media;
 
+    @Column(columnDefinition = "boolean default false")
+    private boolean isPrivate;
+
     public Event() {
     }
 
     public User getCreator() {
-        return creator;
+        return this.creator;
     }
 
     public void setCreator(User creator) {
@@ -65,7 +68,7 @@ public class Event {
     }
 
     public LocalDateTime getModificationDate() {
-        return modificationDate;
+        return this.modificationDate;
     }
 
     public void setModificationDate(LocalDateTime modificationDate) {
@@ -73,7 +76,7 @@ public class Event {
     }
 
     public List<User> getParticipants() {
-        return participants;
+        return this.participants;
     }
 
     public void setParticipants(List<User> participants) {
@@ -81,7 +84,7 @@ public class Event {
     }
 
     public String getTitle() {
-        return title;
+        return this.title;
     }
 
     public void setTitle(String name) {
@@ -89,7 +92,7 @@ public class Event {
     }
 
     public String getDescription() {
-        return description;
+        return this.description;
     }
 
     public void setDescription(String description) {
@@ -97,7 +100,7 @@ public class Event {
     }
 
     public LocalDateTime getDate() {
-        return date;
+        return this.date;
     }
 
     public void setDate(LocalDateTime date) {
@@ -105,7 +108,7 @@ public class Event {
     }
 
     public String getLocation() {
-        return location;
+        return this.location;
     }
 
     public void setLocation(String location) {
@@ -113,7 +116,7 @@ public class Event {
     }
 
     public String getPictureURI() {
-        return pictureURI;
+        return this.pictureURI;
     }
 
     public void setPictureURI(String pictureURI) {
@@ -121,7 +124,7 @@ public class Event {
     }
 
     public LocalDateTime getCreationDate() {
-        return creationDate;
+        return this.creationDate;
     }
 
     public void setCreationDate(LocalDateTime creationDate) {
@@ -129,7 +132,7 @@ public class Event {
     }
 
     public List<UserComment> getComments() {
-        return comments;
+        return this.comments;
     }
 
     public void setComments(List<UserComment> comments) {
@@ -145,10 +148,18 @@ public class Event {
     }
 
     public UUID getId() {
-        return id;
+        return this.id;
     }
 
     public void setId(UUID id) {
         this.id = id;
+    }
+
+    public boolean isPrivate() {
+        return this.isPrivate;
+    }
+
+    public void setPrivate(boolean isPrivate) {
+        this.isPrivate = isPrivate;
     }
 }

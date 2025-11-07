@@ -30,6 +30,8 @@ public class EventDTO {
     // TODO refactor to a new DTO EventCreator (after refactoring mappers to factories) private EventCreatorDTO creator;
     private UserPublicDTO creator;
 
+    private boolean isPrivate;
+
     private List<UserPublicDTO> participants;
 
     private List<UserCommentDTO> comments;
@@ -91,50 +93,58 @@ public class EventDTO {
     }
 
     public UUID getId() {
-        return id;
+        return this.id;
     }
 
     public String getTitle() {
-        return title;
+        return this.title;
     }
 
     public String getDescription() {
-        return description;
+        return this.description;
     }
 
     public String getLocation() {
-        return location;
+        return this.location;
     }
 
     public LocalDateTime getDate() {
-        return date;
+        return this.date;
     }
 
     public LocalDateTime getCreationDate() {
-        return creationDate;
+        return this.creationDate;
     }
 
     public UserPublicDTO getCreator() {
-        return creator;
+        return this.creator;
+    }
+
+    public boolean isPrivate() {
+        return this.isPrivate;
+    }
+
+    public void setPrivate(boolean isPrivate) {
+        this.isPrivate = isPrivate;
     }
 
     public List<UserPublicDTO> getParticipants() {
-        return participants;
+        return this.participants;
     }
 
     public String getPictureURI() {
-        return pictureURI;
+        return this.pictureURI;
     }
 
     public LocalDateTime getModificationDate() {
-        return modificationDate;
+        return this.modificationDate;
     }
 
     public List<UserCommentDTO> getComments() {
-        return comments;
+        return this.comments;
     }
 
     public List<MediumDTO> getMedia() {
-        return media;
+        return this.media;
     }
 }

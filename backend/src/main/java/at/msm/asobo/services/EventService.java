@@ -115,6 +115,7 @@ public class EventService {
         existingEvent.setDescription(eventUpdateDTO.getDescription());
         existingEvent.setLocation(eventUpdateDTO.getLocation());
         existingEvent.setDate(eventUpdateDTO.getDate());
+        existingEvent.setPrivate(eventUpdateDTO.isPrivate());
 
         if (eventUpdateDTO.getParticipants() != null) {
             existingEvent.setParticipants(
