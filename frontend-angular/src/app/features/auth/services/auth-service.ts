@@ -11,8 +11,8 @@ import {UrlUtilService} from '../../../shared/utils/url/url-util-service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private readonly TOKEN_KEY = 'jwt_token';
-  private readonly USER_KEY = 'current_user';
+  private readonly TOKEN_KEY = environment.JWT_TOKEN_STORAGE_KEY;
+  private readonly USER_KEY = environment.USER_STORAGE_KEY;
 
   private tokenCheckInterval: any;
   // Signal to track current user state
@@ -51,18 +51,15 @@ export class AuthService {
   }
 
   private setSession(authResult: LoginResponse): void {
-    // Store JWT token
     localStorage.setItem(this.TOKEN_KEY, authResult.token);
 
     // Store user object
     localStorage.setItem(this.USER_KEY, JSON.stringify(authResult.user));
 
-    // Update signal
     this.currentUserSignal.set(authResult.user);
   }
 
   logout(navigate: boolean = true): void {
-    // Clear storage
     localStorage.removeItem(this.TOKEN_KEY);
     localStorage.removeItem(this.USER_KEY);
 

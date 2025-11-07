@@ -7,23 +7,18 @@ import org.springframework.web.multipart.MultipartFile;
 
 public class UserUpdateDTO {
 
-    @NotBlank(message = "Username must not be blank")
     @Size(min = 3, max = 50, message = "Username must have between 3 and 50 characters")
     private String username;
 
-    @NotBlank(message = "First name is mandatory for user registration")
     @Size(min = 1, max = 50, message = "First name must have between 1 and 50 characters")
     private String firstName;
 
-    @NotBlank(message = "Surname is mandatory for user registration")
     @Size(min = 1, max = 80, message = "First name must have between 1 and 80 characters")
     private String surname;
 
-    @NotBlank(message = "Email must not be blank")
     @Email(message = "Email should be valid")
     private String email;
 
-    @NotBlank(message = "Salutation must not be blank")
     private String salutation;
 
     private String location;
@@ -36,7 +31,7 @@ public class UserUpdateDTO {
 
     private boolean active;
 
-    private MultipartFile picture;
+    private MultipartFile profilePicture;
 
     public String getUsername() {
         return username;
@@ -70,12 +65,12 @@ public class UserUpdateDTO {
         this.email = email;
     }
 
-    public MultipartFile getPicture() {
-        return picture;
+    public MultipartFile getProfilePicture() {
+        return this.profilePicture;
     }
 
-    public void setPicture(MultipartFile picture) {
-        this.picture = picture;
+    public void setProfilePicture(MultipartFile profilePicture) {
+        this.profilePicture = profilePicture;
     }
 
     public String getLocation() {

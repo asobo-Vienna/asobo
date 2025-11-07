@@ -14,7 +14,7 @@ export const routes: Routes = [
   { path: 'login', component: LoginPage },
   { path: 'register', component: RegistrationPage },
   { path: 'events/:id', component: EventDetailPage },
-  { path: '', component: HomePage },
+  { path: '', component: LoginPage },
 
   // everything else needs authentication
   {
@@ -23,7 +23,7 @@ export const routes: Routes = [
     children: [
       { path: 'user/:username', component: UserProfile },
       { path: 'events', component: EventsPage },
-      //{ path: '', redirectTo: '/events', pathMatch: 'full' },
+      //{ path: '', redirectTo: '/login', pathMatch: 'full' },
     ]
   },
 

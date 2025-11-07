@@ -56,7 +56,7 @@ public class SecurityConfig {
                     "http://localhost:63342",
                     "http://localhost:63343"
             ));
-            config.setAllowedMethods(List.of("GET","POST","PUT","DELETE","OPTIONS"));
+            config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
             config.setAllowedHeaders(List.of("Authorization", "Content-Type", "Accept"));
             config.setAllowCredentials(true); // allow cookies or auth headers
             return config;
@@ -74,10 +74,10 @@ public class SecurityConfig {
         http.authorizeHttpRequests(registry -> registry
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/api/events/**").permitAll()
+                .requestMatchers("/api/users/**").authenticated()
                 .requestMatchers("/**").permitAll()
                 //.requestMatchers("/api/**").permitAll() // TODO: remove later, otherwise all api endpoints are open
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                .requestMatchers("/api/users/**").authenticated()
                 .anyRequest().authenticated()
         );
 

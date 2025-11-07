@@ -5,6 +5,7 @@ import at.msm.asobo.dto.auth.LoginResponseDTO;
 import at.msm.asobo.dto.auth.UserLoginDTO;
 import at.msm.asobo.dto.user.*;
 import at.msm.asobo.entities.User;
+import at.msm.asobo.exceptions.UserNotAuthorizedException;
 import at.msm.asobo.exceptions.UserNotFoundException;
 import at.msm.asobo.exceptions.registration.EmailAlreadyExistsException;
 import at.msm.asobo.exceptions.registration.UsernameAlreadyExistsException;
@@ -13,6 +14,7 @@ import at.msm.asobo.repositories.UserRepository;
 import at.msm.asobo.security.JwtUtil;
 import at.msm.asobo.security.UserPrincipal;
 import at.msm.asobo.services.files.FileStorageService;
+import at.msm.asobo.utils.PatchUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -20,10 +22,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -121,8 +121,6 @@ public class UserService {
 
         Authentication authentication = authenticationManager.authenticate(authToken);
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-
         // Get the authenticated principal
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
 
@@ -151,7 +149,20 @@ public class UserService {
     public UserPublicDTO updateUserById(UUID userId, UserUpdateDTO userUpdateDTO) {
         User existingUser = this.getUserById(userId);
 
-        existingUser.setActive(userUpdateDTO.isActive());
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+        UUID authenticatedUserId = UUID.fromString(userPrincipal.getUserId());
+
+        // Authorization check: user can only update their own profile
+        if (!existingUser.getId().equals(authenticatedUserId)) {
+            throw new UserNotAuthorizedException("You can only update your own profile");
+        }
+
+        // Use this instead of checking non-null for each property of the dto
+        // Ignore 'profilePicture' since we handle it separately
+        PatchUtils.copyNonNullProperties(userUpdateDTO, existingUser, "profilePicture");
+
+        /*existingUser.setActive(userUpdateDTO.isActive());
         existingUser.setEmail(userUpdateDTO.getEmail());
         existingUser.setSalutation(userUpdateDTO.getSalutation());
         existingUser.setLocation(userUpdateDTO.getLocation());
@@ -159,10 +170,10 @@ public class UserService {
         existingUser.setFirstName(userUpdateDTO.getFirstName());
         existingUser.setSurname(userUpdateDTO.getSurname());
         existingUser.setPassword(userUpdateDTO.getPassword());
-        existingUser.setAboutMe(userUpdateDTO.getAboutMe());
+        existingUser.setAboutMe(userUpdateDTO.getAboutMe());*/
 
         // Handle the picture if it is present
-        MultipartFile picture = userUpdateDTO.getPicture();
+        MultipartFile picture = userUpdateDTO.getProfilePicture();
         if (picture != null && !picture.isEmpty()) {
             String pictureURI = this.fileStorageService.store(picture, this.fileStorageProperties.getProfilePictureSubfolder());
             existingUser.setPictureURI(pictureURI);

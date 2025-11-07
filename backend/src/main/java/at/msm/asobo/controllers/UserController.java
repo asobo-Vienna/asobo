@@ -79,7 +79,7 @@ public class UserController {
         return this.loginResponseDTOToUserPublicDTOMapper.mapLoginResponseDTOToUserPublicDTO(loginResponseDTO);
     }
 
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     public UserPublicDTO updateUser(@PathVariable UUID id, @ModelAttribute @Valid UserUpdateDTO userUpdateDTO) {
         return this.userService.updateUserById(id, userUpdateDTO);
     }
