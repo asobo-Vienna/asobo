@@ -6,6 +6,7 @@ import { routes } from './app.routes';
 import {provideHttpClient, withInterceptorsFromDi} from '@angular/common/http';
 import {AuthInterceptor} from './core/interceptors/auth-interceptor';
 import {provideAnimations} from '@angular/platform-browser/animations';
+import {MessageService} from 'primeng/api';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -15,6 +16,7 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(withInterceptorsFromDi()),
     provideAnimations(),
     AuthInterceptor,
+    MessageService,
     providePrimeNG({
       theme: {
         preset: Aura,

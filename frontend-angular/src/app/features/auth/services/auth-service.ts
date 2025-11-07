@@ -2,10 +2,12 @@ import {computed, Injectable, signal, inject} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import {Observable, tap} from 'rxjs';
 import {Router} from '@angular/router';
-import {User} from './models/user';
-import {LoginResponse} from './models/login-response';
-import {environment} from '../../../environments/environment';
+import {User} from '../models/user';
+import {LoginResponse} from '../models/login-response';
+import {environment} from '../../../../environments/environment';
 import {jwtDecode} from 'jwt-decode';
+import {UserProfile} from '../../users/user-profile/models/user-profile-model';
+import {UrlUtilService} from '../../../shared/utils/url/url-util-service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -90,6 +92,25 @@ export class AuthService {
     return null;
   }
 
+  updateUserInStorage(user: User): void {
+    localStorage.setItem(this.USER_KEY, JSON.stringify(user));
+    this.currentUserSignal.set(user);
+  }
+
+  private checkTokenValidity(): void {
+    const token = this.getToken();
+
+    if (!token) {
+      this.currentUserSignal.set(null);
+      return;
+    }
+
+    if (this.isTokenExpired(token)) {
+      console.log('Token expired, logging out...');
+      this.logout();
+    }
+  }
+
   private isTokenExpired(token?: string): boolean {
     const tokenToCheck = token || this.getToken();
 
@@ -151,6 +172,22 @@ export class AuthService {
   checkEmailAvailability(email: string): Observable<boolean> {
     return this.http.get<boolean>(`${environment.apiBaseUrl}/auth/check-email/${email}`);
   }
+
+  loggedInUserFormatted = computed<UserProfile>(() => {
+    const user = this.currentUser();
+    return {
+      userProfileUrl: user?.username
+        ? `${environment.userProfileBaseUrl}${user.username}`
+        : '/login',
+      pictureUrl: user?.pictureURI
+        ? UrlUtilService.getMediaUrl(user.pictureURI)
+        : UrlUtilService.getMediaUrl(environment.userDummyProfilePicRelativeUrl),
+      pictureAlt: user?.username
+        ? `${user.username}'s profile picture`
+        : 'User profile picture',
+      username: user?.username || 'Guest'
+    };
+  });
 
   // Refresh user data from backend
   /*refreshUser(): Observable<User> {

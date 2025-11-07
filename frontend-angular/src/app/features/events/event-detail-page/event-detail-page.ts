@@ -15,7 +15,7 @@ import {MediaService} from '../services/media-service';
 import {MediaItem} from '../models/media-item';
 import {List} from '../../../core/data_structures/lists/list';
 import {UrlUtilService} from '../../../shared/utils/url/url-util-service';
-import {AuthService} from '../../auth/auth-service';
+import {AuthService} from '../../auth/services/auth-service';
 import {User} from '../../auth/models/user';
 import {ParticipantService} from '../services/participant-service';
 import {LambdaFunctions} from '../../../shared/utils/lambda-functions';

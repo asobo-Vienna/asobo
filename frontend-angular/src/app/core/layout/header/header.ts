@@ -1,8 +1,9 @@
 import { Component, inject } from '@angular/core';
 import {RouterLink, Router} from '@angular/router';
-import {AuthService} from '../../../features/auth/auth-service';
+import {AuthService} from '../../../features/auth/services/auth-service';
 import {environment} from '../../../../environments/environment';
 import {UrlUtilService} from '../../../shared/utils/url/url-util-service';
+import {UserProfileService} from '../../../features/users/user-profile/user-profile-service';
 
 @Component({
   selector: 'app-header',
@@ -17,23 +18,13 @@ export class Header {
   authService = inject(AuthService);
 
   goHome() {
-    console.log('Logo clicked');  // 🔹 add this to test
+    console.log('Logo clicked');
     this.router.navigate(['/']);
   }
 
-  get userProfile() {
-    const user = this.authService.currentUser();
-    return {
-      userProfileUrl: user?.username
-        ? `${environment.userProfileBaseUrl}${user?.username}`
-        : '/login',
-      pictureUrl: user?.pictureURI
-        ? UrlUtilService.getMediaUrl(user.pictureURI)
-        : UrlUtilService.getMediaUrl(environment.userDummyProfilePicRelativeUrl),
-      pictureAlt: user?.username
-        ? `${user.username}'s profile picture`
-        : 'User profile picture',
-      username: user?.username || 'Guest'
-    };
+  get loggedInUserProfile() {
+    return this.authService.loggedInUserFormatted();
   }
+
+  protected readonly environment = environment;
 }

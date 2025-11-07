@@ -27,11 +27,11 @@ export class MediaService {
 
 
   delete(eventId: string, item: MediaItem): Observable<MediaItem> {
-    return this.http.delete<MediaItem>(`${environment.eventsAddress}/${eventId}/media/${item.id}`);
+    return this.http.delete<MediaItem>(`${environment.eventsEndpoint}/${eventId}/media/${item.id}`);
   }
 
 
   private getMediaUrl(eventId: string): string {
-    return `${environment.eventsAddress}/${eventId}/media`;
+    return `${environment.eventsEndpoint}/${eventId}/media`;
   }
 }

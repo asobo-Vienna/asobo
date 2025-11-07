@@ -2,7 +2,7 @@ import {Component, ViewEncapsulation, inject} from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {CommonModule} from '@angular/common';
 import {ActivatedRoute, Router, RouterLink} from '@angular/router';
-import {AuthService} from '../../auth-service';
+import {AuthService} from '../../services/auth-service';
 import {PasswordModule} from "primeng/password";
 import {ButtonModule} from "primeng/button";
 import {CheckboxModule} from 'primeng/checkbox';

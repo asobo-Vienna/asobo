@@ -2,7 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import {ReactiveFormsModule} from "@angular/forms";
 import {RegistrationForm} from '../registration-form/registration-form';
 import {RouterLink, Router} from "@angular/router";
-import {AuthService} from '../../auth-service';
+import {AuthService} from '../../services/auth-service';
 
 @Component({
   selector: 'app-registration-page',

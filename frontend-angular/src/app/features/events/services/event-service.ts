@@ -12,10 +12,10 @@ export class EventService {
   private http = inject(HttpClient);
 
   public getAllEvents(): Observable<Event[]> {
-    return this.http.get<Event[]>(environment.eventsAddress);
+    return this.http.get<Event[]>(environment.eventsEndpoint);
   }
 
   public getEventById(id: string): Observable<Event> {
-    return this.http.get<Event>(`${environment.eventsAddress}/${id}`);
+    return this.http.get<Event>(`${environment.eventsEndpoint}/${id}`);
   }
 }

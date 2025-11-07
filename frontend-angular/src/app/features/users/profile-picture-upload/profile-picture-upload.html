@@ -1,0 +1,26 @@
+<div #profilePictureBox class="profile-picture-box" (click)="fileInput.click()">
+  <input
+    #fileInput
+    type="file"
+    accept="image/*"
+    class="profile-pic-input"
+    name="profile_picture"
+    (change)="onFileSelected($event)"
+    [disabled]="disabled()"
+    hidden
+  />
+
+  @if (preview()) {
+    <img [src]="preview()" alt="Preview" />
+  } @else if (currentImage()) {
+    <img [src]="currentImage()" alt="Current" />
+  } @else if (showPlusBeforeUpload()) {
+    <div class="profile-picture-button">
+      <svg class="add-picture-plus" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <line x1="50" y1="20" x2="50" y2="80" stroke="currentColor" stroke-width="10" stroke-linecap="round"/>
+        <line x1="20" y1="50" x2="80" y2="50" stroke="currentColor" stroke-width="10" stroke-linecap="round"/>
+      </svg>
+      <span class="picture-label">Add profile picture</span>
+    </div>
+  }
+</div>

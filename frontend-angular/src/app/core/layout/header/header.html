@@ -45,13 +45,13 @@
         }
         @if (authService.isLoggedIn()) {
           <li class="nav-item d-flex align-items-center user-profile-thumbnail" id="user-nav-thumbnail">
-            <a [routerLink]="this.userProfile.userProfileUrl">
-              <img [src]="this.userProfile.pictureUrl" [alt]="this.userProfile.pictureAlt" class="user-thumbnail me-2">
+            <a [routerLink]="this.loggedInUserProfile.userProfileUrl">
+              <img [src]="this.loggedInUserProfile.pictureUrl" [alt]="this.loggedInUserProfile.pictureAlt" class="user-thumbnail me-2">
             </a>
             <div class="d-flex flex-column justify-content-center">
-              <span class="username-thumbnail">{{ this.userProfile.username}}</span>
+              <span class="username-thumbnail">{{ this.loggedInUserProfile.username}}</span>
               <span class="user-myprofile">
-                <a [routerLink]="this.userProfile.userProfileUrl">My Profile</a>
+                <a [routerLink]="this.loggedInUserProfile.userProfileUrl">My Profile</a>
               </span>
             </div>
           </li>
