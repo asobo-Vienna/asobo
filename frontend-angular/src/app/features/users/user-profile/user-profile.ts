@@ -1,6 +1,6 @@
 import { Component, computed, inject, signal, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import { AuthService } from '../../auth/services/auth-service';
 import { UserProfileService } from './user-profile-service';
 import { ProfilePictureUpload } from '../profile-picture-upload/profile-picture-upload';
@@ -12,6 +12,8 @@ import { InputGroup } from 'primeng/inputgroup';
 import { InputGroupAddon } from 'primeng/inputgroupaddon';
 import { Password } from 'primeng/password';
 import {environment} from '../../../../environments/environment';
+import {FormUtilService} from '../../../shared/utils/form/form-util-service';
+import {PasswordRequirement, PasswordValidationService} from '../../auth/services/password-validation-service';
 
 @Component({
   selector: 'app-user-profile',
@@ -35,6 +37,13 @@ export class UserProfile implements OnInit {
   public authService = inject(AuthService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
+  private formBuilder = inject(FormBuilder);
+  private passwordValidator = inject(PasswordValidationService);
+
+  showPasswordRequirements = false;
+  passwordRequirements: PasswordRequirement[];
+
+  updateForm: FormGroup;
 
   // Profile data from service
   userProfile = this.userProfileService.userProfile;
@@ -48,19 +57,35 @@ export class UserProfile implements OnInit {
   // Editing state
   private editingFields = signal(new Set<string>());
 
-  // Form fields
   username = signal('');
-  firstName = signal('');
-  surname = signal('');
-  location = signal('');
-  email = signal('');
 
   // Password fields
   password = signal('');
   passwordConfirmation = signal('');
-  showPasswordRequirements = false;
+
+  constructor() {
+    // Initialize password requirements from service
+    this.passwordRequirements = this.passwordValidator.getPasswordRequirements();
+
+    this.updateForm = this.formBuilder.group({
+      salutation: ['', Validators.required],
+      customSalutation: [''],
+      firstName: ['', [Validators.required]],
+      surname: ['', [Validators.required]],
+      username: ['', [Validators.required, Validators.minLength(environment.minIdentifierLength)]],
+      email: ['', [Validators.required, FormUtilService.validateEmailCustom]],
+      location: ['', [Validators.required]],
+      password: ['', this.passwordValidator.getPasswordValidators()],
+      passwordConfirmation: ['', [Validators.required]],
+    }, {
+      //validators: this.passwordValidator.passwordMatchValidator()
+    });
+  }
 
   ngOnInit() {
+    // Disable all form controls initially
+    this.updateForm.disable();
+
     // Get username from route params and load profile
     this.route.params.subscribe(params => {
       const username = params['username'];
@@ -80,10 +105,30 @@ export class UserProfile implements OnInit {
     this.userProfileService.getUserByUsername(username).subscribe({
       next: (user) => {
         this.username.set(user.username);
-        this.firstName.set(user.firstName);
-        this.surname.set(user.surname);
-        this.location.set(user.location || '');
-        this.email.set(user.email);
+
+        this.updateForm.patchValue({
+          username: user.username,
+          firstName: user.firstName,
+          surname: user.surname,
+          location: user.location || '',
+          email: user.email,
+          salutation: user.salutation || '',
+          //customSalutation: user.customSalutation || ''
+        });
+
+        // Disable all fields initially if viewing own profile
+        // or disable all if viewing someone else's profile
+        if (this.isOwnProfile()) {
+          // Disable all except those being edited
+          Object.keys(this.updateForm.controls).forEach(key => {
+            if (!this.editingFields().has(key)) {
+              this.updateForm.get(key)?.disable();
+            }
+          });
+        } else {
+          // Disable all fields when viewing someone else's profile
+          this.updateForm.disable();
+        }
       },
       error: (err) => {
         console.error('Failed to load user profile:', err);
@@ -113,19 +158,23 @@ export class UserProfile implements OnInit {
       return;
     }
 
+    const control =  this.updateForm.get(field);
     const fields = this.editingFields();
+
     if (fields.has(field)) {
       fields.delete(field);
+      control?.disable();
       // Cancel - reload original value
       this.loadUserProfile(this.username());
     } else {
       fields.add(field);
+      control?.enable();
     }
     this.editingFields.set(new Set(fields));
   }
 
   // Save field on blur
-  saveField(fieldName: string, value: string) {
+  saveField(fieldName: string) {
     if (!this.isOwnProfile()) {
       console.error('Cannot edit another user\'s profile');
       return;
@@ -135,8 +184,17 @@ export class UserProfile implements OnInit {
       return;
     }
 
+    const control = this.updateForm.get(fieldName);
+    const value = control?.value;
+
     if (!value || value.trim() === '') {
       console.error(`${fieldName} cannot be empty`);
+      return;
+    }
+
+    // Check if field is valid
+    if (control?.invalid) {
+      console.error(`${fieldName} is invalid`);
       return;
     }
 
@@ -149,7 +207,6 @@ export class UserProfile implements OnInit {
       },
       error: (err) => {
         console.error(`Failed to update ${fieldName}:`, err);
-        // Reload original value on error
         this.loadUserProfile(this.username());
       }
     });
@@ -254,4 +311,10 @@ export class UserProfile implements OnInit {
     fields.delete('password');
     this.editingFields.set(new Set(fields));
   }
+
+  get getFormControls() {
+    return this.updateForm.controls;
+  }
+
+  protected readonly environment = environment;
 }

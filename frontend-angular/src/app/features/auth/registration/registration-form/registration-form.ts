@@ -58,7 +58,7 @@ export class RegistrationForm {
       customSalutation: [''],
       firstName: ['', [Validators.required]],
       surname: ['', [Validators.required]],
-      username: ['', [Validators.required, Validators.minLength(3)]],
+      username: ['', [Validators.required, Validators.minLength(environment.minIdentifierLength)]],
       email: ['', [Validators.required, FormUtilService.validateEmailCustom]],
       location: ['', [Validators.required]],
       password: ['', this.passwordValidator.getPasswordValidators()],
@@ -223,4 +223,6 @@ export class RegistrationForm {
   get getFormControls() {
     return this.registerForm.controls;
   }
+
+  protected readonly environment = environment;
 }

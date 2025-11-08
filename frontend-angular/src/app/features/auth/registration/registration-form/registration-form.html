@@ -99,7 +99,7 @@
           <span>Username is required.</span>
         }
         @if (this.getFormControls['username'].errors?.['minlength']) {
-          <span>Must be at least 3 characters.</span>
+          <span>Must be at least {{ environment.minIdentifierLength}} characters.</span>
         }
       </small>
     }
@@ -155,7 +155,7 @@
     @if (this.getFormControls['location'].touched && this.getFormControls['location'].invalid) {
       <small class="error-message">
         @if (this.getFormControls['location'].errors?.['required']) {
-          <span>City is required.</span>
+          <span>Location is required.</span>
         }
       </small>
     }
