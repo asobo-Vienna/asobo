@@ -1,4 +1,4 @@
-@if (this.authService.isLoggedIn()) {
+@if (authService.isLoggedIn()) {
   <p>Profile of {{ userProfile().username }}</p>
 
   @if (!isOwnProfile()) {
@@ -34,9 +34,9 @@
             </p-float-label>
           </p-inputgroup>
 
-          @if (this.getFormControls['salutation'].touched && this.getFormControls['salutation'].invalid) {
+          @if (getFormControls['salutation'].touched && getFormControls['salutation'].invalid) {
             <small class="error-message">
-              @if (this.getFormControls['salutation'].errors?.['required']) {
+              @if (getFormControls['salutation'].errors?.['required']) {
                 <span>Salutation is required.</span>
               }
             </small>
@@ -59,9 +59,9 @@
                 </p-float-label>
               </p-inputgroup>
 
-              @if (this.getFormControls['customSalutation'].touched && this.getFormControls['customSalutation'].invalid) {
+              @if (getFormControls['customSalutation'].touched && getFormControls['customSalutation'].invalid) {
                 <small class="error-message">
-                  @if (this.getFormControls['customSalutation'].errors?.['required']) {
+                  @if (getFormControls['customSalutation'].errors?.['required']) {
                     <span>Please specify your salutation.</span>
                   }
                 </small>
@@ -97,18 +97,18 @@
             }
           </p-iconfield>
 
-          @if (this.getFormControls['username'].touched && this.getFormControls['username'].invalid) {
+          @if (getFormControls['username'].touched && getFormControls['username'].invalid) {
             <small class="error-message">
-              @if (this.getFormControls['username'].errors?.['required']) {
+              @if (getFormControls['username'].errors?.['required']) {
                 <span>Username is required.</span>
               }
-              @if (this.getFormControls['username'].errors?.['minlength']) {
+              @if (getFormControls['username'].errors?.['minlength']) {
                 <span>Must be at least {{ environment.minIdentifierLength }} characters.</span>
               }
             </small>
           }
 
-          @if (this.usernameExists()) {
+          @if (!isOwnProfile() && usernameExists()) {
             <div class="error-message">
               <small>Username is already taken. Please choose another one.</small>
             </div>
@@ -142,9 +142,9 @@
             }
           </p-iconfield>
 
-          @if (this.getFormControls['firstName'].touched && this.getFormControls['firstName'].invalid) {
+          @if (getFormControls['firstName'].touched && getFormControls['firstName'].invalid) {
             <small class="error-message">
-              @if (this.getFormControls['firstName'].errors?.['required']) {
+              @if (getFormControls['firstName'].errors?.['required']) {
                 <span>First name is required.</span>
               }
             </small>
@@ -178,9 +178,9 @@
             }
           </p-iconfield>
 
-          @if (this.getFormControls['surname'].touched && this.getFormControls['surname'].invalid) {
+          @if (getFormControls['surname'].touched && getFormControls['surname'].invalid) {
             <small class="error-message">
-              @if (this.getFormControls['surname'].errors?.['required']) {
+              @if (getFormControls['surname'].errors?.['required']) {
                 <span>Surname is required.</span>
               }
             </small>
@@ -214,9 +214,9 @@
             }
           </p-iconfield>
 
-          @if (this.getFormControls['location'].touched && this.getFormControls['location'].invalid) {
+          @if (getFormControls['location'].touched && getFormControls['location'].invalid) {
             <small class="error-message">
-              @if (this.getFormControls['location'].errors?.['required']) {
+              @if (getFormControls['location'].errors?.['required']) {
                 <span>Location is required.</span>
               }
             </small>
@@ -250,21 +250,21 @@
             }
           </p-iconfield>
 
-          @if (this.getFormControls['email'].touched && this.getFormControls['email'].invalid) {
+          @if (getFormControls['email'].touched && getFormControls['email'].invalid) {
             <small class="error-message">
-              @if (this.getFormControls['email'].errors?.['required']) {
+              @if (getFormControls['email'].errors?.['required']) {
                 <span>Email address is required.</span>
               }
-              @if (this.getFormControls['email'].errors?.['minlength']) {
+              @if (getFormControls['email'].errors?.['minlength']) {
                 <span>Must be at least {{ environment.minIdentifierLength }} characters.</span>
               }
-              @if (this.getFormControls['email'].errors?.['email']) {
+              @if (getFormControls['email'].errors?.['email']) {
                 <span>Invalid email format.</span>
               }
             </small>
           }
 
-          @if (this.emailExists()) {
+          @if (!isOwnProfile() && emailExists()) {
             <div class="error-message">
               <small>A user with this email address already exists.</small>
             </div>
@@ -294,9 +294,9 @@
             </p-iconfield>
 
             <!-- Password validation errors -->
-            @if (this.getFormControls['password'].touched && this.getFormControls['password'].invalid) {
+            @if (getFormControls['password'].touched && getFormControls['password'].invalid) {
               <small class="error-message">
-                @if (this.getFormControls['password'].errors?.['required']) {
+                @if (getFormControls['password'].errors?.['required']) {
                   <span>Password is required.</span>
                 }
               </small>
@@ -317,9 +317,9 @@
                 <ul>
                   @for (requirement of passwordRequirements; track requirement.key) {
                     <li [class.met]="requirement.met">
-              <span class="requirement-icon">
-                {{ requirement.met ? '✓' : '○' }}
-              </span>
+                      <span class="requirement-icon">
+                        {{ requirement.met ? '✓' : '○' }}
+                      </span>
                       {{ requirement.label }}
                     </li>
                   }
@@ -348,9 +348,9 @@
                 </p-inputgroup>
               </p-iconfield>
               <!-- Password confirmation validation -->
-              @if (this.getFormControls['passwordConfirmation'].touched && this.getFormControls['passwordConfirmation'].invalid) {
+              @if (getFormControls['passwordConfirmation'].touched && getFormControls['passwordConfirmation'].invalid) {
                 <small class="error-message">
-                  @if (this.getFormControls['passwordConfirmation'].errors?.['required']) {
+                  @if (getFormControls['passwordConfirmation'].errors?.['required']) {
                     <span>Password confirmation is required.</span>
                   }
                 </small>

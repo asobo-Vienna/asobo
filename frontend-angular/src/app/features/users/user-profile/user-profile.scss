@@ -11,6 +11,7 @@
   --p-select-option-hover-background: $asobo-purple-transparent;
   --p-select-option-selected-background: $asobo-purple;
   --p-select-focus-border-color: $asobo-purple;
+  --p-select-disabled-background: transparent;
 }
 
 .profile-section-forms {
@@ -44,7 +45,7 @@ p-iconfield label {
   font-weight: normal;
 }
 
-p-iconfield input:disabled, p-iconfield p-password-input {
+p-iconfield input:disabled, p-iconfield p-password-input, .p-select-dropdown:disabled {
   background-color: transparent;
   color: #495057;
   cursor: not-allowed;
@@ -291,4 +292,17 @@ p-iconfield input:disabled, p-iconfield p-password-input {
 p-float-label label.password-label {
     color: #64748b !important;
     font-weight: normal;
+}
+
+::ng-deep {
+  p-select .p-select.p-disabled .p-select-dropdown-icon,
+  p-select.ng-invalid.ng-touched .p-select.p-disabled .p-select-dropdown {
+    display: none !important;
+  }
+
+  // Target disabled state
+  .p-select:disabled .p-select-dropdown,
+  .p-select.p-disabled .p-select-dropdown {
+    display: none !important;
+  }
 }

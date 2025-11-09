@@ -91,17 +91,23 @@ export class UserProfile implements OnInit {
     });
 
     this.updateForm.get('salutation')?.valueChanges.subscribe(value => {
-      this.showCustomSalutation.set(value === this.salutations[this.salutations.length - 1]);
-      const customSalutationControl = this.updateForm.get('customSalutation');
+      // Only show custom salutation field if viewing own profile and "Other" is selected
+      if (this.isOwnProfile()) {
+        this.showCustomSalutation.set(value === this.salutations[this.salutations.length - 1]);
+        const customSalutationControl = this.updateForm.get('customSalutation');
 
-      if (this.showCustomSalutation()) {
-        customSalutationControl?.setValidators([Validators.required]);
+        if (this.showCustomSalutation()) {
+          customSalutationControl?.setValidators([Validators.required]);
+        } else {
+          customSalutationControl?.clearValidators();
+          customSalutationControl?.setValue('');
+        }
+
+        customSalutationControl?.updateValueAndValidity();
       } else {
-        customSalutationControl?.clearValidators();
-        customSalutationControl?.setValue('');
+        // Always hide custom field when viewing another user's profile
+        this.showCustomSalutation.set(false);
       }
-
-      customSalutationControl?.updateValueAndValidity();
     });
 
     this.checkUsernameAvailability();
@@ -149,10 +155,23 @@ export class UserProfile implements OnInit {
     this.updateForm.get('username')?.valueChanges
       .pipe(
         filter(username => {
+          // Don't check if not viewing own profile
+          if (!this.isOwnProfile()) {
+            this.usernameExists.set(false);
+            return false;
+          }
+
+          // Don't check if not editing
+          if (!this.isEditingUsername()) {
+            this.usernameExists.set(false);
+            return false;
+          }
+
           if (username === this.authService.currentUser()?.username) {
             this.usernameExists.set(false);
-            return false; // Don't proceed with API call
+            return false;
           }
+
           return username.length >= environment.minIdentifierLength;
         }),
         debounceTime(environment.defaultDebounceTimeForFormFields),
@@ -168,10 +187,23 @@ export class UserProfile implements OnInit {
     this.updateForm.get('email')?.valueChanges
       .pipe(
         filter(email => {
+          // Don't check if not viewing own profile
+          if (!this.isOwnProfile()) {
+            this.emailExists.set(false);
+            return false;
+          }
+
+          // Don't check if not editing
+          if (!this.isEditingEmail()) {
+            this.emailExists.set(false);
+            return false;
+          }
+
           if (email === this.authService.currentUser()?.email) {
             this.emailExists.set(false);
-            return false; // Don't proceed with API call
+            return false;
           }
+
           return this.updateForm.get('email')?.valid === true;
         }),
         debounceTime(environment.defaultDebounceTimeForFormFields),
@@ -188,15 +220,57 @@ export class UserProfile implements OnInit {
       next: (user) => {
         this.username.set(user.username);
 
-        this.updateForm.patchValue({
-          username: user.username,
-          firstName: user.firstName,
-          surname: user.surname,
-          location: user.location || '',
-          email: user.email,
-          salutation: user.salutation || '',
-          customSalutation: '',
-        });
+        // Check if salutation matches predefined options
+        const isCustomSalutation = user.salutation && !this.salutations.includes(user.salutation);
+
+        // Determine if viewing another user's profile
+        const viewingOtherProfile = !this.isOwnProfile();
+
+        if (isCustomSalutation && viewingOtherProfile) {
+          // When viewing another user's custom salutation, add it to the options
+          this.salutations = [...environment.defaultSalutations.filter(s => s !== 'Other'), user.salutation];
+
+          this.updateForm.patchValue({
+            username: user.username,
+            firstName: user.firstName,
+            surname: user.surname,
+            location: user.location || '',
+            email: user.email,
+            salutation: user.salutation,
+            customSalutation: '',
+          });
+
+          this.showCustomSalutation.set(false);
+        } else if (isCustomSalutation && !viewingOtherProfile) {
+          // Viewing own profile with custom salutation - show "Other" + custom field
+          this.salutations = environment.defaultSalutations;
+
+          this.updateForm.patchValue({
+            username: user.username,
+            firstName: user.firstName,
+            surname: user.surname,
+            location: user.location || '',
+            email: user.email,
+            salutation: 'Other',
+            customSalutation: user.salutation,
+          });
+
+          this.showCustomSalutation.set(false);
+        } else {
+          this.salutations = environment.defaultSalutations;
+
+          this.updateForm.patchValue({
+            username: user.username,
+            firstName: user.firstName,
+            surname: user.surname,
+            location: user.location || '',
+            email: user.email,
+            salutation: user.salutation || '',
+            customSalutation: '',
+          });
+
+          this.showCustomSalutation.set(false);
+        }
 
         // Disable all fields initially if viewing own profile
         // or disable all if viewing someone else's profile
@@ -214,7 +288,6 @@ export class UserProfile implements OnInit {
       },
       error: (err) => {
         console.error('Failed to load user profile:', err);
-        // Optionally redirect to 404 or home
       }
     });
   }
