@@ -39,7 +39,7 @@ public class UserPublicDTO {
     }
 
     public String getFirstName() {
-        return firstName;
+        return this.firstName;
     }
 
     public void setFirstName(String firstName) {
@@ -47,7 +47,7 @@ public class UserPublicDTO {
     }
 
     public String getSurname() {
-        return surname;
+        return this.surname;
     }
 
     public void setSurname(String surname) {
@@ -63,11 +63,11 @@ public class UserPublicDTO {
     }
 
     public boolean isActive() {
-        return isActive;
+        return this.isActive;
     }
 
     public void setActive(boolean active) {
-        isActive = active;
+        this.isActive = active;
     }
 
     public void setEmail(String email) {
@@ -75,7 +75,7 @@ public class UserPublicDTO {
     }
 
     public String getPictureURI() {
-        return pictureURI;
+        return this.pictureURI;
     }
 
     public void setPictureURI(String pictureURI) {
@@ -99,7 +99,7 @@ public class UserPublicDTO {
     }
 
     public LocalDateTime getRegisterDate() {
-        return registerDate;
+        return this.registerDate;
     }
 
     public String getEmail() {
@@ -111,10 +111,10 @@ public class UserPublicDTO {
     }
 
     public String getLocation() {
-        return location;
+        return this.location;
     }
 
     public String getSalutation() {
-        return salutation;
+        return this.salutation;
     }
 }
