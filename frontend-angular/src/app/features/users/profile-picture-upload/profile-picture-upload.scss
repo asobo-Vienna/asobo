@@ -1,5 +1,15 @@
 @use '../../../../styles/variables' as *;
 
+.profile-picture-box {
+  cursor: pointer;
+
+  &.disabled {
+    cursor: default !important;
+    pointer-events: none;
+    border: none;
+  }
+}
+
 .profile-picture-button {
   display: flex;
   flex-direction: column;

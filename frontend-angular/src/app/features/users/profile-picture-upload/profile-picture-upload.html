@@ -1,4 +1,9 @@
-<div #profilePictureBox class="profile-picture-box" (click)="fileInput.click()">
+<div
+  #profilePictureBox
+  class="profile-picture-box"
+  [class.disabled]="disabled()"
+  (click)="!disabled() && fileInput.click()"
+>
   <input
     #fileInput
     type="file"

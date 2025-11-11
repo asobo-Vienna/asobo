@@ -12,6 +12,8 @@
   --p-select-option-selected-background: $asobo-purple;
   --p-select-focus-border-color: $asobo-purple;
   --p-select-disabled-background: transparent;
+
+  --p-textarea-disabled-background: transparent;
 }
 
 .profile-section-forms {
@@ -27,17 +29,31 @@
   margin-top: -12px !important;
 }
 
-.p-floatlabel:has(input.p-filled) label, p-float-label label {
+
+
+.p-floatlabel:has(input.p-filled) label, p-float-label label, .profile-about-me .p-floatlabel label {
   color: $asobo-purple;
 }
 
-.p-floatlabel:has(input:focus) label {
+.p-textarea {
+  resize: none;
+}
+
+.p-floatlabel:has(input:focus) label, .p-floatlabel:has(textarea:focus) label {
   color: $asobo-purple;
 }
 
-p-iconfield input:focus, p-password-input:focus {
+.profile-about-me .p-inputicon {
+  top: 15px;
+}
+
+.p-floatlabel:has(.p-textarea:focus) label, .p-floatlabel:has(.p-textarea.p-filled) label {
+  top: -6px;
+  background-color: var(--bs-body-bg);
+}
+
+p-iconfield input:focus, p-password-input:focus, .p-textarea:focus {
   border: 2px solid color-mix(in srgb, $asobo-purple 80%, transparent);
-  color: $asobo-purple;
 }
 
 p-iconfield label {
@@ -57,6 +73,8 @@ p-iconfield input:disabled, p-iconfield p-password-input, .p-select-dropdown:dis
   flex: 1;
 }
 
+
+
 // Password input - make it match regular inputs exactly
 ::ng-deep {
   p-inputgroup .p-password {
@@ -75,7 +93,6 @@ p-iconfield input:disabled, p-iconfield p-password-input, .p-select-dropdown:dis
 
       &:focus {
         border: 2px solid color-mix(in srgb, $asobo-purple 80%, transparent) !important;
-        color: $asobo-purple !important;
       }
     }
   }
@@ -167,6 +184,11 @@ p-iconfield input:disabled, p-iconfield p-password-input, .p-select-dropdown:dis
   pointer-events: none;
   font-size: 0.875rem;
   z-index: 10;
+}
+
+.profile-about-me .error-message {
+  left: 65.5%;
+  top: 44.5%;
 }
 
 // Password Requirements Checklist Styles

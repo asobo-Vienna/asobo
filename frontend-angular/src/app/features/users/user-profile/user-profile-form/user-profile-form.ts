@@ -18,6 +18,7 @@ import {debounceTime, distinctUntilChanged, filter, switchMap} from 'rxjs';
 import {UserValidationService} from '../../services/user-validation-service';
 import {NgClass} from '@angular/common';
 import {Select} from 'primeng/select';
+import {Textarea} from 'primeng/textarea';
 
 @Component({
   selector: 'app-user-profile-form',
@@ -34,6 +35,7 @@ import {Select} from 'primeng/select';
     ReactiveFormsModule,
     NgClass,
     Select,
+    Textarea,
   ],
   templateUrl: './user-profile-form.html',
   styleUrl: './user-profile-form.scss',
@@ -77,6 +79,7 @@ export class UserProfileForm implements OnInit {
     this.passwordRequirements = this.passwordValidator.getPasswordRequirements();
 
     this.updateForm = this.formBuilder.group({
+      aboutMe: ['', [Validators.maxLength(environment.maxAboutMeLength)]],
       salutation: ['', Validators.required],
       customSalutation: [''],
       firstName: ['', [Validators.required]],
@@ -228,9 +231,10 @@ export class UserProfileForm implements OnInit {
 
         if (isCustomSalutation && viewingOtherProfile) {
           // When viewing another user's custom salutation, add it to the options
-          this.salutations = [...environment.defaultSalutations.filter(s => s !== 'Other'), user.salutation];
+          this.salutations = [...environment.defaultSalutations.filter(salutation => salutation !== 'Other'), user.salutation];
 
           this.updateForm.patchValue({
+            aboutMe: user.aboutMe,
             username: user.username,
             firstName: user.firstName,
             surname: user.surname,
@@ -246,6 +250,7 @@ export class UserProfileForm implements OnInit {
           this.salutations = environment.defaultSalutations;
 
           this.updateForm.patchValue({
+            aboutMe: user.aboutMe,
             username: user.username,
             firstName: user.firstName,
             surname: user.surname,
@@ -260,6 +265,7 @@ export class UserProfileForm implements OnInit {
           this.salutations = environment.defaultSalutations;
 
           this.updateForm.patchValue({
+            aboutMe: user.aboutMe,
             username: user.username,
             firstName: user.firstName,
             surname: user.surname,
@@ -300,31 +306,35 @@ export class UserProfileForm implements OnInit {
   }
 
   // Editing state helpers
-  isEditingUsername() {
+  isEditingAboutMe(): boolean {
+    return this.editingFields().has('aboutMe');
+  }
+
+  isEditingUsername(): boolean {
     return this.editingFields().has('username');
   }
 
-  isEditingFirstName() {
+  isEditingFirstName(): boolean {
     return this.editingFields().has('firstName');
   }
 
-  isEditingSurname() {
+  isEditingSurname(): boolean {
     return this.editingFields().has('surname');
   }
 
-  isEditingLocation() {
+  isEditingLocation(): boolean {
     return this.editingFields().has('location');
   }
 
-  isEditingEmail() {
+  isEditingEmail(): boolean {
     return this.editingFields().has('email');
   }
 
-  isEditingPassword() {
+  isEditingPassword(): boolean {
     return this.editingFields().has('password');
   }
 
-  toggleEdit(field: 'username' | 'firstName' | 'surname' | 'location' | 'email' | 'password') {
+  toggleEdit(field: 'aboutMe' | 'username' | 'firstName' | 'surname' | 'location' | 'email' | 'password'): void {
     if (!this.isOwnProfile()) {
       console.error('Cannot edit another user\'s profile');
       return;
@@ -359,8 +369,6 @@ export class UserProfileForm implements OnInit {
     const control = this.updateForm.get(fieldName);
     const value = control?.value;
 
-    console.log("value: " + value);
-
     if (!value || value.trim() === '') {
       console.error(`${fieldName} cannot be empty`);
       return;
@@ -369,6 +377,11 @@ export class UserProfileForm implements OnInit {
     // Check if field is valid
     if (control?.invalid) {
       console.error(`${fieldName} is invalid`);
+      return;
+    }
+
+    if (fieldName === 'aboutMe' && value === this.authService.currentUser()?.aboutMe) {
+      console.warn(`${fieldName} coincides with logged in user's about me`);
       return;
     }
 
@@ -450,7 +463,7 @@ export class UserProfileForm implements OnInit {
     });
   }
 
-  onPasswordFocus() {
+  onPasswordFocus(): void {
     const passwordControl = this.updateForm.get('password');
     const confirmControl = this.updateForm.get('passwordConfirmation');
 
@@ -470,7 +483,7 @@ export class UserProfileForm implements OnInit {
     this.showPasswordRequirements = true;
   }
 
-  onPasswordBlur() {
+  onPasswordBlur(): void {
     // Hide password requirements
     this.showPasswordRequirements = false;
     // Keep editing enabled - don't disable until cancel/save

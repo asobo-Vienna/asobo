@@ -1,12 +1,10 @@
 import {Component, inject, OnInit} from '@angular/core';
-import {RegistrationForm} from "../../../auth/registration/registration-form/registration-form";
 import {UserProfileForm} from '../user-profile-form/user-profile-form';
 import {ActivatedRoute} from '@angular/router';
 
 @Component({
   selector: 'app-user-profile-page',
   imports: [
-    RegistrationForm,
     UserProfileForm
   ],
   templateUrl: './user-profile-page.html',

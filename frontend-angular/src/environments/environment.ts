@@ -19,6 +19,7 @@ export const environment = {
   defaultSalutations: ['Mr.', 'Ms.', 'Other'],
   minIdentifierLength: 3,
   minPWLength: 6,
+  maxAboutMeLength: 1000,
   specialCharactersForPW: /[!@#$%^&*(),.?":;{}|<>]/,
   userProfileBaseUrl: `/user/`,
   userDummyProfilePicRelativeUrl: '/uploads/profile-pictures/default.png',

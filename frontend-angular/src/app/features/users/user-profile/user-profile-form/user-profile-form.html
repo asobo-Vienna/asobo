@@ -7,8 +7,37 @@
     />
 
     <div class="d-flex justify-content-center mt-5 profile-section">
-
       <form [formGroup]="updateForm" class="d-flex flex-column gap-2 profile-section-forms">
+        <!-- About Me -->
+        <div class="profile-about-me mb-3">
+          <p-iconfield>
+            <p-floatlabel>
+              <textarea
+                rows="8"
+                cols="36"
+                pTextarea
+                formControlName="aboutMe"
+                (blur)="saveField('aboutMe')">
+              </textarea>
+              <label for="over_label">About Me</label>
+            </p-floatlabel>
+            @if (isOwnProfile()) {
+              <p-inputicon
+                [class]="isEditingAboutMe() ? 'pi pi-check' : 'pi pi-pen-to-square'"
+                (click)="toggleEdit('aboutMe')"
+                style="cursor: pointer;"
+              />
+            }
+          </p-iconfield>
+          @if (getFormControls['aboutMe'].touched && getFormControls['aboutMe'].invalid) {
+            <small class="error-message">
+              @if (getFormControls['aboutMe'].errors?.['maxlength']) {
+                <span>Can't exceed {{ environment.maxAboutMeLength }} characters.</span>
+              }
+            </small>
+          }
+        </div>
+
         <!-- Salutation -->
         <div class="update-field">
           <p-inputgroup>
