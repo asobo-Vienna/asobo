@@ -1,11 +1,15 @@
-import {Component, ViewEncapsulation, inject} from '@angular/core';
+import {Component, ViewEncapsulation, inject, signal} from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {CommonModule} from '@angular/common';
-import {ActivatedRoute, Router, RouterLink} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {AuthService} from '../../services/auth-service';
 import {PasswordModule} from "primeng/password";
 import {ButtonModule} from "primeng/button";
 import {CheckboxModule} from 'primeng/checkbox';
+import {IconField} from 'primeng/iconfield';
+import {InputGroup} from 'primeng/inputgroup';
+import {InputGroupAddon} from 'primeng/inputgroupaddon';
+import {InputText} from 'primeng/inputtext';
 
 @Component({
   selector: 'app-login-form',
@@ -15,6 +19,10 @@ import {CheckboxModule} from 'primeng/checkbox';
     PasswordModule,
     ButtonModule,
     CheckboxModule,
+    IconField,
+    InputGroup,
+    InputGroupAddon,
+    InputText,
   ],
   templateUrl: './login-form.html',
   styleUrl: './login-form.scss',
@@ -24,13 +32,14 @@ export class LoginForm {
   loginForm: FormGroup;
   loginFailed: boolean;
 
+  hasPasswordValue = signal(false);
+
   private formBuilder = inject(FormBuilder);
   public authService = inject(AuthService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
 
-  constructor(
-  ) {
+  constructor() {
     this.loginFailed = false;
     this.loginForm = this.formBuilder.group({
       identifier: ['', [
@@ -40,6 +49,10 @@ export class LoginForm {
         Validators.required,
       ]],
       rememberMe: [false]
+    });
+
+    this.loginForm.get('password')?.valueChanges.subscribe(value => {
+      this.hasPasswordValue.set(value?.length > 0);
     });
   }
 
@@ -70,5 +83,4 @@ export class LoginForm {
   get getFormControls() {
     return this.loginForm.controls;
   }
-
 }

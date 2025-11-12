@@ -114,14 +114,22 @@ app-registration-page {
   inset-inline-end: calc(var(--p-icon-size) + 3px) !important;
 }
 
-.p-password:has(.p-password-clear-icon):has(.p-password-toggle-mask-icon) .p-password-input {
+.p-password:has(.p-password-toggle-mask-icon) .p-password-clear-icon {
+  inset-inline-end: calc(var(--p-icon-size) + 15px) !important;
+}
+
+#login-password .p-password:has(.p-password-clear-icon):has(.p-password-toggle-mask-icon) .p-password-input {
   padding-inline-end: calc(var(--p-icon-size) * 2 + 3px) !important;
+}
+
+#login-password .p-password:has(.p-password-clear-icon):has(.p-password-toggle-mask-icon) .p-password-input {
+  padding-inline-end: calc(var(--p-icon-size) * 2 + 15px) !important;
 }
 
 .p-checkbox.p-checkbox-checked .p-checkbox-box,
 .p-checkbox.p-highlight .p-checkbox-box {
-  border-color: #690F93 !important;
-  background-color: #690F93 !important;
+  border-color: $asobo-purple !important;
+  background-color: $asobo-purple !important;
 }
 
 // Hover state
@@ -133,6 +141,6 @@ app-registration-page {
 
 // Focus state
 .p-checkbox:not(.p-disabled) .p-checkbox-input:focus-visible ~ .p-checkbox-box {
-  border-color: #690F93 !important;
+  border-color: $asobo-purple !important;
   box-shadow: 0 0 0 0.2rem rgba(105, 15, 147, 0.2) !important;
 }
