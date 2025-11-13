@@ -42,9 +42,6 @@ export class CreateEventForm {
   }
 
   onSubmit() {
-    console.log(this.createEventForm.getRawValue());
-    console.log(this.selectedImage);
-
     const formData = new FormData();
     formData.append('title', this.createEventForm.value.title!);
     formData.append('description', this.createEventForm.value.description!);
@@ -55,7 +52,7 @@ export class CreateEventForm {
     formData.append('date', isoLocal);
 
     const isPrivate = this.createEventForm.value.isPrivate;
-    formData.append('isPrivate', String(isPrivate));
+    formData.append('private', String(isPrivate));
 
     const creator = this.authService.currentUser();
     if (creator) {
