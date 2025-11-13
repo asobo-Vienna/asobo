@@ -1,12 +1,40 @@
 <form [formGroup]="createEventForm" (ngSubmit)="onSubmit()" class="create-event-form">
+
+  <div class="form-group position-relative">
+    <app-profile-picture-upload
+      [currentImage]="previewUrl()"
+      (fileSelected)="handleFileSelected($event)"
+      [showPlusBeforeUpload] = "true"
+    />
+  </div>
+  
   <div class="form-group position-relative">
     <input
       type="text"
       placeholder="Title"
       formControlName="title"
       class="form-control"
+      id="title"
       autofocus
     >
+
+    @if (this.getFormControls['title'].touched && this.getFormControls['title'].hasError('required')) {
+      <small class="error-message">
+        Title is required.
+      </small>
+    }
+
+    @if (this.getFormControls['title'].touched && this.getFormControls['title'].hasError('minlength')) {
+      <small class="error-message">
+        Title must have at least 3 characters.
+      </small>
+    }
+
+    @if (this.getFormControls['title'].touched && this.getFormControls['title'].hasError('maxlength')) {
+      <small class="error-message">
+        Title cannot exceed 100 characters.
+      </small>
+    }
   </div>
 
   <div class="form-group position-relative">
@@ -15,8 +43,26 @@
       placeholder="Description"
       formControlName="description"
       class="form-control"
+      id="description"
       autofocus
     >
+    @if (this.getFormControls['description'].touched && this.getFormControls['description'].hasError('required')) {
+      <small class="error-message">
+        Description is required.
+      </small>
+    }
+
+    @if (this.getFormControls['description'].touched && this.getFormControls['description'].hasError('minlength')) {
+      <small class="error-message">
+        Description must have at least 10 characters.
+      </small>
+    }
+
+    @if (this.getFormControls['description'].touched && this.getFormControls['description'].hasError('maxlength')) {
+      <small class="error-message">
+        Description cannot exceed 1000 characters.
+      </small>
+    }
   </div>
 
   <div class="form-group position-relative">
@@ -25,19 +71,38 @@
       placeholder="Location"
       formControlName="location"
       class="form-control"
+      id="location"
       autofocus
     >
+    @if (this.getFormControls['location'].touched && this.getFormControls['location'].hasError('required')) {
+      <small class="error-message">
+        Location is required.
+      </small>
+    }
   </div>
 
   <div class="form-group position-relative">
     <p-datepicker
       formControlName="date"
+      id="date"
+      name="date"
       [showIcon]="true"
       dateFormat="yy-mm-dd"
       [showTime]="true"
       hourFormat="12"
       [readonlyInput]="false">
     </p-datepicker>
+    @if (this.getFormControls['date'].touched && this.getFormControls['date'].hasError('required')) {
+      <small class="error-message">
+        Date is required.
+      </small>
+    }
+
+    @if (this.getFormControls['date'].touched && this.getFormControls['date'].hasError('pastDate')) {
+      <small class="error-message">
+        Date and/or time cannot be in the past.
+      </small>
+    }
   </div>
 
   <div class="form-group d-flex justify-content-center">
