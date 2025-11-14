@@ -4,9 +4,10 @@ import {EventDetailPage} from './features/events/event-detail-page/event-detail-
 import {LoginPage} from './features/auth/login/login-page/login-page';
 import {HomePage} from './core/home/home-page/home-page';
 import {authGuard} from './features/auth/auth.guard';
-import {UserProfile} from './features/users/user-profile/user-profile';
+import {UserProfileForm} from './features/users/user-profile/user-profile-form/user-profile-form';
 import {RegistrationPage} from './features/auth/registration/registration-page/registration-page';
 import {AboutPage} from './core/about/about-page/about-page';
+import {UserProfilePage} from './features/users/user-profile/user-profile-page/user-profile-page';
 
 export const routes: Routes = [
   // public routes
@@ -14,16 +15,16 @@ export const routes: Routes = [
   { path: 'login', component: LoginPage },
   { path: 'register', component: RegistrationPage },
   { path: 'events/:id', component: EventDetailPage },
-  { path: '', component: HomePage },
+  { path: '', component: LoginPage },
 
   // everything else needs authentication
   {
     path:'',
     canActivate: [authGuard],
     children: [
-      { path: 'user/:username', component: UserProfile },
+      { path: 'user/:username', component: UserProfilePage },
       { path: 'events', component: EventsPage },
-      //{ path: '', redirectTo: '/events', pathMatch: 'full' },
+      //{ path: '', redirectTo: '/login', pathMatch: 'full' },
     ]
   },
 

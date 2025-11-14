@@ -52,7 +52,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
                 UserPrincipal userPrincipal = new UserPrincipal(
                         userId,
                         username,
-                        "",
+                        null,
                         List.of(new SimpleGrantedAuthority("ROLE_USER")) // adjust roles later
                 );
 
@@ -62,6 +62,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);
+
             }
         }
 

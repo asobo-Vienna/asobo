@@ -1,0 +1,416 @@
+@if (authService.isLoggedIn()) {
+  <div class="form-group position-relative">
+    <app-profile-picture-upload
+      [currentImage]="displayImage()"
+      (fileSelected)="handleFileSelected($event)"
+      [disabled]="!isOwnProfile()"
+    />
+
+    <div class="d-flex justify-content-center mt-5 profile-section">
+      <form [formGroup]="updateForm" class="d-flex flex-column gap-2 profile-section-forms">
+        <!-- About Me -->
+        <div class="profile-about-me mb-3">
+          <p-iconfield>
+            <p-floatlabel>
+              <textarea
+                rows="8"
+                cols="36"
+                pTextarea
+                formControlName="aboutMe"
+                (blur)="saveField('aboutMe')">
+              </textarea>
+              <label for="over_label">About Me</label>
+            </p-floatlabel>
+            @if (isOwnProfile()) {
+              <p-inputicon
+                [class]="isEditingAboutMe() ? 'pi pi-check' : 'pi pi-pen-to-square'"
+                (click)="toggleEdit('aboutMe')"
+                style="cursor: pointer;"
+              />
+            }
+          </p-iconfield>
+          @if (getFormControls['aboutMe'].touched && getFormControls['aboutMe'].invalid) {
+            <small class="error-message">
+              @if (getFormControls['aboutMe'].errors?.['maxlength']) {
+                <span>Can't exceed {{ environment.maxAboutMeLength }} characters.</span>
+              }
+            </small>
+          }
+        </div>
+
+        <!-- Salutation -->
+        <div class="update-field">
+          <p-inputgroup>
+            <p-inputgroup-addon>
+              <i class="pi pi-tag"></i>
+            </p-inputgroup-addon>
+            <p-float-label variant="on">
+              <p-select
+                id="profile-salutation"
+                [options]="salutations"
+                formControlName="salutation"
+                placeholder="Select your Salutation"
+                panelStyleClass="solid-dropdown"
+                (onChange)="onSalutationChange($event)"
+              />
+              <label for="profile-salutation">Salutation</label>
+            </p-float-label>
+          </p-inputgroup>
+
+          @if (getFormControls['salutation'].touched && getFormControls['salutation'].invalid) {
+            <small class="error-message">
+              @if (getFormControls['salutation'].errors?.['required']) {
+                <span>Salutation is required.</span>
+              }
+            </small>
+          }
+        </div>
+
+        @if (showCustomSalutation()) {
+          <div class="update-field custom-salutation-field">
+            <p-iconfield>
+              <p-inputgroup>
+                <p-inputgroup-addon/>
+                <p-float-label variant="on">
+                  <input
+                    type="text"
+                    placeholder="Other Salutation"
+                    formControlName="customSalutation"
+                    pInputText
+                    id="custom-salutation"
+                  >
+                  <label for="custom-salutation">Custom Salutation</label>
+                </p-float-label>
+              </p-inputgroup>
+              @if (isOwnProfile()) {
+                <p-inputicon
+                  [class]="isEditingUsername() ? 'pi pi-check' : 'pi pi-pen-to-square'"
+                  (click)="toggleEdit('customSalutation')"
+                  style="cursor: pointer;"
+                />
+              }
+            </p-iconfield>
+
+            @if (getFormControls['customSalutation'].touched && getFormControls['customSalutation'].invalid) {
+              <small class="error-message">
+                @if (getFormControls['customSalutation'].errors?.['required']) {
+                  <span>Please specify your salutation.</span>
+                }
+              </small>
+            }
+          </div>
+        }
+
+
+        <!-- Username -->
+        <div class="update-field">
+          <p-iconfield>
+            <p-inputgroup>
+              <p-inputgroup-addon>
+                <i class="pi pi-user"></i>
+              </p-inputgroup-addon>
+              <p-float-label variant="on">
+                <input
+                  type="text"
+                  id="profile-username"
+                  formControlName="username"
+                  pInputText
+                  (blur)="saveField('username')"
+                />
+                <label for="profile-username">Username</label>
+              </p-float-label>
+            </p-inputgroup>
+            @if (isOwnProfile()) {
+              <p-inputicon
+                [class]="isEditingUsername() ? 'pi pi-check' : 'pi pi-pen-to-square'"
+                (click)="toggleEdit('username')"
+                style="cursor: pointer;"
+              />
+            }
+          </p-iconfield>
+
+          @if (getFormControls['username'].touched && getFormControls['username'].invalid) {
+            <small class="error-message">
+              @if (getFormControls['username'].errors?.['required']) {
+                <span>Username is required.</span>
+              }
+              @if (getFormControls['username'].errors?.['minlength']) {
+                <span>Must be at least {{ environment.minIdentifierLength }} characters.</span>
+              }
+            </small>
+          }
+
+          @if (!isOwnProfile() && usernameExists()) {
+            <div class="error-message">
+              <small>Username is already taken. Please choose another one.</small>
+            </div>
+          }
+        </div>
+
+        <!-- First Name -->
+        <div class="firstname-field update-field">
+          <p-iconfield>
+            <p-inputgroup>
+              <p-inputgroup-addon>
+                <i class="pi pi-id-card"></i>
+              </p-inputgroup-addon>
+              <p-float-label variant="on">
+                <input
+                  type="text"
+                  id="profile-firstname"
+                  formControlName="firstName"
+                  pInputText
+                  (blur)="saveField('firstName')"
+                />
+                <label for="profile-firstname">First Name</label>
+              </p-float-label>
+            </p-inputgroup>
+            @if (isOwnProfile()) {
+              <p-inputicon
+                [class]="isEditingFirstName() ? 'pi pi-check' : 'pi pi-pen-to-square'"
+                (click)="toggleEdit('firstName')"
+                style="cursor: pointer;"
+              />
+            }
+          </p-iconfield>
+
+          @if (getFormControls['firstName'].touched && getFormControls['firstName'].invalid) {
+            <small class="error-message">
+              @if (getFormControls['firstName'].errors?.['required']) {
+                <span>First name is required.</span>
+              }
+            </small>
+          }
+        </div>
+
+        <!-- Surname -->
+        <div class="update-field">
+          <p-iconfield>
+            <p-inputgroup>
+              <p-inputgroup-addon>
+                <i class="pi pi-address-book"></i>
+              </p-inputgroup-addon>
+              <p-float-label variant="on">
+                <input
+                  type="text"
+                  id="profile-surname"
+                  formControlName="surname"
+                  pInputText
+                  (blur)="saveField('surname')"
+                />
+                <label for="profile-surname">Surname</label>
+              </p-float-label>
+            </p-inputgroup>
+            @if (isOwnProfile()) {
+              <p-inputicon
+                [class]="isEditingSurname() ? 'pi pi-check' : 'pi pi-pen-to-square'"
+                (click)="toggleEdit('surname')"
+                style="cursor: pointer;"
+              />
+            }
+          </p-iconfield>
+
+          @if (getFormControls['surname'].touched && getFormControls['surname'].invalid) {
+            <small class="error-message">
+              @if (getFormControls['surname'].errors?.['required']) {
+                <span>Surname is required.</span>
+              }
+            </small>
+          }
+        </div>
+
+        <!-- Location -->
+        <div class="update-field">
+          <p-iconfield>
+            <p-inputgroup>
+              <p-inputgroup-addon>
+                <i class="pi pi-map-marker"></i>
+              </p-inputgroup-addon>
+              <p-float-label variant="on">
+                <input
+                  type="text"
+                  id="profile-location"
+                  formControlName="location"
+                  pInputText
+                  (blur)="saveField('location')"
+                />
+                <label for="profile-location">Location</label>
+              </p-float-label>
+            </p-inputgroup>
+            @if (isOwnProfile()) {
+              <p-inputicon
+                [class]="isEditingLocation() ? 'pi pi-check' : 'pi pi-pen-to-square'"
+                (click)="toggleEdit('location')"
+                style="cursor: pointer;"
+              />
+            }
+          </p-iconfield>
+
+          @if (getFormControls['location'].touched && getFormControls['location'].invalid) {
+            <small class="error-message">
+              @if (getFormControls['location'].errors?.['required']) {
+                <span>Location is required.</span>
+              }
+            </small>
+          }
+        </div>
+
+        <!-- Email -->
+        <div class="update-field">
+          <p-iconfield>
+            <p-inputgroup>
+              <p-inputgroup-addon>
+                <i class="pi pi-at"></i>
+              </p-inputgroup-addon>
+              <p-float-label variant="on">
+                <input
+                  type="email"
+                  id="profile-email"
+                  formControlName="email"
+                  pInputText
+                  (blur)="saveField('email')"
+                />
+                <label for="profile-email">Email</label>
+              </p-float-label>
+            </p-inputgroup>
+            @if (isOwnProfile()) {
+              <p-inputicon
+                [class]="isEditingEmail() ? 'pi pi-check' : 'pi pi-pen-to-square'"
+                (click)="toggleEdit('email')"
+                style="cursor: pointer;"
+              />
+            }
+          </p-iconfield>
+
+          @if (getFormControls['email'].touched && getFormControls['email'].invalid) {
+            <small class="error-message">
+              @if (getFormControls['email'].errors?.['required']) {
+                <span>Email address is required.</span>
+              }
+              @if (getFormControls['email'].errors?.['minlength']) {
+                <span>Must be at least {{ environment.minIdentifierLength }} characters.</span>
+              }
+              @if (getFormControls['email'].errors?.['email']) {
+                <span>Invalid email format.</span>
+              }
+            </small>
+          }
+
+          @if (!isOwnProfile() && emailExists()) {
+            <div class="error-message">
+              <small>A user with this email address already exists.</small>
+            </div>
+          }
+        </div>
+
+        <!-- Password Section (only for own profile) -->
+        @if (isOwnProfile()) {
+          <div class="update-field">
+            <p-iconfield>
+              <p-inputgroup>
+                <p-inputgroup-addon>
+                  <i class="pi pi-lock"></i>
+                </p-inputgroup-addon>
+                <p-float-label variant="on">
+                  <p-password
+                    id="profile-password"
+                    formControlName="password"
+                    [toggleMask]="true"
+                    [feedback]="false"
+                    (onFocus)="onPasswordFocus()"
+                    (onBlur)="onPasswordBlur()"
+                  />
+                  <label for="profile-password" class="new-password-label">New Password</label>
+                </p-float-label>
+              </p-inputgroup>
+            </p-iconfield>
+
+            <!-- Password validation errors -->
+            @if (getFormControls['password'].touched && getFormControls['password'].invalid) {
+              <small class="error-message">
+                @if (getFormControls['password'].errors?.['required']) {
+                  <span>Password is required.</span>
+                }
+              </small>
+            }
+
+            <!-- Real-time Password Requirements Checklist -->
+            @if (showPasswordRequirements && getFormControls['password'].value) {
+              <div class="requirements-checklist">
+                <!-- Password Strength Display -->
+                <div class="strength-indicator">
+                  <div class="strength-meter">
+                    <div class="strength-bar" [ngClass]="getPasswordStrength()"></div>
+                  </div>
+                  <p class="strength-label">{{ getPasswordStrengthLabel() }}</p>
+                </div>
+
+                <p class="requirements-title">Password Requirements:</p>
+                <ul>
+                  @for (requirement of passwordRequirements; track requirement.key) {
+                    <li [class.met]="requirement.met">
+                      <span class="requirement-icon">
+                        {{ requirement.met ? '✓' : '○' }}
+                      </span>
+                      {{ requirement.label }}
+                    </li>
+                  }
+                </ul>
+              </div>
+            }
+          </div>
+
+          <!-- Password Confirmation (shown when password has valid value) -->
+          @if (showPasswordConfirmation()) {
+            <div class="update-field">
+              <p-iconfield>
+                <p-inputgroup>
+                  <p-inputgroup-addon>
+                    <i class="pi pi-lock"></i>
+                  </p-inputgroup-addon>
+                  <p-float-label variant="on">
+                    <p-password
+                      id="profile-password-confirm"
+                      formControlName="passwordConfirmation"
+                      [toggleMask]="true"
+                      [feedback]="false"
+                    />
+                    <label for="profile-password-confirm" class="password-label">Confirm Password</label>
+                  </p-float-label>
+                </p-inputgroup>
+              </p-iconfield>
+              <!-- Password confirmation validation -->
+              @if (getFormControls['passwordConfirmation'].touched && getFormControls['passwordConfirmation'].invalid) {
+                <small class="error-message">
+                  @if (getFormControls['passwordConfirmation'].errors?.['required']) {
+                    <span>Password confirmation is required.</span>
+                  }
+                </small>
+              }
+
+              <!-- Password mismatch error -->
+              @if (updateForm.hasError('passwordMismatch') && getFormControls['passwordConfirmation'].touched) {
+                <small class="error-message">
+                  <span>Passwords do not match!</span>
+                </small>
+              }
+            </div>
+
+            <!-- Password Update Buttons -->
+            <div class="d-flex gap-2 mt-2 m-auto">
+              <button
+                class="btn btn-purple btn-primary mb-3"
+                (click)="updatePassword()"
+                [disabled]="disablePWUpdateButton()">
+                Update Password
+              </button>
+              <button class="btn btn-purple btn-primary mb-3" (click)="cancelPasswordEdit()">
+                Cancel
+              </button>
+            </div>
+          }
+        }
+      </form>
+    </div>
+  </div>
+}

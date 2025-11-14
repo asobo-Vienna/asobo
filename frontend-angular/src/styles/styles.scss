@@ -2,6 +2,12 @@
 @use '@angular/material' as mat;
 @import "primeicons/primeicons.css";
 
+h1.component {
+  text-align: center;
+  color: $asobo-purple !important;
+  margin-bottom: 2.5rem;
+}
+
 .btn-purple {
   color: white;
   background-color: $asobo-purple !important;
@@ -120,8 +126,8 @@ app-registration-page {
 
 .p-checkbox.p-checkbox-checked .p-checkbox-box,
 .p-checkbox.p-highlight .p-checkbox-box {
-  border-color: #690F93 !important;
-  background-color: #690F93 !important;
+  border-color: $asobo-purple !important;
+  background-color: $asobo-purple !important;
 }
 
 // Hover state
@@ -133,6 +139,44 @@ app-registration-page {
 
 // Focus state
 .p-checkbox:not(.p-disabled) .p-checkbox-input:focus-visible ~ .p-checkbox-box {
-  border-color: #690F93 !important;
+  border-color: $asobo-purple !important;
   box-shadow: 0 0 0 0.2rem rgba(105, 15, 147, 0.2) !important;
+}
+
+// src/styles.scss
+.solid-dropdown {
+  background: var(--bs-body-bg) !important;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1) !important;
+}
+
+.solid-dropdown .p-select-list-container {
+  background: var(--bs-body-bg) !important;
+}
+
+.solid-dropdown .p-select-list {
+  background: var(--bs-body-bg) !important;
+}
+
+.solid-dropdown .p-select-option {
+  background: var(--bs-body-bg) !important;
+}
+
+.solid-dropdown .p-select-option:hover {
+  background: $asobo-purple-transparent !important;
+}
+
+.solid-dropdown .p-select-option.p-select-option-selected {
+  background: $asobo-purple-transparent-65 !important;
+  color: var(--bs-body-bg) !important;
+}
+
+.p-component-overlay,
+.p-select-overlay,
+.solid-dropdown {
+  z-index: 9999 !important;
+  background: var(--bs-body-bg) !important;
+}
+
+p-inputicon {
+  z-index: 0 !important;
 }

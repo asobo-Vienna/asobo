@@ -1,0 +1,330 @@
+@use '../../../../../styles/variables' as *;
+
+.profile-section {
+  --p-floatlabel-focus-color: $asobo-purple;
+  --p-floatlabel-color: $asobo-purple;
+  --p-inputtext-focus-border-color: $asobo-purple;
+
+  --p-select-overlay-background: rgba(255, 255, 255, 1); // Fully opaque
+  --p-select-list-background: rgba(255, 255, 255, 1);
+  --p-select-option-background: rgba(255, 255, 255, 1);
+  --p-select-option-hover-background: $asobo-purple-transparent;
+  --p-select-option-selected-background: $asobo-purple;
+  --p-select-focus-border-color: $asobo-purple;
+  --p-select-disabled-background: transparent;
+
+  --p-textarea-disabled-background: transparent;
+}
+
+.profile-section-forms {
+  min-width: 400px;
+}
+
+.update-field {
+  position: relative;
+  margin-bottom: 1rem;
+}
+
+.custom-salutation-field {
+  margin-top: -12px !important;
+}
+
+
+
+.p-floatlabel:has(input.p-filled) label, p-float-label label, .profile-about-me .p-floatlabel label {
+  color: $asobo-purple;
+}
+
+.p-textarea {
+  resize: none;
+}
+
+.p-floatlabel:has(input:focus) label, .p-floatlabel:has(textarea:focus) label {
+  color: $asobo-purple;
+}
+
+.profile-about-me .p-inputicon {
+  top: 15px;
+}
+
+.p-floatlabel:has(.p-textarea:focus) label, .p-floatlabel:has(.p-textarea.p-filled) label {
+  top: -6px;
+  background-color: var(--bs-body-bg);
+}
+
+p-iconfield input:focus, p-password-input:focus, .p-textarea:focus {
+  border: 2px solid color-mix(in srgb, $asobo-purple 80%, transparent);
+}
+
+p-iconfield label {
+  color: #64748b;
+  font-weight: normal;
+}
+
+p-iconfield input:disabled, p-iconfield p-password-input, .p-select-dropdown:disabled {
+  background-color: transparent;
+  color: #495057;
+  cursor: not-allowed;
+  opacity: 1;
+}
+
+.p-password, p-select {
+  width: 100%;
+  flex: 1;
+}
+
+
+
+// Password input - make it match regular inputs exactly
+::ng-deep {
+  p-inputgroup .p-password {
+    width: 100%;
+
+    input.p-password-input {
+      width: 100%;
+      padding-right: 2.5rem !important;
+      box-shadow: none !important;
+      outline: none !important;
+      background: transparent !important;
+
+      &::placeholder {
+        color: #6c757d;
+      }
+
+      &:focus {
+        border: 2px solid color-mix(in srgb, $asobo-purple 80%, transparent) !important;
+      }
+    }
+  }
+
+  .p-password .p-password-toggle-mask-icon,
+  .p-password .p-password-clear-icon {
+    color: #6c757d;
+    position: absolute !important;
+    right: 0.75rem !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    margin: 0 !important;
+    cursor: pointer;
+  }
+
+  p-inputgroup .p-password input.p-password-input:disabled {
+    background-color: transparent !important;
+    color: #495057;
+    cursor: not-allowed;
+    opacity: 1;
+  }
+}
+
+.custom-input-with-icon {
+  display: flex;
+  align-items: stretch;
+  border: 1px solid #ced4da;
+  border-radius: 0.375rem;
+  overflow: hidden;
+  background: white;
+
+  .input-icon-addon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem 0.75rem;
+    background-color: #e9ecef;
+    border-right: 1px solid #ced4da;
+    color: #6c757d;
+
+    i {
+      font-size: 1rem;
+    }
+  }
+
+  .flex-grow-1 {
+    flex: 1;
+  }
+
+  .edit-icon {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem 0.75rem;
+    cursor: pointer;
+    color: #6c757d;
+    transition: color 0.2s;
+
+    &:hover {
+      color: $asobo-purple;
+    }
+  }
+
+  ::ng-deep {
+    p-inputgroup p-select {
+      width: 100%;
+      flex: 1;
+
+      .p-select {
+        width: 100%;
+        border: none;
+
+        &:focus {
+          outline: none;
+          box-shadow: none;
+        }
+      }
+    }
+  }
+}
+
+.error-message {
+  position: absolute;
+  top: 50%;
+  left: 100%;
+  margin-left: 15px;
+  transform: translateY(-50%);
+  color: red;
+  white-space: nowrap;
+  pointer-events: none;
+  font-size: 0.875rem;
+  z-index: 10;
+}
+
+.profile-about-me .error-message {
+  left: 65.5%;
+  top: 44.5%;
+}
+
+// Password Requirements Checklist Styles
+.requirements-checklist {
+  margin-top: 0.75rem;
+  padding: 0.75rem;
+  background: #fff;
+  border-left: 4px solid $asobo-purple;
+  border-radius: 0.375rem;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+  animation: slideIn 0.2s ease;
+
+  .strength-indicator {
+    margin-bottom: 0.75rem;
+
+    .strength-meter {
+      height: 0.5rem;
+      background-color: #e0e0e0;
+      border-radius: 0.25rem;
+      overflow: hidden;
+      margin-bottom: 0.375rem;
+
+      .strength-bar {
+        height: 100%;
+        transition: all 0.3s ease;
+        border-radius: 0.25rem;
+
+        &.weak {
+          width: 33.33%;
+          background-color: #e74c3c;
+        }
+
+        &.medium {
+          width: 66.66%;
+          background-color: #f39c12;
+        }
+
+        &.strong {
+          width: 100%;
+          background-color: #27ae60;
+        }
+      }
+    }
+
+    .strength-label {
+      font-size: 0.813rem;
+      text-align: center;
+      margin: 0;
+      font-weight: 500;
+      color: #666;
+    }
+  }
+
+  .requirements-title {
+    font-weight: 600;
+    font-size: 0.813rem;
+    color: #333;
+    margin: 0 0 0.5rem 0;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    li {
+      display: flex;
+      align-items: center;
+      font-size: 0.813rem;
+      color: #666;
+      margin-bottom: 0.375rem;
+      transition: color 0.2s ease;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      &.met {
+        color: #27ae60;
+        font-weight: 500;
+
+        .requirement-icon {
+          color: #27ae60;
+        }
+      }
+
+      &:not(.met) .requirement-icon {
+        color: #bbb;
+      }
+
+      .requirement-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 1.25rem;
+        margin-right: 0.5rem;
+        font-weight: bold;
+        font-size: 0.875rem;
+      }
+    }
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.custom-salutation-field p-inputgroup-addon {
+  border: 0 !important;
+}
+
+.p-floatlabel:has(input:focus) label, .p-floatlabel:has(input.p-filled) label.password-label {
+  color: $asobo-purple !important;
+}
+
+p-float-label label.password-label {
+    color: #64748b !important;
+    font-weight: normal;
+}
+
+::ng-deep {
+  p-select .p-select.p-disabled .p-select-dropdown-icon,
+  p-select.ng-invalid.ng-touched .p-select.p-disabled .p-select-dropdown {
+    display: none !important;
+  }
+
+  // Target disabled state
+  .p-select:disabled .p-select-dropdown,
+  .p-select.p-disabled .p-select-dropdown {
+    display: none !important;
+  }
+}

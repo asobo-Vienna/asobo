@@ -25,7 +25,7 @@
     }
   </div>
 
-  @if (showCustomSalutation) {
+  @if (showCustomSalutation()) {
     <div class="form-group position-relative">
       <input
         type="text"
@@ -99,12 +99,12 @@
           <span>Username is required.</span>
         }
         @if (this.getFormControls['username'].errors?.['minlength']) {
-          <span>Must be at least 3 characters.</span>
+          <span>Must be at least {{ environment.minIdentifierLength}} characters.</span>
         }
       </small>
     }
 
-    @if (this.usernameExists) {
+    @if (this.usernameExists()) {
       <div class="error-message">
         <small>Username is already taken. Please choose another one.</small>
       </div>
@@ -127,7 +127,7 @@
           <span>Email address is required.</span>
         }
         @if (this.getFormControls['email'].errors?.['minlength']) {
-          <span>Must be at least 3 characters.</span>
+          <span>Must be at least {{ environment.minIdentifierLength }} characters.</span>
         }
         @if (this.getFormControls['email'].errors?.['email']) {
           <span>Invalid email format.</span>
@@ -135,7 +135,7 @@
       </small>
     }
 
-    @if (this.emailExists) {
+    @if (this.emailExists()) {
       <div class="error-message">
         <small>A user with this email address already exists.</small>
       </div>
@@ -155,7 +155,7 @@
     @if (this.getFormControls['location'].touched && this.getFormControls['location'].invalid) {
       <small class="error-message">
         @if (this.getFormControls['location'].errors?.['required']) {
-          <span>City is required.</span>
+          <span>Location is required.</span>
         }
       </small>
     }

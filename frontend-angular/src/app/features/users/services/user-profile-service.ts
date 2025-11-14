@@ -4,7 +4,7 @@ import {Observable, of, tap} from 'rxjs';
 import { AuthService } from '../../auth/services/auth-service';
 import { UrlUtilService } from '../../../shared/utils/url/url-util-service';
 import { environment } from '../../../../environments/environment';
-import { UserProfile } from './models/user-profile-model';
+import { UserProfile } from '../user-profile/models/user-profile-model';
 import { User } from '../../auth/models/user';
 
 @Injectable({
@@ -13,7 +13,7 @@ import { User } from '../../auth/models/user';
 export class UserProfileService {
   private authService = inject(AuthService);
   private http = inject(HttpClient);
-  private apiUrl = `${environment.usersEndpoint}`;
+  private usersEndpointBase = `${environment.usersEndpoint}`;
 
   private viewedUserSignal = signal<User | null>(null);
 
@@ -43,7 +43,7 @@ export class UserProfileService {
     }
 
     // Viewing someone else's profile - fetch from backend
-    return this.http.get<User>(`${this.apiUrl}/${username}`)
+    return this.http.get<User>(`${this.usersEndpointBase}/${username}`)
       .pipe(tap(user => this.viewedUserSignal.set(user)));
   }
 
@@ -53,7 +53,7 @@ export class UserProfileService {
 
   // TODO: still needs to be implemented correctly
   updateField(fieldName: string, value: any): Observable<User> {
-    return this.http.patch<User>(`${this.apiUrl}/profile`, { [fieldName]: value })
+    return this.http.patch<User>(`${this.usersEndpointBase}/profile`, { [fieldName]: value })
       .pipe(
         tap(updatedUser => {
           // Update localStorage to keep AuthService in sync
@@ -69,15 +69,15 @@ export class UserProfileService {
 
   // TODO: still needs to be implemented correctly
   updatePassword(password: string): Observable<any> {
-    return this.http.patch(`${this.apiUrl}/password`, { password });
+    return this.http.patch(`${this.usersEndpointBase}/${this.authService.currentUser()?.id}`, { password });
   }
 
   // TODO: still needs to be implemented correctly
   updateProfilePicture(formData: FormData): Observable<User> {
-    return this.http.post<User>(`${this.apiUrl}/profile-picture`, formData)
+    return this.http.patch<User>(`${this.usersEndpointBase}/${this.authService.currentUser()?.id}`, formData)
       .pipe(
         tap(updatedUser => {
-          localStorage.setItem('current_user', JSON.stringify(updatedUser));
+          this.authService.updateUserInStorage(updatedUser);
 
           const loggedInUser = this.authService.currentUser();
           if (loggedInUser?.username === updatedUser.username) {
