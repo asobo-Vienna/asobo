@@ -6,12 +6,33 @@
   }
 
   .btn-purple {
-    width: 60%;
+    width: 40%;
+  }
+
+  .p-datepicker {
+    display: flex;
+    justify-content: center;
+  }
+
+  ::ng-deep .p-datepicker {
+    margin: 0 auto !important;
+    display: flex !important;
+    justify-content: center !important;
+    width: 70% !important;
+  }
+
+  ::ng-deep .p-datepicker:has(.p-datepicker-dropdown) .p-datepicker-input {
+    width: 100% !important;
+  }
+
+  input[type="text"], ::ng-deep .p-datepicker {
+    min-width: 250px;
   }
 
   input[type="text"],
   .p-select .p-select-label {
-    width: 100%;
+    margin: 0 auto;
+    width: 70%;
     padding: 0.375rem 0.75rem;
     font-size: 1rem;
     line-height: 1.5;

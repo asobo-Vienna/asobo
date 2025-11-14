@@ -5,7 +5,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import {DatePickerModule} from 'primeng/datepicker';
-import { ProfilePictureUpload } from '../../users/profile-picture-upload/profile-picture-upload';
+import { PictureUpload } from '../../../core/picture-upload/picture-upload';
 import {EventService} from '../services/event-service';
 import {AuthService} from '../../auth/services/auth-service';
 
@@ -18,7 +18,7 @@ import {AuthService} from '../../auth/services/auth-service';
     MatDatepickerModule,
     MatNativeDateModule,
     DatePickerModule,
-    ProfilePictureUpload,
+    PictureUpload,
   ],
   templateUrl: './create-event-form.html',
   styleUrl: './create-event-form.scss',

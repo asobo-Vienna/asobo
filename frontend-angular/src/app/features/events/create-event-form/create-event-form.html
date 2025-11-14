@@ -1,10 +1,13 @@
 <form [formGroup]="createEventForm" (ngSubmit)="onSubmit()" class="create-event-form">
 
-  <div class="form-group position-relative">
-    <app-profile-picture-upload
+  <div class="form-group position-relative d-flex justify-content-center">
+    <app-picture-upload
       [currentImage]="previewUrl()"
       (fileSelected)="handleFileSelected($event)"
       [showPlusBeforeUpload] = "true"
+      [shape] = "'rectangle'"
+      [caption] = "'Add event cover picture'"
+      [dimensions] = "[40, 20]"
     />
   </div>
 
@@ -110,7 +113,7 @@
       type="checkbox"
       id="isPrivate"
       formControlName="isPrivate"
-      class="form-check-input"
+      class="form-check-input me-2"
     >
     <label class="form-check-label" for="isPrivate">
       Private Event

@@ -77,7 +77,7 @@ a.btn-purple {
   display: none;
 }
 
-app-login-page, app-registration-page {
+app-login-page, app-registration-page, app-create-event-page {
   width: 25%;
   margin: 0 auto;
   min-width: 180px;
@@ -85,6 +85,11 @@ app-login-page, app-registration-page {
 
 app-registration-page {
   width: 30%;
+  min-width: 220px;
+}
+
+app-create-event-page {
+  width: 50%;
   min-width: 220px;
 }
 

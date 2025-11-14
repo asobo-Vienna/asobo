@@ -1,4 +1,4 @@
-<div #profilePictureBox class="profile-picture-box" (click)="fileInput.click()">
+<div #pictureBox [class]="setShapeCssClass()" (click)="fileInput.click()">
   <input
     #fileInput
     type="file"
@@ -20,7 +20,7 @@
         <line x1="50" y1="20" x2="50" y2="80" stroke="currentColor" stroke-width="10" stroke-linecap="round"/>
         <line x1="20" y1="50" x2="80" y2="50" stroke="currentColor" stroke-width="10" stroke-linecap="round"/>
       </svg>
-      <span class="picture-label">Add profile picture</span>
+      <span class="picture-label">{{ caption() }}</span>
     </div>
   }
 </div>

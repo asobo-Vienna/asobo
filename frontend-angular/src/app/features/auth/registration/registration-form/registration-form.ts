@@ -9,7 +9,7 @@ import { SelectModule } from 'primeng/select';
 import { FormUtilService } from '../../../../shared/utils/form/form-util-service';
 import { debounceTime, distinctUntilChanged, filter, switchMap } from 'rxjs';
 import { environment } from '../../../../../environments/environment';
-import { ProfilePictureUpload } from "../../../users/profile-picture-upload/profile-picture-upload";
+import { PictureUpload } from "../../../../core/picture-upload/picture-upload";
 import {PasswordRequirement, PasswordValidationService} from '../../services/password-validation-service';
 
 
@@ -21,7 +21,7 @@ import {PasswordRequirement, PasswordValidationService} from '../../services/pas
     PasswordModule,
     ButtonModule,
     SelectModule,
-    ProfilePictureUpload,
+    PictureUpload,
   ],
   templateUrl: './registration-form.html',
   styleUrl: './registration-form.scss',

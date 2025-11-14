@@ -1,7 +1,7 @@
 <!--@if (!this.authService.isLoggedIn()) {-->
 <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="register-form">
   <div class="form-group position-relative">
-    <app-profile-picture-upload
+    <app-picture-upload
       [currentImage]="previewUrl()"
       (fileSelected)="handleFileSelected($event)"
       [showPlusBeforeUpload] = "true"
