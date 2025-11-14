@@ -1,5 +1,13 @@
 @use 'variables' as *;
 
+.login-form {
+  --p-inputtext-focus-border-color: color-mix(in srgb, $asobo-purple 80%, transparent);
+}
+
+#login-username:focus, .p-password-input:focus {
+  border: 2px solid color-mix(in srgb, $asobo-purple 80%, transparent);
+}
+
 .login-form .form-group {
   width: 100%;
   margin: 0.7em 0.7em 0.7em 0;
@@ -7,23 +15,6 @@
 
 .login-form .btn-purple {
   width: 60%;
-}
-
-.login-password {
-  width: 100%;
-  position: relative;
-}
-
-.login-password .p-password {
-  width: 100%;
-  display: block;
-}
-
-.login-password .p-password input {
-  width: 100%;
-  border: none;
-  padding: 0;
-  box-shadow: none;
 }
 
 .login-password .p-password input::placeholder,
@@ -36,7 +27,6 @@
 }
 
 .login-password .p-password-toggle-mask-icon {
-  inset-inline-end: 0 !important;
   top: 50% !important;
   margin-top: 0 !important;
   transform: translateY(-50%) !important;
@@ -46,11 +36,6 @@
 
 .form-control {
   width: 100%;
-}
-
-.form-control #login-password {
-  width: 100%;
-  border: none;
 }
 
 .checkbox-wrapper {
@@ -70,4 +55,88 @@
   white-space: nowrap;
   pointer-events: none;
   text-align: center;
+}
+
+.p-password {
+  width: 100%;
+  flex: 1;
+}
+
+::ng-deep {
+  p-inputgroup .p-password {
+    width: 100%;
+
+    input.p-password-input {
+      width: 100%;
+      box-shadow: none !important;
+      outline: none !important;
+      background: transparent !important;
+
+      &::placeholder {
+        color: #6c757d;
+      }
+
+      &:focus {
+        border: 2px solid color-mix(in srgb, $asobo-purple 80%, transparent) !important;
+        color: $asobo-purple !important;
+      }
+    }
+  }
+}
+
+p-iconfield label {
+  color: #64748b;
+  font-weight: normal;
+}
+
+p-iconfield p-password-input {
+  background-color: transparent;
+  /*border: 1px solid #e9ecef;*/
+  color: #495057;
+  cursor: not-allowed;
+  opacity: 1;
+}
+
+.p-password-clear-icon {
+  top: 42% !important;
+  display: block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  z-index: 100 !important;
+  color: #94a3b8 !important;
+  pointer-events: auto !important;
+}
+
+.p-password:focus-within .p-password-clear-icon,
+.p-password-input:focus ~ .p-password-clear-icon {
+  display: block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.p-password-clear-icon,
+.p-password-toggle-mask-icon {
+  display: block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  z-index: 100 !important;
+  color: #94a3b8 !important;
+  pointer-events: auto !important;
+}
+
+.p-password:focus-within .p-password-clear-icon,
+.p-password:focus-within .p-password-toggle-mask-icon,
+.p-password-input:focus ~ .p-password-clear-icon,
+.p-password-input:focus ~ .p-password-toggle-mask-icon {
+  display: block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.p-iconfield .p-inputtext:not(:first-child), .p-inputgroup > .p-inputwrapper:last-child > .p-component {
+  padding-inline-start: 12px;
+}
+
+.p-password:has(.p-password-clear-icon):has(.p-password-toggle-mask-icon) .p-password-input {
+  padding-inline-end: calc(var(--p-form-field-padding-x) * 3 + var(--p-icon-size) * 2 - 20px);
 }
