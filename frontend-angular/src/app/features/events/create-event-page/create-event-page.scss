@@ -1,0 +1,16 @@
+@use '../../../../styles/variables' as *;
+
+h1 {
+  text-align: center;
+  color: $asobo-purple !important;
+}
+
+.login-text-link {
+  color: $asobo-purple;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.login-text-link:hover {
+  text-decoration: underline;
+}

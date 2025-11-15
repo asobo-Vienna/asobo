@@ -1,4 +1,4 @@
-@use '../../../../styles/variables' as *;
+@use '../../../styles/variables' as *;
 
 .profile-picture-box {
   cursor: pointer;
@@ -60,9 +60,15 @@
   align-items: center;
   justify-content: center;
   position: relative;
-  width: 100%;
-  max-width: 300px;
-  aspect-ratio: 1 / 1;
+  min-width: 200px;
+  min-height: 200px;
+  // width: 100%;
+  // max-width: 300px;
+  // aspect-ratio: 1 / 1;
+}
+
+.rectangle-picture-box {
+  border-radius: 15px;
 }
 
 .profile-picture-box img {

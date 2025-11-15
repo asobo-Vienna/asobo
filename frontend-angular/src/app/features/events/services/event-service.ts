@@ -15,6 +15,10 @@ export class EventService {
     return this.http.get<Event[]>(environment.eventsEndpoint);
   }
 
+  public createNewEvent(formData: FormData): Observable<Event> {
+    return this.http.post<Event>(environment.eventsEndpoint, formData);
+  }
+
   public getEventById(id: string): Observable<Event> {
     return this.http.get<Event>(`${environment.eventsEndpoint}/${id}`);
   }

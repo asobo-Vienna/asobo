@@ -3,7 +3,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {AuthService} from '../../../auth/services/auth-service';
 import {UserProfileService} from '../../services/user-profile-service';
-import {ProfilePictureUpload} from '../../profile-picture-upload/profile-picture-upload';
+import {PictureUpload} from '../../../../core/picture-upload/picture-upload';
 import {IconField} from 'primeng/iconfield';
 import {InputIcon} from 'primeng/inputicon';
 import {InputText} from 'primeng/inputtext';
@@ -23,7 +23,7 @@ import {Textarea} from 'primeng/textarea';
 @Component({
   selector: 'app-user-profile-form',
   imports: [
-    ProfilePictureUpload,
+    PictureUpload,
     IconField,
     InputIcon,
     InputText,
