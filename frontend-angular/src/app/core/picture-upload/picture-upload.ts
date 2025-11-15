@@ -59,13 +59,20 @@ export class PictureUpload {
     const box = this.pictureBox()?.nativeElement;
     if (box) {
       if (width === height) {
+        // Square: use aspect-ratio
         box.style.aspectRatio = '1/1';
+        box.style.width = '100%';
+        box.style.maxWidth = String(width) + 'vw';
+        box.style.height = 'auto';
       } else {
+        // Rectangle: set both dimensions explicitly
         box.style.aspectRatio = '1.5/1';
+        box.style.width = '100%';
+        box.style.maxWidth = String(width) + 'vw';
+        box.style.height = String(height) + 'vw';
+        box.style.maxHeight = String(height) + 'vw';
         box.style.minHeight = '133.33px';
       }
-      box.style.width = String(width) + 'vw';
-      box.style.height = String(height) + 'vw';
     }
   }
 
