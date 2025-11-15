@@ -29,13 +29,13 @@
 
     @if (this.getFormControls['title'].touched && this.getFormControls['title'].hasError('minlength')) {
       <small class="error-message">
-        Title must have at least 3 characters.
+        Title must have at least {{ environment.minEventTitleLength }} characters.
       </small>
     }
 
     @if (this.getFormControls['title'].touched && this.getFormControls['title'].hasError('maxlength')) {
       <small class="error-message">
-        Title cannot exceed 100 characters.
+        Title cannot exceed {{ environment.maxEventTitleLength }} characters.
       </small>
     }
   </div>
@@ -58,13 +58,13 @@
 
     @if (this.getFormControls['description'].touched && this.getFormControls['description'].hasError('minlength')) {
       <small class="error-message">
-        Description must have at least 10 characters.
+        Description must have at least {{ environment.minEventDescriptionLength }} characters.
       </small>
     }
 
     @if (this.getFormControls['description'].touched && this.getFormControls['description'].hasError('maxlength')) {
       <small class="error-message">
-        Description cannot exceed 1000 characters.
+        Description cannot exceed {{ environment.maxEventDescriptionLength }} characters.
       </small>
     }
   </div>
@@ -123,7 +123,7 @@
 
   <div class="form-group d-flex justify-content-center">
     <button class="btn btn-purple btn-primary mb-3" id="create-event-button" type="submit">
-      Create!
+      Create Event
     </button>
   </div>
 </form>

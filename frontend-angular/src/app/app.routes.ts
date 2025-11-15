@@ -8,7 +8,7 @@ import {UserProfileForm} from './features/users/user-profile/user-profile-form/u
 import {RegistrationPage} from './features/auth/registration/registration-page/registration-page';
 import {AboutPage} from './core/about/about-page/about-page';
 import {UserProfilePage} from './features/users/user-profile/user-profile-page/user-profile-page';
-import {CreateEventPage} from './features/events/create-event-page/create-event-page';
+import {CreateEventPage} from './features/events/create-event/create-event-page/create-event-page';
 
 export const routes: Routes = [
   // public routes
