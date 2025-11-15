@@ -11,6 +11,7 @@ import {AuthService} from '../../../auth/services/auth-service';
 import {Router} from '@angular/router';
 import {environment} from '../../../../../environments/environment';
 import {Textarea} from 'primeng/textarea';
+import {Checkbox} from 'primeng/checkbox';
 
 @Component({
   selector: 'app-create-event-form',
@@ -23,6 +24,7 @@ import {Textarea} from 'primeng/textarea';
     DatePickerModule,
     PictureUpload,
     Textarea,
+    Checkbox,
   ],
   templateUrl: './create-event-form.html',
   styleUrl: './create-event-form.scss',

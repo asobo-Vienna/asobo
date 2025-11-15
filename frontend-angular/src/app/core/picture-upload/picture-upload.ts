@@ -70,7 +70,7 @@ export class PictureUpload {
   }
 
   setShapeCssClass() : string {
-    const cssClass: string = 'profile-picture-box';
+    const cssClass: string = 'picture-box';
     if (this.shape() === 'rectangle') {
       return cssClass + ' rectangle-picture-box';
     }
