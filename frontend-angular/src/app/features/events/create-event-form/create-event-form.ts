@@ -65,7 +65,7 @@ export class CreateEventForm {
 
     this.eventService.createNewEvent(formData).subscribe({
       next: (event) => {
-        console.log(event);
+        alert(`Event ${event.title} created!`);
       },
       error: (err) => {
         console.log('Error creating new event', err);
