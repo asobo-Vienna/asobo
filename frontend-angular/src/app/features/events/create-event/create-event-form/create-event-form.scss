@@ -1,0 +1,124 @@
+@use '../../../../../styles/variables' as *;
+
+.create-event-form {
+  .form-group {
+    width: 100%;
+    margin: 0.7em 0.7em 0.7em 0;
+  }
+
+  .btn-purple {
+    width: 40%;
+  }
+
+  .p-datepicker {
+    display: flex;
+    justify-content: center;
+  }
+
+  ::ng-deep .p-datepicker {
+    margin: 0 auto !important;
+    display: flex !important;
+    justify-content: center !important;
+    width: 70% !important;
+  }
+
+  ::ng-deep .p-datepicker:has(.p-datepicker-dropdown) .p-datepicker-input {
+    width: 100% !important;
+  }
+
+  input[type="text"], ::ng-deep .p-datepicker, textarea {
+    min-width: 250px;
+  }
+
+  input[type="text"], textarea,
+  .p-select .p-select-label {
+    margin: 0 auto;
+    width: 70%;
+    resize: none;
+    padding: 0.375rem 0.75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: var(--bs-body-color);
+    background-color: var(--bs-body-bg);
+    border: 1px solid var(--bs-border-color);
+    border-radius: 0.375rem;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  }
+
+  input[type="text"]:focus,
+  .p-select.p-focus .p-select-label {
+    border-color: #86b7fe;
+    outline: 0;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+  }
+
+  input[type="text"]::placeholder,
+  .p-select .p-select-label.p-placeholder {
+    color: var(--bs-secondary-color);
+  }
+
+  .p-select {
+    width: 100%;
+  }
+
+  .error-message {
+    left: 85%;
+  }
+
+  @media (max-width: 1000px) {
+    .error-message {
+      left: 90%;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .error-message {
+      left: 100%;
+    }
+  }
+
+  @media (max-width: 520px) {
+    .error-message {
+      left: 105%;
+    }
+  }
+}
+
+:host ::ng-deep p-datepicker {
+  display: flex;
+  flex-direction: row-reverse; // Reverses the order
+
+  --p-inputtext-focus-border-color: color-mix(in srgb, $asobo-purple 80%, transparent);
+
+  input {
+    flex: 1;
+
+    &:focus {
+      border: 2px solid color-mix(in srgb, $asobo-purple 80%, transparent) !important;
+    }
+  }
+
+  .p-datepicker-dropdown {
+    border-radius: 0;
+    border-end-start-radius: var(--p-datepicker-dropdown-border-radius);
+    border-start-start-radius: var(--p-datepicker-dropdown-border-radius);
+    border: 1px solid var(--p-datepicker-dropdown-border-color);
+    background-color: var(--p-datepicker-dropdown-background);
+
+    &:hover {
+      cursor: default;
+    }
+  }
+}
+
+:host ::ng-deep .p-datepicker:has(.p-datepicker-dropdown) .p-datepicker-input {
+  border-end-start-radius: 0;
+  border-start-start-radius: 0;
+  border-start-end-radius: var(--p-inputtext-border-radius);
+  border-end-end-radius: var(--p-inputtext-border-radius);
+  border-left: none;
+}
+
+#create-event-title:focus, #create-event-description:focus, #create-event-location:focus {
+  border: 2px solid color-mix(in srgb, $asobo-purple 80%, transparent);
+}

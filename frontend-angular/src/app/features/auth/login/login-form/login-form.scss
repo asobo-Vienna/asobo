@@ -2,6 +2,7 @@
 
 .login-form {
   --p-inputtext-focus-border-color: color-mix(in srgb, $asobo-purple 80%, transparent);
+  color: var(--p-inputtext-color) !important;
 }
 
 #login-username:focus, .p-password-input:focus {
@@ -36,18 +37,6 @@
 
 .form-control {
   width: 100%;
-}
-
-.checkbox-wrapper {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  justify-content: center;
-
-  label {
-    margin: 0;
-    cursor: pointer;
-  }
 }
 
 .login-failed {
@@ -134,7 +123,7 @@ p-iconfield p-password-input {
 }
 
 .p-iconfield .p-inputtext:not(:first-child), .p-inputgroup > .p-inputwrapper:last-child > .p-component {
-  padding-inline-start: 12px;
+  padding-inline-start: 12px !important;
 }
 
 .p-password:has(.p-password-clear-icon):has(.p-password-toggle-mask-icon) .p-password-input {

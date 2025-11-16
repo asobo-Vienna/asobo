@@ -1,29 +1,28 @@
-import {Component, inject, signal} from '@angular/core';
-import {AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators} from "@angular/forms";
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material/core';
-import {DatePickerModule} from 'primeng/datepicker';
-import { PictureUpload } from '../../../core/picture-upload/picture-upload';
-import {EventService} from '../services/event-service';
-import {AuthService} from '../../auth/services/auth-service';
+import { Component, inject, signal } from '@angular/core';
+import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from "@angular/forms";
+import { DatePickerModule } from 'primeng/datepicker';
+import { PictureUpload } from '../../../../core/picture-upload/picture-upload';
+import { EventService } from '../../services/event-service';
+import { AuthService } from '../../../auth/services/auth-service';
+import { Router } from '@angular/router';
+import { environment } from '../../../../../environments/environment';
+import { Textarea } from 'primeng/textarea';
+import { Checkbox } from 'primeng/checkbox';
 
 @Component({
   selector: 'app-create-event-form',
   imports: [
     ReactiveFormsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatDatepickerModule,
-    MatNativeDateModule,
     DatePickerModule,
     PictureUpload,
+    Textarea,
+    Checkbox,
   ],
   templateUrl: './create-event-form.html',
   styleUrl: './create-event-form.scss',
 })
 export class CreateEventForm {
+  private router = inject(Router);
   createEventForm: FormGroup;
   private formBuilder = inject(FormBuilder);
   private eventService = inject(EventService);
@@ -33,8 +32,8 @@ export class CreateEventForm {
 
   constructor() {
     this.createEventForm = this.formBuilder.group({
-      title: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
-      description: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(1000)]],
+      title: ['', [Validators.required, Validators.minLength(environment.minEventTitleLength), Validators.maxLength(environment.maxEventTitleLength)]],
+      description: ['', [Validators.required, Validators.minLength(environment.minEventDescriptionLength), Validators.maxLength(environment.maxEventDescriptionLength)]],
       location: ['', [Validators.required]],
       date: [new Date(), [Validators.required, this.validateDate]],
       isPrivate: [false]
@@ -66,6 +65,7 @@ export class CreateEventForm {
     this.eventService.createNewEvent(formData).subscribe({
       next: (event) => {
         alert(`Event ${event.title} created!`);
+        this.router.navigate(['/events', event.id]);
       },
       error: (err) => {
         console.log('Error creating new event', err);
@@ -89,4 +89,6 @@ export class CreateEventForm {
   get getFormControls() {
     return this.createEventForm.controls;
   }
+
+  protected readonly environment = environment;
 }
