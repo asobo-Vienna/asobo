@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ProfilePictureUpload } from './profile-picture-upload';
+import { CreateEventPage } from './create-event-page';
 
-describe('ProfilePictureUpload', () => {
-  let component: ProfilePictureUpload;
-  let fixture: ComponentFixture<ProfilePictureUpload>;
+describe('RegistrationPage', () => {
+  let component: CreateEventPage;
+  let fixture: ComponentFixture<CreateEventPage>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ProfilePictureUpload]
+      imports: [CreateEventPage]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(ProfilePictureUpload);
+    fixture = TestBed.createComponent(CreateEventPage);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

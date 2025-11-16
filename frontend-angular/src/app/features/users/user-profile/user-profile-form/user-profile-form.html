@@ -1,6 +1,6 @@
 @if (authService.isLoggedIn()) {
   <div class="form-group position-relative">
-    <app-profile-picture-upload
+    <app-picture-upload
       [currentImage]="displayImage()"
       (fileSelected)="handleFileSelected($event)"
       [disabled]="!isOwnProfile()"

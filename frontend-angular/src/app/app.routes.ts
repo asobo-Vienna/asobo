@@ -8,6 +8,7 @@ import {UserProfileForm} from './features/users/user-profile/user-profile-form/u
 import {RegistrationPage} from './features/auth/registration/registration-page/registration-page';
 import {AboutPage} from './core/about/about-page/about-page';
 import {UserProfilePage} from './features/users/user-profile/user-profile-page/user-profile-page';
+import {CreateEventPage} from './features/events/create-event/create-event-page/create-event-page';
 
 export const routes: Routes = [
   // public routes
@@ -24,6 +25,8 @@ export const routes: Routes = [
     children: [
       { path: 'user/:username', component: UserProfilePage },
       { path: 'events', component: EventsPage },
+      { path: 'create-event', component: CreateEventPage }
+      //{ path: '', redirectTo: '/events', pathMatch: 'full' },
       //{ path: '', redirectTo: '/login', pathMatch: 'full' },
     ]
   },

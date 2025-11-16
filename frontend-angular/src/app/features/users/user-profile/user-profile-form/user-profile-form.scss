@@ -328,3 +328,7 @@ p-float-label label.password-label {
     display: none !important;
   }
 }
+
+.custom-salutation-field .p-inputgroup .p-inputgroupaddon {
+  background-color: transparent;
+}
