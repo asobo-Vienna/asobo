@@ -18,16 +18,17 @@ export class EventsPage implements OnInit {
   events: Event[] = [];
 
   ngOnInit(): void {
-    if(this.authService.isLoggedIn()) {
+    if (this.authService.isLoggedIn()) {
       this.eventService.getAllEvents().subscribe({
         next: (events) => this.events = events,
         error: (err) => console.error('Error fetching events:', err)
       });
-    } else {
-      this.eventService.getAllEventsByVisibility(false).subscribe({
-        next: (events) => this.events = events,
-        error: (err) => console.error('Error fetching events:', err)
-      });
+      return;
     }
+
+    this.eventService.getAllEventsByVisibility(false).subscribe({
+      next: (events) => this.events = events,
+      error: (err) => console.error('Error fetching events:', err)
+    });
   }
 }
