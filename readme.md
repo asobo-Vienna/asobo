@@ -12,7 +12,7 @@ A full-stack application for bringing people together built with Angular and Spr
 - [Running the Application](#running-the-application)
 - [API Documentation](#api-documentation)
 
-## ⚙Prerequisites
+## Prerequisites
 
 Before you begin, ensure you have the following installed:
 
@@ -42,7 +42,7 @@ Before you begin, ensure you have the following installed:
 - **MapStruct** - Object Mapping
 - **SpringDoc OpenAPI** - API Documentation
 
-## 📁 Project Structure
+## Project Structure
 ```
 asobo/
 ├── frontend-angular/          # Angular application
@@ -76,7 +76,7 @@ cd backend
 mvn clean install
 ```
 
-## 🔧 Configuration
+## Configuration
 
 ### Database Configuration (NeonDB)
 
