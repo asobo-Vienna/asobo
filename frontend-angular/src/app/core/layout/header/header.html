@@ -38,11 +38,17 @@
         <li class="nav-item">
           <a routerLink="/events" class="nav-link active" aria-current="page">Events</a>
         </li>
-        @if (!authService.isLoggedIn()) {
-        <li class="nav-item">
-          <a routerLink="/register" class="nav-link">Register</a>
-        </li>
+        @if (authService.isLoggedIn()) {
+          <li class="nav-item">
+            <a [routerLink]="environment.adminSectionBaseUrl" class="nav-link"><i class="pi pi-cog admin-nav-icon"></i> Admin</a>
+          </li>
         }
+        @else {
+          <li class="nav-item">
+            <a routerLink="/register" class="nav-link">Register</a>
+          </li>
+        }
+
         @if (authService.isLoggedIn()) {
           <li class="nav-item d-flex align-items-center user-profile-thumbnail" id="user-nav-thumbnail">
             <a [routerLink]="this.loggedInUserProfile.userProfileUrl">
@@ -56,6 +62,7 @@
             </div>
           </li>
         }
+
         <li class="nav-item">
           <div class="d-flex ms-2">
             @if (this.authService.isLoggedIn()) {
