@@ -53,8 +53,8 @@ public class Event {
     @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Medium> media;
 
-    @Column(columnDefinition = "boolean default false")
-    private boolean isPrivate;
+    @Column(name = "is_private", columnDefinition = "boolean default false")
+    private boolean isPrivateEvent;
 
     public Event() {
     }
@@ -155,11 +155,11 @@ public class Event {
         this.id = id;
     }
 
-    public boolean isPrivate() {
-        return this.isPrivate;
+    public boolean isPrivateEvent() {
+        return this.isPrivateEvent;
     }
 
-    public void setPrivate(boolean isPrivate) {
-        this.isPrivate = isPrivate;
+    public void setPrivateEvent(boolean isPrivateEvent) {
+        this.isPrivateEvent = isPrivateEvent;
     }
 }

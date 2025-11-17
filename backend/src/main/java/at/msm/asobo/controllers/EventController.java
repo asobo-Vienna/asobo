@@ -26,10 +26,15 @@ public class EventController {
         this.eventService = eventService;
     }
 
-
     @GetMapping
-    public List<EventDTO> getAllEvents() {
-        return this.eventService.getAllEvents();
+    public List<EventDTO> getAllEvents(@RequestParam(required = false) Boolean isPrivate) {
+        if (isPrivate == null) {
+            return this.eventService.getAllEvents();
+        } else if (isPrivate) {
+            return this.eventService.getAllPrivateEvents();
+        } else {
+            return this.eventService.getAllPublicEvents();
+        }
     }
 
 //    @GetMapping

@@ -16,6 +16,7 @@ export const routes: Routes = [
   { path: 'about', component: AboutPage },
   { path: 'login', component: LoginPage },
   { path: 'register', component: RegistrationPage },
+  { path: 'events', component: EventsPage },
   { path: 'events/:id', component: EventDetailPage },
   { path: '', component: LoginPage },
 

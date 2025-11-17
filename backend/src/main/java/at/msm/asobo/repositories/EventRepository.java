@@ -9,6 +9,9 @@ import java.util.UUID;
 
 @Repository
 public interface EventRepository extends JpaRepository<Event, UUID> {
+    List<Event> findByIsPrivateEventTrue();
+
+    List<Event> findByIsPrivateEventFalse();
 
     List<Event> findEventsByDate(LocalDateTime date);
 

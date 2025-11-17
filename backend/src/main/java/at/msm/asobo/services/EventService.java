@@ -59,6 +59,16 @@ public class EventService {
         return this.eventDTOEventMapper.mapEventsToEventDTOs(events);
     }
 
+    public List<EventDTO> getAllPublicEvents() {
+        List<Event> events = this.eventRepository.findByIsPrivateEventFalse();
+        return this.eventDTOEventMapper.mapEventsToEventDTOs(events);
+    }
+
+    public List<EventDTO> getAllPrivateEvents() {
+        List<Event> events = this.eventRepository.findByIsPrivateEventTrue();
+        return this.eventDTOEventMapper.mapEventsToEventDTOs(events);
+    }
+
     public List<EventDTO> getEventsByDate(LocalDateTime date) {
         List<Event> events = this.eventRepository.findEventsByDate(date);
         return this.eventDTOEventMapper.mapEventsToEventDTOs(events);
@@ -115,7 +125,7 @@ public class EventService {
         existingEvent.setDescription(eventUpdateDTO.getDescription());
         existingEvent.setLocation(eventUpdateDTO.getLocation());
         existingEvent.setDate(eventUpdateDTO.getDate());
-        existingEvent.setPrivate(eventUpdateDTO.isPrivate());
+        existingEvent.setPrivateEvent(eventUpdateDTO.isPrivate());
 
         if (eventUpdateDTO.getParticipants() != null) {
             existingEvent.setParticipants(

@@ -15,6 +15,18 @@ export class EventService {
     return this.http.get<Event[]>(environment.eventsEndpoint);
   }
 
+  public getAllPublicEvents(): Observable<Event[]> {
+    return this.http.get<Event[]>(environment.eventsEndpoint, {
+      params: { isPrivate: false }
+    });
+  }
+
+  public getAllPrivateEvents(): Observable<Event[]> {
+    return this.http.get<Event[]>(environment.eventsEndpoint, {
+      params: { isPrivate: true }
+    });
+  }
+
   public createNewEvent(formData: FormData): Observable<Event> {
     return this.http.post<Event>(environment.eventsEndpoint, formData);
   }

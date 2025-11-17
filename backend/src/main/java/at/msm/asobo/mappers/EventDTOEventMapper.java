@@ -42,7 +42,7 @@ public class EventDTOEventMapper {
         dto.setCreationDate(event.getCreationDate());
         dto.setModificationDate(event.getModificationDate());
         dto.setCreator(this.userDTOUserMapper.mapUserToUserPublicDTO(event.getCreator()));
-        dto.setPrivate(event.isPrivate());
+        dto.setPrivate(event.isPrivateEvent());
 
         // Map participants
         if (event.getParticipants() != null) {
@@ -78,7 +78,7 @@ public class EventDTOEventMapper {
         event.setCreationDate(dto.getCreationDate());
         event.setModificationDate(dto.getModificationDate());
         event.setCreator(this.userDTOUserMapper.mapUserPublicDTOToUser(dto.getCreator()));
-        event.setPrivate(dto.isPrivate());
+        event.setPrivateEvent(dto.isPrivate());
 
         // TODO: this is where the replacing of mappers to factory patterns ticket #37 comes in
         // Note: participants, comments, and media should be handled separately
@@ -100,7 +100,7 @@ public class EventDTOEventMapper {
         // Note: picture is MultipartFile, not mapped from entity
         dto.setLocation(event.getLocation());
         dto.setDate(event.getDate());
-        dto.setPrivate(event.isPrivate());
+        dto.setPrivate(event.isPrivateEvent());
         // Note: modification date & creation date are set in the database, EventUpdateDTO only has the values that can be updated by the user
 
         // Map participants
@@ -173,7 +173,7 @@ public class EventDTOEventMapper {
         event.setLocation(dto.getLocation());
         event.setDate(dto.getDate());
         event.setCreator(this.userDTOUserMapper.mapUserPublicDTOToUser(dto.getCreator()));
-        event.setPrivate(dto.isPrivate());
+        event.setPrivateEvent(dto.isPrivate());
         // pictureURI is ignored and handled in service layer
 
         return event;
