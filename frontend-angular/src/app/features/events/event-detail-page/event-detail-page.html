@@ -5,7 +5,6 @@
     <img class="card-img-top" [src]="UrlUtilService.getMediaUrl(pictureURI || '/uploads/event-cover-pictures/event-cover-default.svg')" alt="{{ title }}" />
   </div>
 
-  <!-- TODO make the join button work for that particular event! -->
   <!-- Event Info Column -->
   <div class="col-md-6 text-start">
     <div class="mb-3">
@@ -42,30 +41,29 @@
   </div>
 </div>
 
+@if(this.authService.isLoggedIn()) {
+  <div class="row text-start mt-4 align-items-center gx-5">
+    <!-- Comment Box for new comment -->
+    <div class="col-md-6">
+      <app-new-comment [author]="currentUser" (commentCreated)="onCommentCreated($event)"></app-new-comment>
+    </div>
 
-<div class="row text-start mt-4 align-items-center gx-5">
-  <!-- Comment Box for new comment -->
-  <div class="col-md-6">
-    @if(this.authService.isLoggedIn()) {
-        <app-new-comment [author]="currentUser" (commentCreated)="onCommentCreated($event)"></app-new-comment>
-    }
+    <!-- Participants -->
+    <div class="col-md-6 text-start">
+      <app-participants [participants]="participants"/>
+    </div>
   </div>
 
-  <!-- Participants -->
-  <div class="col-md-6 text-start">
-    <app-participants [participants]="participants"/>
-  </div>
-</div>
+  <!-- Existing comments list -->
+  <div class="row text-start mt-3 gx-5">
+    <div class="col-md-6 text-start">
+      <app-comments-list [comments]="comments" (commentDeleted)="deleteComment($event)" (commentEdited)="editComment($event)"/>
+    </div>
 
-<!-- Existing comments list -->
-<div class="row text-start mt-3 gx-5">
-  <div class="col-md-6 text-start">
-    <app-comments-list [comments]="comments" (commentDeleted)="deleteComment($event)" (commentEdited)="editComment($event)"/>
+    <!-- Photos & Video -->
+    <div class="col-md-6 mt-3 text-start">
+      <app-gallery [mediaItems]="mediaItems"
+      (mediaAdded)="uploadMedia($event)" (mediaDeleted)="deleteMedia($event)"/>
+    </div>
   </div>
-
-  <!-- Photos & Video -->
-  <div class="col-md-6 mt-3 text-start">
-    <app-gallery [mediaItems]="mediaItems"
-    (mediaAdded)="uploadMedia($event)" (mediaDeleted)="deleteMedia($event)"/>
-  </div>
-</div>
+}
