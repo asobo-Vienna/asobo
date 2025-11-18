@@ -1,13 +1,13 @@
-<a [routerLink]="['/events', id]">
+<a [routerLink]="['/events', event().id]">
   <div class="card event-card">
     <div class="card-image-container">
-      <img class="card-img-top" [src]="UrlUtilService.getMediaUrl(pictureURI || '/uploads/event-cover-pictures/event-cover-default.svg')" alt="{{ title }}">
+      <img class="card-img-top" [src]="UrlUtilService.getMediaUrl(event().pictureURI || '/uploads/event-cover-pictures/event-cover-default.svg')" alt="{{ event().title }}">
     </div>
     <div class="card-body">
-      <h6 class="card-title">{{ title }}</h6>
-      <div class="card-date date-text text-muted">{{ date | date:'EEE, MMMM d, y' }}</div>
-      <div class="card-time date-text text-muted">{{ time | date:'h:mm a' }}</div>
-      <div class="card-location location-text text-muted mt-2">in {{ location }}</div>
+      <h6 class="card-title">{{ event().title }}</h6>
+      <div class="card-date date-text text-muted">{{ event().date | date:'EEE, MMMM d, y' }}</div>
+      <div class="card-time date-text text-muted">{{ event().time | date:'h:mm a' }}</div>
+      <div class="card-location location-text text-muted mt-2">in {{ event().location }}</div>
     </div>
   </div>
 </a>

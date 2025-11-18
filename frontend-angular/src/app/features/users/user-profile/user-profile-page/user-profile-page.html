@@ -1,3 +1,8 @@
 <h1 class="text-primary component">Profile of {{ profileUsername }}</h1>
 
-<app-user-profile-form />
+<app-user-profile-form (userId)="handleUserIdMessage($event)" />
+
+<div id="user-profile-event-list" class="mt-5">
+  <h2 class="text-body-tertiary mb-3">{{ profileUsername }}'s Events</h2>
+  <app-event-list [inputEvents]="events()"/>
+</div>

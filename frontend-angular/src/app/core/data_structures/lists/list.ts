@@ -1,7 +1,7 @@
 export class List<T> implements Iterable<T> {
   private items: T[] = [];
 
-  constructor(items: T[]) {
+  constructor(items: T[] = []) {
     this.addAll(items);
   }
 

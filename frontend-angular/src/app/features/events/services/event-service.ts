@@ -27,6 +27,10 @@ export class EventService {
     });
   }
 
+  public getPublicEventsByUserId(userId: string): Observable<Event[]> {
+    return this.http.get<Event[]>(`${environment.eventsEndpoint}?userId=${userId}&isPrivate=${false}`)
+  }
+
   public createNewEvent(formData: FormData): Observable<Event> {
     return this.http.post<Event>(environment.eventsEndpoint, formData);
   }

@@ -1,4 +1,4 @@
-import {Component, computed, inject, signal, OnInit} from '@angular/core';
+import {Component, computed, inject, signal, OnInit, output} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {AuthService} from '../../../auth/services/auth-service';
@@ -14,11 +14,13 @@ import {Password} from 'primeng/password';
 import {environment} from '../../../../../environments/environment';
 import {FormUtilService} from '../../../../shared/utils/form/form-util-service';
 import {PasswordRequirement, PasswordValidationService} from '../../../auth/services/password-validation-service';
-import {debounceTime, distinctUntilChanged, filter, switchMap} from 'rxjs';
+import {debounceTime, distinctUntilChanged, filter, map, switchMap} from 'rxjs';
 import {UserValidationService} from '../../services/user-validation-service';
 import {NgClass} from '@angular/common';
 import {Select} from 'primeng/select';
 import {Textarea} from 'primeng/textarea';
+import {List} from '../../../../core/data_structures/lists/list';
+import { Event } from '../../../events/models/event';
 
 @Component({
   selector: 'app-user-profile-form',
@@ -58,10 +60,8 @@ export class UserProfileForm implements OnInit {
   usernameExists = signal(false);
   emailExists = signal(false);
 
-  // Profile data from service
   userProfile = this.userProfileService.userProfile;
 
-  // Image handling
   previewUrl = signal<string | ArrayBuffer | null>(null);
   selectedImage: File | null = null;
   selectedImageUrl = computed(() => this.userProfile().pictureUrl);
@@ -70,7 +70,9 @@ export class UserProfileForm implements OnInit {
   // Editing state
   private editingFields = signal(new Set<string>());
 
-  username = signal('');
+  username = signal<string>('');
+  userId = output<string>();
+  events = signal<List<Event>>(new List<Event>());
 
   constructor() {
     this.salutations = environment.defaultSalutations;
@@ -145,6 +147,8 @@ export class UserProfileForm implements OnInit {
         }
       }
     });
+
+    //this.fetchEvents();
   }
 
   private enableField(fieldName: string) {
@@ -222,6 +226,7 @@ export class UserProfileForm implements OnInit {
     this.userProfileService.getUserByUsername(username).subscribe({
       next: (user) => {
         this.username.set(user.username);
+        this.userId.emit(user.id);
 
         // Check if salutation matches predefined options
         const isCustomSalutation = user.salutation && !this.salutations.includes(user.salutation);
