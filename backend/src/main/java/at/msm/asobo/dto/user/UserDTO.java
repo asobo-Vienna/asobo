@@ -91,8 +91,8 @@ public class UserDTO {
         this.registerDate = registerDate;
     }
 
-    public void setActive(boolean active) {
-        isActive = active;
+    public void setIsActive(boolean isActive) {
+        this.isActive = isActive;
     }
 
     public void setLocation(String location) {
@@ -111,11 +111,11 @@ public class UserDTO {
     }
 
     public LocalDateTime getRegisterDate() {
-        return registerDate;
+        return this.registerDate;
     }
 
-    public boolean isActive() {
-        return isActive;
+    public boolean getIsActive() {
+        return this.isActive;
     }
 
     public String getEmail() {
@@ -127,11 +127,11 @@ public class UserDTO {
     }
 
     public String getLocation() {
-        return location;
+        return this.location;
     }
 
     public String getSalutation() {
-        return salutation;
+        return this.salutation;
     }
 
     public String getPassword() {
