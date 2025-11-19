@@ -8,7 +8,7 @@ INSERT INTO users (is_active,register_date,id,pictureuri,email,first_name,"locat
 	 (true,'2025-07-06 23:47:48.970154','9d6fa8e4-fd6d-4c25-9439-8ee91077cf47'::uuid,'/uploads/profile-pictures/0d317296-297b-4108-aa10-ab24a7553d9e_ninahagen.jpg','nina@hagen.de','Nina','Berlin',NULL,'$2a$10$oN8WOlONNLGwn9uRRfId3OqMsQzoNgkrV2PsSNqKPCOgA21RUJy0i','Ms.','Hagen','ninahagen'),
 	 (true,'2025-07-06 23:54:56.253414','d8c038cc-4965-437f-ac37-4865ba4510dd'::uuid,'/uploads/profile-pictures/a8ea86eb-dc39-4742-8a7e-1808f4f48c75_Alex_DeLarge.jpg','alex@clockwork.com','Alex','London',NULL,'$2a$10$oN8WOlONNLGwn9uRRfId3OqMsQzoNgkrV2PsSNqKPCOgA21RUJy0i','Mr.','DeLarge','alexlikesmolokoplus'),
 	 (false,'2025-07-06 23:59:05.635171','f18e96c7-6416-4f51-87d5-4cd229715933'::uuid,'/uploads/profile-pictures/f18e96c7-6416-4f51-87d5-4cd229715933_blackknight.jpg','knight@black.co.uk','Black','Wales',NULL,'$2a$10$oN8WOlONNLGwn9uRRfId3OqMsQzoNgkrV2PsSNqKPCOgA21RUJy0i','Mr.','Knight','blackknight'),
-	 (false,'2025-07-07 00:04:49.973131','3fb77b1c-8670-40a2-929b-2b021f6e3e61'::uuid,'/uploads/profile-pictures/0c6e58ad-9426-46ef-8762-b8050317485e_waynearnold.jpg','wayne@arnold.com','Wayne','Sunnyville',NULL,'$2a$10$oN8WOlONNLGwn9uRRfId3OqMsQzoNgkrV2PsSNqKPCOgA21RUJy0i','Mr.','Arnold','wayne');
+	 (false,'2025-07-07 00:04:49.973131','3fb77b1c-8670-40a2-929b-2b021f6e3e61'::uuid,'/uploads/profile-pictures/0c6e58ad-9426-46ef-8762-b8050317485e_waynearnold.jpg','wayne@arnold.com','Wayne','Sunnyville',NULL,'$2a$10$oN8WOlONNLGwn9uRRfId3OqMsQzoNgkrV2PsSNqKPCOgA21RUJy0i','Mr.','Arnold','wayne'),
 	 (false,'2025-07-11 18:18:58.15966','91740f77-0b27-4db8-a4b8-5b2b62a25664'::uuid,'/uploads/profile-pictures/911ae559-2c12-44d3-bd50-9b556e6d3885_franzi.jpg','fuenfer@wienerlinien.at','Franzi','Wien',NULL,'$2a$10$oN8WOlONNLGwn9uRRfId3OqMsQzoNgkrV2PsSNqKPCOgA21RUJy0i','Mr.','Mayerhofer','5er');
 
 INSERT INTO event (creation_date,"date",modification_date,creator_id,id,pictureuri,description,"location",title) VALUES
@@ -19,7 +19,7 @@ INSERT INTO event (creation_date,"date",modification_date,creator_id,id,pictureu
 	 ('2025-07-11 19:33:23.682237','2025-07-13 13:00:00',NULL,NULL,'de32052d-645f-41d1-b43c-70621565ff7a'::uuid,'/uploads/event-cover-pictures/aaf0a06d-8f4a-4dca-ae8d-7d881882abd4_franzi.jpg','Cosplaying as a Viennese tram with the master cosplayer Franzi a.k.a. 5er','Vienna','Tram Cosplaying');
 
 INSERT INTO event_participants (attended_events_id,participants_id) VALUES
-	 ('045fbc61-736a-4be1-baa3-070748e07f17'::uuid,'7767118c-19bd-4c28-8129-c0abda74b46c'::uuid);
+	 ('045fbc61-736a-4be1-baa3-070748e07f17'::uuid,'7767118c-19bd-4c28-8129-c0abda74b46c'::uuid),
 	 ('045fbc61-736a-4be1-baa3-070748e07f17'::uuid,'7da69d8e-55c7-4a96-ac6d-cb207e4e8a21'::uuid);
 
 INSERT INTO medium (event_id,id,mediumuri) VALUES
@@ -32,6 +32,6 @@ INSERT INTO medium (event_id,id,mediumuri) VALUES
 	 ('ccc5d4bc-8d66-4d1a-87e7-a7b18b6c8773'::uuid,'c6b61a02-4956-4bbc-b6b4-d9b271dcda40'::uuid,'/uploads/event-galleries/ccc5d4bc-8d66-4d1a-87e7-a7b18b6c8773/c58a412a-09fb-4f16-938f-910e5fc6f646_bat.jpg');
 
 INSERT INTO user_comment (creation_date,modification_date,author_id,event_id,id,"text",pictureuri) VALUES
-	 ('2025-07-11 19:39:34.391567',NULL,'7da69d8e-55c7-4a96-ac6d-cb207e4e8a21'::uuid,'aaed8676-8b38-4c7a-b8b1-66dd683a1a96'::uuid,'34e14c80-41db-4de1-8e3f-fa7243bd0ff9'::uuid,'aaaaahhhhhhh!','/uploads/profile-pictures/4f4c9853-29e5-4d05-95c7-d85efc034fe8_harley.jpg');
+	 ('2025-07-11 19:39:34.391567',NULL,'7da69d8e-55c7-4a96-ac6d-cb207e4e8a21'::uuid,'aaed8676-8b38-4c7a-b8b1-66dd683a1a96'::uuid,'34e14c80-41db-4de1-8e3f-fa7243bd0ff9'::uuid,'aaaaahhhhhhh!','/uploads/profile-pictures/4f4c9853-29e5-4d05-95c7-d85efc034fe8_harley.jpg'),
 	 ('2025-07-20 16:48:43.222211',NULL,'7767118c-19bd-4c28-8129-c0abda74b46c'::uuid,'ccc5d4bc-8d66-4d1a-87e7-a7b18b6c8773'::uuid,'193a835b-ce74-4af6-8bda-4302b99a6f4c'::uuid,'Well that was a fun night!','/uploads/profile-pictures/67314290-8700-4f0f-94f4-0da7ed05dbf4_gg.jpg'),
 	 ('2025-09-14 19:18:15.024199',NULL,'7767118c-19bd-4c28-8129-c0abda74b46c'::uuid,'aaed8676-8b38-4c7a-b8b1-66dd683a1a96'::uuid,'631ec747-5460-4657-b57b-84435b8ab4b3'::uuid,'hi','/uploads/profile-pictures/67314290-8700-4f0f-94f4-0da7ed05dbf4_gg.jpg');
