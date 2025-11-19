@@ -62,12 +62,12 @@ public class UserPublicDTO {
         this.aboutMe = aboutMe;
     }
 
-    public boolean isActive() {
+    public boolean getIsActive() {
         return this.isActive;
     }
 
-    public void setActive(boolean active) {
-        this.isActive = active;
+    public void setIsActive(boolean isActive) {
+        this.isActive = isActive;
     }
 
     public void setEmail(String email) {

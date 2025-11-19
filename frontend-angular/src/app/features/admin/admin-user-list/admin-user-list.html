@@ -1,1 +1,51 @@
-<p>TODO: user list</p>
+<p-table [value]="users">
+    <ng-template pTemplate="header">
+        <tr>
+          <h4 class="component">All Users</h4>
+        </tr>
+
+        <tr>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Name</th>
+            <th>Picture</th>
+            <th>Registered</th>
+            <th>Active</th>
+            <th>Location</th>
+        </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-user>
+        <tr>
+            <td>
+              <img
+                [src]="UrlUtilService.getMediaUrl(user.pictureURI || '${environment.userDummyProfilePicRelativeUrl}')"
+                [alt]="user.username"
+                class="user-avatar"
+              />
+            </td>
+
+            <td>{{ user.username }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.firstName }} {{ user.surname }}</td>
+
+            <td>{{ user.registerDate | date:'yyyy-MM-dd' }}</td>
+
+            <td>
+                <p-tag
+                    [value]="user.isActive ? 'Active' : 'Inactive'"
+                    [severity]="user.isActive ? 'success' : 'danger'"
+                />
+            </td>
+
+            <td>{{ user.location }}</td>
+
+          <td>
+            <i class="pi pi-user-edit clickable" title="Edit" (click)="onEdit(user)"></i>
+          </td>
+          <td>
+            <i class="pi pi-trash clickable" title="Delete" (click)="onDelete(user)"></i>
+          </td>
+        </tr>
+    </ng-template>
+</p-table>
