@@ -9,18 +9,21 @@ INSERT INTO users (is_active,register_date,id,pictureuri,email,first_name,"locat
 	 (true,'2025-07-06 23:54:56.253414','d8c038cc-4965-437f-ac37-4865ba4510dd'::uuid,'/uploads/profile-pictures/a8ea86eb-dc39-4742-8a7e-1808f4f48c75_Alex_DeLarge.jpg','alex@clockwork.com','Alex','London',NULL,'$2a$10$oN8WOlONNLGwn9uRRfId3OqMsQzoNgkrV2PsSNqKPCOgA21RUJy0i','Mr.','DeLarge','alexlikesmolokoplus'),
 	 (false,'2025-07-06 23:59:05.635171','f18e96c7-6416-4f51-87d5-4cd229715933'::uuid,'/uploads/profile-pictures/f18e96c7-6416-4f51-87d5-4cd229715933_blackknight.jpg','knight@black.co.uk','Black','Wales',NULL,'$2a$10$oN8WOlONNLGwn9uRRfId3OqMsQzoNgkrV2PsSNqKPCOgA21RUJy0i','Mr.','Knight','blackknight'),
 	 (false,'2025-07-07 00:04:49.973131','3fb77b1c-8670-40a2-929b-2b021f6e3e61'::uuid,'/uploads/profile-pictures/0c6e58ad-9426-46ef-8762-b8050317485e_waynearnold.jpg','wayne@arnold.com','Wayne','Sunnyville',NULL,'$2a$10$oN8WOlONNLGwn9uRRfId3OqMsQzoNgkrV2PsSNqKPCOgA21RUJy0i','Mr.','Arnold','wayne'),
-	 (false,'2025-07-11 18:18:58.15966','91740f77-0b27-4db8-a4b8-5b2b62a25664'::uuid,'/uploads/profile-pictures/911ae559-2c12-44d3-bd50-9b556e6d3885_franzi.jpg','fuenfer@wienerlinien.at','Franzi','Wien',NULL,'$2a$10$oN8WOlONNLGwn9uRRfId3OqMsQzoNgkrV2PsSNqKPCOgA21RUJy0i','Mr.','Mayerhofer','5er');
+	 (false,'2025-07-11 18:18:58.15966','91740f77-0b27-4db8-a4b8-5b2b62a25664'::uuid,'/uploads/profile-pictures/911ae559-2c12-44d3-bd50-9b556e6d3885_franzi.jpg','fuenfer@wienerlinien.at','Franzi','Wien',NULL,'$2a$10$oN8WOlONNLGwn9uRRfId3OqMsQzoNgkrV2PsSNqKPCOgA21RUJy0i','Mr.','Mayerhofer','5er')
+ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO event (creation_date,"date",modification_date,creator_id,id,pictureuri,description,"location",title) VALUES
 	 ('2025-05-21 13:59:21.048244','2025-06-21 20:00:00',NULL,'7767118c-19bd-4c28-8129-c0abda74b46c'::uuid,'aaed8676-8b38-4c7a-b8b1-66dd683a1a96'::uuid,'/uploads/event-cover-pictures/f40bf03b-c55b-4c6a-801b-9b764fc99262_movie_night.jpg','Join us for the most bestest and extravagant movie night ever! Yeah! Bring your friends and don’t forget your own popcorn, nachos and booze...','San Juan Capistrano, CA','Movie Night'),
 	 ('2025-06-22 19:59:21.048244','2025-07-04 17:00:00',NULL,'cb0d70b4-8ac6-4045-8a77-55be2583f2a8'::uuid,'045fbc61-736a-4be1-baa3-070748e07f17'::uuid,'/uploads/event-cover-pictures/55daceaa-0a26-407d-b709-d1df1cdd91f5_cooking.jpg','Cooking together brings people closer through creativity, teamwork, and shared joy — turning simple ingredients into lasting memories.','Vienna, AT','Cooking!'),
 	 ('2025-07-11 10:38:08.360601','2025-07-12 12:00:00',NULL,NULL,'ccc5d4bc-8d66-4d1a-87e7-a7b18b6c8773'::uuid,'/uploads/event-cover-pictures/d2dbe905-ee05-4b93-99e1-f438fb253c53_ozzy_bat.jpg','A delicious feast with the one and only Ozzy Osbourne','Birmingham','Bat Eating with Ozzy'),
 	 ('2025-07-11 10:55:03.235106','2025-07-13 17:00:00',NULL,NULL,'40a7f446-78e6-4383-b1cb-84d8f121011f'::uuid,'/uploads/event-cover-pictures/b6db941d-3c12-4519-8018-7a906e4b9bf6_bachlstmarx.jpg','Dope skate session at St. Marx skatepark','Vienna','Skateboarding St. Marx'),
-	 ('2025-07-11 19:33:23.682237','2025-07-13 13:00:00',NULL,NULL,'de32052d-645f-41d1-b43c-70621565ff7a'::uuid,'/uploads/event-cover-pictures/aaf0a06d-8f4a-4dca-ae8d-7d881882abd4_franzi.jpg','Cosplaying as a Viennese tram with the master cosplayer Franzi a.k.a. 5er','Vienna','Tram Cosplaying');
+	 ('2025-07-11 19:33:23.682237','2025-07-13 13:00:00',NULL,NULL,'de32052d-645f-41d1-b43c-70621565ff7a'::uuid,'/uploads/event-cover-pictures/aaf0a06d-8f4a-4dca-ae8d-7d881882abd4_franzi.jpg','Cosplaying as a Viennese tram with the master cosplayer Franzi a.k.a. 5er','Vienna','Tram Cosplaying')
+ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO event_participants (attended_events_id,participants_id) VALUES
 	 ('045fbc61-736a-4be1-baa3-070748e07f17'::uuid,'7767118c-19bd-4c28-8129-c0abda74b46c'::uuid),
-	 ('045fbc61-736a-4be1-baa3-070748e07f17'::uuid,'7da69d8e-55c7-4a96-ac6d-cb207e4e8a21'::uuid);
+	 ('045fbc61-736a-4be1-baa3-070748e07f17'::uuid,'7da69d8e-55c7-4a96-ac6d-cb207e4e8a21'::uuid)
+ON CONFLICT DO NOTHING;
 
 INSERT INTO medium (event_id,id,mediumuri) VALUES
 	 ('045fbc61-736a-4be1-baa3-070748e07f17'::uuid,'1e76e3cc-97d5-4aa9-8ea2-05769f6ba2b7'::uuid,'/uploads/event-galleries/045fbc61-736a-4be1-baa3-070748e07f17/4c1753f6-59e6-4c91-847f-937a9bcd0bfc_hulk.jpg'),
@@ -29,9 +32,11 @@ INSERT INTO medium (event_id,id,mediumuri) VALUES
 	 ('045fbc61-736a-4be1-baa3-070748e07f17'::uuid,'a38f22f7-d721-4dd3-b22e-0db366e0b104'::uuid,'/uploads/event-galleries/045fbc61-736a-4be1-baa3-070748e07f17/01fcf097-dd14-4b0a-bd82-43b6fea23141_batman.jpg'),
 	 ('aaed8676-8b38-4c7a-b8b1-66dd683a1a96'::uuid,'51d1c642-f28d-41aa-81f8-16ef30da76fa'::uuid,'/uploads/event-galleries/aaed8676-8b38-4c7a-b8b1-66dd683a1a96/f40bf03b-c55b-4c6a-801b-9b764fc99262_tv.jpg'),
 	 ('aaed8676-8b38-4c7a-b8b1-66dd683a1a96'::uuid,'788a945c-ca64-4d06-9b63-c859c35ec04c'::uuid,'/uploads/event-galleries/aaed8676-8b38-4c7a-b8b1-66dd683a1a96/e09be568-9b41-4e3d-a5b0-5476252f16dc_undertaker.jpg'),
-	 ('ccc5d4bc-8d66-4d1a-87e7-a7b18b6c8773'::uuid,'c6b61a02-4956-4bbc-b6b4-d9b271dcda40'::uuid,'/uploads/event-galleries/ccc5d4bc-8d66-4d1a-87e7-a7b18b6c8773/c58a412a-09fb-4f16-938f-910e5fc6f646_bat.jpg');
+	 ('ccc5d4bc-8d66-4d1a-87e7-a7b18b6c8773'::uuid,'c6b61a02-4956-4bbc-b6b4-d9b271dcda40'::uuid,'/uploads/event-galleries/ccc5d4bc-8d66-4d1a-87e7-a7b18b6c8773/c58a412a-09fb-4f16-938f-910e5fc6f646_bat.jpg')
+ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO user_comment (creation_date,modification_date,author_id,event_id,id,"text",pictureuri) VALUES
 	 ('2025-07-11 19:39:34.391567',NULL,'7da69d8e-55c7-4a96-ac6d-cb207e4e8a21'::uuid,'aaed8676-8b38-4c7a-b8b1-66dd683a1a96'::uuid,'34e14c80-41db-4de1-8e3f-fa7243bd0ff9'::uuid,'aaaaahhhhhhh!','/uploads/profile-pictures/4f4c9853-29e5-4d05-95c7-d85efc034fe8_harley.jpg'),
 	 ('2025-07-20 16:48:43.222211',NULL,'7767118c-19bd-4c28-8129-c0abda74b46c'::uuid,'ccc5d4bc-8d66-4d1a-87e7-a7b18b6c8773'::uuid,'193a835b-ce74-4af6-8bda-4302b99a6f4c'::uuid,'Well that was a fun night!','/uploads/profile-pictures/67314290-8700-4f0f-94f4-0da7ed05dbf4_gg.jpg'),
-	 ('2025-09-14 19:18:15.024199',NULL,'7767118c-19bd-4c28-8129-c0abda74b46c'::uuid,'aaed8676-8b38-4c7a-b8b1-66dd683a1a96'::uuid,'631ec747-5460-4657-b57b-84435b8ab4b3'::uuid,'hi','/uploads/profile-pictures/67314290-8700-4f0f-94f4-0da7ed05dbf4_gg.jpg');
+	 ('2025-09-14 19:18:15.024199',NULL,'7767118c-19bd-4c28-8129-c0abda74b46c'::uuid,'aaed8676-8b38-4c7a-b8b1-66dd683a1a96'::uuid,'631ec747-5460-4657-b57b-84435b8ab4b3'::uuid,'hi','/uploads/profile-pictures/67314290-8700-4f0f-94f4-0da7ed05dbf4_gg.jpg')
+ON CONFLICT (id) DO NOTHING;

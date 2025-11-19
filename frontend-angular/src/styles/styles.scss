@@ -2,7 +2,7 @@
 @use '@angular/material' as mat;
 @import "primeicons/primeicons.css";
 
-h1.component {
+h1.component, h4.component {
   text-align: center;
   color: $asobo-purple !important;
   margin-bottom: 2.5rem;
@@ -45,6 +45,21 @@ a.btn-purple {
 .username-thumbnail {
   font-weight: 600;
   font-size: 0.9rem;
+}
+
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 0.5rem;
+  filter: drop-shadow(2px 2px 3px gray);
+  transition: transform .2s;
+}
+
+.user-avatar:hover {
+  transform: scale(1.1);
 }
 
 .user-myprofile {

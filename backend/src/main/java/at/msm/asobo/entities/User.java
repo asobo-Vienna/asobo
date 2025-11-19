@@ -142,12 +142,12 @@ public class User {
         this.pictureURI = pictureURI;
     }
 
-    public boolean isActive() {
+    public boolean getIsActive() {
         return this.isActive;
     }
 
-    public void setActive(boolean active) {
-        isActive = active;
+    public void setIsActive(boolean isActive) {
+        this.isActive = isActive;
     }
 
     public LocalDateTime getRegisterDate() {

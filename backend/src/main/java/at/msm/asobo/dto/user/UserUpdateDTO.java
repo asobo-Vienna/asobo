@@ -1,7 +1,6 @@
 package at.msm.asobo.dto.user;
 
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -29,7 +28,7 @@ public class UserUpdateDTO {
     @Size(min=1, message = "About me must contain at least 1 character")
     private String aboutMe;
 
-    private boolean active;
+    private boolean isActive;
 
     private MultipartFile profilePicture;
 
@@ -82,7 +81,7 @@ public class UserUpdateDTO {
     }
 
     public String getPassword() {
-        return password;
+        return this.password;
     }
 
     public void setPassword(String password) {
@@ -97,12 +96,12 @@ public class UserUpdateDTO {
         this.aboutMe = aboutMe;
     }
 
-    public boolean isActive() {
-        return active;
+    public boolean getIsActive() {
+        return this.isActive;
     }
 
-    public void setActive(boolean active) {
-        this.active = active;
+    public void setIsActive(boolean isActive) {
+        this.isActive = isActive;
     }
 
     public String getSalutation() {
