@@ -27,7 +27,6 @@ export class AdminUserList implements OnInit {
       this.userService.getAllUsers().subscribe({
         next: (users) => {
           this.users.set(users);
-          console.log(this.users());
         },
         error: (err) => console.error('Error fetching users:', err)
       });

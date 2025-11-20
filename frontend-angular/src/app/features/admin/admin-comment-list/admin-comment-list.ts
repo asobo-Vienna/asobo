@@ -27,7 +27,6 @@ export class AdminCommentList implements OnInit {
     this.adminCommentService.getAllComments().subscribe({
       next: (comments) => {
         this.comments.set(comments);
-        console.log(this.comments());
       },
       error: (err) => console.error('Error fetching comments:', err)
     });

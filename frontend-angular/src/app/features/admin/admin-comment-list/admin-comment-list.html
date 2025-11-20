@@ -6,6 +6,7 @@
       <th scope="col"></th>
       <th scope="col" aria-label="Username">Username</th>
       <th scope="col" aria-label="Text">Text</th>
+      <th scope="col" aria-label="EventID">Event ID</th>
       <th scope="col" aria-label="Date">Date</th>
       <th scope="col" aria-label="Modified">Modified</th>
       <th scope="col" aria-label="Edit"></th>
@@ -26,9 +27,10 @@
       </td>
 
       <td>{{ comment.username }}</td>
-      <td>{{ comment.text }}</td>
+      <td>"{{ comment.text }}"</td>
+      <td>{{ comment.eventId }}</td>
       <td>{{ comment.creationDate | date:'yyyy-MM-dd hh:mm a'}}</td>
-      <td>{{ comment.modifiedDate | date:'yyyy-MM-dd hh:mm a'}}</td>
+      <td>{{ comment.modificationDate | date:'yyyy-MM-dd hh:mm a'}}</td>
 
       <td>
         <i class="pi pi-user-edit clickable" title="Edit" (click)="onEdit(comment)" aria-label="Edit comment"></i>
