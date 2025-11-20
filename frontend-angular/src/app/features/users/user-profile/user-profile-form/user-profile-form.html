@@ -101,7 +101,6 @@
           </div>
         }
 
-
         <!-- Username -->
         <div class="update-field">
           <p-iconfield>
@@ -140,7 +139,7 @@
             </small>
           }
 
-          @if (!isOwnProfile() && usernameExists()) {
+          @if (isOwnProfile() && usernameExists()) {
             <div class="error-message">
               <small>Username is already taken. Please choose another one.</small>
             </div>
@@ -296,7 +295,7 @@
             </small>
           }
 
-          @if (!isOwnProfile() && emailExists()) {
+          @if (isOwnProfile() && emailExists()) {
             <div class="error-message">
               <small>A user with this email address already exists.</small>
             </div>
