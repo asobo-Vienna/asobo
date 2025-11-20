@@ -44,7 +44,7 @@ export class AdminEventList {
   }
 
   getEventRouterLink(eventId: string): string {
-    return `${environment.eventsEndpoint}/${eventId}`;
+    return `${environment.eventsSectionBaseUrl}/${eventId}`;
   }
 
   protected readonly UrlUtilService = UrlUtilService;

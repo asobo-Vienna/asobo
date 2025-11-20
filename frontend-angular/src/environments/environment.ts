@@ -27,6 +27,7 @@ export const environment = {
   specialCharactersForPW: /[!@#$%^&*(),.?":;{}|<>]/,
   userProfileBaseUrl: '/user/',
   adminSectionBaseUrl: '/admin',
+  eventsSectionBaseUrl: '/events',
   userDummyProfilePicRelativeUrl: '/uploads/profile-pictures/default.png',
   eventDummyCoverPicRelativeUrl: '/uploads/event-cover-pictures/event-cover-default.svg',
   defaultDebounceTimeForFormFields: 500,
