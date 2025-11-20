@@ -85,11 +85,11 @@ From the root directory of the project, run:
 docker-compose up -d
 ```
 
-   This will start a PostgreSQL database container with the following credentials:
-   - **Username:** `eww`
-   - **Password:** `eww`
-   - **Database:** `asoboapp`
-   - **Port:** `5432`
+This will start a PostgreSQL database container with the following credentials:
+- **Username:** `eww`
+- **Password:** `eww`
+- **Database:** `asoboapp`
+- **Port:** `5432`
 
 2. **Populate Initial Data:**
 
@@ -113,7 +113,7 @@ docker-compose up -d
    spring.jpa.properties.hibernate.format_sql=true
 
    # JWT Configuration
-   jwt.secret=your-secret-key-here-make-it-long-and-secure
+   jwt.secret = ${JWT_SECRET}
    jwt.expiration-ms=how-long-until-token-expires-if-remember-me-was-not-checked
    jwt.remember-me-expiration-ms=how-long-the-remember-me-session-should-last
 
@@ -128,6 +128,16 @@ docker-compose up -d
    spring.sql.init.mode=always
    spring.sql.init.data-locations=classpath:data.sql
    ```
+
+Either set the environment variable `JWT_SECRET` to a secret generated with, e.g.,
+
+`openssl rand -base64 64`
+
+or replace
+
+`jwt.secret = ${JWT_SECRET}` by `jwt.secret=your-secret-key-here-make-it-long-and-secure`
+
+in `application.properties`.
 
 4. **Stop the Database:**
 
@@ -146,11 +156,11 @@ docker-compose down -v
 Create or update `frontend/src/environments/environment.ts`:
 ```typescript
 export const environment = {
-  production: false,
-  apiUrl: 'http://localhost:8080/api',
-  authEndpoint: 'http://localhost:8080/api/auth',
-  eventsEndpoint: 'http://localhost:8080/api/events',
-  usersEndpoint: 'http://localhost:8080/api/users'
+   production: false,
+   apiUrl: 'http://localhost:8080/api',
+   authEndpoint: 'http://localhost:8080/api/auth',
+   eventsEndpoint: 'http://localhost:8080/api/events',
+   usersEndpoint: 'http://localhost:8080/api/users'
 };
 ```
 

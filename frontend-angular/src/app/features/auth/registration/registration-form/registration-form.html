@@ -4,21 +4,30 @@
     <app-picture-upload
       [currentImage]="previewUrl()"
       (fileSelected)="handleFileSelected($event)"
-      [showPlusBeforeUpload] = "true"
+      [showPlusBeforeUpload]="true"
     />
   </div>
 
-  <div class="form-group position-relative">
-    <p-select
-      [options]="salutations"
-      formControlName="salutation"
-      placeholder="Select your Salutation"
-      class="w-full md:w-56"
-    />
+  <!-- Salutation -->
+  <div class="update-field">
+    <p-inputgroup>
+      <p-inputgroup-addon>
+        <i class="pi pi-tag"></i>
+      </p-inputgroup-addon>
+      <p-float-label variant="on">
+        <p-select
+          id="registration-salutation"
+          [options]="salutations"
+          formControlName="salutation"
+          placeholder="Select your Salutation"
+          panelStyleClass="solid-dropdown"
+        />
+      </p-float-label>
+    </p-inputgroup>
 
-    @if (this.getFormControls['salutation'].touched && this.getFormControls['salutation'].invalid) {
+    @if (getFormControls['salutation'].touched && getFormControls['salutation'].invalid) {
       <small class="error-message">
-        @if (this.getFormControls['salutation'].errors?.['required']) {
+        @if (getFormControls['salutation'].errors?.['required']) {
           <span>Salutation is required.</span>
         }
       </small>
@@ -26,18 +35,26 @@
   </div>
 
   @if (showCustomSalutation()) {
-    <div class="form-group position-relative">
-      <input
-        type="text"
-        placeholder="Other Salutation"
-        formControlName="customSalutation"
-        class="form-control"
-        id="register-custom-salutation"
-      >
+    <div class="update-field custom-salutation-field">
+      <p-iconfield>
+        <p-inputgroup>
+          <p-inputgroup-addon/>
+          <p-float-label variant="on">
+            <input
+              type="text"
+              placeholder="Other Salutation"
+              formControlName="customSalutation"
+              pInputText
+              id="custom-salutation"
+            >
+            <label for="custom-salutation">Custom Salutation</label>
+          </p-float-label>
+        </p-inputgroup>
+      </p-iconfield>
 
-      @if (this.getFormControls['customSalutation'].touched && this.getFormControls['customSalutation'].invalid) {
+      @if (getFormControls['customSalutation'].touched && getFormControls['customSalutation'].invalid) {
         <small class="error-message">
-          @if (this.getFormControls['customSalutation'].errors?.['required']) {
+          @if (getFormControls['customSalutation'].errors?.['required']) {
             <span>Please specify your salutation.</span>
           }
         </small>
@@ -45,140 +62,196 @@
     </div>
   }
 
-  <div class="form-group position-relative">
-    <input
-      type="text"
-      placeholder="First Name "
-      formControlName="firstName"
-      class="form-control"
-      id="register-firstname"
-      autofocus
-    >
+  <!-- First Name -->
+  <div class="firstname-field update-field">
+    <p-iconfield>
+      <p-inputgroup>
+        <p-inputgroup-addon>
+          <i class="pi pi-id-card"></i>
+        </p-inputgroup-addon>
+        <p-float-label variant="on">
+          <input
+            type="text"
+            id="profile-firstname"
+            formControlName="firstName"
+            pInputText
+          />
+          <label for="profile-firstname">First Name</label>
+        </p-float-label>
+      </p-inputgroup>
+    </p-iconfield>
 
-    @if (this.getFormControls['firstName'].touched && this.getFormControls['firstName'].invalid) {
+    @if (getFormControls['firstName'].touched && getFormControls['firstName'].invalid) {
       <small class="error-message">
-        @if (this.getFormControls['firstName'].errors?.['required']) {
+        @if (getFormControls['firstName'].errors?.['required']) {
           <span>First name is required.</span>
         }
       </small>
     }
   </div>
 
-  <div class="form-group position-relative">
-    <input
-      type="text"
-      placeholder="Surname"
-      formControlName="surname"
-      class="form-control"
-      id="register-surname"
-      autofocus
-    >
+  <!-- Surname -->
+  <div class="update-field">
+    <p-iconfield>
+      <p-inputgroup>
+        <p-inputgroup-addon>
+          <i class="pi pi-address-book"></i>
+        </p-inputgroup-addon>
+        <p-float-label variant="on">
+          <input
+            type="text"
+            id="profile-surname"
+            formControlName="surname"
+            pInputText
+          />
+          <label for="profile-surname">Surname</label>
+        </p-float-label>
+      </p-inputgroup>
+    </p-iconfield>
 
-    @if (this.getFormControls['surname'].touched && this.getFormControls['surname'].invalid) {
+    @if (getFormControls['surname'].touched && getFormControls['surname'].invalid) {
       <small class="error-message">
-        @if (this.getFormControls['surname'].errors?.['required']) {
+        @if (getFormControls['surname'].errors?.['required']) {
           <span>Surname is required.</span>
         }
       </small>
     }
   </div>
 
-  <div class="form-group position-relative">
-    <input
-      type="text"
-      placeholder="Username"
-      formControlName="username"
-      class="form-control"
-      id="register-username"
-      autofocus
-    >
+  <!-- Username -->
+  <div class="update-field">
+    <p-iconfield>
+      <p-inputgroup>
+        <p-inputgroup-addon>
+          <i class="pi pi-user"></i>
+        </p-inputgroup-addon>
+        <p-float-label variant="on">
+          <input
+            type="text"
+            id="profile-username"
+            formControlName="username"
+            pInputText
+          />
+          <label for="profile-username">Username</label>
+        </p-float-label>
+      </p-inputgroup>
+    </p-iconfield>
 
-    @if (this.getFormControls['username'].touched && this.getFormControls['username'].invalid) {
+    @if (getFormControls['username'].touched && getFormControls['username'].invalid) {
       <small class="error-message">
-        @if (this.getFormControls['username'].errors?.['required']) {
+        @if (getFormControls['username'].errors?.['required']) {
           <span>Username is required.</span>
         }
-        @if (this.getFormControls['username'].errors?.['minlength']) {
-          <span>Must be at least {{ environment.minIdentifierLength}} characters.</span>
+        @if (getFormControls['username'].errors?.['minlength']) {
+          <span>Must be at least {{ environment.minIdentifierLength }} characters.</span>
         }
       </small>
     }
 
-    @if (this.usernameExists()) {
+    @if (usernameExists()) {
       <div class="error-message">
         <small>Username is already taken. Please choose another one.</small>
       </div>
     }
   </div>
 
-  <div class="form-group position-relative">
-    <input
-      type="text"
-      placeholder="Email Address"
-      formControlName="email"
-      class="form-control"
-      id="register-email"
-      autofocus
-    >
+  <!-- Email -->
+  <div class="update-field">
+    <p-iconfield>
+      <p-inputgroup>
+        <p-inputgroup-addon>
+          <i class="pi pi-at"></i>
+        </p-inputgroup-addon>
+        <p-float-label variant="on">
+          <input
+            type="email"
+            id="profile-email"
+            formControlName="email"
+            pInputText
+          />
+          <label for="profile-email">Email</label>
+        </p-float-label>
+      </p-inputgroup>
+    </p-iconfield>
 
-    @if (this.getFormControls['email'].touched && this.getFormControls['email'].invalid) {
+    @if (getFormControls['email'].touched && getFormControls['email'].invalid) {
       <small class="error-message">
-        @if (this.getFormControls['email'].errors?.['required']) {
+        @if (getFormControls['email'].errors?.['required']) {
           <span>Email address is required.</span>
         }
-        @if (this.getFormControls['email'].errors?.['minlength']) {
+        @if (getFormControls['email'].errors?.['minlength']) {
           <span>Must be at least {{ environment.minIdentifierLength }} characters.</span>
         }
-        @if (this.getFormControls['email'].errors?.['email']) {
+        @if (getFormControls['email'].errors?.['email']) {
           <span>Invalid email format.</span>
         }
       </small>
     }
 
-    @if (this.emailExists()) {
+    @if (emailExists()) {
       <div class="error-message">
         <small>A user with this email address already exists.</small>
       </div>
     }
   </div>
 
-  <div class="form-group position-relative">
-    <input
-      type="text"
-      placeholder="City"
-      formControlName="location"
-      class="form-control"
-      id="register-city"
-      autofocus
-    >
+  <!-- Location -->
+  <div class="update-field">
+    <p-iconfield>
+      <p-inputgroup>
+        <p-inputgroup-addon>
+          <i class="pi pi-map-marker"></i>
+        </p-inputgroup-addon>
+        <p-float-label variant="on">
+          <input
+            type="text"
+            id="profile-location"
+            formControlName="location"
+            pInputText
+          />
+          <label for="profile-location">Location</label>
+        </p-float-label>
+      </p-inputgroup>
+    </p-iconfield>
 
-    @if (this.getFormControls['location'].touched && this.getFormControls['location'].invalid) {
+    @if (getFormControls['location'].touched && getFormControls['location'].invalid) {
       <small class="error-message">
-        @if (this.getFormControls['location'].errors?.['required']) {
+        @if (getFormControls['location'].errors?.['required']) {
           <span>Location is required.</span>
         }
       </small>
     }
   </div>
 
-  <!-- Password Field with Requirements -->
-  <div class="form-group register-password form-control position-relative">
-    <p-password
-      [toggleMask]="true"
-      [feedback]="false"
-      [showClear]="getFormControls['password'].value?.length > 0"
-      placeholder="Password"
-      formControlName="password"
-      id="register-password"
-      fluid
-      (onFocus)="toggleRequirements()"
-      (onBlur)="toggleRequirements()"
-    />
+
+  <!-- Password Section -->
+  <div class="update-field">
+    <p-iconfield>
+      <p-inputgroup>
+        <p-inputgroup-addon>
+          <i class="pi pi-lock"></i>
+        </p-inputgroup-addon>
+        <p-float-label variant="on">
+          <p-password
+            [toggleMask]="true"
+            [feedback]="false"
+            [showClear]="getFormControls['password'].value?.length > 0"
+            placeholder="Password"
+            formControlName="password"
+            id="register-password"
+            fluid
+            (onFocus)="toggleRequirements()"
+            (onBlur)="toggleRequirements()"
+          />
+          <label for="profile-password" class="password-label">New Password</label>
+        </p-float-label>
+      </p-inputgroup>
+    </p-iconfield>
 
     <!-- Password validation errors -->
-    @if (this.getFormControls['password'].touched && this.getFormControls['password'].invalid) {
+    @if (getFormControls['password'].touched && getFormControls['password'].invalid) {
       <small class="error-message">
-        @if (this.getFormControls['password'].errors?.['required']) {
+        @if (getFormControls['password'].errors?.['required']) {
           <span>Password is required.</span>
         }
       </small>
@@ -199,9 +272,9 @@
         <ul>
           @for (requirement of passwordRequirements; track requirement.key) {
             <li [class.met]="requirement.met">
-              <span class="requirement-icon">
-                {{ requirement.met ? '✓' : '○' }}
-              </span>
+                      <span class="requirement-icon">
+                        {{ requirement.met ? '✓' : '○' }}
+                      </span>
               {{ requirement.label }}
             </li>
           }
@@ -210,22 +283,31 @@
     }
   </div>
 
-  <!-- Confirm Password Field -->
-  <div class="form-group register-password form-control position-relative">
-    <p-password
-      [toggleMask]="true"
-      [feedback]="false"
-      [showClear]="getFormControls['passwordConfirmation'].value?.length > 0"
-      placeholder="Confirm Password"
-      formControlName="passwordConfirmation"
-      id="register-password-confirmation"
-      fluid
-    />
-
+  <!-- Password Confirmation -->
+  <div class="update-field">
+    <p-iconfield>
+      <p-inputgroup>
+        <p-inputgroup-addon>
+          <i class="pi pi-lock"></i>
+        </p-inputgroup-addon>
+        <p-float-label variant="on">
+          <p-password
+            [toggleMask]="true"
+            [feedback]="false"
+            [showClear]="getFormControls['passwordConfirmation'].value?.length > 0"
+            placeholder="Confirm Password"
+            formControlName="passwordConfirmation"
+            id="register-password-confirmation"
+            fluid
+          />
+          <label for="profile-password-confirm" class="password-label">Confirm Password</label>
+        </p-float-label>
+      </p-inputgroup>
+    </p-iconfield>
     <!-- Password confirmation validation -->
-    @if (this.getFormControls['passwordConfirmation'].touched && this.getFormControls['passwordConfirmation'].invalid) {
+    @if (getFormControls['passwordConfirmation'].touched && getFormControls['passwordConfirmation'].invalid) {
       <small class="error-message">
-        @if (this.getFormControls['passwordConfirmation'].errors?.['required']) {
+        @if (getFormControls['passwordConfirmation'].errors?.['required']) {
           <span>Password confirmation is required.</span>
         }
       </small>

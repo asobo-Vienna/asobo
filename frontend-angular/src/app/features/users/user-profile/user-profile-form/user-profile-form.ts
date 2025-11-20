@@ -147,8 +147,6 @@ export class UserProfileForm implements OnInit {
         }
       }
     });
-
-    //this.fetchEvents();
   }
 
   private enableField(fieldName: string) {
@@ -313,6 +311,10 @@ export class UserProfileForm implements OnInit {
   // Editing state helpers
   isEditingAboutMe(): boolean {
     return this.editingFields().has('aboutMe');
+  }
+
+  isEditingCustomSalutation(): boolean {
+    return this.editingFields().has('customSalutation');
   }
 
   isEditingUsername(): boolean {

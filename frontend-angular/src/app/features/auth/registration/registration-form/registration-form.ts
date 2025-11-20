@@ -12,6 +12,11 @@ import {environment} from '../../../../../environments/environment';
 import {PictureUpload} from '../../../../core/picture-upload/picture-upload';
 import {PasswordRequirement, PasswordValidationService} from '../../services/password-validation-service';
 import {UserValidationService} from '../../../users/services/user-validation-service';
+import {FloatLabel} from 'primeng/floatlabel';
+import {InputGroup} from 'primeng/inputgroup';
+import {InputGroupAddon} from 'primeng/inputgroupaddon';
+import {IconField} from 'primeng/iconfield';
+import {InputText} from 'primeng/inputtext';
 
 
 @Component({
@@ -23,6 +28,11 @@ import {UserValidationService} from '../../../users/services/user-validation-ser
     ButtonModule,
     SelectModule,
     PictureUpload,
+    FloatLabel,
+    InputGroup,
+    InputGroupAddon,
+    IconField,
+    InputText,
   ],
   templateUrl: './registration-form.html',
   styleUrl: './registration-form.scss',
