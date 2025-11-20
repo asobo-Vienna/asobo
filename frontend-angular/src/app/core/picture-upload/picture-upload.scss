@@ -14,9 +14,29 @@
   position: relative;
   min-width: 200px;
   min-height: 200px;
-  // width: 100%;
-  // max-width: 300px;
-  // aspect-ratio: 1 / 1;
+  transition: all 0.3s ease;
+
+  // Hover effect for empty box (with plus icon)
+  &:hover:not(.picture-loaded) {
+    border-color: color-mix(in srgb, $asobo-purple 120%, transparent);
+    box-shadow: 0 0.5rem 1.5rem rgba(105, 15, 147, 0.4);
+    transform: scale(1.02);
+  }
+
+  // Hover effect when image is loaded
+  &.picture-loaded:hover {
+    box-shadow: 0 0.5rem 1.5rem rgba(105, 15, 147, 0.4);
+    transform: scale(1.02);
+
+    img {
+      opacity: 0.7;
+      filter: brightness(0.15);
+    }
+
+    .upload-overlay {
+      opacity: 1;
+    }
+  }
 
   &.disabled {
     cursor: default !important;
@@ -33,13 +53,11 @@
 
   .add-picture-plus {
     color: $asobo-purple;
-    width: 5rem; // Control size with width instead of font-size
+    width: 5rem;
     height: 5rem;
     display: inline-block;
     transform-origin: center center;
     transition: transform 0.3s ease-in-out;
-
-    // For SVG styling
     stroke: $asobo-purple;
   }
 
@@ -50,18 +68,10 @@
   }
 }
 
-.picture-box:hover .add-picture-plus {
+// Plus icon rotation on hover (only when no image)
+.picture-box:not(.picture-loaded):hover .add-picture-plus {
   transform: rotate(90deg);
 }
-
-/*@keyframes rotate {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(90deg);
-  }
-}*/
 
 .rectangle-picture-box {
   border-radius: 15px;
@@ -74,9 +84,38 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transition: all 0.3s ease;
 }
 
 .picture-box.picture-loaded {
   border: none;
   background-color: transparent;
+}
+
+// Upload overlay (shown on hover when image exists)
+.upload-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  color: white;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 2;
+  pointer-events: none;
+
+  i {
+    font-size: 2.5rem;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  }
+
+  span {
+    font-weight: 600;
+    font-size: 1.1rem;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  }
 }

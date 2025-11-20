@@ -1,6 +1,7 @@
 <div
   #pictureBox
   [class]="setShapeCssClass()"
+  [class.picture-loaded]="preview() || currentImage()"
   [class.disabled]="disabled()"
   (click)="!disabled() && fileInput.click()"
 >
@@ -16,9 +17,9 @@
   />
 
   @if (preview()) {
-    <img [src]="preview()" alt="Preview" />
+    <img [src]="preview()" alt="Preview"/>
   } @else if (currentImage()) {
-    <img [src]="currentImage()" alt="Current" />
+    <img [src]="currentImage()" alt="Current"/>
   } @else if (showPlusBeforeUpload()) {
     <div class="picture-button">
       <svg class="add-picture-plus" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
@@ -26,6 +27,13 @@
         <line x1="20" y1="50" x2="80" y2="50" stroke="currentColor" stroke-width="10" stroke-linecap="round"/>
       </svg>
       <span class="picture-label">{{ caption() }}</span>
+    </div>
+  }
+
+  @if (preview() || currentImage()) {
+    <div class="upload-overlay">
+      <i class="pi pi-camera"></i>
+      <span>Change Picture</span>
     </div>
   }
 </div>
