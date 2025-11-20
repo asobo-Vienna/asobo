@@ -84,7 +84,7 @@
               </p-inputgroup>
               @if (isOwnProfile()) {
                 <p-inputicon
-                  [class]="isEditingUsername() ? 'pi pi-check' : 'pi pi-pen-to-square'"
+                  [class]="isEditingCustomSalutation() ? 'pi pi-check' : 'pi pi-pen-to-square'"
                   (click)="toggleEdit('customSalutation')"
                   style="cursor: pointer;"
                 />

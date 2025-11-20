@@ -29,8 +29,6 @@
   margin-top: -12px !important;
 }
 
-
-
 .p-floatlabel:has(input.p-filled) label, p-float-label label, .profile-about-me .p-floatlabel label {
   color: $asobo-purple;
 }
@@ -72,8 +70,6 @@ p-iconfield input:disabled, p-iconfield p-password-input, .p-select-dropdown:dis
   width: 100%;
   flex: 1;
 }
-
-
 
 // Password input - make it match regular inputs exactly
 ::ng-deep {
@@ -303,10 +299,6 @@ p-iconfield input:disabled, p-iconfield p-password-input, .p-select-dropdown:dis
   }
 }
 
-.custom-salutation-field p-inputgroup-addon {
-  border: 0 !important;
-}
-
 .p-floatlabel:has(input:focus) label, .p-floatlabel:has(input.p-filled) label.password-label {
   color: $asobo-purple !important;
 }
@@ -327,6 +319,10 @@ p-float-label label.password-label {
   .p-select.p-disabled .p-select-dropdown {
     display: none !important;
   }
+}
+
+.custom-salutation-field p-inputgroup-addon {
+  border: 0 !important;
 }
 
 .custom-salutation-field .p-inputgroup .p-inputgroupaddon {
