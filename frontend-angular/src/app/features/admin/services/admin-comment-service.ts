@@ -2,15 +2,15 @@ import {inject, Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {environment} from '../../../../environments/environment';
 import {HttpClient} from '@angular/common/http';
-import {User} from '../../auth/models/user';
+import {Comment} from '../../events/models/comment'
 
 @Injectable({
   providedIn: 'root',
 })
-export class UserService {
+export class AdminCommentService {
   private http = inject(HttpClient);
 
-  public getAllUsers(): Observable<User[]> {
-    return this.http.get<User[]>(environment.usersEndpoint);
+  public getAllComments(): Observable<Comment[]> {
+    return this.http.get<Comment[]>(environment.apiBaseUrl + environment.adminSectionBaseUrl + '/comments');
   }
 }

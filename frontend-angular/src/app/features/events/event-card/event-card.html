@@ -6,7 +6,7 @@
     <div class="card-body">
       <h6 class="card-title">{{ event().title }}</h6>
       <div class="card-date date-text text-muted">{{ event().date | date:'EEE, MMMM d, y' }}</div>
-      <div class="card-time date-text text-muted">{{ event().time | date:'h:mm a' }}</div>
+      <div class="card-time date-text text-muted">{{ event().date | date:'h:mm a' }}</div>
       <div class="card-location location-text text-muted mt-2">in {{ event().location }}</div>
     </div>
   </div>

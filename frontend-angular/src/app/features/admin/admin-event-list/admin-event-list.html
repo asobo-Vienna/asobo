@@ -4,6 +4,7 @@
   <ng-template pTemplate="header">
     <tr>
       <th scope="col"></th>
+      <th scope="col" aria-label="ID">ID</th>
       <th scope="col" aria-label="Title">Title</th>
       <th scope="col" aria-label="Description">Description</th>
       <th scope="col" aria-label="Location">Location</th>
@@ -29,6 +30,7 @@
         </a>
       </td>
 
+      <td>{{ event.id }}</td>
       <td>{{ event.title }}</td>
       <td>{{ event.description }}</td>
       <td>{{ event.location }}</td>
