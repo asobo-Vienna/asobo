@@ -75,6 +75,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/api/events/**").permitAll()
                 .requestMatchers("/api/users/**").authenticated()
+                .requestMatchers("/api/admin/**").authenticated()
                 .requestMatchers("/**").permitAll()
                 //.requestMatchers("/api/**").permitAll() // TODO: remove later, otherwise all api endpoints are open
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()

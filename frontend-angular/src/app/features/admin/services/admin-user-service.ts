@@ -7,10 +7,10 @@ import {User} from '../../auth/models/user';
 @Injectable({
   providedIn: 'root',
 })
-export class UserService {
+export class AdminUserService {
   private http = inject(HttpClient);
 
   public getAllUsers(): Observable<User[]> {
-    return this.http.get<User[]>(environment.usersEndpoint);
+    return this.http.get<User[]>(`${environment.apiBaseUrl}/admin/users`);
   }
 }

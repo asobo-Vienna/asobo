@@ -12,9 +12,7 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
-import java.util.List;
 import java.util.UUID;
 
 
@@ -33,15 +31,6 @@ public class UserController {
         this.userService = userService;
         this.userDTOToUserPublicDTOMapper = userDTOToUserPublicDTOMapper;
         this.loginResponseDTOToUserPublicDTOMapper = loginResponseDTOToUserPublicDTOMapper;
-    }
-
-    @GetMapping
-    public List<UserPublicDTO> getAllUsers(Authentication authentication) {
-        if (authentication == null || !authentication.isAuthenticated()) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "You must be logged in"); // TODO: maybe create UserNotAuthorizedException
-        }
-
-        return this.userService.getAllUsers();
     }
 
     // we need "/id/ before the actual id, because otherwise

@@ -11,6 +11,6 @@ export class AdminCommentService {
   private http = inject(HttpClient);
 
   public getAllComments(): Observable<Comment[]> {
-    return this.http.get<Comment[]>(environment.apiBaseUrl + environment.adminSectionBaseUrl + '/comments');
+    return this.http.get<Comment[]>(`${environment.apiBaseUrl}/admin/comments`);
   }
 }
