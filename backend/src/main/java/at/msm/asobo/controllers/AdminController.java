@@ -1,22 +1,20 @@
 package at.msm.asobo.controllers;
 
 import at.msm.asobo.dto.comment.UserCommentDTO;
+import at.msm.asobo.dto.comment.UserCommentWithEventTitleDTO;
 import at.msm.asobo.dto.user.UserFullDTO;
 import at.msm.asobo.services.AdminService;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
-
 import java.util.List;
+import java.util.UUID;
 
 
 @RestController
 @RequestMapping("/api/admin")
 @PreAuthorize("isAuthenticated()")
-@Secured("ROLE_ADMIN")
+// @Secured("ROLE_ADMIN")
 
 public class AdminController {
     private AdminService adminService;
@@ -31,9 +29,10 @@ public class AdminController {
     }
 
     @GetMapping("/comments")
-    public List<UserCommentDTO> getAllUserComments() {
-        return this.adminService.getAllUserComments();
+    public List<UserCommentWithEventTitleDTO> getAllUserCommentsWithEventTitle() {
+        return this.adminService.getUserCommentsWithEventTitle();
     }
+
 
      /*@GetMapping
     public List<UserAdminDTO> getAllUsers() {
