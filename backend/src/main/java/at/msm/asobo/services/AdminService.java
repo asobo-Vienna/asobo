@@ -2,11 +2,9 @@ package at.msm.asobo.services;
 
 import at.msm.asobo.dto.comment.UserCommentDTO;
 import at.msm.asobo.dto.comment.UserCommentWithEventTitleDTO;
-import at.msm.asobo.dto.user.UserDTO;
 import at.msm.asobo.dto.user.UserFullDTO;
-import at.msm.asobo.dto.user.UserPublicDTO;
+import at.msm.asobo.entities.User;
 import at.msm.asobo.entities.UserComment;
-import at.msm.asobo.exceptions.EventNotFoundException;
 import at.msm.asobo.interfaces.UserCommentWithEventTitle;
 import at.msm.asobo.mappers.UserCommentDTOUserCommentMapper;
 import at.msm.asobo.mappers.UserCommentWithEventTitleToUserCommentWithEventTitleDTOMapper;
@@ -17,7 +15,6 @@ import at.msm.asobo.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.UUID;
 
 @Service
 public class AdminService {
@@ -44,16 +41,17 @@ public class AdminService {
     }
 
     public List<UserFullDTO> getAllUsers() {
-        return this.userDTOUserMapper.mapUsersToUserFullDTOs(this.userRepository.findAll());
+        List<User> allUsers = userRepository.findAll();
+        return this.userDTOUserMapper.mapUsersToUserFullDTOs(allUsers);
     }
 
     public List<UserCommentDTO> getAllUserComments() {
-        List<UserComment> userComments = this.userCommentRepository.findAll();
-        return this.userCommentDTOUserCommentMapper.mapUserCommentsToUserCommentDTOs(userComments);
+        List<UserComment> allUserComments = this.userCommentRepository.findAll();
+        return this.userCommentDTOUserCommentMapper.mapUserCommentsToUserCommentDTOs(allUserComments);
     }
 
-    public List<UserCommentWithEventTitleDTO> getUserCommentsWithEventTitle() {
-        List<UserCommentWithEventTitle> userCommentsWithEventTitles = this.userCommentRepository.findCommentsWithEventTitles();
-        return this.userCommentWithEventTitleToUserCommentWithEventTitleDTOMapper.toDTOList(userCommentsWithEventTitles);
+    public List<UserCommentWithEventTitleDTO> getAllUserCommentsWithEventTitle() {
+        List<UserCommentWithEventTitle> allUserCommentsWithEventTitles = this.userCommentRepository.findAllCommentsWithEventTitles();
+        return this.userCommentWithEventTitleToUserCommentWithEventTitleDTOMapper.toDTOList(allUserCommentsWithEventTitles);
     }
 }

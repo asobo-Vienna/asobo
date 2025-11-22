@@ -1,14 +1,11 @@
 package at.msm.asobo.controllers;
 
-import at.msm.asobo.dto.comment.UserCommentDTO;
 import at.msm.asobo.dto.comment.UserCommentWithEventTitleDTO;
 import at.msm.asobo.dto.user.UserFullDTO;
 import at.msm.asobo.services.AdminService;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
-import java.util.UUID;
 
 
 @RestController
@@ -30,7 +27,7 @@ public class AdminController {
 
     @GetMapping("/comments")
     public List<UserCommentWithEventTitleDTO> getAllUserCommentsWithEventTitle() {
-        return this.adminService.getUserCommentsWithEventTitle();
+        return this.adminService.getAllUserCommentsWithEventTitle();
     }
 
 
