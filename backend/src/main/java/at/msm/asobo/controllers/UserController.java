@@ -36,15 +36,6 @@ public class UserController {
         this.loginResponseDTOToUserPublicDTOMapper = loginResponseDTOToUserPublicDTOMapper;
     }
 
-    @GetMapping
-    public List<UserPublicDTO> getAllUsers(Authentication authentication) {
-        if (authentication == null || !authentication.isAuthenticated()) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "You are not authorized to perform this action."); // TODO: maybe create UserNotAuthorizedException
-        }
-
-        return this.userService.getAllUsers();
-    }
-
     // we need "/id/ before the actual id, because otherwise
     // /{id} and /{username} lead to ambiguity
     @GetMapping("/id/{id}")
