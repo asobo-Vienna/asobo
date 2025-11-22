@@ -11,7 +11,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/events/{eventId}/comments")
 public class UserCommentController {
-    private UserCommentService userCommentService;
+    private final UserCommentService userCommentService;
 
     public UserCommentController(UserCommentService userCommentService) {
         this.userCommentService = userCommentService;

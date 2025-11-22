@@ -1,5 +1,6 @@
 package at.msm.asobo.mappers;
 
+import at.msm.asobo.dto.user.UserFullDTO;
 import at.msm.asobo.dto.user.UserPublicDTO;
 import at.msm.asobo.dto.user.UserDTO;
 import at.msm.asobo.dto.user.UserRegisterDTO;
@@ -34,4 +35,10 @@ public interface UserDTOUserMapper {
 
     List<UserRegisterDTO> mapUsersToUserRegisterDTOs(List<User> users);
     List<User> mapUserRegisterDTOsToUsers(List<UserRegisterDTO> userDTOs);
+
+    UserFullDTO mapUserToUserFullDTO(User user);
+    User mapUserFullDTOToUser(UserFullDTO userFullDTO);
+
+    List<UserFullDTO> mapUsersToUserFullDTOs(List<User> users);
+    List<User> mapUserFullDTOsToUsers(List<UserFullDTO> userDTOs);
 }

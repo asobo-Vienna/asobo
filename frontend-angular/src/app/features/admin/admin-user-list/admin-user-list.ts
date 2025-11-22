@@ -3,7 +3,7 @@ import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { User } from '../../auth/models/user';
 import { DatePipe } from '@angular/common';
-import {UserService} from '../services/user-service';
+import {AdminService} from '../services/admin-service';
 import {UrlUtilService} from '../../../shared/utils/url/url-util-service';
 import {RouterLink} from '@angular/router';
 import {environment} from '../../../../environments/environment';
@@ -20,11 +20,11 @@ import {environment} from '../../../../environments/environment';
   styleUrl: './admin-user-list.scss',
 })
 export class AdminUserList implements OnInit {
-  private userService = inject(UserService);
+  private adminService = inject(AdminService);
   users = signal<User[]>([]);
 
   ngOnInit(): void {
-      this.userService.getAllUsers().subscribe({
+      this.adminService.getAllUsers().subscribe({
         next: (users) => {
           this.users.set(users);
         },
