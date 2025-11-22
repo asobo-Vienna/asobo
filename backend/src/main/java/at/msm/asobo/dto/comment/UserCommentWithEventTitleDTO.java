@@ -6,13 +6,14 @@ public class UserCommentWithEventTitleDTO {
 
     @JsonProperty("userComment")
     private UserCommentDTO userCommentDTO;
+
     private String eventTitle;
 
     public UserCommentWithEventTitleDTO() {
     }
 
     public UserCommentDTO getUserCommentDTO() {
-        return userCommentDTO;
+        return this.userCommentDTO;
     }
 
     public void setUserCommentDTO(UserCommentDTO userCommentDTO) {
@@ -20,7 +21,7 @@ public class UserCommentWithEventTitleDTO {
     }
 
     public String getEventTitle() {
-        return eventTitle;
+        return this.eventTitle;
     }
 
     public void setEventTitle(String eventTitle) {
