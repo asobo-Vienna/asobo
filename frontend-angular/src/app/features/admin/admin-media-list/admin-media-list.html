@@ -5,7 +5,7 @@
     <tr>
       <th scope="col"></th>
       <th scope="col" aria-label="Id">ID</th>
-      <th scope="col" aria-label="Event ID">Event ID</th>
+      <th scope="col" aria-label="Event Title">Event Title</th>
       <th scope="col" aria-label="Edit"></th>
       <th scope="col" aria-label="Delete"></th>
     </tr>
@@ -15,13 +15,13 @@
     <tr>
       <td>
         <img
-          [src]="UrlUtilService.getMediaUrl(mediaItem.mediumURI || environment.eventDummyCoverPicRelativeUrl)"
-          [alt]="mediaItem.caption"
+          [src]="UrlUtilService.getMediaUrl(mediaItem.medium.mediumURI || environment.eventDummyCoverPicRelativeUrl)"
+          [alt]="mediaItem.medium.caption"
           class="mediaItem-thumbnail"
         />
       </td>
-      <td>"{{ mediaItem.id }}"</td>
-      <td>{{ mediaItem.eventId }}</td>
+      <td>"{{ mediaItem.medium.id }}"</td>
+      <td>{{ mediaItem.eventTitle }}</td>
 
       <td>
         <i class="pi pi-pencil clickable" title="Edit" (click)="onEdit(mediaItem)" aria-label="Edit medium"></i>
