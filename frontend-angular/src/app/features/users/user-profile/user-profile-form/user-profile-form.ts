@@ -408,8 +408,9 @@ export class UserProfileForm implements OnInit {
     }
 
     this.userProfileService.updateField(fieldName, value).subscribe({
-      next: () => {
+      next: (response) => {
         console.log(`${fieldName} updated successfully`);
+        this.updateForm.patchValue({ [fieldName]: value });
         const fields = this.editingFields();
         fields.delete(fieldName);
         this.editingFields.set(new Set(fields));
@@ -425,7 +426,6 @@ export class UserProfileForm implements OnInit {
     const isOther = event.value === 'Other';
     this.showCustomSalutation.set(isOther);
 
-    // Only save if not "Other"
     if (!isOther) {
       this.saveField('salutation');
     }
