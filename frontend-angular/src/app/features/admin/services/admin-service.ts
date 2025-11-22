@@ -5,6 +5,7 @@ import {HttpClient} from '@angular/common/http';
 import {Comment} from '../../events/models/comment'
 import {User} from '../../auth/models/user';
 import {CommentWithEventTitle} from '../../events/models/comment-with-event-title';
+import {MediaItem} from '../../events/models/media-item';
 
 @Injectable({
   providedIn: 'root',
@@ -18,6 +19,10 @@ export class AdminService {
 
   public getAllCommentsWithEventTitle(): Observable<CommentWithEventTitle[]> {
     return this.http.get<CommentWithEventTitle[]>(`${environment.apiBaseUrl}/admin/comments`);
+  }
+
+  public getAllMedia(): Observable<MediaItem[]> {
+    return this.http.get<MediaItem[]>(`${environment.apiBaseUrl}/admin/media`);
   }
 
 }
