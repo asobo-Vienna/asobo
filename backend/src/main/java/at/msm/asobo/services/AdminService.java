@@ -2,14 +2,13 @@ package at.msm.asobo.services;
 
 import at.msm.asobo.dto.comment.UserCommentDTO;
 import at.msm.asobo.dto.comment.UserCommentWithEventTitleDTO;
-import at.msm.asobo.dto.medium.MediumDTO;
 import at.msm.asobo.dto.medium.MediumWithEventTitleDTO;
 import at.msm.asobo.dto.user.UserFullDTO;
+import at.msm.asobo.entities.User;
 import at.msm.asobo.entities.UserComment;
 import at.msm.asobo.interfaces.MediumWithEventTitle;
 import at.msm.asobo.interfaces.UserCommentWithEventTitle;
 import at.msm.asobo.mappers.*;
-import at.msm.asobo.repositories.EventRepository;
 import at.msm.asobo.repositories.MediumRepository;
 import at.msm.asobo.repositories.UserCommentRepository;
 import at.msm.asobo.repositories.UserRepository;
@@ -20,26 +19,23 @@ import java.util.List;
 @Service
 public class AdminService {
     private final UserRepository userRepository;
-    private final EventRepository eventRepository;
     private final UserCommentRepository userCommentRepository;
     private final MediumRepository mediumRepository;
+
     private final UserDTOUserMapper userDTOUserMapper;
     private final UserCommentDTOUserCommentMapper userCommentDTOUserCommentMapper;
     private final UserCommentWithEventTitleToUserCommentWithEventTitleDTOMapper userCommentWithEventTitleToUserCommentWithEventTitleDTOMapper;
-    private MediumWithEventTitleToMediumWithEventTitleDTOMapper mediumWithEventTitleToMediumWithEventTitleDTOMapper;
+    private final MediumWithEventTitleToMediumWithEventTitleDTOMapper mediumWithEventTitleToMediumWithEventTitleDTOMapper;
 
     public AdminService(UserRepository userRepository,
-                        EventRepository eventRepository,
                         UserCommentRepository userCommentRepository,
                         MediumRepository mediumRepository,
                         UserDTOUserMapper userDTOUserMapper,
                         UserCommentDTOUserCommentMapper userCommentDTOUserCommentMapper,
-                        MediumDTOMediumMapper mediumDTOMediumMapper,
                         UserCommentWithEventTitleToUserCommentWithEventTitleDTOMapper userCommentWithEventTitleToUserCommentWithEventTitleDTOMapper,
                         MediumWithEventTitleToMediumWithEventTitleDTOMapper mediumWithEventTitleToMediumWithEventTitleDTOMapper
     ) {
         this.userRepository = userRepository;
-        this.eventRepository = eventRepository;
         this.userCommentRepository = userCommentRepository;
         this.mediumRepository = mediumRepository;
         this.userDTOUserMapper = userDTOUserMapper;
@@ -49,7 +45,8 @@ public class AdminService {
     }
 
     public List<UserFullDTO> getAllUsers() {
-        return this.userDTOUserMapper.mapUsersToUserFullDTOs(this.userRepository.findAll());
+        List<User> users = userRepository.findAll();
+        return this.userDTOUserMapper.mapUsersToUserFullDTOs(users);
     }
 
     public List<UserCommentDTO> getAllUserComments() {
@@ -58,7 +55,7 @@ public class AdminService {
     }
 
     public List<UserCommentWithEventTitleDTO> getAllUserCommentsWithEventTitle() {
-        List<UserCommentWithEventTitle> userCommentsWithEventTitles = this.userCommentRepository.findCommentsWithEventTitles();
+        List<UserCommentWithEventTitle> userCommentsWithEventTitles = this.userCommentRepository.findAllCommentsWithEventTitles();
         return this.userCommentWithEventTitleToUserCommentWithEventTitleDTOMapper.toDTOList(userCommentsWithEventTitles);
     }
 

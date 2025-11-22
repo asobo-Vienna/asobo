@@ -108,7 +108,7 @@ public class UserFullDTO {
     }
 
     public String getFirstName() {
-        return firstName;
+        return this.firstName;
     }
 
     public void setFirstName(String firstName) {
@@ -116,7 +116,7 @@ public class UserFullDTO {
     }
 
     public String getSurname() {
-        return surname;
+        return this.surname;
     }
 
     public void setSurname(String surname) {
@@ -124,7 +124,7 @@ public class UserFullDTO {
     }
 
     public String getSalutation() {
-        return salutation;
+        return this.salutation;
     }
 
     public void setSalutation(String salutation) {
@@ -132,7 +132,7 @@ public class UserFullDTO {
     }
 
     public String getAboutMe() {
-        return aboutMe;
+        return this.aboutMe;
     }
 
     public void setAboutMe(String aboutMe) {
