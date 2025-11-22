@@ -4,8 +4,8 @@ import { TagModule } from 'primeng/tag';
 import { DatePipe } from '@angular/common';
 import {UrlUtilService} from '../../../shared/utils/url/url-util-service';
 import {environment} from '../../../../environments/environment';
-import {AdminCommentService} from '../services/admin-comment-service';
-import {Comment} from '../../events/models/comment'
+import {AdminService} from '../services/admin-service';
+import {CommentWithEventTitle} from '../../events/models/comment-with-event-title';
 
 @Component({
   selector: 'app-admin-comment-list',
@@ -18,11 +18,11 @@ import {Comment} from '../../events/models/comment'
   styleUrl: './admin-comment-list.scss',
 })
 export class AdminCommentList implements OnInit {
-  private adminCommentService = inject(AdminCommentService);
-  comments = signal<Comment[]>([]);
+  private adminService = inject(AdminService);
+  comments = signal<CommentWithEventTitle[]>([]);
 
   ngOnInit(): void {
-    this.adminCommentService.getAllComments().subscribe({
+    this.adminService.getAllCommentsWithEventTitle().subscribe({
       next: (comments) => {
         this.comments.set(comments);
       },

@@ -5,7 +5,7 @@
     <tr>
       <th scope="col" aria-label="Username">Username</th>
       <th scope="col" aria-label="Text">Text</th>
-      <th scope="col" aria-label="Event ID">Event ID</th>
+      <th scope="col" aria-label="Event Title">Event Title</th>
       <th scope="col" aria-label="Date">Date</th>
       <th scope="col" aria-label="Modified">Modified</th>
       <th scope="col" aria-label="Edit"></th>
@@ -15,13 +15,13 @@
 
   <ng-template pTemplate="body" let-comment>
     <tr>
-      <td>{{ comment.username }}</td>
-      <td>"{{ comment.text }}"</td>
-      <td>{{ comment.eventId }}</td>
-      <td>{{ comment.creationDate | date:'yyyy-MM-dd hh:mm a'}}</td>
+      <td>{{ comment.userComment.username }}</td>
+      <td>"{{ comment.userComment.text }}"</td>
+      <td>{{ comment.eventTitle }}</td>
+      <td>{{ comment.userComment.creationDate | date:'yyyy-MM-dd hh:mm a'}}</td>
 
-      @if(comment.modificationDate) {
-      <td>{{ comment.modificationDate | date:'yyyy-MM-dd hh:mm a'}}</td>
+      @if(comment.userComment.modificationDate) {
+      <td>{{ comment.userComment.modificationDate | date:'yyyy-MM-dd hh:mm a'}}</td>
       } @else {
         <td>–</td>
       }

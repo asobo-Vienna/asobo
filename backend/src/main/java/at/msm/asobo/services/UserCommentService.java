@@ -29,11 +29,6 @@ public class UserCommentService {
         this.eventService = eventService;
     }
 
-    public List<UserCommentDTO> getAllUserComments() {
-        List<UserComment> userComments = this.userCommentRepository.findAll();
-        return this.userCommentDTOUserCommentMapper.mapUserCommentsToUserCommentDTOs(userComments);
-    }
-
     public UserCommentDTO getUserCommentDTOById(UUID id) {
         UserComment userComment = this.userCommentRepository.findById(id).orElseThrow(() -> new UserCommentNotFoundException(id));
         return this.userCommentDTOUserCommentMapper.mapUserCommentToUserCommentDTO(userComment);

@@ -1,4 +1,4 @@
-package at.msm.asobo.dto.admin;
+package at.msm.asobo.dto.user;
 
 import at.msm.asobo.dto.comment.UserCommentDTO;
 import at.msm.asobo.dto.event.EventDTO;
@@ -7,9 +7,11 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
-public class UserAdminDTO {
+public class UserFullDTO {
 
     private UUID id;
+    private String firstName;
+    private String surname;
     private String email;
     private String username;
     private List<EventDTO> createdEvents;
@@ -19,8 +21,10 @@ public class UserAdminDTO {
     private String location;
     private LocalDateTime registerDate;
     private boolean isActive;
+    private String salutation;
+    private String aboutMe;
 
-    public UserAdminDTO() {
+    public UserFullDTO() {
     }
 
     public UUID getId() {
@@ -63,12 +67,12 @@ public class UserAdminDTO {
         this.registerDate = registerDate;
     }
 
-    public boolean isActive() {
-        return isActive;
+    public boolean getIsActive() {
+        return this.isActive;
     }
 
-    public void setActive(boolean active) {
-        isActive = active;
+    public void setIsActive(boolean active) {
+        this.isActive = active;
     }
 
     public String getEmail() {
@@ -103,7 +107,35 @@ public class UserAdminDTO {
         return this.registerDate;
     }
 
-    public boolean getIsActive() {
-        return this.isActive;
+    public String getFirstName() {
+        return this.firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getSurname() {
+        return this.surname;
+    }
+
+    public void setSurname(String surname) {
+        this.surname = surname;
+    }
+
+    public String getSalutation() {
+        return this.salutation;
+    }
+
+    public void setSalutation(String salutation) {
+        this.salutation = salutation;
+    }
+
+    public String getAboutMe() {
+        return this.aboutMe;
+    }
+
+    public void setAboutMe(String aboutMe) {
+        this.aboutMe = aboutMe;
     }
 }

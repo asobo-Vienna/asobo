@@ -2,6 +2,7 @@ package at.msm.asobo.repositories;
 
 import at.msm.asobo.entities.Event;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -12,6 +13,9 @@ public interface EventRepository extends JpaRepository<Event, UUID> {
     List<Event> findByIsPrivateEventTrue();
 
     List<Event> findByIsPrivateEventFalse();
+
+    // @Query("SELECT e.title FROM Event e WHERE e.id = :id")
+    // String findEventTitleById(UUID id);
 
     List<Event> findEventsByDate(LocalDateTime date);
 
