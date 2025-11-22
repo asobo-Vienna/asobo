@@ -88,6 +88,15 @@ a.btn-purple {
   text-decoration: none;
 }
 
+.mediaItem-thumbnail {
+  width: 60px;
+  height: 40px;
+  object-fit: contain;
+  margin-right: 0.5rem;
+  filter: drop-shadow(2px 2px 3px gray);
+  transition: transform .2s;
+}
+
 .event-picture-box {
   margin: 0 auto;
   border: 2px dashed $asobo-purple;
