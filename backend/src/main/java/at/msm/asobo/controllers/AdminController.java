@@ -1,14 +1,12 @@
 package at.msm.asobo.controllers;
 
-import at.msm.asobo.dto.comment.UserCommentDTO;
 import at.msm.asobo.dto.comment.UserCommentWithEventTitleDTO;
+import at.msm.asobo.dto.medium.MediumDTO;
 import at.msm.asobo.dto.user.UserFullDTO;
 import at.msm.asobo.services.AdminService;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
-import java.util.UUID;
 
 
 @RestController
@@ -17,7 +15,7 @@ import java.util.UUID;
 // @Secured("ROLE_ADMIN")
 
 public class AdminController {
-    private AdminService adminService;
+    private final AdminService adminService;
 
     public AdminController(AdminService adminService) {
         this.adminService = adminService;
@@ -30,7 +28,12 @@ public class AdminController {
 
     @GetMapping("/comments")
     public List<UserCommentWithEventTitleDTO> getAllUserCommentsWithEventTitle() {
-        return this.adminService.getUserCommentsWithEventTitle();
+        return this.adminService.getAllUserCommentsWithEventTitle();
+    }
+
+    @GetMapping("/media")
+    public List<MediumDTO> getAllMedia() {
+        return this.adminService.getAllMedia();
     }
 
 

@@ -11,6 +11,8 @@ import java.util.UUID;
 @Repository
 public interface MediumRepository extends JpaRepository<Medium, UUID> {
 
+    List<Medium> findAll();
+
     public List<Medium> findMediaByEventId(UUID eventId);
 
     Optional<Medium> findMediumByEventIdAndId(UUID eventId, UUID mediumId);
