@@ -16,11 +16,11 @@ import at.msm.asobo.security.UserPrincipal;
 import at.msm.asobo.services.files.FileStorageService;
 import at.msm.asobo.utils.PatchUtils;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.web.servlet.MultipartProperties;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
@@ -30,7 +30,6 @@ import java.util.UUID;
 public class UserService {
     @Value("${jwt.expiration-ms}")
     private long EXPIRATION_MS;
-
     @Value("${jwt.remember-me-expiration-ms}")
     private long REMEMBER_ME_EXPIRATION_MS;
 
@@ -41,6 +40,7 @@ public class UserService {
     private final PasswordService passwordService;
     private final JwtUtil jwtUtil;
     private final AuthenticationManager authenticationManager;
+    private final MultipartProperties multipartProperties;
 
     public UserService(UserRepository userRepository,
                        UserDTOUserMapper userDTOUserMapper,
@@ -48,7 +48,8 @@ public class UserService {
                        FileStorageProperties fileStorageProperties,
                        PasswordService passwordService,
                        JwtUtil jwtUtil,
-                       AuthenticationManager authenticationManager
+                       AuthenticationManager authenticationManager,
+                       MultipartProperties multipartProperties
     ) {
         this.userRepository = userRepository;
         this.userDTOUserMapper = userDTOUserMapper;
@@ -57,6 +58,7 @@ public class UserService {
         this.passwordService = passwordService;
         this.jwtUtil = jwtUtil;
         this.authenticationManager = authenticationManager;
+        this.multipartProperties = multipartProperties;
     }
 
     public List<UserPublicDTO> getAllUsers() {
@@ -78,25 +80,14 @@ public class UserService {
     }
 
     public LoginResponseDTO registerUser(UserRegisterDTO userRegisterDTO) {
-        boolean emailExists = this.isEmailAlreadyTaken(userRegisterDTO.getEmail());
-        if (emailExists) {
-            throw new EmailAlreadyExistsException(userRegisterDTO.getEmail());
-        }
-
-        boolean userExists = this.isUsernameAlreadyTaken(userRegisterDTO.getUsername());
-        if (userExists) {
-            throw new UsernameAlreadyExistsException(userRegisterDTO.getUsername());
-        }
+        validateUserRegistration(userRegisterDTO);
 
         User newUser = this.userDTOUserMapper.mapUserRegisterDTOToUser(userRegisterDTO);
 
         String hashedPassword = this.passwordService.hashPassword(userRegisterDTO.getPassword());
         newUser.setPassword(hashedPassword);
 
-        if (userRegisterDTO.getProfilePicture() != null && !userRegisterDTO.getProfilePicture().isEmpty()) {
-            String fileURI = this.fileStorageService.store(userRegisterDTO.getProfilePicture(), this.fileStorageProperties.getProfilePictureSubfolder());
-            newUser.setPictureURI(fileURI);
-        }
+        this.handleProfilePictureUpload(userRegisterDTO.getProfilePicture(), newUser);
 
         User savedUser = this.userRepository.save(newUser);
 
@@ -118,10 +109,9 @@ public class UserService {
                         userLoginDTO.getIdentifier(),
                         userLoginDTO.getPassword()
                 );
-
+        
         Authentication authentication = authenticationManager.authenticate(authToken);
 
-        // Get the authenticated principal
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
 
         long expirationTime = EXPIRATION_MS;
@@ -146,38 +136,24 @@ public class UserService {
         return this.userDTOUserMapper.mapUserToUserPublicDTO(newUser);
     }
 
-    public UserPublicDTO updateUserById(UUID userId, UserUpdateDTO userUpdateDTO) {
-        User existingUser = this.getUserById(userId);
+    public UserPublicDTO updateUserById(UUID targetUserId, UUID loggedInUserId, UserUpdateDTO userUpdateDTO) {
+        User existingUser = this.getUserById(targetUserId);
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
-        UUID authenticatedUserId = UUID.fromString(userPrincipal.getUserId());
-
-        // Authorization check: user can only update their own profile
-        if (!existingUser.getId().equals(authenticatedUserId)) {
-            throw new UserNotAuthorizedException("You can only update your own profile");
+        // Authorization check: user can update their own profile or admin can update any profile
+        if (!canUpdateUser(targetUserId, loggedInUserId)) {
+            throw new UserNotAuthorizedException("You are not authorized to update this profile");
         }
 
         // Use this instead of checking non-null for each property of the dto
         // Ignore 'profilePicture' since we handle it separately
         PatchUtils.copyNonNullProperties(userUpdateDTO, existingUser, "profilePicture");
 
-        /*existingUser.setActive(userUpdateDTO.isActive());
-        existingUser.setEmail(userUpdateDTO.getEmail());
-        existingUser.setSalutation(userUpdateDTO.getSalutation());
-        existingUser.setLocation(userUpdateDTO.getLocation());
-        existingUser.setUsername(userUpdateDTO.getUsername());
-        existingUser.setFirstName(userUpdateDTO.getFirstName());
-        existingUser.setSurname(userUpdateDTO.getSurname());
-        existingUser.setPassword(userUpdateDTO.getPassword());
-        existingUser.setAboutMe(userUpdateDTO.getAboutMe());*/
-
-        // Handle the picture if it is present
-        MultipartFile picture = userUpdateDTO.getProfilePicture();
-        if (picture != null && !picture.isEmpty()) {
-            String pictureURI = this.fileStorageService.store(picture, this.fileStorageProperties.getProfilePictureSubfolder());
-            existingUser.setPictureURI(pictureURI);
+        if(existingUser.getPassword() != null) {
+            String hashedPassword = this.passwordService.hashPassword(existingUser.getPassword());
+            existingUser.setPassword(hashedPassword);
         }
+
+        this.handleProfilePictureUpdate(userUpdateDTO.getProfilePicture(), existingUser);
 
         User updatedUser = this.userRepository.save(existingUser);
         return this.userDTOUserMapper.mapUserToUserPublicDTO(updatedUser);
@@ -197,5 +173,66 @@ public class UserService {
 
     public boolean isEmailAlreadyTaken(String email) {
         return userRepository.findByEmail(email).isPresent();
+    }
+
+    private boolean canUpdateUser(UUID targetUserId, UUID loggedInUserId) {
+        if (targetUserId.equals(loggedInUserId)) {
+            return true;
+        }
+
+        return hasAdminRole(loggedInUserId);
+    }
+
+    private boolean hasAdminRole(UUID userId) {
+        // TODO: Implement when roles are added
+        // User user = getUserById(userId);
+        // return user.getRoles().stream()
+        //     .anyMatch(role -> role.getName().equals("ADMIN"));
+        return false;
+    }
+
+    private void validateUserRegistration(UserRegisterDTO userRegisterDTO) {
+        if (this.isEmailAlreadyTaken(userRegisterDTO.getEmail())) {
+            throw new EmailAlreadyExistsException(userRegisterDTO.getEmail());
+        }
+
+        if (this.isUsernameAlreadyTaken(userRegisterDTO.getUsername())) {
+            throw new UsernameAlreadyExistsException(userRegisterDTO.getUsername());
+        }
+    }
+
+    private void handleProfilePictureUpload(MultipartFile picture, User user) {
+        if (picture != null && !picture.isEmpty()) {
+            validateProfilePicture(picture);
+            String fileURI = this.fileStorageService.store(picture, this.fileStorageProperties.getProfilePictureSubfolder());
+            user.setPictureURI(fileURI);
+        }
+    }
+
+    private void handleProfilePictureUpdate(MultipartFile picture, User user) {
+        if (picture == null || picture.isEmpty()) {
+            return;
+        }
+
+        validateProfilePicture(picture);
+
+        if (user.getPictureURI() != null) {
+            this.fileStorageService.delete(user.getPictureURI());
+        }
+
+        String pictureURI = this.fileStorageService.store(picture, this.fileStorageProperties.getProfilePictureSubfolder());
+        user.setPictureURI(pictureURI);
+    }
+
+    private void validateProfilePicture(MultipartFile file) {
+        long maxBytes = multipartProperties.getMaxFileSize().toBytes();
+        if (file.getSize() > maxBytes) {
+            throw new IllegalArgumentException("Profile picture must be less than " + multipartProperties.getMaxFileSize());
+        }
+
+        String contentType = file.getContentType();
+        if (contentType == null || !contentType.startsWith("image/")) {
+            throw new IllegalArgumentException("Only image files are allowed for profile pictures");
+        }
     }
 }

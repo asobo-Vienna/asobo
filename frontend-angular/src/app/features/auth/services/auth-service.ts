@@ -16,10 +16,7 @@ export class AuthService {
 
   private tokenCheckInterval: any;
   // Signal to track current user state
-  private currentUserSignal = signal<User | null>(this.getUserFromStorage());
-
-  // Public readonly signals
-  public currentUser = this.currentUserSignal.asReadonly();
+  public currentUser = signal<User | null>(this.getUserFromStorage());
   public isLoggedIn = computed(() => !!this.currentUser() && !!this.getToken() && !this.isTokenExpired());
 
   private http = inject(HttpClient);
@@ -36,6 +33,10 @@ export class AuthService {
         tap(response => {
           this.setSession(response);
           this.startTokenValidityCheck();
+
+          // Clear credentials from memory
+          credentials.password = '';
+          credentials.identifier = '';
         })
       );
   }
@@ -56,14 +57,14 @@ export class AuthService {
     // Store user object
     localStorage.setItem(this.USER_KEY, JSON.stringify(authResult.user));
 
-    this.currentUserSignal.set(authResult.user);
+    this.currentUser.set(authResult.user);
   }
 
   logout(navigate: boolean = true): void {
     localStorage.removeItem(this.TOKEN_KEY);
     localStorage.removeItem(this.USER_KEY);
 
-    this.currentUserSignal.set(null);
+    this.currentUser.set(null);
 
     this.stopTokenValidityCheck();
 
@@ -91,14 +92,14 @@ export class AuthService {
 
   updateUserInStorage(user: User): void {
     localStorage.setItem(this.USER_KEY, JSON.stringify(user));
-    this.currentUserSignal.set(user);
+    this.currentUser.set(user);
   }
 
   private checkTokenValidity(): void {
     const token = this.getToken();
 
     if (!token) {
-      this.currentUserSignal.set(null);
+      this.currentUser.set(null);
       return;
     }
 
