@@ -263,7 +263,7 @@ export class UserProfileForm implements OnInit {
             customSalutation: user.salutation,
           });
 
-          this.showCustomSalutation.set(false);
+          this.showCustomSalutation.set(true);
         } else {
           this.salutations = environment.defaultSalutations;
 
@@ -407,9 +407,13 @@ export class UserProfileForm implements OnInit {
       return;
     }
 
+    // if the field to update is customSalutation, actually set the salutation to the value of customSalutation
+    fieldName = fieldName === 'customSalutation' ? 'salutation' : fieldName;
+
     this.userProfileService.updateField(fieldName, value).subscribe({
       next: (response) => {
         console.log(`${fieldName} updated successfully`);
+
         this.updateForm.patchValue({ [fieldName]: value });
         const fields = this.editingFields();
         fields.delete(fieldName);
@@ -421,7 +425,10 @@ export class UserProfileForm implements OnInit {
         // Navigate to new username URL
         if (fieldName === 'username') {
           this.router.navigate(['/user', response.username], { replaceUrl: true });
+          return;
         }
+
+        this.loadUserProfile(response.username);
       },
       error: (err) => {
         console.error(`Failed to update ${fieldName}:`, err);

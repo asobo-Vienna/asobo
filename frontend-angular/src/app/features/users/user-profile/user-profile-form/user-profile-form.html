@@ -17,7 +17,8 @@
                 cols="36"
                 pTextarea
                 formControlName="aboutMe"
-                (blur)="saveField('aboutMe')">
+                (blur)="saveField('aboutMe')"
+              >
               </textarea>
               <label for="over_label">About Me</label>
             </p-floatlabel>
@@ -78,6 +79,7 @@
                     formControlName="customSalutation"
                     pInputText
                     id="custom-salutation"
+                    (blur)="saveField('customSalutation')"
                   >
                   <label for="custom-salutation">Custom Salutation</label>
                 </p-float-label>
