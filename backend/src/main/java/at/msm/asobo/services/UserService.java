@@ -109,12 +109,9 @@ public class UserService {
                         userLoginDTO.getIdentifier(),
                         userLoginDTO.getPassword()
                 );
-
-        System.out.println(userLoginDTO.getPassword());
-        System.out.println(this.passwordService.hashPassword(userLoginDTO.getPassword()));
+        
         Authentication authentication = authenticationManager.authenticate(authToken);
 
-        // Get the authenticated principal
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
 
         long expirationTime = EXPIRATION_MS;

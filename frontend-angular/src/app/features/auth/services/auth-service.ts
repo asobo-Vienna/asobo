@@ -36,6 +36,10 @@ export class AuthService {
         tap(response => {
           this.setSession(response);
           this.startTokenValidityCheck();
+
+          // Clear credentials from memory
+          credentials.password = '';
+          credentials.identifier = '';
         })
       );
   }
