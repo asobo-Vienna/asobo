@@ -44,23 +44,11 @@ public class UserController {
     }
 
     @GetMapping("/{username}")
-    public UserPublicDTO getUserByUsername(@PathVariable String username, Authentication authentication) {
-        // Check if user is logged in
-        String loggedInUsername = null;
-        if (authentication != null && authentication.isAuthenticated()) {
-            UserPrincipal principal = (UserPrincipal) authentication.getPrincipal();
-            loggedInUsername = principal.getUsername();
-            return this.userService.getUserByUsername(loggedInUsername);
-        }
+    public UserPublicDTO getUserByUsername(
+            @PathVariable String username,
+            @AuthenticationPrincipal UserPrincipal principal) {
 
-        // Optional: prevent accessing private profiles of others
-        // Uncomment if you want only the logged-in user to access their profile
-    /*
-    if (loggedInUsername != null && !loggedInUsername.equals(username)) {
-        throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Access denied");
-    }
-    */
-
+        // Spring Security ensures user is authenticated if this endpoint requires it
         return this.userService.getUserByUsername(username);
     }
 
