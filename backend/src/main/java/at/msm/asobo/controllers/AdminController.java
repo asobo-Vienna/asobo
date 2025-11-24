@@ -23,18 +23,18 @@ public class AdminController {
 
     @GetMapping("/users")
     public List<UserFullDTO> getAllUsers() {
-        return this.adminService.getAllUsers();
+      return this.adminService.getAllUsers();
     }
 
-    @GetMapping("/comments")
-    public List<UserCommentWithEventTitleDTO> getAllUserCommentsWithEventTitle() {
-        return this.adminService.getAllUserCommentsWithEventTitle();
-    }
+  @GetMapping("/comments")
+  public List<UserCommentWithEventTitleDTO> getAllUserCommentsWithEventTitle() {
+    return this.adminService.getAllUserCommentsWithEventTitle();
+  }
 
-    @GetMapping("/media")
-    public List<MediumWithEventTitleDTO> getAllMedia() {
-        return this.adminService.getAllMediaWithEventTitle();
-    }
+  @GetMapping("/media")
+  public List<MediumWithEventTitleDTO> getAllMediaWithEventTitle() {
+    return this.adminService.getAllMediaWithEventTitle();
+  }
 
 
      /*@GetMapping
@@ -42,7 +42,7 @@ public class AdminController {
         //return this.userService.getAllUsers();
     }*/
 
-    //@GetMapping("/{id}")
+  //@GetMapping("/{id}")
     /*public UserAdminDTO getUserById(@PathVariable UUID id) {
         User foundUser = this.userService.getUserById(id);
         return new UserAdminDTO(foundUser);
@@ -61,7 +61,7 @@ public class AdminController {
         return new UserAdminDTO(savedUser);
     }*/
 
-    // TODO create UserAdminService that returns UserAdminDTOs
+  // TODO create UserAdminService that returns UserAdminDTOs
 //    @PutMapping("/{id}")
 //    public UserAdminDTO updateUser(@PathVariable UUID id, @RequestBody @Valid UserUpdateDTO userUpdateDTO) {
 //        User updatedUser = this.userService.updateUserById(id, userUpdateDTO);
