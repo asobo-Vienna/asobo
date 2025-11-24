@@ -6,13 +6,15 @@ import {List} from '../../../core/data_structures/lists/list';
 import {Participant} from '../models/participant';
 import {Comment} from '../models/comment';
 import {Event} from '../models/event';
+import { Tag } from 'primeng/tag';
 
 @Component({
   selector: 'app-event-card',
   templateUrl: './event-card.html',
   imports: [
     DatePipe,
-    RouterLink
+    RouterLink,
+    Tag
   ],
   styleUrl: './event-card.scss'
 })

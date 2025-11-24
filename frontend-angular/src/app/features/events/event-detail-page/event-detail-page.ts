@@ -20,6 +20,7 @@ import {User} from '../../auth/models/user';
 import {ParticipantService} from '../services/participant-service';
 import {LambdaFunctions} from '../../../shared/utils/lambda-functions';
 import {environment} from '../../../../environments/environment';
+import {Tag} from 'primeng/tag';
 
 @Component({
   selector: 'app-event-detail-page',
@@ -29,6 +30,7 @@ import {environment} from '../../../../environments/environment';
     Participants,
     CommentsList,
     Gallery,
+    Tag
   ],
   templateUrl: './event-detail-page.html',
   styleUrl: './event-detail-page.scss'
@@ -48,6 +50,7 @@ export class EventDetailPage {
   time!: string;
   location!: string;
   description?: string;
+  isPrivate!: boolean;
   comments = signal<List<Comment>>(new List<Comment>());
   // TODO? make participants list a signal and use computed so we don't have to manually check in a couple places???
   participants = signal<List<Participant>>(new List<Participant>());
