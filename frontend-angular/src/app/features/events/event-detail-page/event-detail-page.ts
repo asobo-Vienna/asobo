@@ -82,6 +82,7 @@ export class EventDetailPage {
     this.time = event.date;
     this.location = event.location;
     this.description = event.description;
+    this.isPrivate = event.isPrivate;
 
     this.participantService.getAllByEventId(event.id).subscribe((participants: List<Participant>) => {
       this.participants.set(participants);
