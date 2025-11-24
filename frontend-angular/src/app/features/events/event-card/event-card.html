@@ -1,12 +1,13 @@
 <a [routerLink]="['/events', event().id]">
   <div class="card event-card">
-    <p-tag
-      class="event-badge"
-      [icon]="event().isPrivate ? 'pi pi-lock' : 'pi pi-globe'"
-      [severity]="event().isPrivate ? 'warn' : 'success'"
-      [value]="event().isPrivate ? 'Private' : 'Public'"
-    >
-    </p-tag>
+    @if (authService.isLoggedIn()) {
+      <p-tag
+        class="event-badge"
+        [icon]="event().isPrivate ? 'pi pi-lock' : 'pi pi-globe'"
+        [severity]="event().isPrivate ? 'warn' : 'success'"
+        [value]="event().isPrivate ? 'Private' : 'Public'"
+      />
+    }
     <div class="card-image-container">
       <img
         class="card-img-top"
