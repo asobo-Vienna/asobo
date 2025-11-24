@@ -59,7 +59,7 @@ public class AdminService {
         return this.userCommentWithEventTitleToUserCommentWithEventTitleDTOMapper.toDTOList(userCommentsWithEventTitles);
     }
 
-    public List<MediumWithEventTitleDTO> getAllMedia() {
+    public List<MediumWithEventTitleDTO> getAllMediaWithEventTitle() {
         List<MediumWithEventTitle> mediaListWithEventTitles = this.mediumRepository.findAllMediaWithEventTitles();
         return this.mediumWithEventTitleToMediumWithEventTitleDTOMapper.toDTOList(mediaListWithEventTitles);
     }

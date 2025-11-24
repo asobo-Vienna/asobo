@@ -1,7 +1,6 @@
 package at.msm.asobo.controllers;
 
 import at.msm.asobo.dto.comment.UserCommentWithEventTitleDTO;
-import at.msm.asobo.dto.medium.MediumDTO;
 import at.msm.asobo.dto.medium.MediumWithEventTitleDTO;
 import at.msm.asobo.dto.user.UserFullDTO;
 import at.msm.asobo.services.AdminService;
@@ -34,7 +33,7 @@ public class AdminController {
 
     @GetMapping("/media")
     public List<MediumWithEventTitleDTO> getAllMedia() {
-        return this.adminService.getAllMedia();
+        return this.adminService.getAllMediaWithEventTitle();
     }
 
 
