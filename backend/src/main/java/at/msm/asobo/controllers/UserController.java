@@ -11,7 +11,10 @@ import at.msm.asobo.services.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.UUID;
 
@@ -41,23 +44,11 @@ public class UserController {
     }
 
     @GetMapping("/{username}")
-    public UserPublicDTO getUserByUsername(@PathVariable String username, Authentication authentication) {
-        // Check if user is logged in
-        String loggedInUsername = null;
-        if (authentication != null && authentication.isAuthenticated()) {
-            UserPrincipal principal = (UserPrincipal) authentication.getPrincipal();
-            loggedInUsername = principal.getUsername();
-            this.userService.getUserByUsername(loggedInUsername);
-        }
+    public UserPublicDTO getUserByUsername(
+            @PathVariable String username,
+            @AuthenticationPrincipal UserPrincipal principal) {
 
-        // Optional: prevent accessing private profiles of others
-        // Uncomment if you want only the logged-in user to access their profile
-    /*
-    if (loggedInUsername != null && !loggedInUsername.equals(username)) {
-        throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Access denied");
-    }
-    */
-
+        // Spring Security ensures user is authenticated if this endpoint requires it
         return this.userService.getUserByUsername(username);
     }
 
@@ -69,8 +60,24 @@ public class UserController {
     }
 
     @PatchMapping("/{id}")
-    public UserPublicDTO updateUser(@PathVariable UUID id, @ModelAttribute @Valid UserUpdateDTO userUpdateDTO) {
-        return this.userService.updateUserById(id, userUpdateDTO);
+    public UserPublicDTO updateUser(@PathVariable UUID id, @RequestBody @Valid UserUpdateDTO userUpdateDTO, @AuthenticationPrincipal UserPrincipal userPrincipal) {
+        UUID loggedInUserId = UUID.fromString(userPrincipal.getUserId());
+
+        return this.userService.updateUserById(id, loggedInUserId, userUpdateDTO);
+    }
+
+    @PatchMapping("/{id}/profile-picture")
+    public UserPublicDTO updateProfilePicture(
+            @PathVariable UUID id,
+            @RequestParam("profilePicture") MultipartFile profilePicture,
+            @AuthenticationPrincipal UserPrincipal principal) {
+
+        UUID loggedInUserId = UUID.fromString(principal.getUserId());
+
+        UserUpdateDTO userUpdateDTO = new UserUpdateDTO();
+        userUpdateDTO.setProfilePicture(profilePicture);
+
+        return this.userService.updateUserById(id, loggedInUserId, userUpdateDTO);
     }
 
     @DeleteMapping("/{id}")

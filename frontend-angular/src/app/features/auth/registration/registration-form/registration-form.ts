@@ -201,10 +201,15 @@ export class RegistrationForm {
         this.usernameExists.set(false);
         this.emailExists.set(false);
         const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/dashboard';
+        this.registerForm.reset();
         this.router.navigate([returnUrl]);
       },
       error: (err) => {
         console.error('Registration failed with status code:', err.status);
+        this.registerForm.patchValue({
+          password: '',
+          passwordConfirmation: '',
+        });
         if (err.status === 409) {
           const errorResponse = err.error;
           if (errorResponse.code === 'EMAIL_EXISTS') {

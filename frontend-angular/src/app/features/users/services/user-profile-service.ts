@@ -53,13 +53,13 @@ export class UserProfileService {
 
   // TODO: still needs to be implemented correctly
   updateField(fieldName: string, value: any): Observable<User> {
-    return this.http.patch<User>(`${this.usersEndpointBase}/profile`, { [fieldName]: value })
+    const loggedInUser = this.authService.currentUser();
+    return this.http.patch<User>(`${environment.apiBaseUrl}/users/${loggedInUser?.id}`, { [fieldName]: value })
       .pipe(
         tap(updatedUser => {
           // Update localStorage to keep AuthService in sync
           localStorage.setItem('current_user', JSON.stringify(updatedUser));
 
-          const loggedInUser = this.authService.currentUser();
           if (loggedInUser?.username === updatedUser.username) {
             this.viewedUserSignal.set(updatedUser);
           }
@@ -74,7 +74,7 @@ export class UserProfileService {
 
   // TODO: still needs to be implemented correctly
   updateProfilePicture(formData: FormData): Observable<User> {
-    return this.http.patch<User>(`${this.usersEndpointBase}/${this.authService.currentUser()?.id}`, formData)
+    return this.http.patch<User>(`${environment.apiBaseUrl}/users/${this.authService.currentUser()?.id}/profile-picture`, formData)
       .pipe(
         tap(updatedUser => {
           this.authService.updateUserInStorage(updatedUser);

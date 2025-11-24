@@ -143,7 +143,7 @@ export class UserProfileForm implements OnInit {
         // Fallback: if no username in route, redirect to logged-in user's profile
         const currentUsername = this.authService.currentUser()?.username;
         if (currentUsername) {
-          this.router.navigate(['/profile', currentUsername]);
+          this.router.navigate(['/user', currentUsername]);
         }
       }
     });
@@ -263,7 +263,7 @@ export class UserProfileForm implements OnInit {
             customSalutation: user.salutation,
           });
 
-          this.showCustomSalutation.set(false);
+          this.showCustomSalutation.set(true);
         } else {
           this.salutations = environment.defaultSalutations;
 
@@ -407,12 +407,28 @@ export class UserProfileForm implements OnInit {
       return;
     }
 
+    // if the field to update is customSalutation, actually set the salutation to the value of customSalutation
+    fieldName = fieldName === 'customSalutation' ? 'salutation' : fieldName;
+
     this.userProfileService.updateField(fieldName, value).subscribe({
-      next: () => {
+      next: (response) => {
         console.log(`${fieldName} updated successfully`);
+
+        this.updateForm.patchValue({ [fieldName]: value });
         const fields = this.editingFields();
         fields.delete(fieldName);
         this.editingFields.set(new Set(fields));
+
+        // Update the logged-in user's data in AuthService
+        this.authService.currentUser.set(response);
+
+        // Navigate to new username URL
+        if (fieldName === 'username') {
+          this.router.navigate(['/user', response.username], { replaceUrl: true });
+          return;
+        }
+
+        this.loadUserProfile(response.username);
       },
       error: (err) => {
         console.error(`Failed to update ${fieldName}:`, err);
@@ -425,7 +441,6 @@ export class UserProfileForm implements OnInit {
     const isOther = event.value === 'Other';
     this.showCustomSalutation.set(isOther);
 
-    // Only save if not "Other"
     if (!isOther) {
       this.saveField('salutation');
     }
