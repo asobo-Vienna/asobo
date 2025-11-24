@@ -37,9 +37,13 @@
   color: $grayish-blue;
 }
 
+.event-image-container {
+  position: relative;
+}
+
 .event-badge {
   position: absolute;
-  top: 10rem;
-  left: 6rem;
+  top: 1rem;
+  left: 2rem;
   z-index: 10;
 }
