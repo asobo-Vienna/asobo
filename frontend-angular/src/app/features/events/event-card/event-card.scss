@@ -43,6 +43,7 @@ $event-card-height: 50vh;
 }
 
 .card-image-container {
+  position: relative;
   height: 23vh;
   width: 100%;
   overflow: hidden;
@@ -51,8 +52,16 @@ $event-card-height: 50vh;
 }
 
 .card-image-container img {
+  position: relative;
   height: 100%;
   width: 100%;
   object-fit: cover;       /* ensures image fills container without distortion */
   display: block;
+}
+
+.event-badge {
+  position: absolute;
+  top: 0.7rem;
+  left: 0.7rem;
+  z-index: 10;
 }
