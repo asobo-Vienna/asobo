@@ -61,7 +61,6 @@ public class AdminService {
 
     public List<MediumWithEventTitleDTO> getAllMediaWithEventTitle() {
         List<MediumWithEventTitle> mediaListWithEventTitles = this.mediumRepository.findAllMediaWithEventTitle();
-        System.out.println(mediaListWithEventTitles);
         return this.mediumWithEventTitleToMediumWithEventTitleDTOMapper.toDTOList(mediaListWithEventTitles);
     }
 }
