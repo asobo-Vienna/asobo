@@ -3,6 +3,7 @@
 <p-table [value]="comments()">
   <ng-template pTemplate="header">
     <tr>
+      <th scope="col" aria-label="ID">ID</th>
       <th scope="col" aria-label="Username">Username</th>
       <th scope="col" aria-label="Text">Text</th>
       <th scope="col" aria-label="Event Title">Event Title</th>
@@ -15,8 +16,9 @@
 
   <ng-template pTemplate="body" let-comment>
     <tr>
+      <td>{{ comment.userComment.id }}</td>
       <td>{{ comment.userComment.username }}</td>
-      <td>"{{ comment.userComment.text }}"</td>
+      <td>{{ comment.userComment.text }}</td>
       <td>{{ comment.eventTitle }}</td>
       <td>{{ comment.userComment.creationDate | date:'yyyy-MM-dd hh:mm a'}}</td>
 

@@ -1,1 +1,50 @@
 <h2 class="component">All Media</h2>
+
+<p-table [value]="mediaItems()">
+  <ng-template pTemplate="header">
+    <tr>
+      <th scope="col"></th>
+      <th scope="col" aria-label="Id">ID</th>
+      <th scope="col" aria-label="Event Title">Event Title</th>
+      <th scope="col" aria-label="Edit"></th>
+      <th scope="col" aria-label="Delete"></th>
+    </tr>
+  </ng-template>
+
+  <ng-template pTemplate="body" let-mediaItem>
+    <tr>
+      <td>
+        <img
+          [src]="
+            UrlUtilService.getMediaUrl(
+              mediaItem.medium.mediumURI || environment.eventDummyCoverPicRelativeUrl
+            )
+          "
+          [alt]="mediaItem.medium.caption"
+          class="mediaItem-thumbnail"
+        />
+      </td>
+      <td>{{ mediaItem.medium.id }}</td>
+      <td>
+        <a [routerLink]="getEventRouterLink(mediaItem.medium.eventId)">{{ mediaItem.eventTitle }}</a>
+      </td>
+
+      <td>
+        <i
+          class="pi pi-pencil clickable"
+          title="Edit"
+          (click)="onEdit(mediaItem)"
+          aria-label="Edit medium"
+        ></i>
+      </td>
+      <td>
+        <i
+          class="pi pi-trash clickable"
+          title="Delete"
+          (click)="onDelete(mediaItem)"
+          aria-label="Delete medium"
+        ></i>
+      </td>
+    </tr>
+  </ng-template>
+</p-table>
