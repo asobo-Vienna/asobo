@@ -15,21 +15,36 @@
     <tr>
       <td>
         <img
-          [src]="UrlUtilService.getMediaUrl(mediaItem.medium.mediumURI || environment.eventDummyCoverPicRelativeUrl)"
+          [src]="
+            UrlUtilService.getMediaUrl(
+              mediaItem.medium.mediumURI || environment.eventDummyCoverPicRelativeUrl
+            )
+          "
           [alt]="mediaItem.medium.caption"
           class="mediaItem-thumbnail"
         />
       </td>
-      <td>"{{ mediaItem.medium.id }}"</td>
-      <td>{{ mediaItem.eventTitle }}</td>
+      <td>{{ mediaItem.medium.id }}</td>
+      <td>
+        <a [routerLink]="getEventRouterLink(mediaItem.medium.eventId)">{{ mediaItem.eventTitle }}</a>
+      </td>
 
       <td>
-        <i class="pi pi-pencil clickable" title="Edit" (click)="onEdit(mediaItem)" aria-label="Edit medium"></i>
+        <i
+          class="pi pi-pencil clickable"
+          title="Edit"
+          (click)="onEdit(mediaItem)"
+          aria-label="Edit medium"
+        ></i>
       </td>
       <td>
-        <i class="pi pi-trash clickable" title="Delete" (click)="onDelete(mediaItem)" aria-label="Delete medium"></i>
+        <i
+          class="pi pi-trash clickable"
+          title="Delete"
+          (click)="onDelete(mediaItem)"
+          aria-label="Delete medium"
+        ></i>
       </td>
     </tr>
   </ng-template>
 </p-table>
-

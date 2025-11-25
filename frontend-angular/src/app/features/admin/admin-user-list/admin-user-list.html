@@ -7,6 +7,7 @@
             <th scope="col" aria-label="Username">Username</th>
             <th scope="col" aria-label="Email">Email</th>
             <th scope="col" aria-label="Name">Name</th>
+            <th scope="col" aria-label="ID">ID</th>
             <th scope="col" aria-label="Registered">Registered</th>
             <th scope="col" aria-label="Active">Active</th>
             <th scope="col" aria-label="Location">Location</th>
@@ -30,7 +31,7 @@
             <td>{{ user.username }}</td>
             <td>{{ user.email }}</td>
             <td>{{ user.firstName }} {{ user.surname }}</td>
-
+            <td>{{ user.id }}</td>
             <td>{{ user.registerDate | date:'yyyy-MM-dd' }}</td>
 
             <td>

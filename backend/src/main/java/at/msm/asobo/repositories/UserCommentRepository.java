@@ -27,5 +27,5 @@ public interface UserCommentRepository extends JpaRepository<UserComment, UUID> 
 
     @Query("SELECT c as comment, e.title as eventTitle " +
             "FROM UserComment c JOIN c.event e")
-    List<UserCommentWithEventTitle> findAllCommentsWithEventTitles();
+    List<UserCommentWithEventTitle> findAllCommentsWithEventTitle();
 }

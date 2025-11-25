@@ -55,12 +55,13 @@ public class AdminService {
     }
 
     public List<UserCommentWithEventTitleDTO> getAllUserCommentsWithEventTitle() {
-        List<UserCommentWithEventTitle> userCommentsWithEventTitles = this.userCommentRepository.findAllCommentsWithEventTitles();
+        List<UserCommentWithEventTitle> userCommentsWithEventTitles = this.userCommentRepository.findAllCommentsWithEventTitle();
         return this.userCommentWithEventTitleToUserCommentWithEventTitleDTOMapper.toDTOList(userCommentsWithEventTitles);
     }
 
     public List<MediumWithEventTitleDTO> getAllMediaWithEventTitle() {
-        List<MediumWithEventTitle> mediaListWithEventTitles = this.mediumRepository.findAllMediaWithEventTitles();
+        List<MediumWithEventTitle> mediaListWithEventTitles = this.mediumRepository.findAllMediaWithEventTitle();
+        System.out.println(mediaListWithEventTitles);
         return this.mediumWithEventTitleToMediumWithEventTitleDTOMapper.toDTOList(mediaListWithEventTitles);
     }
 }

@@ -2,7 +2,6 @@ package at.msm.asobo.repositories;
 
 import at.msm.asobo.entities.Medium;
 import at.msm.asobo.interfaces.MediumWithEventTitle;
-import at.msm.asobo.interfaces.UserCommentWithEventTitle;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -22,5 +21,5 @@ public interface MediumRepository extends JpaRepository<Medium, UUID> {
 
     @Query("SELECT m as medium, e.title as eventTitle " +
             "FROM Medium m JOIN m.event e")
-    List<MediumWithEventTitle> findAllMediaWithEventTitles();
+    List<MediumWithEventTitle> findAllMediaWithEventTitle();
 }

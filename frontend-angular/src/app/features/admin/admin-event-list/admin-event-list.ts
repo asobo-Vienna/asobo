@@ -1,5 +1,4 @@
 import {Component, inject, signal} from '@angular/core';
-import {AdminService} from '../services/admin-service';
 import {Event} from '../../events/models/event';
 import {environment} from '../../../../environments/environment';
 import {RouterLink} from '@angular/router';

@@ -5,12 +5,14 @@ import {environment} from '../../../../environments/environment';
 import {UrlUtilService} from '../../../shared/utils/url/url-util-service';
 import {AdminService} from '../services/admin-service';
 import {MediaItem} from '../../events/models/media-item';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-admin-media-list',
     imports: [
         PrimeTemplate,
-        TableModule
+        TableModule,
+        RouterLink
     ],
   templateUrl: './admin-media-list.html',
   styleUrl: './admin-media-list.scss',
@@ -37,8 +39,8 @@ export class AdminMediaList {
     console.log('Deleting media item:', mediaItems);
   }
 
-  getUserRouterLink(username: string): string {
-    return `${environment.userProfileBaseUrl}${username}`;
+  getEventRouterLink(eventId: string): string {
+    return `${environment.eventsSectionBaseUrl}/${eventId}`;
   }
 
   protected readonly environment = environment;
