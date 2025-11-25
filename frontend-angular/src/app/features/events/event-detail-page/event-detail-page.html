@@ -2,19 +2,18 @@
 <div class="row text-start">
   <!-- Image column -->
   <div class="col-md-6 event-image-container">
-
     <img
       class="card-img-top"
       [src]="UrlUtilService.getMediaUrl(pictureURI || environment.eventDummyCoverPicRelativeUrl)"
       alt="{{ title }}"
     />
     @if (authService.isLoggedIn()) {
-      <p-tag
-        class="event-badge"
-        [icon]="this.isPrivate ? 'pi pi-lock' : 'pi pi-globe'"
-        [severity]="this.isPrivate ? 'warn' : 'success'"
-        [value]="this.isPrivate ? 'Private' : 'Public'"
-      />
+    <p-tag
+      class="event-badge"
+      [icon]="this.isPrivate ? 'pi pi-lock' : 'pi pi-globe'"
+      [severity]="this.isPrivate ? 'warn' : 'success'"
+      [value]="this.isPrivate ? 'Private' : 'Public'"
+    />
     }
   </div>
 
@@ -37,10 +36,11 @@
           </div>
         </div>
         <div class="col-md-4">
-          @if(authService.isLoggedIn()) { @if(isUserAlreadyPartOfEvent()) {
-          <a class="btn btn-purple imin-btn" (click)="joinOrLeaveEvent()">I'm out!</a>
-          } @else {
-          <a class="btn btn-purple imin-btn" (click)="joinOrLeaveEvent()">I'm in!</a>
+          @if(authService.isLoggedIn()) {
+            @if(isUserAlreadyPartOfEvent()) {
+              <a class="btn btn-purple imin-btn" (click)="joinOrLeaveEvent()">I'm out!</a>
+            } @else {
+              <a class="btn btn-purple imin-btn" (click)="joinOrLeaveEvent()">I'm in!</a>
           } }
         </div>
         <div class="col-md-8"><!-- spacer --></div>
