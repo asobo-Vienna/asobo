@@ -2,19 +2,20 @@
 <div class="row text-start">
   <!-- Image column -->
   <div class="col-md-6 event-image-container">
-    
+
     <img
       class="card-img-top"
       [src]="UrlUtilService.getMediaUrl(pictureURI || environment.eventDummyCoverPicRelativeUrl)"
       alt="{{ title }}"
     />
-    <p-tag
-      class="event-badge"
-      [icon]="this.isPrivate ? 'pi pi-lock' : 'pi pi-globe'"
-      [severity]="this.isPrivate ? 'warn' : 'success'"
-      [value]="this.isPrivate ? 'Private' : 'Public'"
-    >
-    </p-tag>
+    @if (authService.isLoggedIn()) {
+      <p-tag
+        class="event-badge"
+        [icon]="this.isPrivate ? 'pi pi-lock' : 'pi pi-globe'"
+        [severity]="this.isPrivate ? 'warn' : 'success'"
+        [value]="this.isPrivate ? 'Private' : 'Public'"
+      />
+    }
   </div>
 
   <!-- Event Info Column -->
