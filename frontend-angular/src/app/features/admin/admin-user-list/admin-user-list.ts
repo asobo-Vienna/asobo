@@ -22,13 +22,18 @@ import {environment} from '../../../../environments/environment';
 export class AdminUserList implements OnInit {
   private adminService = inject(AdminService);
   users = signal<User[]>([]);
+  loading = true;
 
   ngOnInit(): void {
       this.adminService.getAllUsers().subscribe({
         next: (users) => {
           this.users.set(users);
+          this.loading = false;
         },
-        error: (err) => console.error('Error fetching users:', err)
+        error: (err) => {
+          console.error('Error fetching users:', err);
+          this.loading = false;
+        }
       });
       return;
   }
