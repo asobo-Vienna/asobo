@@ -27,7 +27,22 @@
   }
 }
 
-::ng-deep .p-paginator-page.p-paginator-page-selected {
-  background: $asobo-purple;
-  color: white;
+::ng-deep {
+  .p-paginator-page {
+    background-color: transparent;
+  }
+
+  .p-paginator-page.p-paginator-page-selected {
+    background: $asobo-purple;
+    color: white;
+
+    &:hover {
+      background: $asobo-purple-transparent-85;
+    }
+  }
+
+  .p-paginator-page:not(.p-disabled):not(.p-paginator-page-selected):hover {
+    background: $asobo-purple-transparent-65;
+    color: white;
+  }
 }
