@@ -8,12 +8,12 @@
       alt="{{ title }}"
     />
     @if (authService.isLoggedIn()) {
-    <p-tag
-      class="event-badge"
-      [icon]="this.isPrivate ? 'pi pi-lock' : 'pi pi-globe'"
-      [severity]="this.isPrivate ? 'warn' : 'success'"
-      [value]="this.isPrivate ? 'Private' : 'Public'"
-    />
+      <p-tag
+        class="event-badge"
+        [icon]="this.isPrivate ? 'pi pi-lock' : 'pi pi-globe'"
+        [severity]="this.isPrivate ? 'warn' : 'success'"
+        [value]="this.isPrivate ? 'Private' : 'Public'"
+      />
     }
   </div>
 
