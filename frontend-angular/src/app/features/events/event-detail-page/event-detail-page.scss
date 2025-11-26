@@ -36,3 +36,15 @@
 .date-font-color {
   color: $grayish-blue;
 }
+
+.event-image-container {
+  position: relative;
+}
+
+.event-badge {
+  position: absolute;
+  top: 5%;
+  left: 5%;
+  z-index: 10;
+  filter: drop-shadow(1px 1px 2px);
+}
