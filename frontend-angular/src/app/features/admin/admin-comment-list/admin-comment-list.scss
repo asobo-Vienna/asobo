@@ -29,4 +29,7 @@
   }
 }
 
-
+::ng-deep .p-paginator-page.p-paginator-page-selected {
+  background: $asobo-purple;
+  color: white;
+}

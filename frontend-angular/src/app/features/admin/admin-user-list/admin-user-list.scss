@@ -26,3 +26,8 @@
     font-size: 1rem;
   }
 }
+
+::ng-deep .p-paginator-page.p-paginator-page-selected {
+  background: $asobo-purple;
+  color: white;
+}
