@@ -1,12 +1,16 @@
 import { Component, EventEmitter, inject, Input, Output, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { ButtonModule } from 'primeng/button';
+import { TextareaModule } from 'primeng/textarea';
 import { CommentService } from '../services/comment-service';
 import { ActivatedRoute } from '@angular/router';
 import { Comment } from '../models/comment';
 
 @Component({
   selector: 'app-edit-comment',
-  imports: [FormsModule],
+  imports: [FormsModule, 
+    ButtonModule, 
+    TextareaModule],
   templateUrl: './edit-comment.html',
   styleUrl: './edit-comment.scss',
 })

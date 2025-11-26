@@ -1,5 +1,15 @@
-<div class="d-flex gap-2">
-  <textarea [(ngModel)]="text" class="form-control" rows="1"></textarea>
-  <button class="btn btn-purple" (click)="save()">Save</button>
-  <button class="btn btn-secondary" (click)="text.set(comment.text)">Cancel</button>
+<div class="flex gap-2">
+  <textarea [(ngModel)]="text" rows="1" autoResize="true"></textarea>
+
+  <p-button 
+    label="Save"
+    styleClass="p-button-primary"
+    (onClick)="save()">
+  </p-button>
+
+  <p-button 
+    label="Cancel"
+    styleClass="p-button-secondary"
+    (onClick)="text.set(comment.text)">
+  </p-button>
 </div>
