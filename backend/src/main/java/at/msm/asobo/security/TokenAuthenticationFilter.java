@@ -17,9 +17,11 @@ import java.util.List;
 public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
+    private final CustomUserDetailsService customUserDetailsService;
 
-    public TokenAuthenticationFilter(JwtUtil jwtUtil) {
+    public TokenAuthenticationFilter(JwtUtil jwtUtil, CustomUserDetailsService customUserDetailsService) {
         this.jwtUtil = jwtUtil;
+        this.customUserDetailsService = customUserDetailsService;
     }
 
     @Override
@@ -47,14 +49,9 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
             if (jwtUtil.validateToken(token)) {
                 // extract info from token
                 String username = jwtUtil.getUsernameFromToken(token);
-                String userId = jwtUtil.getUserIdFromToken(token);
+                //String userId = jwtUtil.getUserIdFromToken(token);
 
-                UserPrincipal userPrincipal = new UserPrincipal(
-                        userId,
-                        username,
-                        null,
-                        List.of(new SimpleGrantedAuthority("ROLE_USER")) // adjust roles later
-                );
+                UserPrincipal userPrincipal = (UserPrincipal) customUserDetailsService.loadUserByUsername(username);
 
                 UserPrincipalAuthenticationToken authentication =
                         new UserPrincipalAuthenticationToken(userPrincipal);

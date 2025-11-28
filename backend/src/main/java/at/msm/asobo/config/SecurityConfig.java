@@ -74,10 +74,11 @@ public class SecurityConfig {
         http.formLogin(AbstractHttpConfigurer::disable);
 
         http.authorizeHttpRequests(registry -> registry
+                .requestMatchers("/api/roles/**").hasAnyRole("ADMIN", "SUPERADMIN")
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/api/events/**").permitAll()
-                .requestMatchers("/api/users/**").hasAnyRole("USER", "ADMIN")
-                .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                .requestMatchers("/api/users/**").hasAnyRole("USER", "ADMIN", "SUPERADMIN")
+                .requestMatchers("/api/admin/**").hasAnyRole("ADMIN", "SUPERADMIN")
                 .requestMatchers("/**").permitAll()
                 //.requestMatchers("/api/**").permitAll() // TODO: remove later, otherwise all api endpoints are open
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()

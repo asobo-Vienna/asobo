@@ -8,6 +8,7 @@ import {environment} from '../../../../environments/environment';
 import {jwtDecode} from 'jwt-decode';
 import {UserProfile} from '../../users/user-profile/models/user-profile-model';
 import {UrlUtilService} from '../../../shared/utils/url/url-util-service';
+import {Role} from '../../../shared/enums/Role';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -178,6 +179,25 @@ export class AuthService {
       username: user?.username || 'Guest'
     };
   });
+
+  getUserRoles(): string[] {
+    const token = this.getToken();
+    if (!token) return [];
+
+    try {
+      const decoded: any = jwtDecode(token);
+      console.log("roles: ", decoded.roles);
+      return decoded.roles || [];
+    } catch (error) {
+      console.error('Error decoding token for roles:', error);
+      return [];
+    }
+  }
+
+  hasAdminAccess(): boolean {
+    return this.getUserRoles().some(role => [Role.ADMIN, Role.SUPERADMIN].includes(role as Role));
+  }
+
 
   // Refresh user data from backend
   /*refreshUser(): Observable<User> {

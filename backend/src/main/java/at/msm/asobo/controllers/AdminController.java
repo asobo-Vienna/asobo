@@ -4,6 +4,7 @@ import at.msm.asobo.dto.comment.UserCommentWithEventTitleDTO;
 import at.msm.asobo.dto.medium.MediumWithEventTitleDTO;
 import at.msm.asobo.dto.user.UserFullDTO;
 import at.msm.asobo.services.AdminService;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -12,7 +13,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/admin")
 @PreAuthorize("isAuthenticated()")
-// @Secured("ROLE_ADMIN")
+@Secured("ROLE_ADMIN")
 
 public class AdminController {
     private final AdminService adminService;
