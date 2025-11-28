@@ -1,13 +1,37 @@
 @if (authService.hasAdminAccess()) {
   <h1 class="text-primary component">Admin Section</h1>
 
-  <app-admin-user-list/>
+  <p-tabs [(value)]="selectedTab">
+    <p-tablist>
+      <p-tab value="users">Users</p-tab>
+      <p-tab value="events">Events</p-tab>
+      <p-tab value="comments">Comments</p-tab>
+      <p-tab value="media">Media</p-tab>
+    </p-tablist>
 
-  <app-admin-event-list/>
-
-  <app-admin-comment-list/>
-
-  <app-admin-media-list/>
+    <p-tabpanels>
+      <p-tabpanel value="users">
+      @if (loadedTabs.has('users')) {
+        <app-admin-user-list/>
+      }
+      </p-tabpanel>
+      <p-tabpanel value="events">
+        @if (loadedTabs.has('events')) {
+          <app-admin-event-list/>
+        }
+      </p-tabpanel>
+      <p-tabpanel value="comments">
+        @if (loadedTabs.has('comments')) {
+          <app-admin-comment-list/>
+        }
+      </p-tabpanel>
+      <p-tabpanel value="media">
+        @if (loadedTabs.has('media')) {
+          <app-admin-media-list/>
+        }
+      </p-tabpanel>
+    </p-tabpanels>
+  </p-tabs>
 } @else {
   <p>You are not allowed to access this page.</p>
 }
