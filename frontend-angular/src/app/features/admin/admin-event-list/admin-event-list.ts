@@ -7,6 +7,8 @@ import {EventService} from '../../events/services/event-service';
 import {TableModule} from 'primeng/table';
 import {DatePipe} from '@angular/common';
 import {Tag} from 'primeng/tag';
+import {Dialog} from 'primeng/dialog';
+import {Button} from 'primeng/button';
 
 @Component({
   selector: 'app-admin-event-list',
@@ -14,7 +16,9 @@ import {Tag} from 'primeng/tag';
     RouterLink,
     TableModule,
     DatePipe,
-    Tag
+    Tag,
+    Dialog,
+    Button
   ],
   templateUrl: './admin-event-list.html',
   styleUrl: './admin-event-list.scss',
@@ -22,28 +26,51 @@ import {Tag} from 'primeng/tag';
 export class AdminEventList {
   private eventService = inject(EventService);
   events = signal<Event[]>([]);
+  loading = true;
+
+  // Dialog state
+  showDescriptionDialog = false;
+  selectedEvent: Event | null = null;
 
   ngOnInit(): void {
     this.eventService.getAllEvents().subscribe({
       next: (events) => {
         this.events.set(events);
-        console.log(this.events());
+        this.loading = false;
       },
-      error: (err) => console.error('Error fetching events:', err)
+      error: (err) => {
+        console.error('Error fetching events:', err);
+        this.loading = false;
+      }
     });
-    return;
   }
 
-  onEdit(event: any) {
+  onEdit(event: Event) {
     console.log('Editing event:', event);
   }
 
-  onDelete(event: any) {
+  onDelete(event: Event) {
     console.log('Deleting event:', event);
+  }
+
+  viewFullDescription(event: Event): void {
+    this.selectedEvent = event;
+    this.showDescriptionDialog = true;
   }
 
   getEventRouterLink(eventId: string): string {
     return `${environment.eventsSectionBaseUrl}/${eventId}`;
+  }
+
+  getEventDescriptionPreview(description: string): string {
+    if (description.length > environment.eventDescriptionPreviewLength) {
+      return `${description.substring(0, environment.eventDescriptionPreviewLength - 1)}...`;
+    }
+    return description;
+  }
+
+  shouldShowViewMore(description: string): boolean {
+    return description.length > environment.eventDescriptionPreviewLength;
   }
 
   protected readonly UrlUtilService = UrlUtilService;

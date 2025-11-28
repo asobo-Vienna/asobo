@@ -1,62 +1,155 @@
 <h2 class="component">All Events</h2>
 
-<p-table [value]="events()">
-  <ng-template pTemplate="header">
-    <tr>
-      <th scope="col"></th>
-      <th scope="col" aria-label="ID">ID</th>
-      <th scope="col" aria-label="Title">Title</th>
-      <th scope="col" aria-label="Description">Description</th>
-      <th scope="col" aria-label="Location">Location</th>
-      <th scope="col" aria-label="Date">Date</th>
-      <th scope="col" aria-label="Time">Time</th>
-      <th scope="col" aria-label="Visibility">Visibility</th>
-      <th scope="col" aria-label="Number of participants"># Participants</th>
-      <th scope="col" aria-label="Number of comments"># Comments</th>
-      <th scope="col" aria-label="Edit"></th>
-      <th scope="col" aria-label="Delete"></th>
-    </tr>
+<div class="table-wrapper">
+  <p-table
+    [value]="events()"
+    [loading]="false"
+    [paginator]="true"
+    [rows]="10"
+  >
+    <ng-template pTemplate="header">
+      <tr>
+        <th scope="col"></th>
+        <th scope="col" aria-label="ID">ID</th>
+        <th scope="col" aria-label="Title">Title</th>
+        <th scope="col" aria-label="Description">Description</th>
+        <th scope="col" aria-label="Location">Location</th>
+        <th scope="col" aria-label="Date">Date</th>
+        <th scope="col" aria-label="Time">Time</th>
+        <th scope="col" aria-label="Visibility">Visibility</th>
+        <th scope="col" aria-label="Number of participants"># Participants</th>
+        <th scope="col" aria-label="Number of comments"># Comments</th>
+        <th scope="col" aria-label="Edit"></th>
+        <th scope="col" aria-label="Delete"></th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-event>
+      <tr>
+        <td>
+          <a [routerLink]="getEventRouterLink(event.id)">
+            <img
+              [src]="UrlUtilService.getMediaUrl(event.pictureURI || environment.eventDummyCoverPicRelativeUrl)"
+              [alt]="'Cover picture of the event ' + event.title"
+              class="mediaItem-thumbnail"
+            />
+          </a>
+        </td>
+
+        <td><small>{{ event.id }}</small></td>
+        <td>{{ event.title }}</td>
+
+        <!-- Description with view more button -->
+        <td class="description-cell">
+          <div class="description-preview">
+            {{ getEventDescriptionPreview(event.description) }}
+          </div>
+          @if (shouldShowViewMore(event.description)) {
+            <button
+              type="button"
+              class="view-more-btn"
+              (click)="viewFullDescription(event)"
+              title="View full description">
+              <i class="pi pi-eye"></i>
+              View
+            </button>
+          }
+        </td>
+
+        <td>{{ event.location }}</td>
+        <td>{{ event.date | date:'EEE, MMMM d, y' }}</td>
+        <td>{{ event.date | date:'h:mm a' }}</td>
+
+        <td>
+          <p-tag
+            [icon]="event.isPrivate ? 'pi pi-lock' : 'pi pi-globe'"
+            [severity]="event.isPrivate ? 'warn' : 'success'"
+            [value]="event.isPrivate ? 'Private' : 'Public'">
+          </p-tag>
+        </td>
+
+        <td>{{ event.participants.length }}</td>
+        <td>{{ event.comments.length }}</td>
+
+        <td>
+          <i class="pi pi-pencil clickable" title="Edit" (click)="onEdit(event)" aria-label="Edit event"></i>
+        </td>
+        <td>
+          <i class="pi pi-trash clickable" title="Delete" (click)="onDelete(event)" aria-label="Delete event"></i>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+
+  @if (loading) {
+    <div class="loader-overlay">
+      <div class="loader-content">
+        <i class="pi pi-spin pi-spinner"></i>
+        <p>Loading events...</p>
+      </div>
+    </div>
+  }
+</div>
+
+<!-- Description Dialog -->
+<p-dialog
+  [(visible)]="showDescriptionDialog"
+  [header]="selectedEvent?.title"
+  [modal]="true"
+  [style]="{width: '600px', maxWidth: '90vw'}"
+  [dismissableMask]="true"
+  [draggable]="false"
+  [resizable]="false">
+
+  <div class="dialog-content">
+    <!-- Event image -->
+    @if (selectedEvent) {
+      <img
+        [src]="UrlUtilService.getMediaUrl(selectedEvent.pictureURI || environment.eventDummyCoverPicRelativeUrl)"
+        [alt]="'Cover picture of ' + selectedEvent.title"
+        class="dialog-image"
+      />
+    }
+
+    <!-- Full description -->
+    <div class="full-description">
+      <h4>Description</h4>
+      <p>{{ selectedEvent?.description }}</p>
+    </div>
+
+    <!-- Additional info -->
+    <div class="event-details">
+      <div class="detail-row">
+        <i class="pi pi-map-marker"></i>
+        <span>{{ selectedEvent?.location }}</span>
+      </div>
+      <div class="detail-row">
+        <i class="pi pi-calendar"></i>
+        <span>{{ selectedEvent?.date | date:'EEE, MMMM d, y' }}</span>
+      </div>
+      <div class="detail-row">
+        <i class="pi pi-clock"></i>
+        <span>{{ selectedEvent?.date | date:'h:mm a' }}</span>
+      </div>
+    </div>
+  </div>
+
+  <ng-template pTemplate="footer">
+    <div class="dialog-footer-buttons">
+      <p-button
+        label="Close"
+        icon="pi pi-times"
+        (onClick)="showDescriptionDialog = false"
+        styleClass="p-button-text"
+      >
+      </p-button>
+      <p-button
+        label="View Event"
+        icon="pi pi-external-link"
+        [routerLink]="getEventRouterLink(selectedEvent!.id)"
+        (onClick)="showDescriptionDialog = false"
+      >
+      </p-button>
+    </div>
   </ng-template>
-
-  <ng-template pTemplate="body" let-event>
-    <tr>
-      <td>
-        <a [routerLink]="getEventRouterLink(event.id)">
-          <img
-            [src]="UrlUtilService.getMediaUrl(event.pictureURI || environment.eventDummyCoverPicRelativeUrl)"
-            [alt]="'Cover picture of the event ' + event.title"
-            class="mediaItem-thumbnail"
-          />
-        </a>
-      </td>
-
-      <td>{{ event.id }}</td>
-      <td>{{ event.title }}</td>
-      <td>{{ event.description }}</td>
-      <td>{{ event.location }}</td>
-
-      <td>{{ event.date | date:'EEE, MMMM d, y' }}</td>
-
-      <td>{{ event.date | date:'h:mm a' }}</td>
-
-      <td>
-        <p-tag
-          [icon]="event.isPrivate ? 'pi pi-lock' : 'pi pi-globe'"
-          [severity]="event.isPrivate ? 'warn' : 'success'"
-          [value]="event.isPrivate ? 'Private' : 'Public'">
-        </p-tag>
-      </td>
-
-      <td>{{ event.participants.length }}</td>
-
-      <td>{{ event.comments.length }}</td>
-
-      <td>
-        <i class="pi pi-pencil clickable" title="Edit" (click)="onEdit(event)" aria-label="Edit event"></i>
-      </td>
-      <td>
-        <i class="pi pi-trash clickable" title="Delete" (click)="onDelete(event)" aria-label="Delete event"></i>
-      </td>
-    </tr>
-  </ng-template>
-</p-table>
+</p-dialog>

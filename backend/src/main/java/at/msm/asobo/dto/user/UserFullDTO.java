@@ -2,9 +2,11 @@ package at.msm.asobo.dto.user;
 
 import at.msm.asobo.dto.comment.UserCommentDTO;
 import at.msm.asobo.dto.event.EventDTO;
+import at.msm.asobo.entities.Role;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 public class UserFullDTO {
@@ -17,6 +19,7 @@ public class UserFullDTO {
     private List<EventDTO> createdEvents;
     private List<EventDTO> attendedEvents;
     private List<UserCommentDTO> comments;
+    private Set<RoleDTO> roles;
     private String pictureURI;
     private String location;
     private LocalDateTime registerDate;
@@ -137,5 +140,21 @@ public class UserFullDTO {
 
     public void setAboutMe(String aboutMe) {
         this.aboutMe = aboutMe;
+    }
+
+    public Set<RoleDTO> getRoles() {
+        return this.roles;
+    }
+
+    public void setRoles(Set<RoleDTO> roles) {
+        this.roles = roles;
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
     }
 }

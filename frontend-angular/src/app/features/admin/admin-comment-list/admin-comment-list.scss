@@ -1,1 +1,50 @@
+@use 'variables' as *;
 
+.loader-overlay {
+  position: absolute;
+  inset: 0;
+
+  // Main flex container centers everything
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+
+  background: rgba(255, 255, 255, 0.95);
+  z-index: 100;
+
+  // Make the content itself a column
+  flex-direction: column;
+  gap: 1rem; // Space between spinner and text
+
+  i {
+    font-size: 3rem;
+    color: $asobo-purple;
+  }
+
+  p {
+    margin: 0;
+    color: #666;
+    font-size: 1rem;
+  }
+}
+
+::ng-deep {
+  .p-paginator-page {
+    background-color: transparent;
+  }
+
+  .p-paginator-page.p-paginator-page-selected {
+    background: $asobo-purple;
+    color: white;
+
+    &:hover {
+      background: $asobo-purple-transparent-85;
+    }
+  }
+
+  .p-paginator-page:not(.p-disabled):not(.p-paginator-page-selected):hover {
+    background: $asobo-purple-transparent-65;
+    color: white;
+  }
+}

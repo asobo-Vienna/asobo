@@ -29,6 +29,10 @@ a {
   opacity: 0.8;
 }
 
+.a-clickable:hover {
+  text-decoration: underline;
+}
+
 .btn-purple {
   color: white;
   background-color: $asobo-purple !important;
@@ -100,6 +104,10 @@ a.btn-purple {
   margin-right: 0.5rem;
   filter: drop-shadow(2px 2px 3px gray);
   transition: transform .2s;
+}
+
+.mediaItem-thumbnail:hover {
+  transform: scale(1.1);
 }
 
 .event-picture-box {

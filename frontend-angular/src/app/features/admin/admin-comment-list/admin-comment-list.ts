@@ -22,13 +22,18 @@ import { RouterLink } from '@angular/router';
 export class AdminCommentList implements OnInit {
   private adminService = inject(AdminService);
   comments = signal<CommentWithEventTitle[]>([]);
+  loading = true;
 
   ngOnInit(): void {
     this.adminService.getAllCommentsWithEventTitle().subscribe({
       next: (comments) => {
         this.comments.set(comments);
+        this.loading = false;
       },
-      error: (err) => console.error('Error fetching comments:', err)
+      error: (err) => {
+        console.error('Error fetching comments:', err);
+        this.loading = false;
+      }
     });
     return;
   }
