@@ -17,6 +17,7 @@
         <th scope="col" aria-label="Registered">Registered</th>
         <th scope="col" aria-label="Active">Active</th>
         <th scope="col" aria-label="Location">Location</th>
+        <th scope="col" aria-label="Roles">Roles</th>
         <th scope="col" aria-label="Edit"></th>
         <th scope="col" aria-label="Delete"></th>
       </tr>
@@ -48,6 +49,12 @@
         </td>
 
         <td>{{ user.location }}</td>
+
+        <td>
+          <div class="flex flex-col gap-1">
+            <p-multiselect [options]="user.roles" optionLabel="name" placeholder="Select Roles" [fluid]="true"></p-multiselect>
+          </div>
+        </td>
 
         <td>
           <i class="pi pi-user-edit clickable" title="Edit" (click)="onEdit(user)" aria-label="Edit user"></i>

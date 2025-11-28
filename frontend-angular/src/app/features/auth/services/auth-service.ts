@@ -186,7 +186,6 @@ export class AuthService {
 
     try {
       const decoded: any = jwtDecode(token);
-      console.log("roles: ", decoded.roles);
       return decoded.roles || [];
     } catch (error) {
       console.error('Error decoding token for roles:', error);
