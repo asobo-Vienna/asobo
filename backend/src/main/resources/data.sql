@@ -1,5 +1,6 @@
-INSERT INTO users (is_active,register_date,id,pictureuri,email,first_name,"location",old_password,"password",salutation,surname,username) VALUES
+INSERT INTO users (is_active,register_date,id,pictureuri,email,first_name,"location",old_password,"password",salutation,surname,username,about_me) VALUES
 	 (true,'2025-06-21 12:28:08.064861','7da69d8e-55c7-4a96-ac6d-cb207e4e8a21'::uuid,'/uploads/profile-pictures/4f4c9853-29e5-4d05-95c7-d85efc034fe8_harley.jpg','harley@haha.com','Harleen','Brooklyn, NY',NULL,'$2a$10$pPa/hEuxrOOfAOga7LBU4uXhL7n6zb/tHzuLHZzAeREBrGATRfH8i','female','Quinzel','harley'),
+	 (true,'2025-09-19 19:18:36.430076','e2540d46-4540-4223-b07c-78421260c91e'::uuid,'/uploads/profile-pictures/138e74d0-71b1-430a-92da-0943ae388170_skeletor2.jpg','skeletor@mastersoftheuniverse.com','Skele','Universe',NULL,'$2a$10$oN8WOlONNLGwn9uRRfId3OqMsQzoNgkrV2PsSNqKPCOgA21RUJy0i','Master','Tor','skeletor','I am the mighty Skeletor, right?'),
 	 (true,'2025-06-21 11:04:07.308963','cb0d70b4-8ac6-4045-8a77-55be2583f2a8'::uuid,'/uploads/profile-pictures/6eaaa0c2-0e78-4171-a069-5e5fda5794d8_batman.jpg','batman@batcave.com','Bruce','Gotham City, NJ',NULL,'$2a$10$5w1WYzs.b9TG2owTTE6c2eKgbsuJ3UuDlLYhdsOrC4RPIiZBxOzBC','male','Wayne','batman'),
 	 (true,'2025-06-21 12:48:46.048244','7767118c-19bd-4c28-8129-c0abda74b46c'::uuid,'/uploads/profile-pictures/67314290-8700-4f0f-94f4-0da7ed05dbf4_gg.jpg','gg@ggallin.com','GG','Lancaster, NH',NULL,'$2a$10$D8rKBvbxlFu6aqbGBJhO1edbYgGL61uqxnbKqEeKnvOuX4PcWZbZK','male','Allin','ggallin'),
 	 (true,'2025-06-22 17:07:37.69455','a4235f35-d4b9-4d31-b4f1-91b8a6436d98'::uuid,'/uploads/profile-pictures/c0e1d8e9-b9d1-4060-a893-79b148366010_eltonjohn.jpg','elton@john.co.uk','Elton','London',NULL,'$2a$10$oN8WOlONNLGwn9uRRfId3OqMsQzoNgkrV2PsSNqKPCOgA21RUJy0i','male','John','sireltonjohn'),
@@ -10,6 +11,31 @@ INSERT INTO users (is_active,register_date,id,pictureuri,email,first_name,"locat
 	 (false,'2025-07-06 23:59:05.635171','f18e96c7-6416-4f51-87d5-4cd229715933'::uuid,'/uploads/profile-pictures/f18e96c7-6416-4f51-87d5-4cd229715933_blackknight.jpg','knight@black.co.uk','Black','Wales',NULL,'$2a$10$oN8WOlONNLGwn9uRRfId3OqMsQzoNgkrV2PsSNqKPCOgA21RUJy0i','Mr.','Knight','blackknight'),
 	 (false,'2025-07-07 00:04:49.973131','3fb77b1c-8670-40a2-929b-2b021f6e3e61'::uuid,'/uploads/profile-pictures/0c6e58ad-9426-46ef-8762-b8050317485e_waynearnold.jpg','wayne@arnold.com','Wayne','Sunnyville',NULL,'$2a$10$oN8WOlONNLGwn9uRRfId3OqMsQzoNgkrV2PsSNqKPCOgA21RUJy0i','Mr.','Arnold','wayne'),
 	 (false,'2025-07-11 18:18:58.15966','91740f77-0b27-4db8-a4b8-5b2b62a25664'::uuid,'/uploads/profile-pictures/911ae559-2c12-44d3-bd50-9b556e6d3885_franzi.jpg','fuenfer@wienerlinien.at','Franzi','Wien',NULL,'$2a$10$oN8WOlONNLGwn9uRRfId3OqMsQzoNgkrV2PsSNqKPCOgA21RUJy0i','Mr.','Mayerhofer','5er')
+ON CONFLICT (id) DO NOTHING;
+
+INSERT INTO role(id, name) VALUES
+    (0, 'SUPERADMIN'),
+    (1, 'ADMIN'),
+    (2, 'USER'),
+ON CONFLICT (id) DO NOTHING;
+
+INSERT INTO user_roles(user_id, role_id) VALUES
+    ('7da69d8e-55c7-4a96-ac6d-cb207e4e8a21'::uuid, 0),
+    ('7da69d8e-55c7-4a96-ac6d-cb207e4e8a21'::uuid, 1),
+    ('7da69d8e-55c7-4a96-ac6d-cb207e4e8a21'::uuid, 2),
+    ('e2540d46-4540-4223-b07c-78421260c91e'::uuid, 0),
+    ('e2540d46-4540-4223-b07c-78421260c91e'::uuid, 1),
+    ('e2540d46-4540-4223-b07c-78421260c91e'::uuid, 2),
+    ('cb0d70b4-8ac6-4045-8a77-55be2583f2a8'::uuid, 2),
+    ('7767118c-19bd-4c28-8129-c0abda74b46c'::uuid, 2),
+    ('a4235f35-d4b9-4d31-b4f1-91b8a6436d98'::uuid, 2),
+    ('01a26044-6c60-40b6-a449-c72b0d240503'::uuid, 2),
+    ('f75d02b0-ca03-4c0d-af93-acae8aea85f7'::uuid, 2),
+    ('9d6fa8e4-fd6d-4c25-9439-8ee91077cf47'::uuid, 2),
+    ('d8c038cc-4965-437f-ac37-4865ba4510dd'::uuid, 2),
+    ('f18e96c7-6416-4f51-87d5-4cd229715933'::uuid, 2),
+    ('3fb77b1c-8670-40a2-929b-2b021f6e3e61'::uuid, 2),
+    ('91740f77-0b27-4db8-a4b8-5b2b62a25664'::uuid, 2),
 ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO event (creation_date,"date",modification_date,creator_id,id,pictureuri,description,"location",title) VALUES
