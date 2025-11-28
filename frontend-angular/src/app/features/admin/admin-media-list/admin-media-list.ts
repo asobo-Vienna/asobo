@@ -20,13 +20,18 @@ import { RouterLink } from '@angular/router';
 export class AdminMediaList {
   private adminService = inject(AdminService);
   mediaItems = signal<MediaItem[]>([]);
+  loading = true;
 
   ngOnInit(): void {
     this.adminService.getAllMedia().subscribe({
       next: (mediaItems) => {
         this.mediaItems.set(mediaItems);
+        this.loading = false;
       },
-      error: (err) => console.error('Error fetching media:', err)
+      error: (err) => {
+        console.error('Error fetching media:', err);
+        this.loading = false;
+      }
     });
     return;
   }

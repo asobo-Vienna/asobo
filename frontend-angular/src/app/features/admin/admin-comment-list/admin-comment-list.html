@@ -1,39 +1,55 @@
 <h2 class="component">All Comments</h2>
 
-<p-table [value]="comments()">
-  <ng-template pTemplate="header">
-    <tr>
-      <th scope="col" aria-label="ID">ID</th>
-      <th scope="col" aria-label="Username">Username</th>
-      <th scope="col" aria-label="Text">Text</th>
-      <th scope="col" aria-label="Event Title">Event Title</th>
-      <th scope="col" aria-label="Date">Date</th>
-      <th scope="col" aria-label="Modified">Modified</th>
-      <th scope="col" aria-label="Edit"></th>
-      <th scope="col" aria-label="Delete"></th>
-    </tr>
-  </ng-template>
+<div class="table-wrapper">
+  <p-table
+    [value]="comments()"
+    [loading]="false"
+    [paginator]="true"
+    [rows]="10"
+  >
+    <ng-template pTemplate="header">
+      <tr>
+        <th scope="col" aria-label="ID">ID</th>
+        <th scope="col" aria-label="Username">Username</th>
+        <th scope="col" aria-label="Text">Text</th>
+        <th scope="col" aria-label="Event Title">Event Title</th>
+        <th scope="col" aria-label="Date">Date</th>
+        <th scope="col" aria-label="Modified">Modified</th>
+        <th scope="col" aria-label="Edit"></th>
+        <th scope="col" aria-label="Delete"></th>
+      </tr>
+    </ng-template>
 
-  <ng-template pTemplate="body" let-comment>
-    <tr>
-      <td>{{ comment.userComment.id }}</td>
-      <td>{{ comment.userComment.username }}</td>
-      <td>{{ comment.userComment.text }}</td>
-      <td><a [routerLink]="getEventRouterLink(comment.userComment.eventId)">{{ comment.eventTitle }}</a></td>
-      <td>{{ comment.userComment.creationDate | date:'yyyy-MM-dd hh:mm a'}}</td>
+    <ng-template pTemplate="body" let-comment>
+      <tr>
+        <td><small>{{ comment.userComment.id }}</small></td>
+        <td>{{ comment.userComment.username }}</td>
+        <td>{{ comment.userComment.text }}</td>
+        <td><a [routerLink]="getEventRouterLink(comment.userComment.eventId)"
+               class="a-clickable">{{ comment.eventTitle }}</a></td>
+        <td>{{ comment.userComment.creationDate | date:'yyyy-MM-dd hh:mm a' }}</td>
 
-      @if(comment.userComment.modificationDate) {
-      <td>{{ comment.userComment.modificationDate | date:'yyyy-MM-dd hh:mm a'}}</td>
-      } @else {
-        <td>–</td>
-      }
+        @if (comment.userComment.modificationDate) {
+          <td>{{ comment.userComment.modificationDate | date:'yyyy-MM-dd hh:mm a' }}</td>
+        } @else {
+          <td>–</td>
+        }
 
-      <td>
-        <i class="pi pi-pencil clickable" title="Edit" (click)="onEdit(comment)" aria-label="Edit comment"></i>
-      </td>
-      <td>
-        <i class="pi pi-trash clickable" title="Delete" (click)="onDelete(comment)" aria-label="Delete comment"></i>
-      </td>
-    </tr>
-  </ng-template>
-</p-table>
+        <td>
+          <i class="pi pi-pencil clickable" title="Edit" (click)="onEdit(comment)" aria-label="Edit comment"></i>
+        </td>
+        <td>
+          <i class="pi pi-trash clickable" title="Delete" (click)="onDelete(comment)" aria-label="Delete comment"></i>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+  @if (loading) {
+    <div class="loader-overlay">
+      <div class="loader-content">
+        <i class="pi pi-spin pi-spinner"></i>
+        <p>Loading comments...</p>
+      </div>
+    </div>
+  }
+</div>
