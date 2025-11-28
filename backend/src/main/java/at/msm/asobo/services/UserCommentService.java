@@ -77,6 +77,8 @@ public class UserCommentService {
         UserComment existingComment = userCommentRepository.findUserCommentByEventIdAndId(eventId, commentId)
                 .orElseThrow(() -> new UserCommentNotFoundException(commentId));
 
+        // TODO check if logged in user is the author of the comment -> update
+
         existingComment.setText(updatedCommentDTO.getText());
         existingComment.setModificationDate(LocalDateTime.now());
         UserComment savedExistingComment = userCommentRepository.save(existingComment);

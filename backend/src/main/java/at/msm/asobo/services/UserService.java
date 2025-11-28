@@ -184,11 +184,9 @@ public class UserService {
     }
 
     private boolean hasAdminRole(UUID userId) {
-        // TODO: Implement when roles are added
-        // User user = getUserById(userId);
-        // return user.getRoles().stream()
-        //     .anyMatch(role -> role.getName().equals("ADMIN"));
-        return false;
+        User user = getUserById(userId);
+        return user.getRoles().stream()
+            .anyMatch(role -> role.getName().equals("ADMIN"));
     }
 
     private void validateUserRegistration(UserRegisterDTO userRegisterDTO) {

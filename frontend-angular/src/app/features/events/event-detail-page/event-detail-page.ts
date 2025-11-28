@@ -128,8 +128,13 @@ export class EventDetailPage {
 
   editComment(comment: Comment) {
     this.commentService.edit(comment).subscribe({
-      next: () => {
-        console.log('edit comment:', comment);
+      next: (updatedComment) => {
+        const index = this.comments().toArray().findIndex(c => c.id === updatedComment.id);
+        if (index !== -1) {
+          const oldComment = this.comments().get(index)!;
+          Object.assign(oldComment, updatedComment);
+          this.comments.set(this.comments());
+        }
       },
       error: (err) => {
         console.error('Failed to edit comment!', err);
