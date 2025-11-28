@@ -1,0 +1,10 @@
+@use 'variables' as *;
+
+:host::ng-deep {
+  .p-tab-active {
+    color: $asobo-purple;
+    border-color: $asobo-purple;
+  }
+
+  --p-tabs-active-bar-background: $asobo-purple;
+}
