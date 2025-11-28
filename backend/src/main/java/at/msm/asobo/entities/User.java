@@ -5,10 +5,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import org.hibernate.annotations.CreationTimestamp;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Entity
 @Table(name="users")
@@ -64,10 +61,16 @@ public class User {
     @NotBlank(message = "Salutation is mandatory")
     private String salutation;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
     private Set<Role> roles;
 
     public User(){
+
     }
 
     public String getLocation() {
@@ -198,9 +201,12 @@ public class User {
         this.salutation = salutation;
     }
 
-    public String getRole() {
-        // TODO
-        return "role placeholder";
+    public Set<Role> getRoles() {
+        return roles != null ? roles : new HashSet<>();
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
     }
 
     @Override
