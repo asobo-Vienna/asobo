@@ -7,6 +7,7 @@ import {AdminService} from '../services/admin-service';
 import {UrlUtilService} from '../../../shared/utils/url/url-util-service';
 import {RouterLink} from '@angular/router';
 import {environment} from '../../../../environments/environment';
+import {MultiSelect} from 'primeng/multiselect';
 
 @Component({
   selector: 'app-admin-user-list',
@@ -14,7 +15,8 @@ import {environment} from '../../../../environments/environment';
     TableModule,
     TagModule,
     DatePipe,
-    RouterLink
+    RouterLink,
+    MultiSelect
   ],
   templateUrl: './admin-user-list.html',
   styleUrl: './admin-user-list.scss',
