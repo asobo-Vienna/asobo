@@ -1,7 +1,6 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {Comment} from '../models/comment';
-import { EditComment } from '../edit-comment/edit-comment';
 import {DatePipe} from '@angular/common';
 import {MatIconButton} from '@angular/material/button';
 import {MatIcon} from '@angular/material/icon';
@@ -17,8 +16,7 @@ import {RouterLink} from '@angular/router';
     DatePipe,
     MatIconButton,
     MatIcon,
-    RouterLink,
-    EditComment
+    RouterLink
   ],
   templateUrl: './comments-list.html',
   styleUrl: './comments-list.scss'
@@ -30,10 +28,21 @@ export class CommentsList {
   protected readonly UrlUtilService = UrlUtilService;
   protected readonly environment = environment;
 
-  editingComment: string | null = null;
+  editingCommentId: string | null = null;
+  editingCommentText: string = '';
 
-  handleEdited(updated: Comment) {
-    this.commentEdited.emit(updated);
-    this.editingComment = null;
+  startEdit(comment: Comment) {
+    this.editingCommentId = comment.id;
+    this.editingCommentText = comment.text;
+  }
+
+  saveEdit(comment: Comment) {
+    this.commentEdited.emit({ ...comment, text: this.editingCommentText });
+    this.editingCommentId = null;
+  }
+
+  cancelEdit() {
+    this.editingCommentId = null;
+    this.editingCommentText = '';
   }
 }
