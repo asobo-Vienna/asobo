@@ -33,7 +33,6 @@ public class RoleController {
     }
 
     @PostMapping("/assign")
-    //@PreAuthorize("hasRole('ADMIN') or hasRole('SUPERADMIN')")
     public String assignRole(
             @RequestParam UUID userId,
             @RequestParam String roleName
