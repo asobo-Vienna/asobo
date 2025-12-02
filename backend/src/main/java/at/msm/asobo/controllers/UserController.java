@@ -4,12 +4,15 @@ import at.msm.asobo.dto.auth.LoginResponseDTO;
 import at.msm.asobo.dto.user.UserPublicDTO;
 import at.msm.asobo.dto.user.UserRegisterDTO;
 import at.msm.asobo.dto.user.UserUpdateDTO;
+import at.msm.asobo.exceptions.UserNotFoundException;
 import at.msm.asobo.mappers.LoginResponseDTOToUserPublicDTOMapper;
 import at.msm.asobo.mappers.UserDTOToUserPublicDTOMapper;
 import at.msm.asobo.security.UserPrincipal;
 import at.msm.asobo.services.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -38,9 +41,15 @@ public class UserController {
 
     // we need "/id/ before the actual id, because otherwise
     // /{id} and /{username} lead to ambiguity
-    @GetMapping("/id/{id}")
-    public UserPublicDTO getUserById(@PathVariable UUID id) {
-        return this.userService.getUserDTOById(id);
+    @GetMapping(value = "/id/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<UserPublicDTO> getUserById(@PathVariable UUID id) {
+        UserPublicDTO user = this.userService.getUserDTOById(id);
+
+        if (user == null) {
+            throw new UserNotFoundException("User with id " + id + " not found");
+        }
+
+        return ResponseEntity.ok(user);
     }
 
     @GetMapping("/{username}")
