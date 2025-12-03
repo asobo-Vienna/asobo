@@ -42,7 +42,7 @@ public class UserController {
     // we need "/id/ before the actual id, because otherwise
     // /{id} and /{username} lead to ambiguity
     @GetMapping(value = "/id/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UserPublicDTO> getUserById(@PathVariable UUID id) {
+    public ResponseEntity<UserPublicDTO> getUserById(@PathVariable UUID id, @AuthenticationPrincipal UserPrincipal userPrincipal) {
         UserPublicDTO user = this.userService.getUserDTOById(id);
 
         if (user == null) {
@@ -53,12 +53,17 @@ public class UserController {
     }
 
     @GetMapping("/{username}")
-    public UserPublicDTO getUserByUsername(
+    public ResponseEntity<UserPublicDTO> getUserByUsername(
             @PathVariable String username,
-            @AuthenticationPrincipal UserPrincipal principal) {
+            @AuthenticationPrincipal UserPrincipal userPrincipal) {
 
-        // Spring Security ensures user is authenticated if this endpoint requires it
-        return this.userService.getUserByUsername(username);
+        UserPublicDTO user = this.userService.getUserByUsername(username);
+
+        if (user == null) {
+            throw new UserNotFoundException("User with username " + username + " not found");
+        }
+
+        return ResponseEntity.ok(user);
     }
 
     @PostMapping
