@@ -3,10 +3,11 @@ package at.msm.asobo.security;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
+import java.util.UUID;
 
 public class UserPrincipal implements UserDetails {
 
-    private final String userId;
+    private final UUID userId;
 
     private final String username;
 
@@ -14,7 +15,7 @@ public class UserPrincipal implements UserDetails {
 
     private final Collection<? extends GrantedAuthority> authorities;
 
-    public UserPrincipal(String userId,
+    public UserPrincipal(UUID userId,
                          String username,
                          String password,
                          Collection<? extends GrantedAuthority> authorities) {
@@ -31,12 +32,12 @@ public class UserPrincipal implements UserDetails {
 
     @Override
     public String getPassword() {
-        return password;
+        return this.password;
     }
 
     @Override
     public String getUsername() {
-        return username;
+        return this.username;
     }
 
     @Override
@@ -59,7 +60,7 @@ public class UserPrincipal implements UserDetails {
         return true;
     }
 
-    public String getUserId() {
-        return userId;
+    public UUID getUserId() {
+        return this.userId;
     }
 }

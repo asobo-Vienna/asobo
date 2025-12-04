@@ -2,6 +2,7 @@ package at.msm.asobo.controllers;
 
 import at.msm.asobo.config.FileStorageProperties;
 import at.msm.asobo.dto.user.UserPublicDTO;
+import at.msm.asobo.dto.user.UserRegisterDTO;
 import at.msm.asobo.exceptions.UserNotFoundException;
 import at.msm.asobo.mappers.LoginResponseDTOToUserPublicDTOMapper;
 import at.msm.asobo.mappers.UserDTOToUserPublicDTOMapper;
@@ -86,6 +87,11 @@ public class UserControllerTest {
         private String email = "test@example.com";
         private String firstName = "Test";
         private String surname = "User";
+        private String password = "password";
+
+        public UserTestBuilder withoutId() {
+            return this;
+        }
 
         public UserTestBuilder withId(UUID id) {
             this.id = id;
@@ -103,7 +109,22 @@ public class UserControllerTest {
             return this;
         }
 
-        public UserPublicDTO build() {
+        public UserTestBuilder withFirstName(String firstName) {
+            this.firstName = firstName;
+            return this;
+        }
+
+        public UserTestBuilder withSurname(String surname) {
+            this.surname = surname;
+            return this;
+        }
+
+        public UserTestBuilder withPassword(String password) {
+            this.password = password;
+            return this;
+        }
+
+        public UserPublicDTO buildUserPublicDTO() {
             UserPublicDTO user = new UserPublicDTO();
             user.setId(id);
             user.setUsername(username);
@@ -112,21 +133,33 @@ public class UserControllerTest {
             user.setSurname(surname);
             return user;
         }
+
+        public UserRegisterDTO buildUserRegisterDTO() {
+            UserRegisterDTO user = new UserRegisterDTO();
+            user.setUsername(username);
+            user.setEmail(email);
+            user.setFirstName(firstName);
+            user.setSurname(surname);
+            return user;
+        }
+    }
+
+    private UserPublicDTO createDefaultTestUser() {
+        return new UserTestBuilder()
+                .withId(UUID.fromString("123e4567-e89b-12d3-a456-426614174000"))
+                .withUsername("testuser")
+                .withEmail("test@example.com")
+                .buildUserPublicDTO();
     }
 
     @Test
     @WithMockUser(username = "testuser", roles = "USER")
     void getUserById_returnsExpectedResult() throws Exception {
-        UUID testId = UUID.fromString("123e4567-e89b-12d3-a456-426614174000");
+        UserPublicDTO expectedUser = createDefaultTestUser();
 
-        UserPublicDTO expectedUser = new UserTestBuilder()
-                .withId(testId)
-                .withUsername("testuser")
-                .build();
+        when(userService.getUserDTOById(expectedUser.getId())).thenReturn(expectedUser);
 
-        when(userService.getUserDTOById(testId)).thenReturn(expectedUser);
-
-        mockMvc.perform(get("/api/users/id/{id}", testId)
+        mockMvc.perform(get("/api/users/id/{id}", expectedUser.getId())
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -160,7 +193,7 @@ public class UserControllerTest {
         UserPublicDTO expectedUser = new UserTestBuilder()
                 .withId(testId)
                 .withUsername("testuser")
-                .build();
+                .buildUserPublicDTO();
 
         when(userService.getUserByUsername("testuser")).thenReturn(expectedUser);
 

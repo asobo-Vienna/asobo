@@ -33,7 +33,7 @@ public class CustomUserDetailsService implements UserDetailsService {
                 user.getRoles().stream().map(Role::getName).toList());
 
         return new UserPrincipal(
-                user.getId().toString(),
+                user.getId(),
                 user.getUsername(),
                 user.getPassword(),
                 user.getRoles().stream()

@@ -23,6 +23,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
 import java.util.List;
 import java.util.UUID;
 
@@ -92,7 +93,7 @@ public class UserService {
         User savedUser = this.userRepository.save(newUser);
 
         UserPrincipal userPrincipal = new UserPrincipal(
-                savedUser.getId().toString(),
+                savedUser.getId(),
                 savedUser.getUsername(),
                 savedUser.getPassword(),
                 List.of(new SimpleGrantedAuthority("ROLE_USER"))
@@ -109,7 +110,7 @@ public class UserService {
                         userLoginDTO.getIdentifier(),
                         userLoginDTO.getPassword()
                 );
-        
+
         Authentication authentication = authenticationManager.authenticate(authToken);
 
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
@@ -121,7 +122,7 @@ public class UserService {
 
         String token = jwtUtil.generateToken(userPrincipal, expirationTime);
 
-        User user = userRepository.findById(UUID.fromString(userPrincipal.getUserId()))
+        User user = userRepository.findById(userPrincipal.getUserId())
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
 
         UserPublicDTO userPublicDTO = this.userDTOUserMapper.mapUserToUserPublicDTO(user);
@@ -148,7 +149,7 @@ public class UserService {
         // Ignore 'profilePicture' since we handle it separately
         PatchUtils.copyNonNullProperties(userUpdateDTO, existingUser, "profilePicture");
 
-        if(existingUser.getPassword() != null) {
+        if (existingUser.getPassword() != null) {
             String hashedPassword = this.passwordService.hashPassword(existingUser.getPassword());
             existingUser.setPassword(hashedPassword);
         }
@@ -168,11 +169,11 @@ public class UserService {
     }
 
     public boolean isUsernameAlreadyTaken(String username) {
-        return this.userRepository.findByUsername(username).isPresent();
+        return this.userRepository.existsByUsername(username);
     }
 
     public boolean isEmailAlreadyTaken(String email) {
-        return userRepository.findByEmail(email).isPresent();
+        return this.userRepository.existsByEmail(email);
     }
 
     private boolean canUpdateUser(UUID targetUserId, UUID loggedInUserId) {
@@ -184,20 +185,25 @@ public class UserService {
     }
 
     private boolean hasAdminRole(UUID userId) {
-        // TODO: Implement when roles are added
-        // User user = getUserById(userId);
-        // return user.getRoles().stream()
-        //     .anyMatch(role -> role.getName().equals("ADMIN"));
-        return false;
+        User user = this.getUserById(userId);
+        return user.getRoles().stream()
+                .anyMatch(role -> role.getName().equals("ADMIN"));
     }
 
     private void validateUserRegistration(UserRegisterDTO userRegisterDTO) {
-        if (this.isEmailAlreadyTaken(userRegisterDTO.getEmail())) {
-            throw new EmailAlreadyExistsException(userRegisterDTO.getEmail());
-        }
+        validateEmailNotTaken(userRegisterDTO.getEmail());
+        validateUsernameNotTaken(userRegisterDTO.getUsername());
+    }
 
-        if (this.isUsernameAlreadyTaken(userRegisterDTO.getUsername())) {
-            throw new UsernameAlreadyExistsException(userRegisterDTO.getUsername());
+    private void validateEmailNotTaken(String email) {
+        if (this.isEmailAlreadyTaken(email)) {
+            throw new EmailAlreadyExistsException(email);
+        }
+    }
+
+    private void validateUsernameNotTaken(String username) {
+        if (this.isUsernameAlreadyTaken(username)) {
+            throw new UsernameAlreadyExistsException(username);
         }
     }
 
