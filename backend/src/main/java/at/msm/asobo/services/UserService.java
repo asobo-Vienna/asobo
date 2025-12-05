@@ -189,12 +189,6 @@ public class UserService {
         return userRepository.findByEmail(email).isPresent();
     }
 
-    private boolean hasAdminRole(UUID userId) {
-        User user = getUserById(userId);
-        return user.getRoles().stream()
-            .anyMatch(role -> role.getName().equals("ADMIN"));
-    }
-
     private void validateUserRegistration(UserRegisterDTO userRegisterDTO) {
         if (this.isEmailAlreadyTaken(userRegisterDTO.getEmail())) {
             throw new EmailAlreadyExistsException(userRegisterDTO.getEmail());
