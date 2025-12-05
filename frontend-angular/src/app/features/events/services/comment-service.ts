@@ -31,7 +31,6 @@ export class CommentService {
 
 
   edit(updatedComment: Comment): Observable<Comment> {
-    console.log('comment to edit ', updatedComment);
     return this.http.put<Comment>(
       `${this.getCommentsUrl(updatedComment.eventId)}/${updatedComment.id}`,
       updatedComment
