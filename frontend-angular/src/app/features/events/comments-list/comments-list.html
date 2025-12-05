@@ -1,6 +1,6 @@
-@if(comments && comments.size() > 0) {
+@if(comments() && comments().size() > 0) {
   <div class="comments-list">
-    @for (comment of comments; track comment.id) {
+    @for (comment of comments(); track comment.id) {
       <div class="comment-box">
         <div class="d-flex gap-3">
           <a [routerLink]="`${environment.userProfileBaseUrl}${comment.username}`">
@@ -14,26 +14,23 @@
             </div>
 
             <div class="d-flex align-items-start">
-              @if(comment.id === editingCommentId) {
-                <textarea [(ngModel)]="editingCommentText" class="flex-grow-1"></textarea>
-                <div class="comment-actions">
-                  <button mat-icon-button aria-label="Save" (click)="saveEdit(comment)">
-                    <mat-icon class="mat-icon-custom">check</mat-icon>
-                  </button>
-                  <button mat-icon-button aria-label="Cancel" (click)="cancelEdit()">
-                    <mat-icon class="mat-icon-custom">close</mat-icon>
-                  </button>
-                </div>
+              @if(comment.id === editingCommentId()) {
+                <textarea #editTextarea
+                          [value]="editingCommentText()"
+                          class="flex-grow-1 me-3 mt-2"
+                          pTextarea></textarea>
+                  <div class="comment-actions mt-1">
+                    <mat-icon class="mat-icon-custom clickable me-1" (click)="saveEdit(comment, editTextarea.value)">check</mat-icon>
+                    <mat-icon class="mat-icon-custom clickable" (click)="cancelEdit()">close</mat-icon>
+                  </div>
               } @else {
                 <p class="mt-2 flex-grow-1">{{ comment.text }}</p>
-                <div class="comment-actions">
-                  <button mat-icon-button aria-label="Edit" (click)="startEdit(comment)">
-                    <mat-icon class="mat-icon-custom">edit</mat-icon>
-                  </button>
-                  <button mat-icon-button aria-label="Delete" (click)="commentDeleted.emit(comment)">
-                    <mat-icon class="mat-icon-custom">delete_forever</mat-icon>
-                  </button>
-                </div>
+                @if(authService.currentUser()?.id === comment.authorId || authService.hasAdminAccess()) {
+                  <div class="comment-actions mt-2 ms-2">
+                    <mat-icon class="mat-icon-custom clickable" (click)="startEdit(comment)">edit</mat-icon>
+                    <mat-icon class="mat-icon-custom clickable" (click)="commentDeleted.emit(comment)">delete_forever</mat-icon>
+                  </div>
+                }
               }
             </div>
           </div>

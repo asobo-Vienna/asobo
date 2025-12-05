@@ -61,7 +61,7 @@ public class UserController {
 
     @PatchMapping("/{id}")
     public UserPublicDTO updateUser(@PathVariable UUID id, @RequestBody @Valid UserUpdateDTO userUpdateDTO, @AuthenticationPrincipal UserPrincipal userPrincipal) {
-        UUID loggedInUserId = UUID.fromString(userPrincipal.getUserId());
+        UUID loggedInUserId = userPrincipal.getUserId();
 
         return this.userService.updateUserById(id, loggedInUserId, userUpdateDTO);
     }
@@ -72,7 +72,7 @@ public class UserController {
             @RequestParam("profilePicture") MultipartFile profilePicture,
             @AuthenticationPrincipal UserPrincipal principal) {
 
-        UUID loggedInUserId = UUID.fromString(principal.getUserId());
+        UUID loggedInUserId = principal.getUserId();
 
         UserUpdateDTO userUpdateDTO = new UserUpdateDTO();
         userUpdateDTO.setProfilePicture(profilePicture);

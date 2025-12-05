@@ -21,7 +21,7 @@ public class UserCommentDTOUserCommentMapper {
         dto.setText(entity.getText());
         dto.setCreationDate(entity.getCreationDate());
         dto.setModificationDate(entity.getModificationDate());
-        dto.setPictureURI(entity.getPictureURI());
+        dto.setPictureURI(entity.getAuthor().getPictureURI());
 
         if (entity.getAuthor() != null) {
             dto.setAuthorId(entity.getAuthor().getId());
@@ -44,7 +44,6 @@ public class UserCommentDTOUserCommentMapper {
         entity.setText(dto.getText());
         entity.setAuthor(author);
         entity.setEvent(event);
-        entity.setPictureURI(author.getPictureURI());
         entity.setCreationDate(dto.getCreationDate());
         entity.setModificationDate(dto.getModificationDate());
         return entity;

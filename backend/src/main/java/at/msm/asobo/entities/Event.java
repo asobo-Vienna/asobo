@@ -47,7 +47,7 @@ public class Event {
     @LastModifiedDate
     private LocalDateTime modificationDate;
 
-    @OneToMany(mappedBy = "event")
+    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UserComment> comments;
 
     @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
