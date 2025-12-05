@@ -25,10 +25,8 @@
                 </textarea>
 
                 <div class="comment-actions mt-1">
-                  <mat-icon class="mat-icon-custom clickable me-1" (click)="saveEdit(comment, editTextarea.value)">
-                    check
-                  </mat-icon>
-                  <mat-icon class="mat-icon-custom clickable" (click)="cancelEdit()">close</mat-icon>
+                  <i class="pi pi-check clickable me-1" (click)="saveEdit(comment, editTextarea.value)"></i>
+                  <i class="pi pi-times clickable" (click)="cancelEdit()"></i>
                 </div>
               } @else {
                   <p class="mt-2 flex-grow-1">{{ comment.text }}</p>

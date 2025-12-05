@@ -4,7 +4,6 @@ import at.msm.asobo.entities.User;
 import at.msm.asobo.exceptions.UserNotFoundException;
 import at.msm.asobo.repositories.UserRepository;
 import org.springframework.stereotype.Service;
-
 import java.util.UUID;
 
 @Service
@@ -19,7 +18,7 @@ public class UserAuthorizationService {
         if (targetUserId.equals(loggedInUserId)) {
             return true;
         }
-        return hasAdminRole(loggedInUserId);
+        return this.hasAdminRole(loggedInUserId);
     }
 
     private boolean hasAdminRole(UUID userId) {
