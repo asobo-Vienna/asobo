@@ -60,8 +60,8 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<ErrorResponse> handleAccessDenied(AccessDeniedException ex) {
         ErrorResponse error = new ErrorResponse(
-                "Unauthorized",
-                "You must be logged in to access this resource",
+                "Forbidden",
+                "You don't have permission to access this resource",
                 HttpStatus.FORBIDDEN.value()
         );
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
