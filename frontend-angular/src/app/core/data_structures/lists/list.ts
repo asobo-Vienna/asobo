@@ -55,6 +55,13 @@ export class List<T> implements Iterable<T> {
     return this.items.includes(item);
   }
 
+  findIndex(item: T, compareFn?: (a: T, b: T) => boolean): number {
+    if (compareFn) {
+      return this.items.findIndex(i => compareFn(i, item));
+    }
+    return -1;
+  }
+
   // Get size
   size(): number {
     return this.items.length;

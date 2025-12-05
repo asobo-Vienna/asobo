@@ -6,6 +6,7 @@ import { UrlUtilService } from '../../../shared/utils/url/url-util-service';
 import { environment } from '../../../../environments/environment';
 import { UserProfile } from '../user-profile/models/user-profile-model';
 import { User } from '../../auth/models/user';
+import {LoginResponse} from '../../auth/models/login-response';
 
 @Injectable({
   providedIn: 'root'
@@ -52,16 +53,20 @@ export class UserProfileService {
   }
 
   // TODO: still needs to be implemented correctly
-  updateField(fieldName: string, value: any): Observable<User> {
+  updateField(fieldName: string, value: any): Observable<LoginResponse> {
     const loggedInUser = this.authService.currentUser();
-    return this.http.patch<User>(`${environment.apiBaseUrl}/users/${loggedInUser?.id}`, { [fieldName]: value })
+    console.log("username: ", loggedInUser?.username)
+    return this.http.patch<LoginResponse>(`${environment.apiBaseUrl}/users/${loggedInUser?.id}`, { [fieldName]: value })
       .pipe(
-        tap(updatedUser => {
+        tap(response => {
           // Update localStorage to keep AuthService in sync
-          localStorage.setItem('current_user', JSON.stringify(updatedUser));
+          localStorage.setItem('current_user', JSON.stringify(response.user));
+          if (response.token) {
+            localStorage.setItem(environment.JWT_TOKEN_STORAGE_KEY, response.token);
+          }
 
-          if (loggedInUser?.username === updatedUser.username) {
-            this.viewedUserSignal.set(updatedUser);
+          if (loggedInUser?.username === response.user.username) {
+            this.viewedUserSignal.set(response.user);
           }
         })
       );
@@ -73,15 +78,15 @@ export class UserProfileService {
   }
 
   // TODO: still needs to be implemented correctly
-  updateProfilePicture(formData: FormData): Observable<User> {
-    return this.http.patch<User>(`${environment.apiBaseUrl}/users/${this.authService.currentUser()?.id}/profile-picture`, formData)
+  updateProfilePicture(formData: FormData): Observable<LoginResponse> {
+    return this.http.patch<LoginResponse>(`${environment.apiBaseUrl}/users/${this.authService.currentUser()?.id}/profile-picture`, formData)
       .pipe(
-        tap(updatedUser => {
-          this.authService.updateUserInStorage(updatedUser);
+        tap(response => {
+          this.authService.updateUserInStorage(response.user);
 
           const loggedInUser = this.authService.currentUser();
-          if (loggedInUser?.username === updatedUser.username) {
-            this.viewedUserSignal.set(updatedUser);
+          if (loggedInUser?.username === response.user.username) {
+            this.viewedUserSignal.set(response.user);
           }
         })
       );
