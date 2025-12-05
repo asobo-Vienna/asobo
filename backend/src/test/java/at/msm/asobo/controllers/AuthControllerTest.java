@@ -1,5 +1,6 @@
 package at.msm.asobo.controllers;
 
+import at.msm.asobo.builders.UserTestBuilder;
 import at.msm.asobo.config.FileStorageProperties;
 import at.msm.asobo.dto.auth.LoginResponseDTO;
 import at.msm.asobo.dto.user.UserPublicDTO;
@@ -70,7 +71,6 @@ public class AuthControllerTest {
 
     @BeforeEach
     void setUp() throws ServletException, IOException {
-        // Configure the mocked filter to pass requests through using the public doFilter method
         doAnswer(invocation -> {
             FilterChain chain = invocation.getArgument(2);
             chain.doFilter(invocation.getArgument(0), invocation.getArgument(1));
@@ -84,7 +84,17 @@ public class AuthControllerTest {
 
     @Test
     void registerUser_returnsExpectedResult() throws Exception {
-        UserPublicDTO expectedUser = new UserControllerTest.UserTestBuilder()
+        UserRegisterDTO registerDTO = new UserTestBuilder()
+                .withoutId()
+                .withUsername("testuser")
+                .withEmail("testuser@example.com")
+                .withFirstName("Test")
+                .withSurname("User")
+                .withPassword("password123")
+                .withSalutation("Mr.")
+                .buildUserRegisterDTO();
+
+        UserPublicDTO expectedUser = new UserTestBuilder()
                 .withUsername("testuser")
                 .withEmail("test@example.com")
                 .buildUserPublicDTO();
@@ -96,12 +106,12 @@ public class AuthControllerTest {
                 .thenReturn(expectedUser);
 
         mockMvc.perform(multipart("/api/auth/register")
-                        .param("username", "testuser")
-                        .param("email", "testuser@example.com")
-                        .param("password", "password123")
-                        .param("firstName", "Test")
-                        .param("surname", "User")
-                        .param("salutation", "Mr.")
+                        .param("username", registerDTO.getUsername())
+                        .param("email", registerDTO.getEmail())
+                        .param("password", registerDTO.getPassword())
+                        .param("firstName", registerDTO.getEmail())
+                        .param("surname", registerDTO.getSurname())
+                        .param("salutation", registerDTO.getSalutation())
                         .with(csrf())
                         .with(user("anonymousUser"))
                         .accept(MediaType.APPLICATION_JSON))

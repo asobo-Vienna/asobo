@@ -1,8 +1,8 @@
 package at.msm.asobo.controllers;
 
+import at.msm.asobo.builders.UserTestBuilder;
 import at.msm.asobo.config.FileStorageProperties;
 import at.msm.asobo.dto.user.UserPublicDTO;
-import at.msm.asobo.dto.user.UserRegisterDTO;
 import at.msm.asobo.exceptions.UserNotFoundException;
 import at.msm.asobo.mappers.LoginResponseDTOToUserPublicDTOMapper;
 import at.msm.asobo.mappers.UserDTOToUserPublicDTOMapper;
@@ -69,7 +69,6 @@ public class UserControllerTest {
 
     @BeforeEach
     void setUp() throws ServletException, IOException {
-        // Configure the mocked filter to pass requests through using the public doFilter method
         doAnswer(invocation -> {
             FilterChain chain = invocation.getArgument(2);
             chain.doFilter(invocation.getArgument(0), invocation.getArgument(1));
@@ -79,69 +78,6 @@ public class UserControllerTest {
                 any(ServletResponse.class),
                 any(FilterChain.class)
         );
-    }
-
-    static class UserTestBuilder {
-        private UUID id = UUID.randomUUID();
-        private String username = "testuser";
-        private String email = "test@example.com";
-        private String firstName = "Test";
-        private String surname = "User";
-        private String password = "password";
-
-        public UserTestBuilder withoutId() {
-            return this;
-        }
-
-        public UserTestBuilder withId(UUID id) {
-            this.id = id;
-            return this;
-        }
-
-        public UserTestBuilder withUsername(String username) {
-            this.username = username;
-            this.email = username + "@example.com";
-            return this;
-        }
-
-        public UserTestBuilder withEmail(String email) {
-            this.email = email;
-            return this;
-        }
-
-        public UserTestBuilder withFirstName(String firstName) {
-            this.firstName = firstName;
-            return this;
-        }
-
-        public UserTestBuilder withSurname(String surname) {
-            this.surname = surname;
-            return this;
-        }
-
-        public UserTestBuilder withPassword(String password) {
-            this.password = password;
-            return this;
-        }
-
-        public UserPublicDTO buildUserPublicDTO() {
-            UserPublicDTO user = new UserPublicDTO();
-            user.setId(id);
-            user.setUsername(username);
-            user.setEmail(email);
-            user.setFirstName(firstName);
-            user.setSurname(surname);
-            return user;
-        }
-
-        public UserRegisterDTO buildUserRegisterDTO() {
-            UserRegisterDTO user = new UserRegisterDTO();
-            user.setUsername(username);
-            user.setEmail(email);
-            user.setFirstName(firstName);
-            user.setSurname(surname);
-            return user;
-        }
     }
 
     private UserPublicDTO createDefaultTestUser() {
@@ -168,7 +104,8 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$.username").value(expectedUser.getUsername()))
                 .andExpect(jsonPath("$.email").value(expectedUser.getEmail()))
                 .andExpect(jsonPath("$.firstName").value(expectedUser.getFirstName()))
-                .andExpect(jsonPath("$.surname").value(expectedUser.getSurname()));
+                .andExpect(jsonPath("$.surname").value(expectedUser.getSurname()))
+                .andExpect(jsonPath("$.salutation").value(expectedUser.getSalutation()));
     }
 
     @Test
@@ -206,7 +143,8 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$.username").value(expectedUser.getUsername()))
                 .andExpect(jsonPath("$.email").value(expectedUser.getEmail()))
                 .andExpect(jsonPath("$.firstName").value(expectedUser.getFirstName()))
-                .andExpect(jsonPath("$.surname").value(expectedUser.getSurname()));
+                .andExpect(jsonPath("$.surname").value(expectedUser.getSurname()))
+                .andExpect(jsonPath("$.salutation").value(expectedUser.getSalutation()));;
     }
 
     @Test
