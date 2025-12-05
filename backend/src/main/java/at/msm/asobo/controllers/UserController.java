@@ -10,6 +10,7 @@ import at.msm.asobo.security.UserPrincipal;
 import at.msm.asobo.services.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -60,14 +61,19 @@ public class UserController {
     }
 
     @PatchMapping("/{id}")
-    public UserPublicDTO updateUser(@PathVariable UUID id, @RequestBody @Valid UserUpdateDTO userUpdateDTO, @AuthenticationPrincipal UserPrincipal userPrincipal) {
-        UUID loggedInUserId = UUID.fromString(userPrincipal.getUserId());
+    public ResponseEntity<LoginResponseDTO> updateUser(
+            @PathVariable UUID id,
+            @RequestBody @Valid UserUpdateDTO userUpdateDTO,
+            @AuthenticationPrincipal UserPrincipal userPrincipal) {
 
-        return this.userService.updateUserById(id, loggedInUserId, userUpdateDTO);
+        UUID loggedInUserId = UUID.fromString(userPrincipal.getUserId());
+        LoginResponseDTO response = this.userService.updateUserById(id, loggedInUserId, userUpdateDTO);
+
+        return ResponseEntity.ok(response);
     }
 
     @PatchMapping("/{id}/profile-picture")
-    public UserPublicDTO updateProfilePicture(
+    public LoginResponseDTO updateProfilePicture(
             @PathVariable UUID id,
             @RequestParam("profilePicture") MultipartFile profilePicture,
             @AuthenticationPrincipal UserPrincipal principal) {
