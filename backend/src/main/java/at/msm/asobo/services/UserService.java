@@ -146,16 +146,16 @@ public class UserService {
         return this.userDTOUserMapper.mapUserToUserPublicDTO(newUser);
     }
 
-    public UserPublicDTO updateUserById(UUID targetUserId, UUID loggedInUserId, UserUpdateDTO userUpdateDTO) {
+    public LoginResponseDTO updateUserById(UUID targetUserId, UUID loggedInUserId, UserUpdateDTO userUpdateDTO) {
         User existingUser = this.getUserById(targetUserId);
 
-        // Authorization check: user can update their own profile or admin can update any profile
         if (!canUpdateUser(targetUserId, loggedInUserId)) {
             throw new UserNotAuthorizedException("You are not authorized to update this profile");
         }
 
-        // Use this instead of checking non-null for each property of the dto
-        // Ignore 'profilePicture' since we handle it separately
+        boolean usernameChanged = userUpdateDTO.getUsername() != null
+                && !userUpdateDTO.getUsername().equals(existingUser.getUsername());
+
         PatchUtils.copyNonNullProperties(userUpdateDTO, existingUser, "profilePicture");
 
         if(existingUser.getPassword() != null) {
@@ -166,7 +166,24 @@ public class UserService {
         this.handleProfilePictureUpdate(userUpdateDTO.getProfilePicture(), existingUser);
 
         User updatedUser = this.userRepository.save(existingUser);
-        return this.userDTOUserMapper.mapUserToUserPublicDTO(updatedUser);
+
+        if (usernameChanged) {
+            UserPrincipal userPrincipal = new UserPrincipal(
+                    updatedUser.getId().toString(),
+                    updatedUser.getUsername(),
+                    updatedUser.getPassword(),
+                    updatedUser.getRoles().stream()
+                            .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getName()))
+                            .toList()
+            );
+
+            String newToken = jwtUtil.generateToken(userPrincipal, EXPIRATION_MS);
+            UserPublicDTO userPublicDTO = this.userDTOUserMapper.mapUserToUserPublicDTO(updatedUser);
+
+            return new LoginResponseDTO(newToken, userPublicDTO);
+        }
+
+        return new LoginResponseDTO(null, this.userDTOUserMapper.mapUserToUserPublicDTO(updatedUser));
     }
 
     public UserPublicDTO deleteUserById(UUID id) {
