@@ -5,6 +5,7 @@ import at.msm.asobo.dto.auth.UserLoginDTO;
 import at.msm.asobo.dto.user.UserRegisterDTO;
 import at.msm.asobo.services.UserService;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -18,6 +19,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
+    @ResponseStatus(HttpStatus.CREATED)
     public LoginResponseDTO register(@ModelAttribute @Valid UserRegisterDTO userRegisterDTO) {
         return this.userService.registerUser(userRegisterDTO);
     }

@@ -38,10 +38,12 @@
         <li class="nav-item">
           <a routerLink="/events" class="nav-link active" aria-current="page">Events</a>
         </li>
-        @if (authService.hasAdminAccess()) {
-          <li class="nav-item">
-            <a [routerLink]="environment.adminSectionBaseUrl" class="nav-link"><i class="pi pi-cog admin-nav-icon"></i> Admin</a>
-          </li>
+        @if (authService.isLoggedIn()) {
+          @if (authService.hasAdminAccess()) {
+            <li class="nav-item">
+              <a [routerLink]="environment.adminSectionBaseUrl" class="nav-link"><i class="pi pi-cog admin-nav-icon"></i> Admin</a>
+            </li>
+          }
         }
         @else {
           <li class="nav-item">
