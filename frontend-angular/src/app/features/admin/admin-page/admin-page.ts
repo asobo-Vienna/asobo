@@ -32,8 +32,8 @@ export class AdminPage {
     return this._selectedTab;
   }
 
-  set selectedTab(tab: string) {
-    this._selectedTab = tab;
-    this.loadedTabs.add(tab);
+  set selectedTab(tabName: string) {
+    this._selectedTab = tabName;
+    this.loadedTabs.add(tabName);
   }
 }
