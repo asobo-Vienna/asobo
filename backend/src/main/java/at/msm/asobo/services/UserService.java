@@ -160,10 +160,10 @@ public class UserService {
         boolean usernameChanged = userUpdateDTO.getUsername() != null
                 && !userUpdateDTO.getUsername().equals(existingUser.getUsername());
 
-        PatchUtils.copyNonNullProperties(userUpdateDTO, existingUser, "profilePicture");
+        PatchUtils.copyNonNullProperties(userUpdateDTO, existingUser, "profilePicture", "password");
 
-        if(existingUser.getPassword() != null) {
-            String hashedPassword = this.passwordService.hashPassword(existingUser.getPassword());
+        if(userUpdateDTO.getPassword() != null) {
+            String hashedPassword = this.passwordService.hashPassword(userUpdateDTO.getPassword());
             existingUser.setPassword(hashedPassword);
         }
 
