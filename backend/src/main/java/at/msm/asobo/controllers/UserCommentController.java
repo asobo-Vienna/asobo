@@ -26,14 +26,18 @@ public class UserCommentController {
     }
 
     @GetMapping("/{commentId}")
-    public UserCommentDTO getUserCommentById(@PathVariable UUID eventId, @PathVariable UUID commentId) {
+    public UserCommentDTO getUserCommentById(@PathVariable UUID eventId,
+                                             @PathVariable UUID commentId
+    ) {
         return this.userCommentService.getUserCommentByEventIdAndCommentId(eventId, commentId);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public UserCommentDTO addNewComment(@PathVariable UUID eventId,
-                                        @RequestBody @Valid UserCommentDTO commentDTO) {
+    public UserCommentDTO addNewComment(
+            @PathVariable UUID eventId,
+            @RequestBody @Valid UserCommentDTO commentDTO
+    ) {
         return this.userCommentService.addNewUserCommentToEventById(eventId, commentDTO);
     }
 
@@ -53,9 +57,11 @@ public class UserCommentController {
     }
 
     @DeleteMapping("/{commentId}")
-    public UserCommentDTO deleteUserComment(@PathVariable UUID eventId,
-                                            @PathVariable UUID commentId,
-                                            @AuthenticationPrincipal UserPrincipal loggedInUser) {
+    public UserCommentDTO deleteUserComment(
+            @PathVariable UUID eventId,
+            @PathVariable UUID commentId,
+            @AuthenticationPrincipal UserPrincipal loggedInUser
+    ) {
         return this.userCommentService.deleteUserCommentByEventIdAndCommentId(
                 eventId,
                 commentId,
