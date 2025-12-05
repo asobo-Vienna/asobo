@@ -10,6 +10,7 @@ import at.msm.asobo.exceptions.UserNotFoundException;
 import at.msm.asobo.exceptions.registration.EmailAlreadyExistsException;
 import at.msm.asobo.exceptions.registration.UsernameAlreadyExistsException;
 import at.msm.asobo.mappers.UserDTOUserMapper;
+import at.msm.asobo.repositories.RoleRepository;
 import at.msm.asobo.repositories.UserRepository;
 import at.msm.asobo.security.JwtUtil;
 import at.msm.asobo.security.UserPrincipal;
@@ -24,7 +25,9 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
+import at.msm.asobo.entities.Role;
 
 @Service
 public class UserService {
@@ -34,6 +37,7 @@ public class UserService {
     private long REMEMBER_ME_EXPIRATION_MS;
 
     private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
     private final UserDTOUserMapper userDTOUserMapper;
     private final FileStorageService fileStorageService;
     private final FileStorageProperties fileStorageProperties;
@@ -44,6 +48,7 @@ public class UserService {
     private final UserAuthorizationService userAuthorizationService;
 
     public UserService(UserRepository userRepository,
+                       RoleRepository roleRepository,
                        UserDTOUserMapper userDTOUserMapper,
                        FileStorageService fileStorageService,
                        FileStorageProperties fileStorageProperties,
@@ -54,6 +59,7 @@ public class UserService {
                        UserAuthorizationService userAuthorizationService
     ) {
         this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
         this.userDTOUserMapper = userDTOUserMapper;
         this.fileStorageService = fileStorageService;
         this.fileStorageProperties = fileStorageProperties;
@@ -91,6 +97,10 @@ public class UserService {
         newUser.setPassword(hashedPassword);
 
         this.handleProfilePictureUpload(userRegisterDTO.getProfilePicture(), newUser);
+
+        Role userRole = roleRepository.findByName("USER")
+                .orElseThrow(() -> new RuntimeException("Default role ROLE_USER not found"));
+        newUser.setRoles(Set.of(userRole));
 
         User savedUser = this.userRepository.save(newUser);
 
