@@ -3,13 +3,11 @@ package at.msm.asobo.controllers;
 import at.msm.asobo.builders.UserTestBuilder;
 import at.msm.asobo.config.FileStorageProperties;
 import at.msm.asobo.dto.user.UserPublicDTO;
+import at.msm.asobo.dto.user.UserUpdateDTO;
 import at.msm.asobo.exceptions.UserNotFoundException;
 import at.msm.asobo.mappers.LoginResponseDTOToUserPublicDTOMapper;
 import at.msm.asobo.mappers.UserDTOToUserPublicDTOMapper;
-import at.msm.asobo.security.CustomUserDetailsService;
-import at.msm.asobo.security.JwtUtil;
-import at.msm.asobo.security.RestAuthenticationEntryPoint;
-import at.msm.asobo.security.TokenAuthenticationFilter;
+import at.msm.asobo.security.*;
 import at.msm.asobo.services.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
@@ -21,17 +19,23 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.authentication;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(UserController.class)
@@ -120,6 +124,8 @@ public class UserControllerTest {
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isNotFound());
+
+        verify(userService).getUserDTOById(any(UUID.class));
     }
 
     @Test
@@ -159,5 +165,55 @@ public class UserControllerTest {
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isNotFound());
+
+        verify(userService).getUserByUsername(username);
+    }
+
+    @Test
+    void updateUser_allFieldsSameUser_returnsExpectedResult() throws Exception {
+        UUID testId = UUID.fromString("123e4567-e89b-12d3-a456-426614174000");
+
+        UserPrincipal userPrincipal = mock(UserPrincipal.class);
+        when(userPrincipal.getUserId()).thenReturn(testId);
+        when(userPrincipal.getUsername()).thenReturn("testuser");
+
+        UserUpdateDTO updateDTO = new UserTestBuilder()
+                .withId(testId)
+                .withUsername("testuser")
+                .withEmail("updated@example.com")
+                .withFirstName("Updated")
+                .withSurname("Name")
+                .withSalutation("Dr.")
+                .withPassword("Update123!")
+                .buildUserUpdateDTO();
+
+        UserPublicDTO expectedUser = new UserTestBuilder()
+                .withId(testId)
+                .withUsername("testuser")
+                .withEmail("updated@example.com")
+                .withFirstName("Updated")
+                .withSurname("Name")
+                .withSalutation("Dr.")
+                .buildUserPublicDTO();
+
+        when(userService.updateUserById(eq(testId), eq(testId), any(UserUpdateDTO.class)))
+                .thenReturn(expectedUser);
+
+        mockMvc.perform(patch("/api/users/{id}", testId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(updateDTO))
+                        .with(csrf())
+                        .with(authentication(new UsernamePasswordAuthenticationToken(
+                                userPrincipal, null, Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")))))
+                        .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.id").value(expectedUser.getId().toString()))
+                .andExpect(jsonPath("$.username").value(expectedUser.getUsername()))
+                .andExpect(jsonPath("$.email").value(expectedUser.getEmail()))
+                .andExpect(jsonPath("$.firstName").value(expectedUser.getFirstName()))
+                .andExpect(jsonPath("$.surname").value(expectedUser.getSurname()))
+                .andExpect(jsonPath("$.salutation").value(expectedUser.getSalutation()));
     }
 }
