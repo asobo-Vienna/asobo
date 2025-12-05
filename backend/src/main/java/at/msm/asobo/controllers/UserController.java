@@ -66,7 +66,7 @@ public class UserController {
             @RequestBody @Valid UserUpdateDTO userUpdateDTO,
             @AuthenticationPrincipal UserPrincipal userPrincipal) {
 
-        UUID loggedInUserId = UUID.fromString(userPrincipal.getUserId());
+        UUID loggedInUserId = userPrincipal.getUserId();
         LoginResponseDTO response = this.userService.updateUserById(id, loggedInUserId, userUpdateDTO);
 
         return ResponseEntity.ok(response);
@@ -78,7 +78,7 @@ public class UserController {
             @RequestParam("profilePicture") MultipartFile profilePicture,
             @AuthenticationPrincipal UserPrincipal principal) {
 
-        UUID loggedInUserId = UUID.fromString(principal.getUserId());
+        UUID loggedInUserId = principal.getUserId();
 
         UserUpdateDTO userUpdateDTO = new UserUpdateDTO();
         userUpdateDTO.setProfilePicture(profilePicture);

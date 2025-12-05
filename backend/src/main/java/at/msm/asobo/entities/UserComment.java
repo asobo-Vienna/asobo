@@ -31,9 +31,6 @@ public class UserComment {
     // @JsonIgnore
     private Event event;
 
-    @Column(length = 4096)
-    private String pictureURI;
-
     @CreationTimestamp
     private LocalDateTime creationDate;
 
@@ -46,7 +43,7 @@ public class UserComment {
     }
 
     public String getText() {
-        return text;
+        return this.text;
     }
 
     public void setText(String text) {
@@ -54,7 +51,7 @@ public class UserComment {
     }
 
     public LocalDateTime getCreationDate() {
-        return creationDate;
+        return this.creationDate;
     }
 
     public void setCreationDate(LocalDateTime creationDate) {
@@ -62,7 +59,7 @@ public class UserComment {
     }
 
     public LocalDateTime getModificationDate() {
-        return modificationDate;
+        return this.modificationDate;
     }
 
     public void setModificationDate(LocalDateTime modificationDate) {
@@ -74,15 +71,15 @@ public class UserComment {
     }
 
     public UUID getId() {
-        return id;
+        return this.id;
     }
 
     public Event getEvent() {
-        return event;
+        return this.event;
     }
 
     public User getAuthor() {
-        return author;
+        return this.author;
     }
 
     public void setAuthor(User author) {
@@ -91,13 +88,5 @@ public class UserComment {
 
     public void setEvent(Event event) {
         this.event = event;
-    }
-
-    public String getPictureURI() {
-        return pictureURI;
-    }
-
-    public void setPictureURI(String pictureURI) {
-        this.pictureURI = pictureURI;
     }
 }

@@ -26,7 +26,7 @@ public class CustomUserDetailsService implements UserDetailsService {
                         .orElseThrow(() -> new UserNotFoundException("User not found with identifier: " + identifier)));
 
         return new UserPrincipal(
-                user.getId().toString(),
+                user.getId(),
                 user.getUsername(),
                 user.getPassword(),
                 user.getRoles().stream()

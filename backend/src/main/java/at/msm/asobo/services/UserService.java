@@ -45,6 +45,7 @@ public class UserService {
     private final JwtUtil jwtUtil;
     private final AuthenticationManager authenticationManager;
     private final MultipartProperties multipartProperties;
+    private final UserAuthorizationService userAuthorizationService;
 
     public UserService(UserRepository userRepository,
                        RoleRepository roleRepository,
@@ -54,7 +55,8 @@ public class UserService {
                        PasswordService passwordService,
                        JwtUtil jwtUtil,
                        AuthenticationManager authenticationManager,
-                       MultipartProperties multipartProperties
+                       MultipartProperties multipartProperties,
+                       UserAuthorizationService userAuthorizationService
     ) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
@@ -65,6 +67,7 @@ public class UserService {
         this.jwtUtil = jwtUtil;
         this.authenticationManager = authenticationManager;
         this.multipartProperties = multipartProperties;
+        this.userAuthorizationService = userAuthorizationService;
     }
 
     public List<UserPublicDTO> getAllUsers() {
@@ -102,7 +105,7 @@ public class UserService {
         User savedUser = this.userRepository.save(newUser);
 
         UserPrincipal userPrincipal = new UserPrincipal(
-                savedUser.getId().toString(),
+                savedUser.getId(),
                 savedUser.getUsername(),
                 savedUser.getPassword(),
                 List.of(new SimpleGrantedAuthority("ROLE_USER"))
@@ -131,7 +134,7 @@ public class UserService {
 
         String token = jwtUtil.generateToken(userPrincipal, expirationTime);
 
-        User user = userRepository.findById(UUID.fromString(userPrincipal.getUserId()))
+        User user = userRepository.findById(userPrincipal.getUserId())
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
 
         UserPublicDTO userPublicDTO = this.userDTOUserMapper.mapUserToUserPublicDTO(user);
@@ -148,8 +151,9 @@ public class UserService {
 
     public LoginResponseDTO updateUserById(UUID targetUserId, UUID loggedInUserId, UserUpdateDTO userUpdateDTO) {
         User existingUser = this.getUserById(targetUserId);
+        boolean canUpdateUser = userAuthorizationService.canUpdateEntity(targetUserId, loggedInUserId);
 
-        if (!canUpdateUser(targetUserId, loggedInUserId)) {
+        if (!canUpdateUser) {
             throw new UserNotAuthorizedException("You are not authorized to update this profile");
         }
 
@@ -169,7 +173,7 @@ public class UserService {
 
         if (usernameChanged) {
             UserPrincipal userPrincipal = new UserPrincipal(
-                    updatedUser.getId().toString(),
+                    updatedUser.getId(),
                     updatedUser.getUsername(),
                     updatedUser.getPassword(),
                     updatedUser.getRoles().stream()
@@ -200,22 +204,6 @@ public class UserService {
 
     public boolean isEmailAlreadyTaken(String email) {
         return userRepository.findByEmail(email).isPresent();
-    }
-
-    private boolean canUpdateUser(UUID targetUserId, UUID loggedInUserId) {
-        if (targetUserId.equals(loggedInUserId)) {
-            return true;
-        }
-
-        return hasAdminRole(loggedInUserId);
-    }
-
-    private boolean hasAdminRole(UUID userId) {
-        // TODO: Implement when roles are added
-        // User user = getUserById(userId);
-        // return user.getRoles().stream()
-        //     .anyMatch(role -> role.getName().equals("ADMIN"));
-        return false;
     }
 
     private void validateUserRegistration(UserRegisterDTO userRegisterDTO) {

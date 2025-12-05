@@ -30,9 +30,11 @@ export class CommentService {
   }
 
 
-  edit(comment: Comment): Observable<Comment> {
-    console.log('comment to edit ', comment);
-    return new Observable<Comment>();
+  edit(updatedComment: Comment): Observable<Comment> {
+    return this.http.put<Comment>(
+      `${this.getCommentsUrl(updatedComment.eventId)}/${updatedComment.id}`,
+      updatedComment
+    );
   }
 
 
