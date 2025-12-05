@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, Output, ViewEncapsulation} from '@angular/core';
+import {Component, EventEmitter, inject, Input, Output, ViewEncapsulation} from '@angular/core';
 import {MediaItem} from '../models/media-item';
 import {List} from "../../../core/data_structures/lists/list";
 import {UrlUtilService} from '../../../shared/utils/url/url-util-service';
@@ -7,6 +7,7 @@ import {PrimeTemplate} from 'primeng/api';
 import {MatIcon} from '@angular/material/icon';
 import {MatIconButton} from '@angular/material/button';
 import {MediaUtilService} from '../../../shared/utils/media/media-util-service';
+import {AuthService} from '../../auth/services/auth-service';
 
 @Component({
   selector: 'app-gallery',
@@ -22,6 +23,7 @@ import {MediaUtilService} from '../../../shared/utils/media/media-util-service';
 })
 
 export class Gallery {
+  authService = inject(AuthService);
   @Input() mediaItems: List<MediaItem> = new List([]);
   @Output() mediaAdded = new EventEmitter<File>();
   @Output() mediaDeleted = new EventEmitter<MediaItem>();
