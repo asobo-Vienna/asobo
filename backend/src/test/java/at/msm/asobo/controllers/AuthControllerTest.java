@@ -105,6 +105,8 @@ public class AuthControllerTest {
         when(loginResponseDTOToUserPublicDTOMapper.mapLoginResponseDTOToUserPublicDTO(any()))
                 .thenReturn(expectedUser);
 
+        String expectedJson = objectMapper.writeValueAsString(loginResponseDTO);
+
         mockMvc.perform(multipart("/api/auth/register")
                         .param("username", registerDTO.getUsername())
                         .param("email", registerDTO.getEmail())
@@ -117,10 +119,6 @@ public class AuthControllerTest {
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.user.username").value(expectedUser.getUsername()))
-                .andExpect(jsonPath("$.user.email").value(expectedUser.getEmail()))
-                .andExpect(jsonPath("$.user.firstName").value(expectedUser.getFirstName()))
-                .andExpect(jsonPath("$.user.surname").value(expectedUser.getSurname()))
-                .andExpect(jsonPath("$.user.salutation").value(expectedUser.getSalutation()));
+                .andExpect(content().json(expectedJson));
     }
 }

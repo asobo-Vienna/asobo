@@ -99,17 +99,14 @@ public class UserControllerTest {
 
         when(userService.getUserDTOById(expectedUser.getId())).thenReturn(expectedUser);
 
+        String expectedJson = objectMapper.writeValueAsString(expectedUser);
+
         mockMvc.perform(get("/api/users/id/{id}", expectedUser.getId())
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.id").value(expectedUser.getId().toString()))
-                .andExpect(jsonPath("$.username").value(expectedUser.getUsername()))
-                .andExpect(jsonPath("$.email").value(expectedUser.getEmail()))
-                .andExpect(jsonPath("$.firstName").value(expectedUser.getFirstName()))
-                .andExpect(jsonPath("$.surname").value(expectedUser.getSurname()))
-                .andExpect(jsonPath("$.salutation").value(expectedUser.getSalutation()));
+                .andExpect(content().json(expectedJson));
     }
 
     @Test
@@ -140,17 +137,14 @@ public class UserControllerTest {
 
         when(userService.getUserByUsername("testuser")).thenReturn(expectedUser);
 
+        String expectedJson = objectMapper.writeValueAsString(expectedUser);
+
         mockMvc.perform(get("/api/users/{username}", "testuser")
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.id").value(expectedUser.getId().toString()))
-                .andExpect(jsonPath("$.username").value(expectedUser.getUsername()))
-                .andExpect(jsonPath("$.email").value(expectedUser.getEmail()))
-                .andExpect(jsonPath("$.firstName").value(expectedUser.getFirstName()))
-                .andExpect(jsonPath("$.surname").value(expectedUser.getSurname()))
-                .andExpect(jsonPath("$.salutation").value(expectedUser.getSalutation()));;
+                .andExpect(content().json(expectedJson));
     }
 
     @Test
@@ -199,6 +193,8 @@ public class UserControllerTest {
         when(userService.updateUserById(eq(testId), eq(testId), any(UserUpdateDTO.class)))
                 .thenReturn(expectedUser);
 
+        String expectedJson = objectMapper.writeValueAsString(expectedUser);
+
         mockMvc.perform(patch("/api/users/{id}", testId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(updateDTO))
@@ -209,11 +205,6 @@ public class UserControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.id").value(expectedUser.getId().toString()))
-                .andExpect(jsonPath("$.username").value(expectedUser.getUsername()))
-                .andExpect(jsonPath("$.email").value(expectedUser.getEmail()))
-                .andExpect(jsonPath("$.firstName").value(expectedUser.getFirstName()))
-                .andExpect(jsonPath("$.surname").value(expectedUser.getSurname()))
-                .andExpect(jsonPath("$.salutation").value(expectedUser.getSalutation()));
+                .andExpect(content().json(expectedJson));
     }
 }
