@@ -27,7 +27,7 @@
   }
 }
 
-::ng-deep {
+:host::ng-deep {
   .p-paginator-page {
     background-color: transparent;
   }

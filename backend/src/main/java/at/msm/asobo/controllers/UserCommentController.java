@@ -1,10 +1,13 @@
 package at.msm.asobo.controllers;
 
 import at.msm.asobo.dto.comment.UserCommentDTO;
+import at.msm.asobo.security.UserPrincipal;
 import at.msm.asobo.services.UserCommentService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 import java.util.UUID;
 
@@ -23,24 +26,46 @@ public class UserCommentController {
     }
 
     @GetMapping("/{commentId}")
-    public UserCommentDTO getUserCommentById(@PathVariable UUID eventId, @PathVariable UUID commentId) {
+    public UserCommentDTO getUserCommentById(@PathVariable UUID eventId,
+                                             @PathVariable UUID commentId
+    ) {
         return this.userCommentService.getUserCommentByEventIdAndCommentId(eventId, commentId);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public UserCommentDTO addNewComment(@PathVariable UUID eventId, @RequestBody @Valid UserCommentDTO commentDTO) {
+    public UserCommentDTO addNewComment(
+            @PathVariable UUID eventId,
+            @RequestBody @Valid UserCommentDTO commentDTO
+    ) {
         return this.userCommentService.addNewUserCommentToEventById(eventId, commentDTO);
     }
 
     @PutMapping("/{commentId}")
-    public UserCommentDTO updateUserComment(@PathVariable UUID eventId, @PathVariable UUID commentId,
-                                            @RequestBody @Valid UserCommentDTO updatedCommentDTO) {
-        return this.userCommentService.updateUserCommentByEventIdAndCommentId(eventId, commentId, updatedCommentDTO);
+    public UserCommentDTO updateUserComment(
+            @PathVariable UUID eventId,
+            @PathVariable UUID commentId,
+            @RequestBody @Valid UserCommentDTO updatedCommentDTO,
+            @AuthenticationPrincipal UserPrincipal loggedInUser
+    ) {
+        return this.userCommentService.updateUserCommentByEventIdAndCommentId(
+                eventId,
+                commentId,
+                updatedCommentDTO,
+                loggedInUser.getUserId()
+        );
     }
 
     @DeleteMapping("/{commentId}")
-    public UserCommentDTO deleteUserComment(@PathVariable UUID eventId, @PathVariable UUID commentId) {
-        return this.userCommentService.deleteUserCommentByEventIdAndCommentId(eventId, commentId);
+    public UserCommentDTO deleteUserComment(
+            @PathVariable UUID eventId,
+            @PathVariable UUID commentId,
+            @AuthenticationPrincipal UserPrincipal loggedInUser
+    ) {
+        return this.userCommentService.deleteUserCommentByEventIdAndCommentId(
+                eventId,
+                commentId,
+                loggedInUser.getUserId()
+        );
     }
 }

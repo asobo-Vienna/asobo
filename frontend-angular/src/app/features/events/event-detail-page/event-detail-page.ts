@@ -37,11 +37,11 @@ import {Tag} from 'primeng/tag';
 })
 export class EventDetailPage {
   private route = inject(ActivatedRoute);
-  private eventService =  inject(EventService);
-  private commentService =  inject(CommentService);
-  private mediaService =  inject(MediaService);
-  authService =  inject(AuthService);
-  participantService =  inject(ParticipantService);
+  private eventService = inject(EventService);
+  private commentService = inject(CommentService);
+  private mediaService = inject(MediaService);
+  authService = inject(AuthService);
+  participantService = inject(ParticipantService);
 
   id!: string;
   title!: string;
@@ -51,8 +51,8 @@ export class EventDetailPage {
   location!: string;
   description?: string;
   isPrivate!: boolean;
+  
   comments = signal<List<Comment>>(new List<Comment>());
-  // TODO? make participants list a signal and use computed so we don't have to manually check in a couple places???
   participants = signal<List<Participant>>(new List<Participant>());
   mediaItems = signal<List<MediaItem>>(new List<MediaItem>());
   currentUser: User | null = this.authService.currentUser();
@@ -128,8 +128,11 @@ export class EventDetailPage {
 
   editComment(comment: Comment) {
     this.commentService.edit(comment).subscribe({
-      next: () => {
-        console.log('edit comment:', comment);
+      next: (updatedComment) => {
+        const index = this.comments().findIndex(updatedComment, LambdaFunctions.compareById);
+        if (index !== -1) {
+          this.comments().set(index, updatedComment);
+        }
       },
       error: (err) => {
         console.error('Failed to edit comment!', err);
@@ -178,7 +181,8 @@ export class EventDetailPage {
       },
       error: (err) => {
         alert(err.error.message);
-        console.error('Error joining event:', err); }
+        console.error('Error joining event:', err);
+      }
     });
   }
 

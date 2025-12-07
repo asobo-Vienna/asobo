@@ -414,21 +414,21 @@ export class UserProfileForm implements OnInit {
       next: (response) => {
         console.log(`${fieldName} updated successfully`);
 
+        // Update the logged-in user's data in AuthService
+        this.authService.currentUser.set(response.user);
+
         this.updateForm.patchValue({ [fieldName]: value });
         const fields = this.editingFields();
         fields.delete(fieldName);
         this.editingFields.set(new Set(fields));
 
-        // Update the logged-in user's data in AuthService
-        this.authService.currentUser.set(response);
-
         // Navigate to new username URL
         if (fieldName === 'username') {
-          this.router.navigate(['/user', response.username], { replaceUrl: true });
+          this.router.navigate(['/user', response.user.username], { replaceUrl: true });
           return;
         }
 
-        this.loadUserProfile(response.username);
+        this.loadUserProfile(response.user.username);
       },
       error: (err) => {
         console.error(`Failed to update ${fieldName}:`, err);

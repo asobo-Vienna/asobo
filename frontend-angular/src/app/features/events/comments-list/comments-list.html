@@ -1,30 +1,46 @@
-@if(comments && comments.size() > 0) {
+@if (comments() && comments().size() > 0) {
   <div class="comments-list">
-    @for (comment of comments; track comment.id) {
+    @for (comment of comments(); track comment.id) {
       <div class="comment-box">
         <div class="d-flex gap-3">
           <a [routerLink]="`${environment.userProfileBaseUrl}${comment.username}`">
-            <img class="user-avatar" [src]="UrlUtilService.getMediaUrl(comment.pictureURI || '/uploads/profile-pictures/default.png')" alt="{{comment.username}}'s avatar">
+            <img class="user-avatar"
+                 [src]="UrlUtilService.getMediaUrl(comment.pictureURI || '/uploads/profile-pictures/default.png')"
+                 alt="{{comment.username}}'s avatar">
           </a>
           <div class="flex-grow-1">
             <div class="d-flex justify-content-between align-items-center">
               <!-- replace link with userProfileService userProfile.userProfileUrl-->
-              <a class="mb-0 comment-username" [routerLink]="`${environment.userProfileBaseUrl}${comment.username}`">{{ comment.username }}</a>
+              <a class="mb-0 comment-username"
+                 [routerLink]="`${environment.userProfileBaseUrl}${comment.username}`">{{ comment.username }}</a>
               <span class="comment-time">{{ comment.creationDate | date:'short' }}</span>
             </div>
 
             <div class="d-flex align-items-start">
-              <p class="mt-2 flex-grow-1">{{ comment.text }}</p>
-              <div class="comment-actions">
-                <button mat-icon-button aria-label="Edit" (click)="commentEdited.emit(comment)">
-                  <mat-icon class="mat-icon-custom">edit</mat-icon>
-                </button>
-                <button mat-icon-button aria-label="Delete" (click)="commentDeleted.emit(comment)">
-                  <mat-icon class="mat-icon-custom">delete_forever</mat-icon>
-                </button>
-              </div>
+              @if (comment.id === editingCommentId()) {
+                <textarea #editTextarea
+                          [value]="editingCommentText()"
+                          class="flex-grow-1 me-3 mt-2"
+                          pTextarea>
+                </textarea>
+
+                <div class="comment-actions mt-1">
+                  <i class="pi pi-check clickable me-1" (click)="saveEdit(comment, editTextarea.value)"></i>
+                  <i class="pi pi-times clickable" (click)="cancelEdit()"></i>
+                </div>
+              } @else {
+                  <p class="mt-2 flex-grow-1">{{ comment.text }}</p>
+                @if (authService.currentUser()?.id === comment.authorId || authService.hasAdminAccess()) {
+                  <div class="comment-actions mt-2 ms-2">
+                    <mat-icon class="mat-icon-custom clickable" (click)="startEdit(comment)">edit</mat-icon>
+                    <mat-icon class="mat-icon-custom clickable" (click)="commentDeleted.emit(comment)">delete_forever
+                    </mat-icon>
+                  </div>
+                }
+              }
             </div>
           </div>
+
         </div>
       </div>
     }

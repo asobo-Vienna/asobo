@@ -32,7 +32,16 @@ export class List<T> implements Iterable<T> {
 
   // Get item by index
   get(index: number): T | undefined {
-    return this.items[index];
+    if (index >= 0 && index < this.items.length) {
+      return this.items[index];
+      }
+    return undefined;
+  }
+
+  set(index: number, item: T): void {
+    if (index >= 0 && index < this.items.length) {
+      this.items[index] = item;
+    }
   }
 
   // Remove by index
@@ -53,6 +62,13 @@ export class List<T> implements Iterable<T> {
       return this.items.some(i => compareFn(i, item));
     }
     return this.items.includes(item);
+  }
+
+  findIndex(item: T, compareFn?: (a: T, b: T) => boolean): number {
+    if (compareFn) {
+      return this.items.findIndex(i => compareFn(i, item));
+    }
+    return -1;
   }
 
   // Get size

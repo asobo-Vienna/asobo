@@ -4,6 +4,7 @@ import at.msm.asobo.dto.medium.MediumCreationDTO;
 import at.msm.asobo.dto.medium.MediumDTO;
 import at.msm.asobo.services.MediumService;
 import jakarta.validation.Valid;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -35,6 +36,7 @@ public class MediumController {
     }
 
     @DeleteMapping("/{mediumID}")
+    @Secured({"ROLE_ADMIN", "ROLE_SUPERADMIN"})
     public MediumDTO deleteMediumById(@PathVariable UUID eventID, @PathVariable UUID mediumID) {
         return this.mediumService.deleteMediumById(eventID, mediumID);
     }

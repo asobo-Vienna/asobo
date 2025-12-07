@@ -10,10 +10,12 @@
              alt="{{ item.caption }}">
       }
 
-      <button mat-icon-button class="delete-media-button" (click)="mediaDeleted.emit(item);
-      $event.stopPropagation();" aria-label="Delete media">
-        <mat-icon class="mat-icon-custom">delete_forever</mat-icon>
-      </button>
+      @if(authService.hasAdminAccess()) {
+        <button mat-icon-button class="delete-media-button" (click)="mediaDeleted.emit(item);
+        $event.stopPropagation();" aria-label="Delete media">
+          <mat-icon class="mat-icon-custom">delete_forever</mat-icon>
+        </button>
+      }
     </div>
   }
 
