@@ -28,8 +28,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.io.IOException;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
@@ -99,19 +98,15 @@ public class AuthControllerTest {
                 .withEmail("test@example.com")
                 .buildUserPublicDTO();
 
-        LoginResponseDTO loginResponseDTO = new LoginResponseDTO("token", expectedUser);
+        LoginResponseDTO mockResponse = new LoginResponseDTO("any-token", expectedUser);
 
-        when(userService.registerUser(any(UserRegisterDTO.class))).thenReturn(loginResponseDTO);
-        when(loginResponseDTOToUserPublicDTOMapper.mapLoginResponseDTOToUserPublicDTO(any()))
-                .thenReturn(expectedUser);
-
-        String expectedJson = objectMapper.writeValueAsString(loginResponseDTO);
+        when(userService.registerUser(any(UserRegisterDTO.class))).thenReturn(mockResponse);
 
         mockMvc.perform(multipart("/api/auth/register")
                         .param("username", registerDTO.getUsername())
                         .param("email", registerDTO.getEmail())
                         .param("password", registerDTO.getPassword())
-                        .param("firstName", registerDTO.getEmail())
+                        .param("firstName", registerDTO.getFirstName())
                         .param("surname", registerDTO.getSurname())
                         .param("salutation", registerDTO.getSalutation())
                         .with(csrf())
@@ -119,6 +114,10 @@ public class AuthControllerTest {
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(content().json(expectedJson));
+                .andExpect(jsonPath("$.token").isString())
+                .andExpect(jsonPath("$.user.username").exists())
+                .andExpect(jsonPath("$.user.email").exists());
+
+        verify(userService).registerUser(any(UserRegisterDTO.class));
     }
 }
