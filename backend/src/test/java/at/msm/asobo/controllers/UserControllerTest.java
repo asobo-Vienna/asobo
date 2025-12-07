@@ -2,6 +2,7 @@ package at.msm.asobo.controllers;
 
 import at.msm.asobo.builders.UserTestBuilder;
 import at.msm.asobo.config.FileStorageProperties;
+import at.msm.asobo.dto.auth.LoginResponseDTO;
 import at.msm.asobo.dto.user.UserPublicDTO;
 import at.msm.asobo.dto.user.UserUpdateDTO;
 import at.msm.asobo.exceptions.UserNotFoundException;
@@ -181,14 +182,14 @@ public class UserControllerTest {
                 .withPassword("Update123!")
                 .buildUserUpdateDTO();
 
-        UserPublicDTO expectedUser = new UserTestBuilder()
+        LoginResponseDTO expectedUser = new UserTestBuilder()
                 .withId(testId)
                 .withUsername("testuser")
                 .withEmail("updated@example.com")
                 .withFirstName("Updated")
                 .withSurname("Name")
                 .withSalutation("Dr.")
-                .buildUserPublicDTO();
+                .buildLoginResponseDTO();
 
         when(userService.updateUserById(eq(testId), eq(testId), any(UserUpdateDTO.class)))
                 .thenReturn(expectedUser);

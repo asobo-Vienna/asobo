@@ -1,5 +1,6 @@
 package at.msm.asobo.builders;
 
+import at.msm.asobo.dto.auth.LoginResponseDTO;
 import at.msm.asobo.dto.user.UserPublicDTO;
 import at.msm.asobo.dto.user.UserRegisterDTO;
 import at.msm.asobo.dto.user.UserUpdateDTO;
@@ -104,5 +105,16 @@ public class UserTestBuilder {
         user.setSalutation(this.salutation);
         user.setPassword(this.password);
         return user;
+    }
+
+    public LoginResponseDTO buildLoginResponseDTO() {
+        UserPublicDTO user = new UserPublicDTO();
+        user.setUsername(this.username);
+        user.setEmail(this.email);
+        user.setFirstName(this.firstName);
+        user.setSurname(this.surname);
+        user.setSalutation(this.salutation);
+
+        return new LoginResponseDTO("any-token", user);
     }
 }

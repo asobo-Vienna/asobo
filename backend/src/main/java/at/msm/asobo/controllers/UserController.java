@@ -1,5 +1,6 @@
 package at.msm.asobo.controllers;
 
+import at.msm.asobo.dto.auth.LoginResponseDTO;
 import at.msm.asobo.dto.user.UserPublicDTO;
 import at.msm.asobo.dto.user.UserUpdateDTO;
 import at.msm.asobo.exceptions.UserNotFoundException;
@@ -8,9 +9,6 @@ import at.msm.asobo.services.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
