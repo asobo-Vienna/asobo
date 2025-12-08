@@ -22,7 +22,7 @@ export class CreateComment {
   text = signal<string>('');
 
   onTextChange(event: Event): void {
-    const value = (event.target as HTMLTextAreaElement).value;
+    const value: string = (event.target as HTMLTextAreaElement).value;
     this.text.set(value);
   }
 
