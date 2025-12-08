@@ -21,9 +21,14 @@ export class CreateComment {
   commentCreated = output<Comment>();
   text = signal<string>('');
 
+  onTextChange(event: Event): void {
+    const value = (event.target as HTMLTextAreaElement).value;
+    this.text.set(value);
+  }
+
   async submit(): Promise<void> {
     const eventId: string | null = this.route.snapshot.paramMap.get('id');
-    if (!eventId || !this.text().trim() || !this.author)
+    if (!eventId || !this.text().trim() || !this.author())
       return;
 
     this.commentService.create({
