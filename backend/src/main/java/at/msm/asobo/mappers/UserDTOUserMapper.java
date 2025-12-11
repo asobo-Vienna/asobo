@@ -3,19 +3,14 @@ package at.msm.asobo.mappers;
 import at.msm.asobo.dto.user.UserFullDTO;
 import at.msm.asobo.dto.user.UserPublicDTO;
 import at.msm.asobo.dto.user.UserDTO;
-import at.msm.asobo.dto.user.UserRegisterDTO;
-import at.msm.asobo.entities.Role;
+import at.msm.asobo.dto.auth.UserRegisterDTO;
 import at.msm.asobo.entities.User;
 import at.msm.asobo.mappers.helpers.UserMapperHelper;
 import at.msm.asobo.mappers.helpers.PictureMapperHelper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.Named;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring", uses = {UserMapperHelper.class, PictureMapperHelper.class})
 public interface UserDTOUserMapper {
@@ -32,10 +27,8 @@ public interface UserDTOUserMapper {
     List<UserPublicDTO> mapUsersToUserPublicDTOs(List<User> users);
     List<User> mapUserPublicDTOsToUsers(List<UserPublicDTO> userDTOs);
 
-    @Mapping(target = "profilePicture", ignore = true)
     UserRegisterDTO mapUserToUserRegisterDTO(User user);
 
-    @Mapping(target = "pictureURI", ignore = true) // Ignore MultipartFile here
     User mapUserRegisterDTOToUser(UserRegisterDTO userDTO);
 
     List<UserRegisterDTO> mapUsersToUserRegisterDTOs(List<User> users);

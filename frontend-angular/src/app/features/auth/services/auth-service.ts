@@ -1,6 +1,6 @@
 import {computed, Injectable, signal, inject} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import {Observable, tap} from 'rxjs';
+import {Observable, take, tap} from 'rxjs';
 import {Router} from '@angular/router';
 import {User} from '../models/user';
 import {LoginResponse} from '../models/login-response';
@@ -9,6 +9,7 @@ import {jwtDecode} from 'jwt-decode';
 import {UserProfile} from '../../users/user-profile/models/user-profile-model';
 import {UrlUtilService} from '../../../shared/utils/url/url-util-service';
 import {Role} from '../../../shared/enums/Role';
+import {UserRegistrationData} from '../models/user-registration-data';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -30,6 +31,7 @@ export class AuthService {
 
   login(credentials: { identifier: string; password: string }): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(environment.loginEndpoint, credentials)
+      .pipe(take(1))
       .pipe(
         tap(response => {
           this.setSession(response);
@@ -42,8 +44,9 @@ export class AuthService {
       );
   }
 
-  register(formData: FormData): Observable<LoginResponse> {
-    return this.http.post<LoginResponse>(environment.registerEndpoint, formData)
+  register(userData: UserRegistrationData): Observable<LoginResponse> {
+    return this.http.post<LoginResponse>(environment.registerEndpoint, userData)
+      .pipe(take(1))
       .pipe(
         tap(response => {
           this.setSession(response);

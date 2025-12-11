@@ -3,6 +3,7 @@ package at.msm.asobo.services;
 import at.msm.asobo.config.FileStorageProperties;
 import at.msm.asobo.dto.auth.LoginResponseDTO;
 import at.msm.asobo.dto.auth.UserLoginDTO;
+import at.msm.asobo.dto.auth.UserRegisterDTO;
 import at.msm.asobo.dto.user.*;
 import at.msm.asobo.entities.User;
 import at.msm.asobo.exceptions.UserNotAuthorizedException;
@@ -96,8 +97,6 @@ public class UserService {
 
         String hashedPassword = this.passwordService.hashPassword(userRegisterDTO.getPassword());
         newUser.setPassword(hashedPassword);
-
-        this.handleProfilePictureUpload(userRegisterDTO.getProfilePicture(), newUser);
 
         Role userRole = roleRepository.findByName("USER")
                 .orElseThrow(() -> new RuntimeException("Default role ROLE_USER not found"));
@@ -221,14 +220,6 @@ public class UserService {
     private void validateUsernameNotTaken(String username) {
         if (this.isUsernameAlreadyTaken(username)) {
             throw new UsernameAlreadyExistsException(username);
-        }
-    }
-
-    private void handleProfilePictureUpload(MultipartFile picture, User user) {
-        if (picture != null && !picture.isEmpty()) {
-            validateProfilePicture(picture);
-            String fileURI = this.fileStorageService.store(picture, this.fileStorageProperties.getProfilePictureSubfolder());
-            user.setPictureURI(fileURI);
         }
     }
 
