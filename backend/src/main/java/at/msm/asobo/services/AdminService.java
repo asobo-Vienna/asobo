@@ -3,6 +3,7 @@ package at.msm.asobo.services;
 import at.msm.asobo.dto.comment.UserCommentDTO;
 import at.msm.asobo.dto.comment.UserCommentWithEventTitleDTO;
 import at.msm.asobo.dto.medium.MediumWithEventTitleDTO;
+import at.msm.asobo.dto.user.UserAdminSummaryDTO;
 import at.msm.asobo.dto.user.UserFullDTO;
 import at.msm.asobo.entities.User;
 import at.msm.asobo.entities.UserComment;
@@ -12,6 +13,8 @@ import at.msm.asobo.mappers.*;
 import at.msm.asobo.repositories.MediumRepository;
 import at.msm.asobo.repositories.UserCommentRepository;
 import at.msm.asobo.repositories.UserRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -44,9 +47,9 @@ public class AdminService {
         this.mediumWithEventTitleToMediumWithEventTitleDTOMapper =  mediumWithEventTitleToMediumWithEventTitleDTOMapper;
     }
 
-    public List<UserFullDTO> getAllUsers() {
-        List<User> users = userRepository.findAll();
-        return this.userDTOUserMapper.mapUsersToUserFullDTOs(users);
+    public Page<UserAdminSummaryDTO> getAllUsers(Pageable pageable) {
+        Page<User> users = userRepository.findAll(pageable);
+        return this.userDTOUserMapper.mapUsersToAdminSummaryDTOs(users);
     }
 
     public List<UserCommentDTO> getAllUserComments() {

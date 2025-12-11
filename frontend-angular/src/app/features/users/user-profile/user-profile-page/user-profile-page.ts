@@ -30,7 +30,7 @@ export class UserProfilePage implements OnInit {
 
   handleUserIdMessage(userId: string) {
     this.userId = userId;
-    this.fetchEvents(); // fetch after receiving userId
+    this.fetchEvents();
   }
 
   private fetchEvents() {
