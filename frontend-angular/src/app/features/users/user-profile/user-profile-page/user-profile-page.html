@@ -5,6 +5,10 @@
 @if (events()) {
   <div id="user-profile-event-list" class="mt-5">
     <h2 class="text-body-tertiary mb-3">{{ profileUsername }}'s Events</h2>
-    <app-event-list [inputEvents]="events()"/>
+    @if (events().size() > 0) {
+      <app-event-list [inputEvents]="events()"/>
+    } @else {
+      <span class="ms-5">Currently not attending any events.</span>
+    }
   </div>
 }
