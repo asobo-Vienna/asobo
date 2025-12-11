@@ -31,7 +31,7 @@ export class AdminUserList implements OnInit {
   private pageCache = new Map<string, User[]>();
 
   ngOnInit(): void {
-    this.loadUsers(0, 10);
+    this.loadUsers(0, environment.defaultPageSize);
   }
 
   loadUsers(page: number, size: number): void {
@@ -40,7 +40,7 @@ export class AdminUserList implements OnInit {
     // Check if page is already cached
     if (this.pageCache.has(cacheKey)) {
       this.users.set(this.pageCache.get(cacheKey)!);
-      return; // Don't make API call
+      return;
     }
 
     this.loading.set(true);
@@ -66,7 +66,7 @@ export class AdminUserList implements OnInit {
     this.loadUsers(page, event.rows);
   }
 
-  // Optional: Clear cache when data changes (after edit/delete)
+  // Clear cache when data changes (after edit/delete)
   clearCache(): void {
     this.pageCache.clear();
   }
@@ -77,13 +77,14 @@ export class AdminUserList implements OnInit {
   onEdit(user: any) {
     console.log('Editing user:', user);
     // After editing, you might want to clear cache
-    // this.clearCache();
+    this.clearCache();
   }
 
   onDelete(user: any) {
     console.log('Deleting user:', user);
     // After deleting, clear cache and reload
-    // this.clearCache();
+    this.clearCache();
+    // stay on page, thus track currently loaded users and update numbers:
     // this.loadUsers(0, 10);
   }
 

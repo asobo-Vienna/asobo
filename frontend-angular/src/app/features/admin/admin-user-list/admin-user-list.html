@@ -5,7 +5,7 @@
     [value]="users()"
     [loading]="loading()"
     [paginator]="true"
-    [rows]="10"
+    [rows]="environment.defaultPageSize"
     [totalRecords]="totalRecords()"
     [lazy]="true"
     (onLazyLoad)="onPageChange($event)"
