@@ -1,19 +1,13 @@
 package at.msm.asobo.mappers;
 
 import at.msm.asobo.dto.user.*;
-import at.msm.asobo.entities.Role;
 import at.msm.asobo.entities.User;
 import at.msm.asobo.mappers.helpers.UserMapperHelper;
 import at.msm.asobo.mappers.helpers.PictureMapperHelper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.Named;
 import org.springframework.data.domain.Page;
-
-import java.util.Collections;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring", uses = {UserMapperHelper.class, PictureMapperHelper.class})
 public interface UserDTOUserMapper {
