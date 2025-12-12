@@ -25,7 +25,10 @@ public interface UserCommentRepository extends JpaRepository<UserComment, UUID> 
 
     Optional<UserComment> findUserCommentByEventIdAndId(UUID eventId, UUID commentId);
 
-    @Query("SELECT c as comment, e.title as eventTitle " +
-            "FROM UserComment c JOIN c.event e")
+    @Query("SELECT c.id as id, c.text as text, c.author.username as username, " +
+            "c.author.id as authorId, c.event.id as eventId, c.author.pictureURI as pictureURI, " +
+            "c.creationDate as creationDate, c.modificationDate as modificationDate, " +
+            "c.event.title as eventTitle " +
+            "FROM UserComment c")
     List<UserCommentWithEventTitle> findAllCommentsWithEventTitle();
 }

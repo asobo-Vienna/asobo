@@ -22,15 +22,15 @@
 
     <ng-template pTemplate="body" let-comment>
       <tr>
-        <td><small>{{ comment.userComment.id }}</small></td>
-        <td>{{ comment.userComment.username }}</td>
-        <td>{{ comment.userComment.text }}</td>
-        <td><a [routerLink]="getEventRouterLink(comment.userComment.eventId)"
+        <td><small>{{ comment.id }}</small></td>
+        <td>{{ comment.username }}</td>
+        <td>{{ comment.text }}</td>
+        <td><a [routerLink]="getEventRouterLink(comment.eventId)"
                class="a-clickable">{{ comment.eventTitle }}</a></td>
-        <td>{{ comment.userComment.creationDate | date:'yyyy-MM-dd hh:mm a' }}</td>
+        <td>{{ comment.creationDate | date:'yyyy-MM-dd hh:mm a' }}</td>
 
-        @if (comment.userComment.modificationDate) {
-          <td>{{ comment.userComment.modificationDate | date:'yyyy-MM-dd hh:mm a' }}</td>
+        @if (comment.modificationDate) {
+          <td>{{ comment.modificationDate | date:'yyyy-MM-dd hh:mm a' }}</td>
         } @else {
           <td>–</td>
         }

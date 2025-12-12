@@ -1,8 +1,16 @@
 package at.msm.asobo.interfaces;
 
-import at.msm.asobo.entities.UserComment;
+import java.time.LocalDateTime;
+import java.util.UUID;
 
 public interface UserCommentWithEventTitle {
-    UserComment getComment();
+    UUID getId();
+    String getText();
+    String getUsername();
+    UUID getAuthorId();
+    UUID getEventId();
+    String getPictureURI();
+    LocalDateTime getCreationDate();
+    LocalDateTime getModificationDate();
     String getEventTitle();
 }

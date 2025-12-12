@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 
@@ -33,15 +34,15 @@ public class AdminController {
     /*@GetMapping("/users/{id}/full")
     public UserFullDTO getUserWithDetails(@PathVariable UUID id);*/
 
-  @GetMapping("/comments")
-  public List<UserCommentWithEventTitleDTO> getAllUserCommentsWithEventTitle() {
-    return this.adminService.getAllUserCommentsWithEventTitle();
-  }
+    @GetMapping("/comments")
+    public List<UserCommentWithEventTitleDTO> getAllUserCommentsWithEventTitle() {
+        return this.adminService.getAllUserCommentsWithEventTitle();
+    }
 
-  @GetMapping("/media")
-  public List<MediumWithEventTitleDTO> getAllMediaWithEventTitle() {
-    return this.adminService.getAllMediaWithEventTitle();
-  }
+    @GetMapping("/media")
+    public List<MediumWithEventTitleDTO> getAllMediaWithEventTitle() {
+        return this.adminService.getAllMediaWithEventTitle();
+    }
 
 
      /*@GetMapping
@@ -49,7 +50,7 @@ public class AdminController {
         //return this.userService.getAllUsers();
     }*/
 
-  //@GetMapping("/{id}")
+    //@GetMapping("/{id}")
     /*public UserAdminDTO getUserById(@PathVariable UUID id) {
         User foundUser = this.userService.getUserById(id);
         return new UserAdminDTO(foundUser);
@@ -68,7 +69,7 @@ public class AdminController {
         return new UserAdminDTO(savedUser);
     }*/
 
-  // TODO create UserAdminService that returns UserAdminDTOs
+    // TODO create UserAdminService that returns UserAdminDTOs
 //    @PutMapping("/{id}")
 //    public UserAdminDTO updateUser(@PathVariable UUID id, @RequestBody @Valid UserUpdateDTO userUpdateDTO) {
 //        User updatedUser = this.userService.updateUserById(id, userUpdateDTO);
