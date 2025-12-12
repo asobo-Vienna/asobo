@@ -21,7 +21,7 @@ public class MediumController {
     }
 
     @GetMapping()
-    public List<MediumDTO> getAllMedia(@PathVariable UUID eventID) {
+    public List<MediumDTO> getAllMediaByEventId(@PathVariable UUID eventID) {
         return mediumService.getAllMediaByEventId(eventID);
     }
 

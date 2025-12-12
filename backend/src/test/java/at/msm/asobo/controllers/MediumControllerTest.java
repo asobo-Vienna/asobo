@@ -74,7 +74,7 @@ class MediumControllerTest {
     }
 
     @Test
-    void getAllMedia_ReturnsListOfMedia() throws Exception {
+    void getAllMedia_ReturnsListOfMediaByEventId() throws Exception {
         List<MediumDTO> mediaList = List.of(mediumDTO);
         String expectedJson =  objectMapper.writeValueAsString(mediaList);
 
