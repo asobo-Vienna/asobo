@@ -22,8 +22,12 @@ export class AdminService {
     return this.http.get<PageResponse<User>>(`${environment.apiBaseUrl}/admin/users`, { params });
   }
 
-  public getAllCommentsWithEventTitle(): Observable<CommentWithEventTitle[]> {
-    return this.http.get<CommentWithEventTitle[]>(`${environment.apiBaseUrl}/admin/comments`);
+  public getAllCommentsWithEventTitle(page: number, size: number): Observable<PageResponse<CommentWithEventTitle>> {
+    const params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString());
+
+    return this.http.get<PageResponse<CommentWithEventTitle>>(`${environment.apiBaseUrl}/admin/comments`, { params });
   }
 
   public getAllMedia(): Observable<MediaItem[]> {

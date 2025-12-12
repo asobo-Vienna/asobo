@@ -35,8 +35,8 @@ public class AdminController {
     public UserFullDTO getUserWithDetails(@PathVariable UUID id);*/
 
     @GetMapping("/comments")
-    public List<UserCommentWithEventTitleDTO> getAllUserCommentsWithEventTitle() {
-        return this.adminService.getAllUserCommentsWithEventTitle();
+    public Page<UserCommentWithEventTitleDTO> getAllUserCommentsWithEventTitle(Pageable pageable) {
+        return this.adminService.getAllUserCommentsWithEventTitle(pageable);
     }
 
     @GetMapping("/media")

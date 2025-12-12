@@ -27,7 +27,6 @@ export class AdminUserList implements OnInit {
   totalRecords = signal<number>(0);
   loading = signal<boolean>(true);
 
-  // Cache for loaded pages
   private pageCache = new Map<string, User[]>();
 
   ngOnInit(): void {

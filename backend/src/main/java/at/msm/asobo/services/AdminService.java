@@ -4,7 +4,6 @@ import at.msm.asobo.dto.comment.UserCommentDTO;
 import at.msm.asobo.dto.comment.UserCommentWithEventTitleDTO;
 import at.msm.asobo.dto.medium.MediumWithEventTitleDTO;
 import at.msm.asobo.dto.user.UserAdminSummaryDTO;
-import at.msm.asobo.dto.user.UserFullDTO;
 import at.msm.asobo.entities.User;
 import at.msm.asobo.entities.UserComment;
 import at.msm.asobo.interfaces.MediumWithEventTitle;
@@ -57,9 +56,13 @@ public class AdminService {
         return this.userCommentDTOUserCommentMapper.mapUserCommentsToUserCommentDTOs(userComments);
     }
 
-    public List<UserCommentWithEventTitleDTO> getAllUserCommentsWithEventTitle() {
-        List<UserCommentWithEventTitle> userCommentsWithEventTitles = this.userCommentRepository.findAllCommentsWithEventTitle();
-        return this.userCommentWithEventTitleToUserCommentWithEventTitleDTOMapper.toDTOList(userCommentsWithEventTitles);
+    public Page<UserCommentWithEventTitleDTO> getAllUserCommentsWithEventTitle(Pageable pageable) {
+        Page<UserCommentWithEventTitle> userCommentsWithEventTitles =
+                this.userCommentRepository.findAllCommentsWithEventTitle(pageable);
+
+        return userCommentsWithEventTitles.map(
+                this.userCommentWithEventTitleToUserCommentWithEventTitleDTOMapper::toDTO
+        );
     }
 
     public List<MediumWithEventTitleDTO> getAllMediaWithEventTitle() {

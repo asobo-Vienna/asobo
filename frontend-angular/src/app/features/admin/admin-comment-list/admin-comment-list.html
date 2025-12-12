@@ -3,9 +3,12 @@
 <div class="table-wrapper">
   <p-table
     [value]="comments()"
-    [loading]="false"
+    [loading]="loading()"
     [paginator]="true"
-    [rows]="10"
+    [rows]="environment.defaultPageSize"
+    [totalRecords]="totalRecords()"
+    [lazy]="true"
+    (onLazyLoad)="onPageChange($event)"
   >
     <ng-template pTemplate="header">
       <tr>
@@ -44,7 +47,7 @@
       </tr>
     </ng-template>
   </p-table>
-  @if (loading) {
+  @if (loading()) {
     <div class="loader-overlay">
       <div class="loader-content">
         <i class="pi pi-spin pi-spinner"></i>
