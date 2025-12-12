@@ -7,7 +7,6 @@ import {environment} from '../../../../environments/environment';
 import {AdminService} from '../services/admin-service';
 import {CommentWithEventTitle} from '../../events/models/comment-with-event-title';
 import { RouterLink } from '@angular/router';
-import {User} from '../../auth/models/user';
 
 @Component({
   selector: 'app-admin-comment-list',

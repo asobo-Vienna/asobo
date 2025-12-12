@@ -1,8 +1,10 @@
 package at.msm.asobo.interfaces;
 
-import at.msm.asobo.entities.Medium;
+import java.util.UUID;
 
 public interface MediumWithEventTitle {
-    Medium getMedium();
+    UUID getId();
+    UUID getEventId();
+    String getMediumURI();
     String getEventTitle();
 }

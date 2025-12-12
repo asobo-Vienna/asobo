@@ -40,8 +40,8 @@ public class AdminController {
     }
 
     @GetMapping("/media")
-    public List<MediumWithEventTitleDTO> getAllMediaWithEventTitle() {
-        return this.adminService.getAllMediaWithEventTitle();
+    public Page<MediumWithEventTitleDTO> getAllMediaWithEventTitle(Pageable pageable) {
+        return this.adminService.getAllMediaWithEventTitle(pageable);
     }
 
 

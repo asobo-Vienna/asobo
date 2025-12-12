@@ -65,8 +65,8 @@ public class AdminService {
         );
     }
 
-    public List<MediumWithEventTitleDTO> getAllMediaWithEventTitle() {
-        List<MediumWithEventTitle> mediaListWithEventTitles = this.mediumRepository.findAllMediaWithEventTitle();
-        return this.mediumWithEventTitleToMediumWithEventTitleDTOMapper.toDTOList(mediaListWithEventTitles);
+    public Page<MediumWithEventTitleDTO> getAllMediaWithEventTitle(Pageable pageable) {
+        Page<MediumWithEventTitle> mediaListWithEventTitles = this.mediumRepository.findAllMediaWithEventTitle(pageable);
+        return mediaListWithEventTitles.map(this.mediumWithEventTitleToMediumWithEventTitleDTOMapper::toDTO);
     }
 }

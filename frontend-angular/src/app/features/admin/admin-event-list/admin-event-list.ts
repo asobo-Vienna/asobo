@@ -1,4 +1,4 @@
-import {Component, inject, signal} from '@angular/core';
+import {Component, inject, OnInit, signal} from '@angular/core';
 import {Event} from '../../events/models/event';
 import {environment} from '../../../../environments/environment';
 import {RouterLink} from '@angular/router';
@@ -23,12 +23,11 @@ import {Button} from 'primeng/button';
   templateUrl: './admin-event-list.html',
   styleUrl: './admin-event-list.scss',
 })
-export class AdminEventList {
+export class AdminEventList implements OnInit {
   private eventService = inject(EventService);
   events = signal<Event[]>([]);
   loading = true;
 
-  // Dialog state
   showDescriptionDialog = false;
   selectedEvent: Event | null = null;
 

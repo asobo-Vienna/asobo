@@ -7,6 +7,7 @@ import {User} from '../../auth/models/user';
 import {CommentWithEventTitle} from '../../events/models/comment-with-event-title';
 import {MediaItem} from '../../events/models/media-item';
 import {PageResponse} from '../../../shared/entities/PageResponse';
+import {MediaItemWithEventTitle} from '../../events/models/media-item-with-event-title';
 
 @Injectable({
   providedIn: 'root',
@@ -30,8 +31,12 @@ export class AdminService {
     return this.http.get<PageResponse<CommentWithEventTitle>>(`${environment.apiBaseUrl}/admin/comments`, { params });
   }
 
-  public getAllMedia(): Observable<MediaItem[]> {
-    return this.http.get<MediaItem[]>(`${environment.apiBaseUrl}/admin/media`);
+  public getAllMediaWithEventTitle(page: number, size: number): Observable<PageResponse<MediaItemWithEventTitle>> {
+    const params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString());
+
+    return this.http.get<PageResponse<MediaItemWithEventTitle>>(`${environment.apiBaseUrl}/admin/media`, { params});
   }
 
 }
