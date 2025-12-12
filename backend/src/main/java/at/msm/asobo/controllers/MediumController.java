@@ -5,6 +5,8 @@ import at.msm.asobo.dto.medium.MediumDTO;
 import at.msm.asobo.services.MediumService;
 import jakarta.validation.Valid;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -31,12 +33,13 @@ public class MediumController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_SUPERADMIN', 'ROLE_USER')")
     public MediumDTO addMediumToEventById(@PathVariable UUID eventID, @ModelAttribute @Valid MediumCreationDTO medium) {
         return this.mediumService.addMediumToEventById(eventID, medium);
     }
 
     @DeleteMapping("/{mediumID}")
-    @Secured({"ROLE_ADMIN", "ROLE_SUPERADMIN"})
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPERADMIN')")
     public MediumDTO deleteMediumById(@PathVariable UUID eventID, @PathVariable UUID mediumID) {
         return this.mediumService.deleteMediumById(eventID, mediumID);
     }
