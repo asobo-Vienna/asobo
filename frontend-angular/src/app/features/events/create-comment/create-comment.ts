@@ -21,7 +21,7 @@ export class CreateComment {
   commentCreated = output<Comment>();
   text = signal<string>('');
 
-  onTextChange(event: Event): void {
+  onTextAreaLeave(event: Event): void {
     const value: string = (event.target as HTMLTextAreaElement).value;
     this.text.set(value);
   }
