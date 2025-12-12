@@ -24,10 +24,8 @@ public interface UserDTOUserMapper {
     List<UserPublicDTO> mapUsersToUserPublicDTOs(List<User> users);
     List<User> mapUserPublicDTOsToUsers(List<UserPublicDTO> userDTOs);
 
-    @Mapping(target = "profilePicture", ignore = true)
     UserRegisterDTO mapUserToUserRegisterDTO(User user);
 
-    @Mapping(target = "pictureURI", ignore = true) // Ignore MultipartFile here
     User mapUserRegisterDTOToUser(UserRegisterDTO userDTO);
 
     List<UserRegisterDTO> mapUsersToUserRegisterDTOs(List<User> users);

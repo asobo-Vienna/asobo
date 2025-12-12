@@ -17,6 +17,7 @@ import {InputGroup} from 'primeng/inputgroup';
 import {InputGroupAddon} from 'primeng/inputgroupaddon';
 import {IconField} from 'primeng/iconfield';
 import {InputText} from 'primeng/inputtext';
+import {UserService} from '../../../users/services/user-service';
 
 
 @Component({
@@ -50,6 +51,7 @@ export class RegistrationForm {
   private formBuilder = inject(FormBuilder);
   private passwordValidator = inject(PasswordValidationService);
   public authService = inject(AuthService);
+  private userService = inject(UserService);
   private userValidationService = inject(UserValidationService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
@@ -103,6 +105,11 @@ export class RegistrationForm {
   }
 
   private checkUsernameAvailability(): void {
+    const username = this.registerForm.get('username')?.value;
+    if (!username || username.length < environment.minIdentifierLength) {
+      return;
+    }
+
     this.registerForm.get('username')?.valueChanges
       .pipe(
         filter(username => username.length >= environment.minIdentifierLength),
@@ -116,6 +123,11 @@ export class RegistrationForm {
   }
 
   private checkEmailAvailability(): void {
+    const email = this.registerForm.get('email')?.value;
+    if (!email || email.length < environment.minIdentifierLength) {
+      return;
+    }
+
     this.registerForm.get('email')?.valueChanges
       .pipe(
         filter(() => this.registerForm.get('email')?.valid === true),
@@ -180,29 +192,24 @@ export class RegistrationForm {
       return;
     }
 
-    const formDataObj = this.getSubmitData();
-    if (!formDataObj) {
+    const formUserDataObj = this.getSubmitData();
+    if (!formUserDataObj) {
       return;
     }
 
-    const formData = new FormData();
-
-    Object.entries(formDataObj).forEach(([key, value]) => {
-      formData.append(key, value as string);
-    });
-
-    if (this.selectedImage) {
-      formData.append('profilePicture', this.selectedImage);
-    }
-
-    this.authService.register(formData).subscribe({
+    // Step 1: Register with JSON (no FormData needed)
+    this.authService.register(formUserDataObj).subscribe({
       next: (response) => {
         console.log('Registration successful:', response);
         this.usernameExists.set(false);
         this.emailExists.set(false);
-        const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/dashboard';
-        this.registerForm.reset();
-        this.router.navigate([returnUrl]);
+
+        this.navigateToDashboard();
+
+        // Step 2: Upload profile picture if selected
+        if (this.selectedImage) {
+          this.uploadProfilePicture();
+        }
       },
       error: (err) => {
         console.error('Registration failed with status code:', err.status);
@@ -220,6 +227,23 @@ export class RegistrationForm {
         }
       }
     });
+  }
+
+  private uploadProfilePicture() {
+    const formData = new FormData();
+    formData.append('profilePicture', this.selectedImage!);
+
+    this.userService.updateProfilePicture(formData).subscribe({
+      next: (response) =>
+        console.log('Profile picture uploaded:', response),
+      error: (err) =>
+        console.error('Profile picture upload failed:', err)
+    });
+  }
+
+  private navigateToDashboard() {
+    const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/dashboard';
+    this.router.navigate([returnUrl]);
   }
 
   private getSubmitData() {

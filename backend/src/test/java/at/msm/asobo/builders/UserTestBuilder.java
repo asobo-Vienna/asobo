@@ -2,7 +2,7 @@ package at.msm.asobo.builders;
 
 import at.msm.asobo.dto.auth.LoginResponseDTO;
 import at.msm.asobo.dto.user.UserPublicDTO;
-import at.msm.asobo.dto.user.UserRegisterDTO;
+import at.msm.asobo.dto.auth.UserRegisterDTO;
 import at.msm.asobo.dto.user.UserUpdateDTO;
 
 import java.util.UUID;

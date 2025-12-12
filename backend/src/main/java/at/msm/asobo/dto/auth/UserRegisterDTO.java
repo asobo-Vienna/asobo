@@ -1,11 +1,8 @@
-package at.msm.asobo.dto.user;
+package at.msm.asobo.dto.auth;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.util.UUID;
 
 public class UserRegisterDTO {
 
@@ -31,8 +28,6 @@ public class UserRegisterDTO {
 
     //@NotBlank(message = "Password confirmation is required")
     //private String passwordConf;
-
-    private MultipartFile profilePicture;
 
     private String location;
 
@@ -88,14 +83,6 @@ public class UserRegisterDTO {
     public void setPasswordConf(String passwordConf) {
         this.passwordConf = passwordConf;
     }*/
-
-    public MultipartFile getProfilePicture() {
-        return profilePicture;
-    }
-
-    public void setProfilePicture(MultipartFile profilePicture) {
-        this.profilePicture = profilePicture;
-    }
 
     public String getLocation() {
         return location;
