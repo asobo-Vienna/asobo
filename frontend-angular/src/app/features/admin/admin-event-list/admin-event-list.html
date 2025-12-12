@@ -3,9 +3,12 @@
 <div class="table-wrapper">
   <p-table
     [value]="events()"
-    [loading]="false"
+    [loading]="loading()"
     [paginator]="true"
-    [rows]="10"
+    [rows]="environment.defaultPageSize"
+    [totalRecords]="totalRecords()"
+    [lazy]="true"
+    (onLazyLoad)="onPageChange($event)"
   >
     <ng-template pTemplate="header">
       <tr>
@@ -19,6 +22,7 @@
         <th scope="col" aria-label="Visibility">Visibility</th>
         <th scope="col" aria-label="Number of participants"># Participants</th>
         <th scope="col" aria-label="Number of comments"># Comments</th>
+        <th scope="col" aria-label="Number of media"># Media</th>
         <th scope="col" aria-label="Edit"></th>
         <th scope="col" aria-label="Delete"></th>
       </tr>
@@ -68,8 +72,9 @@
           </p-tag>
         </td>
 
-        <td>{{ event.participants.length }}</td>
-        <td>{{ event.comments.length }}</td>
+        <td>{{ event.participantCount }}</td>
+        <td>{{ event.commentCount }}</td>
+        <td>{{ event.mediaCount }}</td>
 
         <td>
           <i class="pi pi-pencil clickable" title="Edit" (click)="onEdit(event)" aria-label="Edit event"></i>
@@ -81,7 +86,7 @@
     </ng-template>
   </p-table>
 
-  @if (loading) {
+  @if (loading()) {
     <div class="loader-overlay">
       <div class="loader-content">
         <i class="pi pi-spin pi-spinner"></i>

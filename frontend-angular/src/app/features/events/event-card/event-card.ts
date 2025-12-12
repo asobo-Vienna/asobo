@@ -8,6 +8,7 @@ import {Comment} from '../models/comment';
 import {Event} from '../models/event';
 import { Tag } from 'primeng/tag';
 import {AuthService} from '../../auth/services/auth-service';
+import {EventSummary} from '../models/event-summary';
 
 @Component({
   selector: 'app-event-card',
@@ -20,7 +21,7 @@ import {AuthService} from '../../auth/services/auth-service';
   styleUrl: './event-card.scss'
 })
 export class EventCard {
-  event = input<Event>({
+  event = input<EventSummary>({
     id: '',
     title: '',
     pictureURI: '',
@@ -29,8 +30,9 @@ export class EventCard {
     location: '',
     description: '',
     isPrivate: false,
-    participants: new List<Participant>(),
-    comments: new List<Comment>()
+    participantCount: 0,
+    commentCount: 0,
+    mediaCount: 0,
   });
   protected readonly UrlUtilService = UrlUtilService;
   authService = inject(AuthService);

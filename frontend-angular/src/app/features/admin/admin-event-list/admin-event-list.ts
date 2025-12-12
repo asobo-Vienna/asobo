@@ -9,6 +9,7 @@ import {DatePipe} from '@angular/common';
 import {Tag} from 'primeng/tag';
 import {Dialog} from 'primeng/dialog';
 import {Button} from 'primeng/button';
+import {EventSummary} from '../../events/models/event-summary';
 
 @Component({
   selector: 'app-admin-event-list',
@@ -25,31 +26,64 @@ import {Button} from 'primeng/button';
 })
 export class AdminEventList implements OnInit {
   private eventService = inject(EventService);
-  events = signal<Event[]>([]);
-  loading = true;
+  events = signal<EventSummary[]>([]);
+  totalRecords = signal<number>(0);
+  loading = signal<boolean>(true);
 
   showDescriptionDialog = false;
   selectedEvent: Event | null = null;
 
+  private pageCache = new Map<string, EventSummary[]>();
+
   ngOnInit(): void {
-    this.eventService.getAllEvents().subscribe({
-      next: (events) => {
-        this.events.set(events);
-        this.loading = false;
+    this.loadEvents(0, environment.defaultPageSize);
+  }
+
+  loadEvents(page: number, size: number): void {
+    const cacheKey = `${page}-${size}`;
+
+    // Check if page is already cached
+    if (this.pageCache.has(cacheKey)) {
+      this.events.set(this.pageCache.get(cacheKey)!);
+      return;
+    }
+
+    this.loading.set(true);
+
+    this.eventService.getAllEventsPaginated(page, size).subscribe({
+      next: (response) => {
+        // Cache the page data
+        this.pageCache.set(cacheKey, response.content);
+
+        this.events.set(response.content);
+        this.totalRecords.set(response.totalElements);
+        this.loading.set(false);
       },
       error: (err) => {
         console.error('Error fetching events:', err);
-        this.loading = false;
+        this.loading.set(false);
       }
     });
   }
 
+  onPageChange(event: any): void {
+    const page = event.first / event.rows;
+    this.loadEvents(page, event.rows);
+  }
+
+  // Clear cache when data changes (after edit/delete)
+  clearCache(): void {
+    this.pageCache.clear();
+  }
+
   onEdit(event: Event) {
     console.log('Editing event:', event);
+    this.clearCache();
   }
 
   onDelete(event: Event) {
     console.log('Deleting event:', event);
+    this.clearCache();
   }
 
   viewFullDescription(event: Event): void {

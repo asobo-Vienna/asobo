@@ -48,7 +48,7 @@ export class AdminMediaList implements OnInit {
         this.loading.set(false);
       },
       error: (err) => {
-        console.error('Error fetching comments:', err);
+        console.error('Error fetching media:', err);
         this.loading.set(false);
       }
     });

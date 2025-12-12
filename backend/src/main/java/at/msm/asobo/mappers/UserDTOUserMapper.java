@@ -1,5 +1,6 @@
 package at.msm.asobo.mappers;
 
+import at.msm.asobo.dto.auth.UserRegisterDTO;
 import at.msm.asobo.dto.user.*;
 import at.msm.asobo.entities.User;
 import at.msm.asobo.mappers.helpers.UserMapperHelper;
