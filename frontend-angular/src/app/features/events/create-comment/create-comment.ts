@@ -1,4 +1,4 @@
-import {Component, EventEmitter, inject, Input, Output, signal} from '@angular/core';
+import {Component, inject, input, output, signal} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {CommentService} from '../services/comment-service';
 import {ActivatedRoute} from '@angular/router';
@@ -17,23 +17,28 @@ export class CreateComment {
   private commentService = inject(CommentService);
   private route = inject(ActivatedRoute);
 
-  @Input() author!: User | null ;
-  @Output() commentCreated: EventEmitter<Comment> = new EventEmitter<Comment>();
-  text: string = '';
+  author = input<User | null>(null);
+  commentCreated = output<Comment>();
+  text = signal<string>('');
+
+  onTextAreaLeave(event: Event): void {
+    const value: string = (event.target as HTMLTextAreaElement).value;
+    this.text.set(value);
+  }
 
   async submit(): Promise<void> {
     const eventId: string | null = this.route.snapshot.paramMap.get('id');
-    if (!eventId || !this.text.trim() || !this.author)
+    if (!eventId || !this.text().trim() || !this.author())
       return;
 
     this.commentService.create({
-      text: this.text.trim(),
-      authorId: this.author.id,
+      text: this.text().trim(),
+      authorId: this.author()!.id,
       eventId: eventId
     }).subscribe({
       next: (newComment: Comment) => {
         this.commentCreated.emit(newComment);
-        this.text = '';
+        this.text.set('');
       },
       error: (err: Error) => {
         console.error('Error posting comment', err);

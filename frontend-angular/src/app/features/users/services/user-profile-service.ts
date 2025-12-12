@@ -7,12 +7,14 @@ import { environment } from '../../../../environments/environment';
 import { UserProfile } from '../user-profile/models/user-profile-model';
 import { User } from '../../auth/models/user';
 import {LoginResponse} from '../../auth/models/login-response';
+import {UserService} from './user-service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserProfileService {
   private authService = inject(AuthService);
+  private userService = inject(UserService);
   private http = inject(HttpClient);
   private usersEndpointBase = `${environment.usersEndpoint}`;
 
@@ -72,14 +74,12 @@ export class UserProfileService {
       );
   }
 
-  // TODO: still needs to be implemented correctly
-  updatePassword(password: string): Observable<any> {
-    return this.http.patch(`${this.usersEndpointBase}/${this.authService.currentUser()?.id}`, { password });
+  updatePassword(password: string): Observable<LoginResponse> {
+    return this.userService.updatePassword(password);
   }
 
-  // TODO: still needs to be implemented correctly
   updateProfilePicture(formData: FormData): Observable<LoginResponse> {
-    return this.http.patch<LoginResponse>(`${environment.apiBaseUrl}/users/${this.authService.currentUser()?.id}/profile-picture`, formData)
+    return this.userService.updateProfilePicture(formData)
       .pipe(
         tap(response => {
           this.authService.updateUserInStorage(response.user);

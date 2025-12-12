@@ -1,5 +1,5 @@
 <div class="d-flex gap-2">
-  <textarea [(ngModel)]="text" class="form-control" rows="1"
+  <textarea [value]="text()" (blur)="onTextAreaLeave($event)" class="form-control" rows="3"
             placeholder="Your new comment goes here!"></textarea>
-  <button class="btn btn-purple" (click)="submit()">Post!</button>
+  <button class="btn btn-purple align-self-end" (click)="submit()">Post!</button>
 </div>

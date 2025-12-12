@@ -4,7 +4,7 @@ import at.msm.asobo.builders.UserTestBuilder;
 import at.msm.asobo.config.FileStorageProperties;
 import at.msm.asobo.dto.auth.LoginResponseDTO;
 import at.msm.asobo.dto.user.UserPublicDTO;
-import at.msm.asobo.dto.user.UserRegisterDTO;
+import at.msm.asobo.dto.auth.UserRegisterDTO;
 import at.msm.asobo.mappers.LoginResponseDTOToUserPublicDTOMapper;
 import at.msm.asobo.mappers.UserDTOToUserPublicDTOMapper;
 import at.msm.asobo.security.CustomUserDetailsService;
