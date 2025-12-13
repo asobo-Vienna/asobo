@@ -43,7 +43,7 @@ public class RoleController {
                 .orElseThrow(() -> new UserNotFoundException(userId));
 
         Role role = roleRepository.findByName(roleName)
-                .orElseThrow(() -> new RoleNotFoundException("Role not found"));
+                .orElseThrow(() -> new RoleNotFoundException("The specified role does not exist"));
 
         user.getRoles().add(role);
         userRepository.save(user);

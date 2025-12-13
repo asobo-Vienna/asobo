@@ -132,7 +132,6 @@ class ParticipantControllerTest {
         verifyNoInteractions(participantService);
     }
 
-
     @Test
     @WithMockUser(roles = "USER")
     void getParticipantsByEventId_asUser_returns200() throws Exception {
@@ -166,5 +165,5 @@ class ParticipantControllerTest {
 
         verifyNoInteractions(participantService);
     }
-    
+
 }
