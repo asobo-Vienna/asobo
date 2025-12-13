@@ -21,7 +21,7 @@ public class UserCommentController {
     }
 
     @GetMapping
-    public List<UserCommentDTO> getAllUserComments(@PathVariable UUID eventId) {
+    public List<UserCommentDTO> getAllUserCommentsByEventId(@PathVariable UUID eventId) {
         return this.userCommentService.getUserCommentsByEventId(eventId);
     }
 

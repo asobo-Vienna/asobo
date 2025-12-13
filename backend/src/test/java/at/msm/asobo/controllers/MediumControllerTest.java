@@ -24,7 +24,6 @@ import static org.mockito.ArgumentMatchers.any;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -74,14 +73,14 @@ class MediumControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "loggedInUser")
     void getAllMedia_ReturnsListOfMediaByEventId() throws Exception {
         List<MediumDTO> mediaList = List.of(mediumDTO);
         String expectedJson =  objectMapper.writeValueAsString(mediaList);
 
         when(mediumService.getAllMediaByEventId(eventID)).thenReturn(mediaList);
 
-        mockMvc.perform(get("/api/events/{eventID}/media", eventID)
-                        .with(user("anonymousUser")))
+        mockMvc.perform(get("/api/events/{eventID}/media", eventID))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().json(expectedJson));
@@ -90,14 +89,14 @@ class MediumControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "loggedInUser")
     void getMediumById_ReturnsMedium() throws Exception {
         when(mediumService.getMediumDTOByEventIdAndMediumId(eventID, mediumID))
                 .thenReturn(mediumDTO);
 
         String expectedJson =  objectMapper.writeValueAsString(mediumDTO);
 
-        mockMvc.perform(get("/api/events/{eventID}/media/{mediumID}", eventID, mediumID)
-                    .with(user("anonymousUser")))
+        mockMvc.perform(get("/api/events/{eventID}/media/{mediumID}", eventID, mediumID))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().json(expectedJson));

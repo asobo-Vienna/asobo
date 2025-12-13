@@ -7,6 +7,7 @@ import at.msm.asobo.exceptions.RoleNotFoundException;
 import at.msm.asobo.repositories.RoleRepository;
 import at.msm.asobo.repositories.UserRepository;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,6 +15,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/roles")
+@PreAuthorize("hasAnyRole('ADMIN', 'SUPERADMIN')")
 public class RoleController {
 
     private final RoleRepository roleRepository;

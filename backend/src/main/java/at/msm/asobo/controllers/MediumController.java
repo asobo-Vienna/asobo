@@ -37,7 +37,7 @@ public class MediumController {
     }
 
     @DeleteMapping("/{mediumID}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'SUPERADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'EVENTADMIN', 'SUPERADMIN')")
     public MediumDTO deleteMediumById(@PathVariable UUID eventID, @PathVariable UUID mediumID) {
         return this.mediumService.deleteMediumById(eventID, mediumID);
     }
