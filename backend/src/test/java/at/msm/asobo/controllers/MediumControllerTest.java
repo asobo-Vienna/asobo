@@ -53,6 +53,8 @@ class MediumControllerTest {
     private UUID eventID;
     private UUID mediumID;
     private MediumDTO mediumDTO;
+    private static final String ALL_MEDIA_URL = "/api/events/{eventID}/media";
+    private static final String SINGLE_MEDIUM_URL = "/api/events/{eventID}/media/{mediumID}";
 
     @BeforeEach
     void setUp() {
@@ -80,7 +82,7 @@ class MediumControllerTest {
 
         when(mediumService.getAllMediaByEventId(eventID)).thenReturn(mediaList);
 
-        mockMvc.perform(get("/api/events/{eventID}/media", eventID))
+        mockMvc.perform(get(ALL_MEDIA_URL, eventID))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().json(expectedJson));
@@ -96,7 +98,7 @@ class MediumControllerTest {
 
         String expectedJson =  objectMapper.writeValueAsString(mediumDTO);
 
-        mockMvc.perform(get("/api/events/{eventID}/media/{mediumID}", eventID, mediumID))
+        mockMvc.perform(get(SINGLE_MEDIUM_URL, eventID, mediumID))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().json(expectedJson));
@@ -112,7 +114,7 @@ class MediumControllerTest {
 
         MockMultipartFile file = createMockMultipartFile();
 
-        mockMvc.perform(multipart("/api/events/{eventID}/media", eventID)
+        mockMvc.perform(multipart(ALL_MEDIA_URL, eventID)
                         .file(file)
                         .with(csrf()))
                 .andExpect(status().isOk());
@@ -125,7 +127,7 @@ class MediumControllerTest {
 
         MockMultipartFile file = createMockMultipartFile();
 
-        mockMvc.perform(multipart("/api/events/{eventID}/media", eventID)
+        mockMvc.perform(multipart(ALL_MEDIA_URL, eventID)
                         .file(file))
                 .andExpect(status().isForbidden());
     }
@@ -136,7 +138,7 @@ class MediumControllerTest {
         when(mediumService.deleteMediumById(eventID, mediumID))
                 .thenReturn(mediumDTO);
 
-        mockMvc.perform(delete("/api/events/{eventID}/media/{mediumID}", eventID, mediumID)
+        mockMvc.perform(delete(SINGLE_MEDIUM_URL, eventID, mediumID)
                         .with(csrf()))
                 .andExpect(status().isOk());
 
@@ -146,7 +148,7 @@ class MediumControllerTest {
     @Test
     @WithMockUser(roles = "USER")
     void deleteMediumById_WithoutAdminRole_ReturnsForbidden() throws Exception {
-        mockMvc.perform(delete("/api/events/{eventID}/media/{mediumID}", eventID, mediumID)
+        mockMvc.perform(delete(SINGLE_MEDIUM_URL, eventID, mediumID)
                         .with(csrf()))
                 .andExpect(status().isForbidden());
 

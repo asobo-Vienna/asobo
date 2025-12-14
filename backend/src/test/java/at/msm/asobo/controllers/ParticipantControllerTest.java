@@ -53,6 +53,7 @@ class ParticipantControllerTest {
 
     private UserPublicDTO userPublicDTO;
     private UUID eventId;
+    private final String ALL_PARTICIPANTS_URL = "/api/events/{eventID}/participants";
 
     @BeforeEach
     void setUp() {
@@ -70,7 +71,7 @@ class ParticipantControllerTest {
         when(participantService.toggleParticipantInEvent(eq(eventId), any(UserPublicDTO.class)))
                 .thenReturn(participantDTOList);
 
-        mockMvc.perform(post("/api/events/{eventID}/participants", eventId)
+        mockMvc.perform(post(ALL_PARTICIPANTS_URL, eventId)
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(userPublicDTO)))
@@ -86,7 +87,7 @@ class ParticipantControllerTest {
     @Test
     @WithMockUser(roles = "X")
     void toggleParticipantInEvent_withUnauthorizedRole_returns403() throws Exception {
-        mockMvc.perform(post("/api/events/{eventId}/participants", eventId)
+        mockMvc.perform(post(ALL_PARTICIPANTS_URL, eventId)
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(userPublicDTO)))
@@ -98,7 +99,7 @@ class ParticipantControllerTest {
     @Test
     void toggleParticipantInEvent_unauthenticated_returns401() throws Exception {
 
-        mockMvc.perform(post("/api/events/{eventID}/participants", eventId)
+        mockMvc.perform(post(ALL_PARTICIPANTS_URL, eventId)
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(userPublicDTO)))
@@ -112,7 +113,7 @@ class ParticipantControllerTest {
     void toggleParticipantInEvent_withInvalidRequestBody_returns400() throws Exception {
         String invalidJson = "{ invalid json }";
 
-        mockMvc.perform(post("/api/events/{eventId}/participants", eventId)
+        mockMvc.perform(post(ALL_PARTICIPANTS_URL, eventId)
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(invalidJson))
@@ -124,7 +125,7 @@ class ParticipantControllerTest {
     @Test
     @WithMockUser(roles = "USER")
     void toggleParticipantInEvent_withoutCsrf_returns403() throws Exception {
-        mockMvc.perform(post("/api/events/{eventId}/participants", eventId)
+        mockMvc.perform(post(ALL_PARTICIPANTS_URL, eventId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(userPublicDTO)))
                 .andExpect(status().isForbidden());
@@ -141,7 +142,7 @@ class ParticipantControllerTest {
         when(participantService.getAllParticipantsAsDTOsByEventId(eventId))
                 .thenReturn(participantDTOList);
 
-        mockMvc.perform(get("/api/events/{eventID}/participants", eventId))
+        mockMvc.perform(get(ALL_PARTICIPANTS_URL, eventId))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().json(expectedJson));
@@ -151,7 +152,7 @@ class ParticipantControllerTest {
 
     @Test
     void getParticipantsByEventId_unauthenticated_returns401() throws Exception {
-        mockMvc.perform(get("/api/events/{eventID}/participants", eventId))
+        mockMvc.perform(get(ALL_PARTICIPANTS_URL, eventId))
                 .andExpect(status().isUnauthorized());
 
         verifyNoInteractions(participantService);
@@ -160,7 +161,7 @@ class ParticipantControllerTest {
     @Test
     @WithMockUser(roles = "X")
     void getParticipantsByEventId_withUnauthorizedRole_returns403() throws Exception {
-        mockMvc.perform(get("/api/events/{eventId}/participants", eventId))
+        mockMvc.perform(get(ALL_PARTICIPANTS_URL, eventId))
                 .andExpect(status().isForbidden());
 
         verifyNoInteractions(participantService);

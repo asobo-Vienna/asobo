@@ -63,6 +63,8 @@ class RoleControllerTest {
     private UUID userId;
     private Role testRole;
     private User testUser;
+    private final String ROLES_URL = "/api/roles";
+    private final String ASSIGN_URL = "/api/roles/assign";
 
     @BeforeEach
     void setUp() {
@@ -86,7 +88,7 @@ class RoleControllerTest {
 
         String expectedJson = objectMapper.writeValueAsString(List.of("TESTROLE"));
 
-        mockMvc.perform(get("/api/roles")
+        mockMvc.perform(get(ROLES_URL)
                         .with(user("testuser").roles(role)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -98,7 +100,7 @@ class RoleControllerTest {
     @Test
     @WithMockUser(roles = "USER")
     void getAllRoles_withUnauthorizedRole_returns403() throws Exception {
-        mockMvc.perform(get("/api/roles"))
+        mockMvc.perform(get(ROLES_URL))
                 .andExpect(status().isForbidden());
 
         verifyNoInteractions(roleRepository);
@@ -106,7 +108,7 @@ class RoleControllerTest {
 
     @Test
     void getAllRoles_unauthenticated_returns401() throws Exception {
-        mockMvc.perform(get("/api/roles"))
+        mockMvc.perform(get(ROLES_URL))
                 .andExpect(status().isUnauthorized());
 
         verifyNoInteractions(roleRepository);
@@ -119,7 +121,7 @@ class RoleControllerTest {
         when(roleRepository.findByName("TESTROLE")).thenReturn(Optional.of(testRole));
         when(userRepository.save(testUser)).thenReturn(testUser);
 
-        mockMvc.perform(post("/api/roles/assign")
+        mockMvc.perform(post(ASSIGN_URL)
                         .with(user("testuser").roles(role))
                         .with(csrf())
                         .param("userId", userId.toString())
@@ -135,7 +137,7 @@ class RoleControllerTest {
     @Test
     @WithMockUser(roles = "USER")
     void assignRole_withUnauthorizedRole_returns403() throws Exception {
-        mockMvc.perform(post("/api/roles/assign")
+        mockMvc.perform(post(ASSIGN_URL)
                         .with(csrf())
                         .param("userId", userId.toString())
                         .param("roleName", "TESTROLE"))
@@ -146,7 +148,7 @@ class RoleControllerTest {
 
     @Test
     void assignRole_unauthenticated_returns401() throws Exception {
-        mockMvc.perform(post("/api/roles/assign")
+        mockMvc.perform(post(ASSIGN_URL)
                         .with(csrf())
                         .param("userId", userId.toString())
                         .param("roleName", "TESTROLE"))
@@ -158,7 +160,7 @@ class RoleControllerTest {
     @Test
     @WithMockUser(roles = "ADMIN")
     void assignRole_withoutCsrf_returns403() throws Exception {
-        mockMvc.perform(post("/api/roles/assign")
+        mockMvc.perform(post(ASSIGN_URL)
                         .param("userId", userId.toString())
                         .param("roleName", "TESTROLE"))
                 .andExpect(status().isForbidden());
@@ -172,7 +174,7 @@ class RoleControllerTest {
         when(userRepository.findUserById(userId))
                 .thenThrow(new UserNotFoundException(userId));
 
-        mockMvc.perform(post("/api/roles/assign")
+        mockMvc.perform(post(ASSIGN_URL)
                         .with(user("testuser").roles(role))
                         .with(csrf())
                         .param("userId", userId.toString())
@@ -190,7 +192,7 @@ class RoleControllerTest {
         when(roleRepository.findByName("NONEXISTENT"))
                 .thenThrow(new RoleNotFoundException("Role not found"));
 
-        mockMvc.perform(post("/api/roles/assign")
+        mockMvc.perform(post(ASSIGN_URL)
                         .with(user("testuser").roles(role))
                         .with(csrf())
                         .param("userId", userId.toString())
@@ -205,7 +207,7 @@ class RoleControllerTest {
     @ParameterizedTest
     @ValueSource(strings = {"ADMIN", "SUPERADMIN"})
     void assignRole_withMissingUserId_returns400(String role) throws Exception {
-        mockMvc.perform(post("/api/roles/assign")
+        mockMvc.perform(post(ASSIGN_URL)
                         .with(user("testuser").roles(role))
                         .with(csrf())
                         .param("roleName", "TESTROLE"))
@@ -217,7 +219,7 @@ class RoleControllerTest {
     @ParameterizedTest
     @ValueSource(strings = {"ADMIN", "SUPERADMIN"})
     void assignRole_withMissingRoleName_returns400(String role) throws Exception {
-        mockMvc.perform(post("/api/roles/assign")
+        mockMvc.perform(post(ASSIGN_URL)
                         .with(user("testuser").roles(role))
                         .with(csrf())
                         .param("userId", userId.toString()))
@@ -229,7 +231,7 @@ class RoleControllerTest {
     @ParameterizedTest
     @ValueSource(strings = {"ADMIN", "SUPERADMIN"})
     void assignRole_withInvalidUUID_returns400(String role) throws Exception {
-        mockMvc.perform(post("/api/roles/assign")
+        mockMvc.perform(post(ASSIGN_URL)
                         .with(user("testuser").roles(role))
                         .with(csrf())
                         .param("userId", "invalid-uuid")
