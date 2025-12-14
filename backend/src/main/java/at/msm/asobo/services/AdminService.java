@@ -4,10 +4,9 @@ import at.msm.asobo.dto.comment.UserCommentDTO;
 import at.msm.asobo.dto.comment.UserCommentWithEventTitleDTO;
 import at.msm.asobo.dto.medium.MediumWithEventTitleDTO;
 import at.msm.asobo.dto.user.UserAdminSummaryDTO;
+import at.msm.asobo.entities.Medium;
 import at.msm.asobo.entities.User;
 import at.msm.asobo.entities.UserComment;
-import at.msm.asobo.interfaces.MediumWithEventTitle;
-import at.msm.asobo.interfaces.UserCommentWithEventTitle;
 import at.msm.asobo.mappers.*;
 import at.msm.asobo.repositories.MediumRepository;
 import at.msm.asobo.repositories.UserCommentRepository;
@@ -26,24 +25,24 @@ public class AdminService {
 
     private final UserDTOUserMapper userDTOUserMapper;
     private final UserCommentDTOUserCommentMapper userCommentDTOUserCommentMapper;
-    private final UserCommentWithEventTitleToUserCommentWithEventTitleDTOMapper userCommentWithEventTitleToUserCommentWithEventTitleDTOMapper;
-    private final MediumWithEventTitleToMediumWithEventTitleDTOMapper mediumWithEventTitleToMediumWithEventTitleDTOMapper;
+    private final UserCommentToUserCommentWithEventTitleDTOMapper userCommentToUserCommentWithEventTitleDTOMapper;
+    private final MediumToMediumWithEventTitleDTOMapper mediumToMediumWithEventTitleDTOMapper;
 
     public AdminService(UserRepository userRepository,
                         UserCommentRepository userCommentRepository,
                         MediumRepository mediumRepository,
                         UserDTOUserMapper userDTOUserMapper,
                         UserCommentDTOUserCommentMapper userCommentDTOUserCommentMapper,
-                        UserCommentWithEventTitleToUserCommentWithEventTitleDTOMapper userCommentWithEventTitleToUserCommentWithEventTitleDTOMapper,
-                        MediumWithEventTitleToMediumWithEventTitleDTOMapper mediumWithEventTitleToMediumWithEventTitleDTOMapper
+                        UserCommentToUserCommentWithEventTitleDTOMapper userCommentToUserCommentWithEventTitleDTOMapper,
+                        MediumToMediumWithEventTitleDTOMapper mediumToMediumWithEventTitleDTOMapper
     ) {
         this.userRepository = userRepository;
         this.userCommentRepository = userCommentRepository;
         this.mediumRepository = mediumRepository;
         this.userDTOUserMapper = userDTOUserMapper;
         this.userCommentDTOUserCommentMapper = userCommentDTOUserCommentMapper;
-        this.userCommentWithEventTitleToUserCommentWithEventTitleDTOMapper = userCommentWithEventTitleToUserCommentWithEventTitleDTOMapper;
-        this.mediumWithEventTitleToMediumWithEventTitleDTOMapper =  mediumWithEventTitleToMediumWithEventTitleDTOMapper;
+        this.userCommentToUserCommentWithEventTitleDTOMapper = userCommentToUserCommentWithEventTitleDTOMapper;
+        this.mediumToMediumWithEventTitleDTOMapper =  mediumToMediumWithEventTitleDTOMapper;
     }
 
     public Page<UserAdminSummaryDTO> getAllUsers(Pageable pageable) {
@@ -57,16 +56,14 @@ public class AdminService {
     }
 
     public Page<UserCommentWithEventTitleDTO> getAllUserCommentsWithEventTitle(Pageable pageable) {
-        Page<UserCommentWithEventTitle> userCommentsWithEventTitles =
-                this.userCommentRepository.findAllCommentsWithEventTitle(pageable);
+        Page<UserComment> userCommentsWithEventTitles =
+                this.userCommentRepository.findAllPageable(pageable);
 
-        return userCommentsWithEventTitles.map(
-                this.userCommentWithEventTitleToUserCommentWithEventTitleDTOMapper::toDTO
-        );
+        return userCommentsWithEventTitles.map(this.userCommentToUserCommentWithEventTitleDTOMapper::toDTO);
     }
 
     public Page<MediumWithEventTitleDTO> getAllMediaWithEventTitle(Pageable pageable) {
-        Page<MediumWithEventTitle> mediaListWithEventTitles = this.mediumRepository.findAllMediaWithEventTitle(pageable);
-        return mediaListWithEventTitles.map(this.mediumWithEventTitleToMediumWithEventTitleDTOMapper::toDTO);
+        Page<Medium> mediaListWithEventTitles = this.mediumRepository.findAllPageable(pageable);
+        return mediaListWithEventTitles.map(this.mediumToMediumWithEventTitleDTOMapper::toDTO);
     }
 }

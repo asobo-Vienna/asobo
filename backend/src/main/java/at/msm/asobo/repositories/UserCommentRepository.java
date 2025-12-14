@@ -3,7 +3,6 @@ package at.msm.asobo.repositories;
 import at.msm.asobo.entities.Event;
 import at.msm.asobo.entities.User;
 import at.msm.asobo.entities.UserComment;
-import at.msm.asobo.interfaces.UserCommentWithEventTitle;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -26,10 +25,6 @@ public interface UserCommentRepository extends JpaRepository<UserComment, UUID> 
 
     Optional<UserComment> findUserCommentByEventIdAndId(UUID eventId, UUID commentId);
 
-    @Query("SELECT c.id as id, c.text as text, c.author.username as username, " +
-            "c.author.id as authorId, c.event.id as eventId, c.author.pictureURI as pictureURI, " +
-            "c.creationDate as creationDate, c.modificationDate as modificationDate, " +
-            "c.event.title as eventTitle " +
-            "FROM UserComment c")
-    Page<UserCommentWithEventTitle> findAllCommentsWithEventTitle(Pageable pageable);
+    @Query("SELECT c FROM UserComment c JOIN FETCH c.author JOIN FETCH c.event")
+    Page<UserComment> findAllPageable(Pageable pageable);
 }
