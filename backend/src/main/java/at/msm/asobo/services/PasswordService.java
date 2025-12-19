@@ -1,9 +1,9 @@
 package at.msm.asobo.services;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-@Component
+@Service
 public class PasswordService {
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
