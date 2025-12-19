@@ -51,21 +51,24 @@ class ParticipantControllerTest {
     @MockitoBean
     private CustomUserDetailsService customUserDetailsService;
 
-    private UserPublicDTO userPublicDTO;
+    private UserPublicDTO userPublicDTO1;
+    private UserPublicDTO userPublicDTO2;
     private UUID eventId;
     private final String ALL_PARTICIPANTS_URL = "/api/events/{eventID}/participants";
 
     @BeforeEach
     void setUp() {
         eventId =  UUID.randomUUID();
-        userPublicDTO = new UserPublicDTO();
-        userPublicDTO.setId(UUID.randomUUID());
+        userPublicDTO1 = new UserPublicDTO();
+        userPublicDTO1.setId(UUID.randomUUID());
+        userPublicDTO2 = new UserPublicDTO();
+        userPublicDTO2.setId(UUID.randomUUID());
     }
 
     @Test
     @WithMockUser(roles = "USER")
     void toggleParticipantInEvent_asUser_returns200() throws Exception {
-        List<UserPublicDTO> participantDTOList = List.of(userPublicDTO);
+        List<UserPublicDTO> participantDTOList = List.of(userPublicDTO1, userPublicDTO2);
         String expectedJson = objectMapper.writeValueAsString(participantDTOList);
 
         when(participantService.toggleParticipantInEvent(eq(eventId), any(UserPublicDTO.class)))
@@ -74,7 +77,7 @@ class ParticipantControllerTest {
         mockMvc.perform(post(ALL_PARTICIPANTS_URL, eventId)
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(userPublicDTO)))
+                        .content(objectMapper.writeValueAsString(userPublicDTO1)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().json(expectedJson));
@@ -90,7 +93,7 @@ class ParticipantControllerTest {
         mockMvc.perform(post(ALL_PARTICIPANTS_URL, eventId)
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(userPublicDTO)))
+                        .content(objectMapper.writeValueAsString(userPublicDTO1)))
                 .andExpect(status().isForbidden());
 
         verifyNoInteractions(participantService);
@@ -102,7 +105,7 @@ class ParticipantControllerTest {
         mockMvc.perform(post(ALL_PARTICIPANTS_URL, eventId)
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(userPublicDTO)))
+                        .content(objectMapper.writeValueAsString(userPublicDTO1)))
                 .andExpect(status().isUnauthorized());
 
         verifyNoInteractions(participantService);
@@ -127,7 +130,7 @@ class ParticipantControllerTest {
     void toggleParticipantInEvent_withoutCsrf_returns403() throws Exception {
         mockMvc.perform(post(ALL_PARTICIPANTS_URL, eventId)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(userPublicDTO)))
+                        .content(objectMapper.writeValueAsString(userPublicDTO1)))
                 .andExpect(status().isForbidden());
 
         verifyNoInteractions(participantService);
@@ -136,7 +139,7 @@ class ParticipantControllerTest {
     @Test
     @WithMockUser(roles = "USER")
     void getParticipantsByEventId_asUser_returns200() throws Exception {
-        List<UserPublicDTO> participantDTOList = List.of(userPublicDTO);
+        List<UserPublicDTO> participantDTOList = List.of(userPublicDTO1);
         String expectedJson = objectMapper.writeValueAsString(participantDTOList);
 
         when(participantService.getAllParticipantsAsDTOsByEventId(eventId))

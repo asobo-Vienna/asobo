@@ -52,7 +52,8 @@ class MediumControllerTest {
 
     private UUID eventID;
     private UUID mediumID;
-    private MediumDTO mediumDTO;
+    private MediumDTO mediumDTO1;
+    private MediumDTO mediumDTO2;
     private static final String ALL_MEDIA_URL = "/api/events/{eventID}/media";
     private static final String SINGLE_MEDIUM_URL = "/api/events/{eventID}/media/{mediumID}";
 
@@ -61,9 +62,13 @@ class MediumControllerTest {
         eventID = UUID.randomUUID();
         mediumID = UUID.randomUUID();
 
-        mediumDTO = new MediumDTO();
-        mediumDTO.setId(UUID.randomUUID());
-        mediumDTO.setEventId(eventID);
+        mediumDTO1 = new MediumDTO();
+        mediumDTO1.setId(UUID.randomUUID());
+        mediumDTO1.setEventId(eventID);
+
+        mediumDTO2 = new MediumDTO();
+        mediumDTO2.setId(UUID.randomUUID());
+        mediumDTO2.setEventId(eventID);
     }
 
     private MockMultipartFile createMockMultipartFile() {
@@ -77,7 +82,7 @@ class MediumControllerTest {
     @Test
     @WithMockUser(username = "loggedInUser")
     void getAllMedia_ReturnsListOfMediaByEventId() throws Exception {
-        List<MediumDTO> mediaList = List.of(mediumDTO);
+        List<MediumDTO> mediaList = List.of(mediumDTO1, mediumDTO2);
         String expectedJson =  objectMapper.writeValueAsString(mediaList);
 
         when(mediumService.getAllMediaByEventId(eventID)).thenReturn(mediaList);
@@ -94,9 +99,9 @@ class MediumControllerTest {
     @WithMockUser(username = "loggedInUser")
     void getMediumById_ReturnsMedium() throws Exception {
         when(mediumService.getMediumDTOByEventIdAndMediumId(eventID, mediumID))
-                .thenReturn(mediumDTO);
+                .thenReturn(mediumDTO1);
 
-        String expectedJson =  objectMapper.writeValueAsString(mediumDTO);
+        String expectedJson =  objectMapper.writeValueAsString(mediumDTO1);
 
         mockMvc.perform(get(SINGLE_MEDIUM_URL, eventID, mediumID))
                 .andExpect(status().isOk())
@@ -110,7 +115,7 @@ class MediumControllerTest {
     @WithMockUser(roles = "USER")
     void addMediumToEventById_WithValidData_ReturnsMedium() throws Exception {
         when(mediumService.addMediumToEventById(any(UUID.class), any(MediumCreationDTO.class)))
-                .thenReturn(mediumDTO);
+                .thenReturn(mediumDTO1);
 
         MockMultipartFile file = createMockMultipartFile();
 
@@ -136,7 +141,7 @@ class MediumControllerTest {
     @WithMockUser(roles = "ADMIN")
     void deleteMediumById_WithAdminRole_DeletesMedium() throws Exception {
         when(mediumService.deleteMediumById(eventID, mediumID))
-                .thenReturn(mediumDTO);
+                .thenReturn(mediumDTO1);
 
         mockMvc.perform(delete(SINGLE_MEDIUM_URL, eventID, mediumID)
                         .with(csrf()))

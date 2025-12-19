@@ -61,7 +61,8 @@ class RoleControllerTest {
     private CustomUserDetailsService customUserDetailsService;
 
     private UUID userId;
-    private Role testRole;
+    private Role testRole1;
+    private Role testRole2;
     private User testUser;
     private final String ROLES_URL = "/api/roles";
     private final String ASSIGN_URL = "/api/roles/assign";
@@ -70,9 +71,13 @@ class RoleControllerTest {
     void setUp() {
         userId = UUID.randomUUID();
 
-        testRole = new Role();
-        testRole.setId(1L);
-        testRole.setName("TESTROLE");
+        testRole1 = new Role();
+        testRole1.setId(1L);
+        testRole1.setName("TESTROLE");
+
+        testRole2 = new Role();
+        testRole2.setId(2L);
+        testRole2.setName("TESTROLE_XY");
 
         testUser = new User();
         testUser.setId(userId);
@@ -83,10 +88,10 @@ class RoleControllerTest {
     @ParameterizedTest
     @ValueSource(strings = {"ADMIN", "SUPERADMIN"})
     void getAllRoles_withAuthorizedRole_returns200(String role) throws Exception {
-        List<Role> rolesList = List.of(testRole);
+        List<Role> rolesList = List.of(testRole1, testRole2);
         when(roleRepository.findAll()).thenReturn(rolesList);
 
-        String expectedJson = objectMapper.writeValueAsString(List.of("TESTROLE"));
+        String expectedJson = objectMapper.writeValueAsString(List.of("TESTROLE", "TESTROLE_XY"));
 
         mockMvc.perform(get(ROLES_URL)
                         .with(user("testuser").roles(role)))
@@ -118,7 +123,7 @@ class RoleControllerTest {
     @ValueSource(strings = {"ADMIN", "SUPERADMIN"})
     void assignRole_withAuthorizedRole_returns200(String role) throws Exception {
         when(userRepository.findUserById(userId)).thenReturn(Optional.of(testUser));
-        when(roleRepository.findByName("TESTROLE")).thenReturn(Optional.of(testRole));
+        when(roleRepository.findByName("TESTROLE")).thenReturn(Optional.of(testRole1));
         when(userRepository.save(testUser)).thenReturn(testUser);
 
         mockMvc.perform(post(ASSIGN_URL)

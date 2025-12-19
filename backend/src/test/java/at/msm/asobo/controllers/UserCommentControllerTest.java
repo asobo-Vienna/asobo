@@ -58,7 +58,8 @@ class UserCommentControllerTest {
 
     private UUID eventId;
     private UUID commentId;
-    private UserCommentDTO userCommentDTO;
+    private UserCommentDTO userCommentDTO1;
+    private UserCommentDTO userCommentDTO2;
     private final String ALL_COMMENTS_URL = "/api/events/{eventId}/comments";
     private final String SINGLE_COMMENT_URL =  "/api/events/{eventId}/comments/{commentId}";
 
@@ -67,9 +68,13 @@ class UserCommentControllerTest {
         eventId = UUID.randomUUID();
         commentId = UUID.randomUUID();
 
-        userCommentDTO = new UserCommentDTO();
-        userCommentDTO.setId(commentId);
-        userCommentDTO.setText("Test comment");
+        userCommentDTO1 = new UserCommentDTO();
+        userCommentDTO1.setId(commentId);
+        userCommentDTO1.setText("Test comment #1!");
+
+        userCommentDTO2 = new UserCommentDTO();
+        userCommentDTO2.setId(commentId);
+        userCommentDTO2.setText("Test comment #2, yo!");
     }
 
     private UserPrincipal createUserPrincipal(String role) {
@@ -84,7 +89,7 @@ class UserCommentControllerTest {
     @ParameterizedTest
     @ValueSource(strings = {"USER", "ADMIN", "SUPERADMIN"})
     void getAllUserCommentsByEventId_withAuthorizedRole_returns200(String role) throws Exception {
-        List<UserCommentDTO> comments = List.of(userCommentDTO);
+        List<UserCommentDTO> comments = List.of(userCommentDTO1, userCommentDTO2);
         String expectedJson = objectMapper.writeValueAsString(comments);
 
         when(userCommentService.getUserCommentsByEventId(eventId)).thenReturn(comments);
@@ -118,10 +123,10 @@ class UserCommentControllerTest {
     @ParameterizedTest
     @ValueSource(strings = {"USER", "ADMIN", "SUPERADMIN"})
     void getUserCommentById_withAuthorizedRole_returns200(String role) throws Exception {
-        String expectedJson = objectMapper.writeValueAsString(userCommentDTO);
+        String expectedJson = objectMapper.writeValueAsString(userCommentDTO1);
 
         when(userCommentService.getUserCommentByEventIdAndCommentId(eventId, commentId))
-                .thenReturn(userCommentDTO);
+                .thenReturn(userCommentDTO1);
 
         mockMvc.perform(get(SINGLE_COMMENT_URL, eventId, commentId)
                         .with(user("testuser").roles(role)))
@@ -152,10 +157,10 @@ class UserCommentControllerTest {
     @ParameterizedTest
     @ValueSource(strings = {"USER", "ADMIN", "SUPERADMIN"})
     void addNewComment_withAuthorizedRole_returns201(String role) throws Exception {
-        String jsonComment = objectMapper.writeValueAsString(userCommentDTO);
+        String jsonComment = objectMapper.writeValueAsString(userCommentDTO1);
 
         when(userCommentService.addNewUserCommentToEventById(eq(eventId), any(UserCommentDTO.class)))
-                .thenReturn(userCommentDTO);
+                .thenReturn(userCommentDTO1);
 
         mockMvc.perform(post(ALL_COMMENTS_URL, eventId)
                         .with(user("testuser").roles(role))
@@ -171,7 +176,7 @@ class UserCommentControllerTest {
     @Test
     @WithMockUser(roles = "X")
     void addNewComment_withUnauthorizedRole_returns403() throws Exception {
-        String jsonComment =  objectMapper.writeValueAsString(userCommentDTO);
+        String jsonComment =  objectMapper.writeValueAsString(userCommentDTO1);
         mockMvc.perform(post(ALL_COMMENTS_URL, eventId)
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
@@ -183,7 +188,7 @@ class UserCommentControllerTest {
 
     @Test
     void addNewComment_unauthenticated_returns401() throws Exception {
-        String jsonComment =  objectMapper.writeValueAsString(userCommentDTO);
+        String jsonComment =  objectMapper.writeValueAsString(userCommentDTO1);
         mockMvc.perform(post(ALL_COMMENTS_URL, eventId)
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
@@ -212,7 +217,7 @@ class UserCommentControllerTest {
     void addNewComment_withoutCsrf_returns403() throws Exception {
         mockMvc.perform(post(ALL_COMMENTS_URL, eventId)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(userCommentDTO)))
+                        .content(objectMapper.writeValueAsString(userCommentDTO1)))
                 .andExpect(status().isForbidden());
 
         verifyNoInteractions(userCommentService);
@@ -221,11 +226,11 @@ class UserCommentControllerTest {
     @ParameterizedTest
     @ValueSource(strings = {"USER", "ADMIN", "SUPERADMIN"})
     void updateUserComment_withAuthorizedRole_returns200(String role) throws Exception {
-        String jsonComment =  objectMapper.writeValueAsString(userCommentDTO);
+        String jsonComment =  objectMapper.writeValueAsString(userCommentDTO1);
 
         when(userCommentService.updateUserCommentByEventIdAndCommentId(
                 eq(eventId), eq(commentId), any(UserCommentDTO.class), any(UUID.class)))
-                .thenReturn(userCommentDTO);
+                .thenReturn(userCommentDTO1);
 
         UserPrincipal loggedInUser = createUserPrincipal(role);
 
@@ -248,7 +253,7 @@ class UserCommentControllerTest {
         mockMvc.perform(put(SINGLE_COMMENT_URL, eventId, commentId)
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(userCommentDTO)))
+                        .content(objectMapper.writeValueAsString(userCommentDTO1)))
                 .andExpect(status().isForbidden());
 
         verifyNoInteractions(userCommentService);
@@ -259,7 +264,7 @@ class UserCommentControllerTest {
         mockMvc.perform(put(SINGLE_COMMENT_URL, eventId, commentId)
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(userCommentDTO)))
+                        .content(objectMapper.writeValueAsString(userCommentDTO1)))
                 .andExpect(status().isUnauthorized());
 
         verifyNoInteractions(userCommentService);
@@ -284,7 +289,7 @@ class UserCommentControllerTest {
     void updateUserComment_withoutCsrf_returns403() throws Exception {
         mockMvc.perform(put(SINGLE_COMMENT_URL, eventId, commentId)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(userCommentDTO)))
+                        .content(objectMapper.writeValueAsString(userCommentDTO1)))
                 .andExpect(status().isForbidden());
 
         verifyNoInteractions(userCommentService);
@@ -295,7 +300,7 @@ class UserCommentControllerTest {
     void deleteUserComment_withAuthorizedRole_returns200(String role) throws Exception {
         when(userCommentService.deleteUserCommentByEventIdAndCommentId(
                 eq(eventId), eq(commentId), any(UUID.class)))
-                .thenReturn(userCommentDTO);
+                .thenReturn(userCommentDTO1);
 
         UserPrincipal loggedInUser = createUserPrincipal(role);
 
@@ -304,7 +309,7 @@ class UserCommentControllerTest {
                         .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(content().json(objectMapper.writeValueAsString(userCommentDTO)));
+                .andExpect(content().json(objectMapper.writeValueAsString(userCommentDTO1)));
 
         verify(userCommentService).deleteUserCommentByEventIdAndCommentId(
                 eq(eventId), eq(commentId), any(UUID.class));
