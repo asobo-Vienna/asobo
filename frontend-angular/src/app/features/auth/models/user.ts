@@ -12,5 +12,5 @@ export interface User {
   pictureURI: string;
   location: string;
   salutation: string;
-  roles?: Role[]
+  roles?: Role[];
 }

@@ -1,9 +1,9 @@
 import {Participant} from './participant';
 import {Comment} from './comment';
 import {List} from '../../../core/data_structures/lists/list';
-import {EventBaseInfo} from './event-base-info';
+import {EventCoreInfo} from './event-core-info';
 
-export interface Event extends EventBaseInfo {
+export interface Event extends EventCoreInfo {
   participants: List<Participant>;
   comments: List<Comment>;
 }

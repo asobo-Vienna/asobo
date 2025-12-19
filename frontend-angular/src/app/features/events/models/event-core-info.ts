@@ -1,4 +1,4 @@
-export interface EventBaseInfo {
+export interface EventCoreInfo {
   id: string;
   title: string;
   pictureURI: string;
