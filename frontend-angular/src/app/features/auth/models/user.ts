@@ -1,3 +1,5 @@
+import {Role} from '../../../shared/enums/Role';
+
 export interface User {
   id: string;
   username: string;
@@ -10,4 +12,5 @@ export interface User {
   pictureURI: string;
   location: string;
   salutation: string;
+  roles?: Role[];
 }

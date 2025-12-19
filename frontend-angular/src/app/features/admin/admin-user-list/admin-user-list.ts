@@ -24,36 +24,70 @@ import {MultiSelect} from 'primeng/multiselect';
 export class AdminUserList implements OnInit {
   private adminService = inject(AdminService);
   users = signal<User[]>([]);
-  loading = true;
+  totalRecords = signal<number>(0);
+  loading = signal<boolean>(true);
+
+  private pageCache = new Map<string, User[]>();
 
   ngOnInit(): void {
-      this.adminService.getAllUsers().subscribe({
-        next: (users) => {
-          this.users.set(users);
-          this.loading = false;
-        },
-        error: (err) => {
-          console.error('Error fetching users:', err);
-          this.loading = false;
-        }
-      });
+    this.loadUsers(0, environment.defaultPageSize);
+  }
+
+  loadUsers(page: number, size: number): void {
+    const cacheKey = `${page}-${size}`;
+
+    // Check if page is already cached
+    if (this.pageCache.has(cacheKey)) {
+      this.users.set(this.pageCache.get(cacheKey)!);
       return;
+    }
+
+    this.loading.set(true);
+
+    this.adminService.getAllUsers(page, size).subscribe({
+      next: (response) => {
+        // Cache the page data
+        this.pageCache.set(cacheKey, response.content);
+
+        this.users.set(response.content);
+        this.totalRecords.set(response.totalElements);
+        this.loading.set(false);
+      },
+      error: (err) => {
+        console.error('Error fetching users:', err);
+        this.loading.set(false);
+      }
+    });
+  }
+
+  onPageChange(event: any): void {
+    const page = event.first / event.rows;
+    this.loadUsers(page, event.rows);
+  }
+
+  // Clear cache when data changes (after edit/delete)
+  clearCache(): void {
+    this.pageCache.clear();
   }
 
   protected readonly UrlUtilService = UrlUtilService;
+  protected readonly environment = environment;
 
   onEdit(user: any) {
     console.log('Editing user:', user);
+    // After editing, you might want to clear cache
+    this.clearCache();
   }
 
   onDelete(user: any) {
     console.log('Deleting user:', user);
+    // After deleting, clear cache and reload
+    this.clearCache();
+    // stay on page, thus track currently loaded users and update numbers:
+    // this.loadUsers(0, 10);
   }
 
   getUserRouterLink(username: string): string {
     return `${environment.userProfileBaseUrl}${username}`;
   }
-
-  protected readonly environment = environment;
 }
-

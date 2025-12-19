@@ -1,6 +1,5 @@
 import {Comment} from './comment';
 
-export interface CommentWithEventTitle {
-  userComment: Comment;
+export interface CommentWithEventTitle extends Comment {
   eventTitle: string;
 }

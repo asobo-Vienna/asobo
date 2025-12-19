@@ -1,7 +1,8 @@
 package at.msm.asobo.repositories;
 
 import at.msm.asobo.entities.Medium;
-import at.msm.asobo.interfaces.MediumWithEventTitle;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -19,7 +20,6 @@ public interface MediumRepository extends JpaRepository<Medium, UUID> {
 
     Optional<Medium> findMediumByEventIdAndId(UUID eventId, UUID mediumId);
 
-    @Query("SELECT m as medium, e.title as eventTitle " +
-            "FROM Medium m JOIN m.event e")
-    List<MediumWithEventTitle> findAllMediaWithEventTitle();
+    @Query("SELECT m FROM Medium m JOIN FETCH m.event")
+    Page<Medium> findAllPageable(Pageable pageable);
 }

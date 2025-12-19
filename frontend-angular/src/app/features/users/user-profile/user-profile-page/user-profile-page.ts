@@ -5,6 +5,7 @@ import {EventList} from '../../../events/event-list/event-list';
 import {List} from '../../../../core/data_structures/lists/list';
 import {Event} from '../../../events/models/event';
 import {EventService} from '../../../events/services/event-service';
+import {EventSummary} from '../../../events/models/event-summary';
 
 @Component({
   selector: 'app-user-profile-page',
@@ -19,7 +20,7 @@ export class UserProfilePage implements OnInit {
   private route = inject(ActivatedRoute);
   private eventService = inject(EventService);
   profileUsername: string | undefined;
-  events = signal<List<Event>>(new List<Event>());
+  events = signal<List<EventSummary>>(new List<EventSummary>());
   private userId: string = "";
 
   ngOnInit() {
@@ -30,7 +31,7 @@ export class UserProfilePage implements OnInit {
 
   handleUserIdMessage(userId: string) {
     this.userId = userId;
-    this.fetchEvents(); // fetch after receiving userId
+    this.fetchEvents();
   }
 
   private fetchEvents() {
@@ -42,7 +43,7 @@ export class UserProfilePage implements OnInit {
     console.log("Fetching events for userId:", this.userId);
     this.eventService.getPublicEventsByUserId(this.userId).subscribe({
       next: (eventsArray) => {
-        this.events.set(new List<Event>(eventsArray));
+        this.events.set(new List<EventSummary>(eventsArray));
       },
       error: (err) => console.error('Error fetching events:', err)
     });

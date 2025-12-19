@@ -3,8 +3,12 @@ package at.msm.asobo.mappers;
 import at.msm.asobo.dto.comment.UserCommentDTO;
 import at.msm.asobo.dto.event.EventCreationDTO;
 import at.msm.asobo.dto.event.EventDTO;
+import at.msm.asobo.dto.event.EventSummaryDTO;
 import at.msm.asobo.dto.event.EventUpdateDTO;
 import at.msm.asobo.entities.Event;
+import at.msm.asobo.interfaces.EventSummaryProjection;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
@@ -85,6 +89,29 @@ public class EventDTOEventMapper {
         // in the service layer with proper entity references
 
         return event;
+    }
+
+    public EventSummaryDTO toEventSummaryDTO(Event event) {
+        if (event == null) {
+            return null;
+        }
+
+        EventSummaryDTO dto = new EventSummaryDTO();
+        dto.setId(event.getId());
+        dto.setTitle(event.getTitle());
+        dto.setDescription(event.getDescription());
+        dto.setPictureURI(event.getPictureURI());
+        dto.setLocation(event.getLocation());
+        dto.setDate(event.getDate());
+        dto.setCreationDate(event.getCreationDate());
+        dto.setModificationDate(event.getModificationDate());
+        dto.setCreator(this.userDTOUserMapper.mapUserToUserPublicDTO(event.getCreator()));
+        dto.setIsPrivate(event.isPrivateEvent());
+        dto.setParticipantCount(event.getParticipants().size());
+        dto.setCommentCount(event.getComments().size());
+        dto.setMediaCount(event.getMedia().size());
+
+        return dto;
     }
 
     // Event → EventUpdateDTO
@@ -188,6 +215,32 @@ public class EventDTOEventMapper {
                 .map(this::mapEventToEventDTO)
                 .collect(Collectors.toList());
     }
+
+    public List<EventSummaryDTO> mapEventsToEventSummaryDTOs(List<Event> events) {
+        if (events == null) {
+            return new ArrayList<>();
+        }
+        return events.stream()
+                .map(this::toEventSummaryDTO)
+                .collect(Collectors.toList());
+    }
+
+    public Page<EventSummaryDTO> mapEventsToEventSummaryDTOs(Page<Event> events) {
+        if (events == null) {
+            return Page.empty();
+        }
+
+        List<EventSummaryDTO> dtoList = events.stream()
+                .map(this::toEventSummaryDTO)
+                .toList();
+
+        return new PageImpl<>(
+                dtoList,
+                events.getPageable(),
+                events.getTotalElements()
+        );
+    }
+
 
     public List<Event> mapEventDTOsToEvents(List<EventDTO> eventDTOs) {
         if (eventDTOs == null) {

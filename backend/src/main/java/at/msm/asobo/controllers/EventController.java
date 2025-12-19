@@ -2,10 +2,14 @@ package at.msm.asobo.controllers;
 
 import at.msm.asobo.dto.event.EventCreationDTO;
 import at.msm.asobo.dto.event.EventDTO;
+import at.msm.asobo.dto.event.EventSummaryDTO;
 import at.msm.asobo.services.EventService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
+import org.springframework.data.domain.Pageable;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.List;
@@ -19,15 +23,14 @@ import org.springframework.web.server.ResponseStatusException;
 @RestController
 @RequestMapping("/api/events")
 public class EventController {
-
-    private EventService eventService;
+    private final EventService eventService;
     
     public EventController(EventService eventService){
         this.eventService = eventService;
     }
 
     @GetMapping
-    public List<EventDTO> getAllEvents(
+    public List<EventSummaryDTO> getAllEvents(
             @RequestParam(required = false) UUID userId,
             @RequestParam(required = false) Boolean isPrivate
     ) {
@@ -43,6 +46,23 @@ public class EventController {
         }
     }
 
+    @GetMapping("/paginated")
+    public Page<EventSummaryDTO> getAllEventsPaginated(
+            @RequestParam(required = false) UUID userId,
+            @RequestParam(required = false) Boolean isPrivate,
+            Pageable pageable
+    ) {
+        if (userId != null) {
+            return this.eventService.getEventsByParticipantIdPaginated(userId, isPrivate, pageable);
+        } else if (isPrivate == null) {
+            return this.eventService.getAllEventsPaginated(pageable);
+        } else if (isPrivate) {
+            return this.eventService.getAllPrivateEventsPaginated(pageable);
+        } else {
+            return this.eventService.getAllPublicEventsPaginated(pageable);
+        }
+    }
+
 //    @GetMapping
 //    public List<EventDTO> getEventsByTitle(String title) {
 //        return this.eventService.getEventsByTitle(title);
@@ -50,7 +70,7 @@ public class EventController {
 
 
     @GetMapping(params = "location")
-    public List<EventDTO> getEventsByLocation(@RequestParam(required = false) String location) {
+    public List<EventSummaryDTO> getEventsByLocation(@RequestParam(required = false) String location, Pageable pageable) {
 
         if (location == null || location.isBlank()) {
             return this.eventService.getAllEvents();
@@ -60,7 +80,7 @@ public class EventController {
     }
     
     @GetMapping(params = "date")
-    public List<EventDTO> getEventsByDate(@RequestParam(required = false) String date) {
+    public List<EventSummaryDTO> getEventsByDate(@RequestParam(required = false) String date, Pageable pageable) {
         if (date == null || date.isBlank()) {
             return this.eventService.getAllEvents();
         }

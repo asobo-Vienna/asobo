@@ -1,24 +1,9 @@
 package at.msm.asobo.dto.comment;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-public class UserCommentWithEventTitleDTO {
-
-    @JsonProperty("userComment")
-    private UserCommentDTO userCommentDTO;
-
+public class UserCommentWithEventTitleDTO extends UserCommentDTO {
     private String eventTitle;
 
-    public UserCommentWithEventTitleDTO() {
-    }
-
-    public UserCommentDTO getUserCommentDTO() {
-        return this.userCommentDTO;
-    }
-
-    public void setUserCommentDTO(UserCommentDTO userCommentDTO) {
-        this.userCommentDTO = userCommentDTO;
-    }
+    public UserCommentWithEventTitleDTO() {}
 
     public String getEventTitle() {
         return this.eventTitle;
