@@ -15,9 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/admin")
-@PreAuthorize("isAuthenticated()")
-@Secured("ROLE_ADMIN")
-
+@PreAuthorize("hasAnyRole('ADMIN', 'SUPERADMIN')")
 public class AdminController {
     private final AdminService adminService;
 
