@@ -22,28 +22,61 @@ import { RouterLink } from '@angular/router';
 export class AdminCommentList implements OnInit {
   private adminService = inject(AdminService);
   comments = signal<CommentWithEventTitle[]>([]);
-  loading = true;
+  totalRecords = signal<number>(0);
+  loading = signal<boolean>(true);
+
+  private pageCache = new Map<string, CommentWithEventTitle[]>();
 
   ngOnInit(): void {
-    this.adminService.getAllCommentsWithEventTitle().subscribe({
-      next: (comments) => {
-        this.comments.set(comments);
-        this.loading = false;
+    this.loadComments(0, environment.defaultPageSize);
+  }
+
+  loadComments(page: number, size: number): void {
+    const cacheKey = `${page}-${size}`;
+
+    if (this.pageCache.has(cacheKey)) {
+      this.comments.set(this.pageCache.get(cacheKey)!);
+      return;
+    }
+
+    this.loading.set(true);
+
+    this.adminService.getAllCommentsWithEventTitle(page, size).subscribe({
+      next: (response) => {
+        // Cache the page data
+        this.pageCache.set(cacheKey, response.content);
+
+        this.comments.set(response.content);
+        this.totalRecords.set(response.totalElements);
+        this.loading.set(false);
       },
       error: (err) => {
         console.error('Error fetching comments:', err);
-        this.loading = false;
+        this.loading.set(false);
       }
     });
-    return;
+  }
+
+  onPageChange(event: any): void {
+    const page = event.first / event.rows;
+    this.loadComments(page, event.rows);
+  }
+
+  // Clear cache when data changes (after edit/delete)
+  clearCache(): void {
+    this.pageCache.clear();
   }
 
   onEdit(comment: any) {
     console.log('Editing comment:', comment);
+    this.clearCache();
   }
 
   onDelete(comment: any) {
     console.log('Deleting comment:', comment);
+    this.clearCache();
+    // stay on page, thus track currently loaded comments and update numbers:
+    // this.loadComments(0, 10);
   }
 
   getEventRouterLink(eventId: string): string {

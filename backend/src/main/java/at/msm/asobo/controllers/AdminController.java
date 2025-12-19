@@ -2,11 +2,14 @@ package at.msm.asobo.controllers;
 
 import at.msm.asobo.dto.comment.UserCommentWithEventTitleDTO;
 import at.msm.asobo.dto.medium.MediumWithEventTitleDTO;
-import at.msm.asobo.dto.user.UserFullDTO;
+import at.msm.asobo.dto.user.UserAdminSummaryDTO;
 import at.msm.asobo.services.AdminService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 
@@ -23,19 +26,23 @@ public class AdminController {
     }
 
     @GetMapping("/users")
-    public List<UserFullDTO> getAllUsers() {
-      return this.adminService.getAllUsers();
+    public Page<UserAdminSummaryDTO> getAllUsers(Pageable pageable) {
+        return this.adminService.getAllUsers(pageable);
     }
 
-  @GetMapping("/comments")
-  public List<UserCommentWithEventTitleDTO> getAllUserCommentsWithEventTitle() {
-    return this.adminService.getAllUserCommentsWithEventTitle();
-  }
+    // TODO?: On expand get full user details for ONE user
+    /*@GetMapping("/users/{id}/full")
+    public UserFullDTO getUserWithDetails(@PathVariable UUID id);*/
 
-  @GetMapping("/media")
-  public List<MediumWithEventTitleDTO> getAllMediaWithEventTitle() {
-    return this.adminService.getAllMediaWithEventTitle();
-  }
+    @GetMapping("/comments")
+    public Page<UserCommentWithEventTitleDTO> getAllUserCommentsWithEventTitle(Pageable pageable) {
+        return this.adminService.getAllUserCommentsWithEventTitle(pageable);
+    }
+
+    @GetMapping("/media")
+    public Page<MediumWithEventTitleDTO> getAllMediaWithEventTitle(Pageable pageable) {
+        return this.adminService.getAllMediaWithEventTitle(pageable);
+    }
 
 
      /*@GetMapping
@@ -43,7 +50,7 @@ public class AdminController {
         //return this.userService.getAllUsers();
     }*/
 
-  //@GetMapping("/{id}")
+    //@GetMapping("/{id}")
     /*public UserAdminDTO getUserById(@PathVariable UUID id) {
         User foundUser = this.userService.getUserById(id);
         return new UserAdminDTO(foundUser);
@@ -62,7 +69,7 @@ public class AdminController {
         return new UserAdminDTO(savedUser);
     }*/
 
-  // TODO create UserAdminService that returns UserAdminDTOs
+    // TODO create UserAdminService that returns UserAdminDTOs
 //    @PutMapping("/{id}")
 //    public UserAdminDTO updateUser(@PathVariable UUID id, @RequestBody @Valid UserUpdateDTO userUpdateDTO) {
 //        User updatedUser = this.userService.updateUserById(id, userUpdateDTO);

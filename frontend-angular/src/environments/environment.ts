@@ -33,4 +33,5 @@ export const environment = {
   userDummyProfilePicRelativeUrl: '/uploads/profile-pictures/default.png',
   eventDummyCoverPicRelativeUrl: '/uploads/event-cover-pictures/event-cover-default.svg',
   defaultDebounceTimeForFormFields: 500,
+  defaultPageSize: 10,
 };

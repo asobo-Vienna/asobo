@@ -4,6 +4,7 @@ import {EventService} from '../services/event-service';
 import {Event} from '../models/event'
 import {AuthService} from '../../auth/services/auth-service';
 import {List} from '../../../core/data_structures/lists/list';
+import {EventSummary} from '../models/event-summary';
 
 @Component({
   selector: 'app-event-list',
@@ -17,8 +18,8 @@ export class EventList implements OnInit {
   private eventService = inject(EventService);
   authService = inject(AuthService);
 
-  inputEvents = input<List<Event>>();
-  private fetchedEvents = signal<List<Event>>(new List<Event>());
+  inputEvents = input<List<EventSummary>>();
+  private fetchedEvents = signal<List<EventSummary>>(new List<EventSummary>());
 
   // Computed: use input if provided, otherwise use fetched
   events = computed(() => {
@@ -31,12 +32,12 @@ export class EventList implements OnInit {
     if (!this.inputEvents()) {
       if (this.authService.isLoggedIn()) {
         this.eventService.getAllEvents().subscribe({
-          next: (events) => this.fetchedEvents.set(new List<Event>(events)),
+          next: (events) => this.fetchedEvents.set(new List<EventSummary>(events)),
           error: (err) => console.error('Error fetching events:', err)
         });
       } else {
         this.eventService.getAllPublicEvents().subscribe({
-          next: (events) => this.fetchedEvents.set(new List<Event>(events)),
+          next: (events) => this.fetchedEvents.set(new List<EventSummary>(events)),
           error: (err) => console.error('Error fetching public events:', err)
         });
       }

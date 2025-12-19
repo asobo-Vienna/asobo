@@ -3,9 +3,12 @@
 <div class="table-wrapper">
   <p-table
     [value]="mediaItems()"
-    [loading]="false"
+    [loading]="loading()"
     [paginator]="true"
-    [rows]="10"
+    [rows]="environment.defaultPageSize"
+    [totalRecords]="totalRecords()"
+    [lazy]="true"
+    (onLazyLoad)="onPageChange($event)"
   >
     <ng-template pTemplate="header">
       <tr>
@@ -23,16 +26,16 @@
           <img
             [src]="
             UrlUtilService.getMediaUrl(
-              mediaItem.medium.mediumURI || environment.eventDummyCoverPicRelativeUrl
+              mediaItem.mediumURI || environment.eventDummyCoverPicRelativeUrl
             )
           "
-            [alt]="mediaItem.medium.caption"
+            [alt]="mediaItem.caption"
             class="mediaItem-thumbnail"
           />
         </td>
-        <td><small>{{ mediaItem.medium.id }}</small></td>
+        <td><small>{{ mediaItem.id }}</small></td>
         <td>
-          <a [routerLink]="getEventRouterLink(mediaItem.medium.eventId)"
+          <a [routerLink]="getEventRouterLink(mediaItem.eventId)"
              class="a-clickable">{{ mediaItem.eventTitle }}</a>
         </td>
 
@@ -56,7 +59,7 @@
     </ng-template>
   </p-table>
 
-  @if (loading) {
+  @if (loading()) {
     <div class="loader-overlay">
       <div class="loader-content">
         <i class="pi pi-spin pi-spinner"></i>

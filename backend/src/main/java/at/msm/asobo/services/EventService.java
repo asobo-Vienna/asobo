@@ -3,6 +3,7 @@ package at.msm.asobo.services;
 import at.msm.asobo.config.FileStorageProperties;
 import at.msm.asobo.dto.event.EventCreationDTO;
 import at.msm.asobo.dto.event.EventDTO;
+import at.msm.asobo.dto.event.EventSummaryDTO;
 import at.msm.asobo.dto.event.EventUpdateDTO;
 import at.msm.asobo.entities.Event;
 import at.msm.asobo.entities.User;
@@ -12,8 +13,12 @@ import at.msm.asobo.repositories.EventRepository;
 import at.msm.asobo.services.files.FileStorageService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -22,27 +27,24 @@ import java.util.UUID;
 @Service
 @Transactional
 public class EventService {
-
     private final EventRepository eventRepository;
     private final UserService userService;
     private final EventDTOEventMapper eventDTOEventMapper;
     private final UserDTOUserMapper userDTOUserMapper;
-    private final UserCommentDTOUserCommentMapper userCommentDTOUserCommentMapper;
-    private final MediumDTOMediumMapper mediumDTOMediumMapper;
     private final FileStorageService fileStorageService;
     private final FileStorageProperties fileStorageProperties;
 
     @Value("${app.file-storage.event-coverpicture-subfolder}")
     private String eventCoverPictureSubfolder;
 
-    public EventService(EventRepository eventRepository,
-                        UserService userService,
-                        EventDTOEventMapper eventDTOEventMapper,
-                        FileStorageService fileStorageService,
-                        FileStorageProperties fileStorageProperties,
-                        UserDTOUserMapper userDTOUserMapper,
-                        UserCommentDTOUserCommentMapper userCommentDTOUserCommentMapper,
-                        MediumDTOMediumMapper mediumDTOMediumMapper) {
+    public EventService(
+            EventRepository eventRepository,
+            UserService userService,
+            EventDTOEventMapper eventDTOEventMapper,
+            FileStorageService fileStorageService,
+            FileStorageProperties fileStorageProperties,
+            UserDTOUserMapper userDTOUserMapper
+    ) {
         this.eventRepository = eventRepository;
         this.userService = userService;
         this.eventDTOEventMapper = eventDTOEventMapper;
@@ -50,26 +52,39 @@ public class EventService {
         this.fileStorageService = fileStorageService;
         this.fileStorageProperties = fileStorageProperties;
         this.userDTOUserMapper = userDTOUserMapper;
-        this.userCommentDTOUserCommentMapper = userCommentDTOUserCommentMapper;
-        this.mediumDTOMediumMapper = mediumDTOMediumMapper;
     }
 
-    public List<EventDTO> getAllEvents() {
-        List<Event> events = this.eventRepository.findAll();
-        return this.eventDTOEventMapper.mapEventsToEventDTOs(events);
+    public List<EventSummaryDTO> getAllEvents() {
+        List<Event> allEvents = this.eventRepository.findAll();
+        return this.eventDTOEventMapper.mapEventsToEventSummaryDTOs(allEvents);
     }
 
-    public List<EventDTO> getAllPublicEvents() {
+    public Page<EventSummaryDTO> getAllEventsPaginated(Pageable pageable) {
+        Page<Event> events = this.eventRepository.findAllEvents(pageable);
+        return events.map(this.eventDTOEventMapper::toEventSummaryDTO);
+    }
+
+    public List<EventSummaryDTO> getAllPublicEvents() {
         List<Event> events = this.eventRepository.findByIsPrivateEventFalse();
-        return this.eventDTOEventMapper.mapEventsToEventDTOs(events);
+        return this.eventDTOEventMapper.mapEventsToEventSummaryDTOs(events);
     }
 
-    public List<EventDTO> getAllPrivateEvents() {
-        List<Event> events = this.eventRepository.findByIsPrivateEventTrue();
-        return this.eventDTOEventMapper.mapEventsToEventDTOs(events);
+    public Page<EventSummaryDTO> getAllPublicEventsPaginated(Pageable pageable) {
+        Page<Event> events = this.eventRepository.findByIsPrivateEventFalse(pageable);
+        return events.map(this.eventDTOEventMapper::toEventSummaryDTO);
     }
 
-    public List<EventDTO> getEventsByParticipantId(UUID participantId, Boolean isPrivate) {
+    public List<EventSummaryDTO> getAllPrivateEvents() {
+        List<Event> allEvents = this.eventRepository.findByIsPrivateEventTrue();
+        return this.eventDTOEventMapper.mapEventsToEventSummaryDTOs(allEvents);
+    }
+
+    public Page<EventSummaryDTO> getAllPrivateEventsPaginated(Pageable pageable) {
+        Page<Event> events = this.eventRepository.findByIsPrivateEventTrue(pageable);
+        return events.map(this.eventDTOEventMapper::toEventSummaryDTO);
+    }
+
+    public List<EventSummaryDTO> getEventsByParticipantId(UUID participantId, Boolean isPrivate) {
         List<Event> events;
 
         if (isPrivate == null) {
@@ -79,19 +94,31 @@ public class EventService {
         } else {
             events = eventRepository.findByParticipants_IdAndIsPrivateEventFalse(participantId);
         }
-        return this.eventDTOEventMapper.mapEventsToEventDTOs(events);
+        return this.eventDTOEventMapper.mapEventsToEventSummaryDTOs(events);
     }
 
-    public List<EventDTO> getEventsByDate(LocalDateTime date) {
+    public Page<EventSummaryDTO> getEventsByParticipantIdPaginated(UUID participantId, Boolean isPrivate, Pageable pageable) {
+        Page<Event> events;
+
+        if (isPrivate == null) {
+            events = eventRepository.findByParticipants_Id(participantId, pageable);
+        } else if (isPrivate) {
+            events = eventRepository.findByParticipants_IdAndIsPrivateEventTrue(participantId, pageable);
+        } else {
+            events = eventRepository.findByParticipants_IdAndIsPrivateEventFalse(participantId, pageable);
+        }
+        return this.eventDTOEventMapper.mapEventsToEventSummaryDTOs(events);
+    }
+
+    public List<EventSummaryDTO> getEventsByDate(LocalDateTime date) {
         List<Event> events = this.eventRepository.findEventsByDate(date);
-        return this.eventDTOEventMapper.mapEventsToEventDTOs(events);
+        return this.eventDTOEventMapper.mapEventsToEventSummaryDTOs(events);
     }
 
-    public List<EventDTO> getEventsByLocation(String location) {
+    public List<EventSummaryDTO> getEventsByLocation(String location) {
         List<Event> events = this.eventRepository.findEventsByLocation(location);
-        return this.eventDTOEventMapper.mapEventsToEventDTOs(events);
+        return this.eventDTOEventMapper.mapEventsToEventSummaryDTOs(events);
     }
-
 
     public EventDTO addNewEvent(EventCreationDTO eventCreationDTO) {
         User user = this.userService.getUserById(eventCreationDTO.getCreator().getId());
