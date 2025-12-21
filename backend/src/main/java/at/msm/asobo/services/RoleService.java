@@ -1,5 +1,6 @@
 package at.msm.asobo.services;
 
+import at.msm.asobo.dto.user.RoleDTO;
 import at.msm.asobo.dto.user.UserRolesDTO;
 import at.msm.asobo.entities.Role;
 import at.msm.asobo.entities.User;
@@ -27,23 +28,21 @@ public class RoleService {
         this.roleMapper = roleMapper;
     }
 
-    public List<String> getAllRoles() {
-        return roleRepository.findAll().stream()
-                .map(Role::getName)
-                .toList();
+    public List<RoleDTO> getAllRoles() {
+        return this.roleRepository.findAll().stream().map(this.roleMapper::mapRoleToRoleDTO).collect(Collectors.toList());
     }
 
-    public UserRolesDTO assignRoles(UUID userId, Set<String> roles) {
+    public UserRolesDTO assignRoles(UUID userId, Set<RoleDTO> roles) {
         User user = userRepository.findUserById(userId)
                 .orElseThrow(() -> new UserNotFoundException(userId));
 
         Set<Role> roleEntities = roles.stream()
-                .map(roleName -> roleRepository.findByName(roleName)
+                .map(roleDTO -> roleRepository.findByName(roleDTO.getName())
                         .orElseThrow(() ->
-                                new RoleNotFoundException("Role not found: " + roleName)))
+                                new RoleNotFoundException("Role not found: " + roleDTO.getName())))
                 .collect(Collectors.toSet());
 
-        user.getRoles().addAll(roleEntities);
+        user.setRoles(roleEntities);
         userRepository.save(user);
 
         UserRolesDTO rolesDTO = new UserRolesDTO();
