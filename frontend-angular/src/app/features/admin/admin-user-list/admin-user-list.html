@@ -58,14 +58,15 @@
             <p-multiselect
               [options]="allRoles()"
               optionLabel="name"
-              placeholder="Select Roles"
+              placeholder="View/Edit Roles"
               [fluid]="true"
               [ngModel]="getUserRoles(user)"
               (ngModelChange)="onRolesChange($event, user)"
               dataKey="id"
-              [placeholder]="'Select Roles'"
               [filter]="true"
-              [showToggleAll]="false">
+              [showToggleAll]="false"
+              [maxSelectedLabels]="0"
+              [selectedItemsLabel]="'View/Edit Roles'">
             ></p-multiselect>
           </div>
         </td>

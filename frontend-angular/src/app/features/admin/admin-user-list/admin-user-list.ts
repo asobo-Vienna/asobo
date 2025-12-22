@@ -32,7 +32,7 @@ export class AdminUserList implements OnInit {
   totalRecords = signal<number>(0);
   loading = signal<boolean>(true);
 
-  userRolesMap = signal<Map<string, Set<Role>>>(new Map());
+  userRolesMap = signal<Map<string, Role[]>>(new Map());
 
   private pageCache = new Map<string, User[]>();
   private roleCache = new Map<string, Role[]>();
@@ -67,7 +67,6 @@ export class AdminUserList implements OnInit {
       });
     }
 
-    // Check if page is already cached
     if (this.pageCache.has(cacheKey)) {
       const cachedUsers = this.pageCache.get(cacheKey)!;
       this.users.set(cachedUsers);
@@ -78,7 +77,6 @@ export class AdminUserList implements OnInit {
 
     this.adminService.getAllUsers(page, size).subscribe({
       next: response => {
-        // Cache the page data
         this.pageCache.set(cacheKey, response.content);
 
         this.users.set(response.content);
@@ -94,42 +92,34 @@ export class AdminUserList implements OnInit {
   }
 
   private initializeUserRolesMap(users: User[]): void {
-    const rolesMap = new Map<string, Set<Role>>();
+    const rolesMap = new Map<string, Role[]>();
     users.forEach(user => {
-      rolesMap.set(user.id, user.roles! || new Set<Role>());
+      rolesMap.set(user.id, user.roles! || []);
     });
     this.userRolesMap.set(rolesMap);
   }
 
-  getUserRoles(user: User): Set<Role> {
-    return this.userRolesMap().get(user.id) || user.roles || new Set<Role>;
+  getUserRoles(user: User): Role[] {
+    return this.userRolesMap().get(user.id) || user.roles || [];
   }
 
-  onRolesChange(selectedRoles: Set<Role>, user: User): void {
-    const previousRoles = user.roles || new Set<Role>();
+  onRolesChange(selectedRoles: Role[], user: User): void {
+    const previousRoles = this.getUserRoles(user);
 
     const currentMap = new Map(this.userRolesMap());
     currentMap.set(user.id, selectedRoles);
     this.userRolesMap.set(currentMap);
 
-    // Update backend
+    // Update backend (don't update signals here to avoid re-render/close)
     this.adminService.updateUserRoles(user.id, selectedRoles).subscribe({
       next: (response) => {
         console.log('Roles updated successfully:', response);
 
-        // Update the user object in the users signal
-        const currentUsers = this.users();
-        const updatedUsers = currentUsers.map(u =>
-          u.id === user.id ? { ...u, roles: selectedRoles } : u
-        );
-        this.users.set(updatedUsers);
-
-        // Update cache
         const cacheKey = `${this.currentPage()}-${this.currentSize()}`;
         if (this.pageCache.has(cacheKey)) {
           const cachedUsers = this.pageCache.get(cacheKey)!;
           const updatedCache = cachedUsers.map(u =>
-            u.id === user.id ? { ...u, roles: selectedRoles } : u
+            u.id === user.id ? { ...u, roles: selectedRoles as any } : u
           );
           this.pageCache.set(cacheKey, updatedCache);
         }
@@ -137,7 +127,7 @@ export class AdminUserList implements OnInit {
       error: (err) => {
         console.error('Error updating roles:', err);
 
-        // Revert the signal on error
+        // Revert on error
         const revertMap = new Map(this.userRolesMap());
         revertMap.set(user.id, previousRoles);
         this.userRolesMap.set(revertMap);

@@ -21,11 +21,11 @@ export class AdminService {
     return this.http.get<Role[]>(`${environment.apiBaseUrl}/roles`);
   }
 
-  public updateUserRoles(userId: string, roles: Set<Role>): Observable<UserRoles> {
-     return this.http.patch<UserRoles>(`${environment.apiBaseUrl}/roles/assign`, {
-       userId,
-       roles
-     });
+  public updateUserRoles(userId: string, roles: Role[]): Observable<UserRoles> {
+    return this.http.patch<UserRoles>(`${environment.apiBaseUrl}/roles/assign`, {
+      userId,
+      roles
+    });
   }
 
   public getAllUsers(page: number, size: number): Observable<PageResponse<User>> {

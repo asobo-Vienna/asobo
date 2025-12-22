@@ -2,5 +2,5 @@ import {Role} from '../enums/Role';
 
 export interface UserRoles {
   userId: string;
-  roles: Set<Role>;
+  roles: Role[];
 }
