@@ -77,6 +77,8 @@ public class AuthControllerTest {
 
     private final String REGISTER_URL = "/api/auth/register";
     private final String LOGIN_URL = "/api/auth/login";
+    private final String CHECK_USERNAME_URL = "/api/auth/check-username/{username}";
+    private final String CHECK_EMAIL_URL = "/api/auth/check-email/{email}";
 
     @BeforeEach
     void setUp() throws ServletException, IOException {
@@ -164,45 +166,59 @@ public class AuthControllerTest {
         when(userService.loginUser(any(UserLoginDTO.class)))
                 .thenThrow(new BadCredentialsException("Bad credentials"));
 
-        mockMvc.perform(post(LOGIN_URL)
+        mockMvc.perform(post("/api/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(loginDTO)))
                 .andExpect(status().isUnauthorized());
+
+        verify(userService).loginUser(any(UserLoginDTO.class));
     }
 
     @Test
     void checkUsernameAvailability_available() throws Exception {
-        when(userService.isUsernameAlreadyTaken("available")).thenReturn(false);
+        String username = "available";
+        when(userService.isUsernameAlreadyTaken(username)).thenReturn(false);
 
-        mockMvc.perform(get("/api/auth/check-username/available"))
+        mockMvc.perform(get(CHECK_USERNAME_URL, username))
                 .andExpect(status().isOk())
                 .andExpect(content().string("true"));
+
+        verify(userService).isUsernameAlreadyTaken(username);
     }
 
     @Test
     void checkUsernameAvailability_taken() throws Exception {
-        when(userService.isUsernameAlreadyTaken("taken")).thenReturn(true);
+        String username = "taken";
+        when(userService.isUsernameAlreadyTaken(username)).thenReturn(true);
 
-        mockMvc.perform(get("/api/auth/check-username/taken"))
+        mockMvc.perform(get(CHECK_USERNAME_URL, username))
                 .andExpect(status().isOk())
                 .andExpect(content().string("false"));
+
+        verify(userService).isUsernameAlreadyTaken(username);
     }
 
     @Test
     void checkEmailAvailability_available() throws Exception {
-        when(userService.isEmailAlreadyTaken("new@example.com")).thenReturn(false);
+        String email = "new@example.com";
+        when(userService.isEmailAlreadyTaken(email)).thenReturn(false);
 
-        mockMvc.perform(get("/api/auth/check-email/new@example.com"))
+        mockMvc.perform(get(CHECK_EMAIL_URL, email))
                 .andExpect(status().isOk())
                 .andExpect(content().string("true"));
+
+        verify(userService).isEmailAlreadyTaken(email);
     }
 
     @Test
     void checkEmailAvailability_taken() throws Exception {
-        when(userService.isEmailAlreadyTaken("taken@example.com")).thenReturn(true);
+        String email = "taken@example.com";
+        when(userService.isEmailAlreadyTaken(email)).thenReturn(true);
 
-        mockMvc.perform(get("/api/auth/check-email/taken@example.com"))
+        mockMvc.perform(get(CHECK_EMAIL_URL, email))
                 .andExpect(status().isOk())
                 .andExpect(content().string("false"));
+
+        verify(userService).isEmailAlreadyTaken(email);
     }
 }
