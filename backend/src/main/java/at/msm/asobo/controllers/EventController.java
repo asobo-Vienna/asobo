@@ -7,6 +7,7 @@ import at.msm.asobo.services.EventService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import org.springframework.data.domain.Pageable;
@@ -96,6 +97,7 @@ public class EventController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN', 'SUPERADMIN')")
     public EventDTO createEvent(@ModelAttribute @Valid EventCreationDTO eventCreationDTO) {
         return this.eventService.addNewEvent(eventCreationDTO);
     }
@@ -107,6 +109,7 @@ public class EventController {
 
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPERADMIN')")
     public EventDTO deleteEventById(@PathVariable UUID id) {
         return this.eventService.deleteEventById(id);
     }
