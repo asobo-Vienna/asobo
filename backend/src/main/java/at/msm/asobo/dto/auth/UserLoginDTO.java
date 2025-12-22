@@ -18,6 +18,14 @@ public class UserLoginDTO {
     // TODO: decide if inactive users can log in
     private boolean active;
 
+    public UserLoginDTO(String identifier, String password) {
+        this.identifier = identifier;
+        this.password = password;
+    }
+
+    public UserLoginDTO() {
+    }
+
     public String getIdentifier() {
         return this.identifier;
     }
@@ -27,4 +35,20 @@ public class UserLoginDTO {
     }
 
     public boolean isRememberMe() { return this.rememberMe; }
+
+    public void setIdentifier(String identifier) {
+        this.identifier = identifier;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setRememberMe(boolean rememberMe) {
+        this.rememberMe = rememberMe;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
 }
