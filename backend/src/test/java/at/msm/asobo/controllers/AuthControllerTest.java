@@ -161,7 +161,7 @@ public class AuthControllerTest {
 
     @Test
     void login_invalidCredentials() throws Exception {
-        UserLoginDTO loginDTO = new UserLoginDTO("wronguser", "wrongpass");
+        UserLoginDTO loginDTO = new UserLoginDTO("wronguser", "wrongpassword");
 
         when(userService.loginUser(any(UserLoginDTO.class)))
                 .thenThrow(new BadCredentialsException("Bad credentials"));

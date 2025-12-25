@@ -100,6 +100,7 @@ class EventControllerTest {
     void getAllEvents_WithoutParameters_ReturnsAllEvents() throws Exception {
         List<EventSummaryDTO> events = List.of(eventSummary1, eventSummary2);
         String expectedJson =  objectMapper.writeValueAsString(events);
+
         when(eventService.getAllEvents()).thenReturn(events);
 
         mockMvc.perform(get(EVENTS_URL))
@@ -114,6 +115,7 @@ class EventControllerTest {
     void getAllEvents_WithUserIdParameter_ReturnsUserEvents() throws Exception {
         List<EventSummaryDTO> events = List.of(eventSummary1);
         String expectedJson =  objectMapper.writeValueAsString(events);
+
         when(eventService.getEventsByParticipantId(userId, null)).thenReturn(events);
 
         mockMvc.perform(get(EVENTS_URL)
@@ -129,6 +131,7 @@ class EventControllerTest {
     void getAllEvents_WithIsPrivateTrue_ReturnsPrivateEvents() throws Exception {
         List<EventSummaryDTO> events = List.of(eventSummary2);
         String expectedJson =  objectMapper.writeValueAsString(events);
+
         when(eventService.getAllPrivateEvents()).thenReturn(events);
 
         mockMvc.perform(get(EVENTS_URL)
@@ -144,6 +147,7 @@ class EventControllerTest {
     void getAllEvents_WithIsPrivateFalse_ReturnsPublicEvents() throws Exception {
         List<EventSummaryDTO> events = List.of(eventSummary1);
         String expectedJson =  objectMapper.writeValueAsString(events);
+
         when(eventService.getAllPublicEvents()).thenReturn(events);
 
         mockMvc.perform(get(EVENTS_URL)
@@ -251,6 +255,7 @@ class EventControllerTest {
     @Test
     void getEventById_WithValidId_ReturnsEvent() throws Exception {
         String expectedJson =  objectMapper.writeValueAsString(eventDTO);
+
         when(eventService.getEventDTOById(eventId)).thenReturn(eventDTO);
 
         mockMvc.perform(get(EVENTS_URL + "/{id}", eventId))
