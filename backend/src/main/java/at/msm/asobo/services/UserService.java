@@ -149,6 +149,10 @@ public class UserService {
         return this.userDTOUserMapper.mapUserToUserPublicDTO(newUser);
     }
 
+    public User saveUser(User user) {
+        return this.userRepository.save(user);
+    }
+
     public LoginResponseDTO updateUserById(UUID targetUserId, UUID loggedInUserId, UserUpdateDTO userUpdateDTO) {
         User existingUser = this.getUserById(targetUserId);
         boolean canUpdateUser = userAuthorizationService.canUpdateEntity(targetUserId, loggedInUserId);
