@@ -231,7 +231,7 @@ class EventControllerTest {
     @Test
     void getEventsByDate_WithValidDate_ReturnsEvents() throws Exception {
         String validDate = "2024-12-25T14:30:00";
-        List<EventSummaryDTO> events = List.of(eventSummary2);
+        List<EventSummaryDTO> events = List.of(eventSummary2, eventSummary1);
         String expectedJson =  objectMapper.writeValueAsString(events);
 
         when(eventService.getEventsByDate(any(LocalDateTime.class))).thenReturn(events);
@@ -258,12 +258,20 @@ class EventControllerTest {
 
         when(eventService.getEventDTOById(eventId)).thenReturn(eventDTO);
 
-        mockMvc.perform(get(EVENTS_URL + "/{id}", eventId))
+        mockMvc.perform(get(SINGLE_EVENT_URL, eventId))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().string(expectedJson));
 
         verify(eventService).getEventDTOById(eventId);
+    }
+
+    @Test
+    void getEventsById_WithInvalidId_ReturnsBadRequest() throws Exception {
+        String invalidEventId = "invalid-id";
+
+        mockMvc.perform(get(SINGLE_EVENT_URL, invalidEventId))
+                .andExpect(status().isBadRequest());
     }
 
     @ParameterizedTest

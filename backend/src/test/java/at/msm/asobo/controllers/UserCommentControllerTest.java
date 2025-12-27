@@ -226,11 +226,12 @@ class UserCommentControllerTest {
     @ParameterizedTest
     @ValueSource(strings = {"USER", "ADMIN", "SUPERADMIN"})
     void updateUserComment_withAuthorizedRole_returns200(String role) throws Exception {
-        String jsonComment =  objectMapper.writeValueAsString(userCommentDTO1);
+        String jsonCommentRequest =  objectMapper.writeValueAsString(userCommentDTO1);
+        String jsonCommentResponse =  objectMapper.writeValueAsString(userCommentDTO2);
 
         when(userCommentService.updateUserCommentByEventIdAndCommentId(
                 eq(eventId), eq(commentId), any(UserCommentDTO.class), any(UUID.class)))
-                .thenReturn(userCommentDTO1);
+                .thenReturn(userCommentDTO2);
 
         UserPrincipal loggedInUser = createUserPrincipal(role);
 
@@ -238,10 +239,10 @@ class UserCommentControllerTest {
                         .with(user(loggedInUser))
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(jsonComment))
+                        .content(jsonCommentRequest))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(content().json(jsonComment));
+                .andExpect(content().json(jsonCommentResponse));
 
         verify(userCommentService).updateUserCommentByEventIdAndCommentId(
                 eq(eventId), eq(commentId), any(UserCommentDTO.class), any(UUID.class));

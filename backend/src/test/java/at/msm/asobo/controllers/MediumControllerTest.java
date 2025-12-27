@@ -133,8 +133,11 @@ class MediumControllerTest {
         MockMultipartFile file = createMockMultipartFile();
 
         mockMvc.perform(multipart(ALL_MEDIA_URL, eventID)
-                        .file(file))
-                .andExpect(status().isForbidden());
+                        .file(file)
+                .with(csrf()))
+                .andExpect(status().isUnauthorized());
+
+        verify(mediumService, never()).addMediumToEventById(eq(eventID), any(MediumCreationDTO.class));
     }
 
     @Test
