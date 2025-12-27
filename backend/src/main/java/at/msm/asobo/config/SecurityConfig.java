@@ -7,7 +7,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -24,7 +24,7 @@ import java.util.List;
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(securedEnabled = true)
+@EnableMethodSecurity
 public class SecurityConfig {
 
     private final TokenAuthenticationFilter tokenAuthenticationFilter;
@@ -76,11 +76,10 @@ public class SecurityConfig {
         http.authorizeHttpRequests(registry -> registry
                 .requestMatchers("/api/roles/**").hasAnyRole("ADMIN", "SUPERADMIN")
                 .requestMatchers("/api/auth/**").permitAll()
-                .requestMatchers("/api/events/**").permitAll()
+                .requestMatchers(HttpMethod.GET,"/api/events/**").permitAll()
                 .requestMatchers("/api/users/**").hasAnyRole("USER", "ADMIN", "SUPERADMIN")
                 .requestMatchers("/api/admin/**").hasAnyRole("ADMIN", "SUPERADMIN")
-                .requestMatchers("/**").permitAll()
-                //.requestMatchers("/api/**").permitAll() // TODO: remove later, otherwise all api endpoints are open
+                .requestMatchers("/uploads/**").permitAll()
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .anyRequest().authenticated()
         );

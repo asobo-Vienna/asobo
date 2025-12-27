@@ -9,6 +9,7 @@ import at.msm.asobo.services.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,6 +18,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/users")
+@PreAuthorize("hasAnyRole('ADMIN', 'SUPERADMIN', 'USER')")
 public class UserController {
 
     private final UserService userService;
@@ -28,7 +30,10 @@ public class UserController {
     // we need "/id/ before the actual id, because otherwise
     // /{id} and /{username} lead to ambiguity
     @GetMapping(value = "/id/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UserPublicDTO> getUserById(@PathVariable UUID id, @AuthenticationPrincipal UserPrincipal userPrincipal) {
+    public ResponseEntity<UserPublicDTO> getUserById(
+            @PathVariable UUID id,
+            @AuthenticationPrincipal UserPrincipal userPrincipal
+    ) {
         UserPublicDTO user = this.userService.getUserDTOById(id);
 
         if (user == null) {
@@ -79,6 +84,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPERADMIN')")
     public UserPublicDTO deleteUser(@PathVariable UUID id) {
         return this.userService.deleteUserById(id);
     }

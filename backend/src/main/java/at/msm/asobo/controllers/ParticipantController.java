@@ -3,12 +3,14 @@ package at.msm.asobo.controllers;
 import at.msm.asobo.dto.user.UserPublicDTO;
 import at.msm.asobo.services.ParticipantService;
 import jakarta.validation.Valid;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/events/{eventId}/participants")
+@PreAuthorize("hasAnyRole('ADMIN', 'SUPERADMIN', 'USER')")
 public class ParticipantController {
 
     private final ParticipantService participantService;
