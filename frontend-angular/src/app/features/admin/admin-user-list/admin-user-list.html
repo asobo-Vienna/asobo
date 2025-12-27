@@ -55,7 +55,19 @@
 
         <td>
           <div class="flex flex-col gap-1">
-            <p-multiselect [options]="user.roles" optionLabel="name" placeholder="Select Roles" [fluid]="true"></p-multiselect>
+            <p-multiselect
+              [options]="allRoles()"
+              optionLabel="name"
+              placeholder="View/Edit Roles"
+              [fluid]="true"
+              [ngModel]="getUserRoles(user)"
+              (ngModelChange)="onRolesChange($event, user)"
+              dataKey="id"
+              [filter]="true"
+              [showToggleAll]="false"
+              [maxSelectedLabels]="0"
+              [selectedItemsLabel]="'View/Edit Roles'">
+            ></p-multiselect>
           </div>
         </td>
 
