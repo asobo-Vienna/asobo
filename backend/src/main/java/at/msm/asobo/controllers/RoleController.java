@@ -3,6 +3,7 @@ package at.msm.asobo.controllers;
 import at.msm.asobo.dto.user.RoleDTO;
 import at.msm.asobo.dto.user.UserRolesDTO;
 import at.msm.asobo.services.RoleService;
+import jakarta.validation.Valid;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,7 +26,7 @@ public class RoleController {
     }
 
     @PatchMapping("/assign")
-    public UserRolesDTO assignRoles(@RequestBody UserRolesDTO userRolesDTO) {
+    public UserRolesDTO assignRoles(@Valid @RequestBody UserRolesDTO userRolesDTO) {
         return this.roleService.assignRoles(userRolesDTO.getUserId(), userRolesDTO.getRoles());
     }
 }
