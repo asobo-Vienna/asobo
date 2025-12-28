@@ -5,6 +5,7 @@ import at.msm.asobo.security.UserPrincipal;
 import at.msm.asobo.services.UserCommentService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,6 +14,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/events/{eventId}/comments")
+@PreAuthorize("hasAnyRole('ADMIN', 'SUPERADMIN', 'USER')")
 public class UserCommentController {
     private final UserCommentService userCommentService;
 
@@ -21,7 +23,7 @@ public class UserCommentController {
     }
 
     @GetMapping
-    public List<UserCommentDTO> getAllUserComments(@PathVariable UUID eventId) {
+    public List<UserCommentDTO> getAllUserCommentsByEventId(@PathVariable UUID eventId) {
         return this.userCommentService.getUserCommentsByEventId(eventId);
     }
 

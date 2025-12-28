@@ -31,6 +31,14 @@ public class RoleService {
     }
 
     public UserRolesDTO assignRoles(UUID userId, Set<RoleDTO> roles) {
+        if (userId == null) {
+            throw new IllegalArgumentException("User ID cannot be null");
+        }
+
+        if (roles == null || roles.isEmpty()) {
+            throw new IllegalArgumentException("At least one role is required");
+        }
+
         User user = this.userService.getUserById(userId);
 
         Set<Role> roleEntities = roles.stream()

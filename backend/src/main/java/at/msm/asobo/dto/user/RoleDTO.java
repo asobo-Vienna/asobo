@@ -1,5 +1,7 @@
 package at.msm.asobo.dto.user;
 
+import java.util.Objects;
+
 public class RoleDTO {
     private Long id;
     private String name;
@@ -26,5 +28,17 @@ public class RoleDTO {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        RoleDTO roleDTO = (RoleDTO) o;
+        return Objects.equals(id, roleDTO.id) && Objects.equals(name, roleDTO.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name);
     }
 }

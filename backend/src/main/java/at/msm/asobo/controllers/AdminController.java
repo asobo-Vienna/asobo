@@ -6,18 +6,14 @@ import at.msm.asobo.dto.user.UserAdminSummaryDTO;
 import at.msm.asobo.services.AdminService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 
 @RestController
 @RequestMapping("/api/admin")
-@PreAuthorize("isAuthenticated()")
-@Secured("ROLE_ADMIN")
-
+@PreAuthorize("hasAnyRole('ADMIN', 'SUPERADMIN')")
 public class AdminController {
     private final AdminService adminService;
 
