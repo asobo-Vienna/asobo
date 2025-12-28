@@ -81,7 +81,7 @@ class MediumControllerTest {
 
     @Test
     @WithMockUser(username = "loggedInUser")
-    void getAllMedia_ReturnsListOfMediaByEventId() throws Exception {
+    void getAllMediaByEventId_ReturnsListOfMedia() throws Exception {
         List<MediumDTO> mediaList = List.of(mediumDTO1, mediumDTO2);
         String expectedJson =  objectMapper.writeValueAsString(mediaList);
 
