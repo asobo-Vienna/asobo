@@ -24,11 +24,13 @@
         <div class="col" id="event-basic-info-container">
           <div class="d-flex justify-content-between">
             <span id="event-title" class="fw-bold flex-grow-1">{{ title }}</span>
-            <span id="event-date" class="date-font-color ms-1 flex-shrink-0">{{ date | date : 'EEE, MMMM d, y' }}</span>
+            <div id="event-date" class="date-font-color ms-1 flex-shrink-0">{{ date | date : 'EEE, MMMM d, y' }}
+              <div id="event-time" class="date-font-color ms-1 small event-time">{{ time | date : 'h:mm a' }}</div>
+            </div>
           </div>
           <div class="d-flex justify-content-between">
             <span id="event-location" class="date-font-color small flex-grow-1">in {{ location }}</span>
-            <span id="event-time" class="date-font-color ms-1 small flex-shrink-0">{{ time | date : 'h:mm a' }}</span>
+
           </div>
         </div>
         <div class="col-md-4">
