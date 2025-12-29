@@ -68,13 +68,17 @@ public class RoleService {
                 .map(Role::getName)
                 .collect(Collectors.toSet());
 
+        if (!roleNames.contains(ROLE_USER)) {
+            throw new IllegalStateException("Every user requires the role USER");
+        }
+
         if (roleNames.contains(ROLE_SUPERADMIN) &&
                 (!roleNames.contains(ROLE_ADMIN) || !roleNames.contains(ROLE_USER))) {
-            throw new IllegalArgumentException("SUPERADMIN requires ADMIN and USER roles");
+            throw new IllegalStateException("SUPERADMIN requires ADMIN and USER roles");
         }
 
         if (roleNames.contains(ROLE_ADMIN) && !roleNames.contains(ROLE_USER)) {
-            throw new IllegalArgumentException("ADMIN requires USER role");
+            throw new IllegalStateException("ADMIN requires USER role");
         }
     }
 }
