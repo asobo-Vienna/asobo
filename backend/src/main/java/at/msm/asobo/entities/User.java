@@ -209,10 +209,6 @@ public class User {
         this.roles = roles;
     }
 
-    public boolean hasAllRoles(Set<Role> roles) {
-        return this.roles.containsAll(roles);
-    }
-
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
