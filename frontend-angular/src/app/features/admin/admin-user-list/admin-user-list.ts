@@ -48,6 +48,7 @@ export class AdminUserList implements OnInit {
 
   private pageCache = new Map<string, User[]>();
   private roleCache = new Map<string, Role[]>();
+  private sortedRolesCache = new Map<string, Role[]>();
   private currentPage = signal<number>(0);
   private currentSize = signal<number>(environment.defaultPageSize);
 
@@ -111,8 +112,6 @@ export class AdminUserList implements OnInit {
     }));
     this.userRolesStore.set(userRolesList);
   }
-
-  private sortedRolesCache = new Map<string, Role[]>();
 
   getUserRoles(user: User): Role[] {
     const userRoles = this.userRolesStore().find(ur => ur.userId === user.id);
@@ -186,13 +185,11 @@ export class AdminUserList implements OnInit {
       return;
     }
 
-    // Apply hierarchy rules
     const hierarchicalRoles = this.applyRoleHierarchy(newSelection, currentRoles);
 
     // Update the signal store - create new array to trigger change detection
     this.updateUserRolesStore(user, hierarchicalRoles);
 
-    // Send to backend
     this.adminService.updateUserRoles(user.id, hierarchicalRoles).subscribe({
       next: () => {
         console.log('Backend updated successfully');
@@ -226,7 +223,6 @@ export class AdminUserList implements OnInit {
     // Remove the clicked role
     const newSelection = currentRoles.filter(r => r.id !== role.id);
 
-    // Call your existing hierarchy/deselection logic
     this.onRolesChange(newSelection, user);
   }
 
@@ -248,9 +244,6 @@ export class AdminUserList implements OnInit {
     this.pageCache.clear();
   }
 
-  protected readonly UrlUtilService = UrlUtilService;
-  protected readonly environment = environment;
-
   onEdit(user: any) {
     console.log('Editing user:', user);
     this.clearCache();
@@ -265,5 +258,6 @@ export class AdminUserList implements OnInit {
     return `${environment.userProfileBaseUrl}${username}`;
   }
 
-  protected readonly RoleEnum = RoleEnum;
+  protected readonly UrlUtilService = UrlUtilService;
+  protected readonly environment = environment;
 }
