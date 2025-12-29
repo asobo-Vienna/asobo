@@ -12,11 +12,7 @@ import {FormsModule} from '@angular/forms';
 import {Role} from '../../../shared/entities/role';
 import {RoleEnum} from '../../../shared/enums/role-enum';
 import {Chip} from 'primeng/chip';
-
-interface UserRoles {
-  userId: string;
-  roles: Role[];
-}
+import {UserRoles} from '../../../shared/entities/user-roles';
 
 @Component({
   selector: 'app-admin-user-list',
