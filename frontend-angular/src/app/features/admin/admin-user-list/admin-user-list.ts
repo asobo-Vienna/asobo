@@ -135,9 +135,6 @@ export class AdminUserList implements OnInit {
     return sorted;
   }
 
-  /**
-   * Apply role hierarchy rules when a role is toggled
-   */
   private applyRoleHierarchy(newSelection: Role[], currentRoles: Role[]): Role[] {
     const currentNames = new Set(currentRoles.map(r => r.name));
     const newNames = new Set(newSelection.map(r => r.name));
@@ -145,7 +142,6 @@ export class AdminUserList implements OnInit {
     let changedRole: RoleEnum | undefined;
     let wasAdded = false;
 
-    // detect change
     for (const name of newNames) {
       if (!currentNames.has(name)) {
         changedRole = name as RoleEnum;
@@ -167,9 +163,6 @@ export class AdminUserList implements OnInit {
 
     const resultNames = new Set(newNames);
 
-    console.log('ROLE_HIERARCHY keys:', Object.keys(this.ROLE_HIERARCHY));
-    console.log('changedRole:', changedRole);
-
     if (wasAdded) {
       const dependencies = this.ROLE_HIERARCHY[changedRole] ?? [];
       dependencies.forEach(dep => resultNames.add(dep));
@@ -185,9 +178,6 @@ export class AdminUserList implements OnInit {
   }
 
   onRolesChange(newSelection: Role[], user: User): void {
-    console.log('=== onRolesChange called ===');
-    console.log('New selection:', newSelection.map(r => r.name));
-
     const currentRoles = this.getUserRoles(user);
 
     // deselecting the user role should be impossible
@@ -198,7 +188,6 @@ export class AdminUserList implements OnInit {
 
     // Apply hierarchy rules
     const hierarchicalRoles = this.applyRoleHierarchy(newSelection, currentRoles);
-    console.log('After hierarchy:', hierarchicalRoles.map(r => r.name));
 
     // Update the signal store - create new array to trigger change detection
     this.updateUserRolesStore(user, hierarchicalRoles);
@@ -207,8 +196,6 @@ export class AdminUserList implements OnInit {
     this.adminService.updateUserRoles(user.id, hierarchicalRoles).subscribe({
       next: () => {
         console.log('Backend updated successfully');
-
-        // Update cache
         const cacheKey = `${this.currentPage()}-${this.currentSize()}`;
         if (this.pageCache.has(cacheKey)) {
           const cachedUsers = this.pageCache.get(cacheKey)!;
@@ -227,7 +214,6 @@ export class AdminUserList implements OnInit {
       },
       error: (err) => {
         console.error('Error updating roles:', err);
-
         // Revert to previous state
         this.updateUserRolesStore(user, currentRoles);
       }
@@ -235,7 +221,6 @@ export class AdminUserList implements OnInit {
   }
 
   handleChipRemove(role: Role, user: User) {
-    // Get current selected roles for the user
     const currentRoles = this.getUserRoles(user);
 
     // Remove the clicked role
@@ -278,10 +263,6 @@ export class AdminUserList implements OnInit {
 
   getUserRouterLink(username: string): string {
     return `${environment.userProfileBaseUrl}${username}`;
-  }
-
-  noCloseMulti(event: any) {
-    event.stopPropagation();
   }
 
   protected readonly RoleEnum = RoleEnum;
