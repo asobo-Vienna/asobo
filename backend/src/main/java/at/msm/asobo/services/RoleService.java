@@ -68,10 +68,6 @@ public class RoleService {
                 .map(Role::getName)
                 .collect(Collectors.toSet());
 
-        for (String roleName : roleNames) {
-            System.out.println("role name: " + roleName);
-        }
-
         if (!roleNames.contains(ROLE_USER)) {
             throw new IllegalArgumentException("Every user requires the role USER");
         }
