@@ -108,6 +108,7 @@ export class AdminUserList implements OnInit {
   }
 
   private initializeUserRolesStore(users: User[]): void {
+    this.sortedRolesCache.clear();
     const userRolesList: UserRoles[] = users.map(user => ({
       userId: user.id,
       roles: [...(user.roles || [])]
@@ -115,9 +116,27 @@ export class AdminUserList implements OnInit {
     this.userRolesStore.set(userRolesList);
   }
 
+  private sortedRolesCache = new Map<string, Role[]>();
+
   getUserRoles(user: User): Role[] {
     const userRoles = this.userRolesStore().find(ur => ur.userId === user.id);
-    return userRoles?.roles || [];
+    const roles = userRoles?.roles || [];
+
+    const cacheKey = `${user.id}-${roles.map(r => r.id).join(',')}`;
+
+    if (this.sortedRolesCache.has(cacheKey)) {
+      return this.sortedRolesCache.get(cacheKey)!;
+    }
+
+    const roleOrder = [RoleEnum.SUPERADMIN, RoleEnum.ADMIN, RoleEnum.USER];
+    const sorted = [...roles].sort((a, b) => {
+      const indexA = roleOrder.indexOf(a.name as RoleEnum);
+      const indexB = roleOrder.indexOf(b.name as RoleEnum);
+      return (indexA === -1 ? 999 : indexA) - (indexB === -1 ? 999 : indexB);
+    });
+
+    this.sortedRolesCache.set(cacheKey, sorted);
+    return sorted;
   }
 
   /**
