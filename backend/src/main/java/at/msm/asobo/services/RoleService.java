@@ -14,9 +14,9 @@ import java.util.stream.Collectors;
 
 @Service
 public class RoleService {
-    private static final String ROLE_SUPERADMIN = "ROLE_SUPERADMIN";
-    private static final String ROLE_ADMIN = "ROLE_ADMIN";
-    private static final String ROLE_USER = "ROLE_USER";
+    private static final String ROLE_SUPERADMIN = "SUPERADMIN";
+    private static final String ROLE_ADMIN = "ADMIN";
+    private static final String ROLE_USER = "USER";
 
     private final RoleRepository roleRepository;
     private final RoleMapper roleMapper;
@@ -67,6 +67,10 @@ public class RoleService {
         Set<String> roleNames = roles.stream()
                 .map(Role::getName)
                 .collect(Collectors.toSet());
+
+        for (String roleName : roleNames) {
+            System.out.println("role name: " + roleName);
+        }
 
         if (!roleNames.contains(ROLE_USER)) {
             throw new IllegalArgumentException("Every user requires the role USER");
