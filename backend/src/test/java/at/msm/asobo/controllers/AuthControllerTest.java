@@ -151,6 +151,7 @@ public class AuthControllerTest {
         when(userService.loginUser(any(UserLoginDTO.class))).thenReturn(mockResponse);
 
         mockMvc.perform(post(LOGIN_URL)
+                        .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(loginDTO)))
                 .andExpect(status().isOk())
