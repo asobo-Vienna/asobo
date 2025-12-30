@@ -1,6 +1,5 @@
 package at.msm.asobo.services;
 
-import at.msm.asobo.exceptions.InvalidPasswordFormatException;
 import at.msm.asobo.security.PasswordValidator;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
