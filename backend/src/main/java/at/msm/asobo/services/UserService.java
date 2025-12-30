@@ -167,6 +167,7 @@ public class UserService {
         PatchUtils.copyNonNullProperties(userUpdateDTO, existingUser, "profilePicture", "password");
 
         if(userUpdateDTO.getPassword() != null) {
+            this.passwordService.validatePasswordFormat(userUpdateDTO.getPassword());
             String hashedPassword = this.passwordService.hashPassword(userUpdateDTO.getPassword());
             existingUser.setPassword(hashedPassword);
         }
@@ -213,6 +214,7 @@ public class UserService {
     private void validateUserRegistration(UserRegisterDTO userRegisterDTO) {
         validateEmailNotTaken(userRegisterDTO.getEmail());
         validateUsernameNotTaken(userRegisterDTO.getUsername());
+        this.passwordService.validatePasswordFormat(userRegisterDTO.getPassword());
     }
 
     private void validateEmailNotTaken(String email) {

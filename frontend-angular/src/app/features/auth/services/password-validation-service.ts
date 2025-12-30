@@ -17,8 +17,9 @@ export class PasswordValidationService {
   // Password requirements definition
   getPasswordRequirements(): PasswordRequirement[] {
     return [
-      { key: 'minlength', label: 'At least 8 characters', met: false },
+      { key: 'minlength', label: `At least ${environment.minPWLength} characters`, met: false },
       { key: 'uppercase', label: 'At least one uppercase letter', met: false },
+      { key: 'lowercase', label: 'At least one lowercase letter', met: false },
       { key: 'number', label: 'At least one number', met: false },
       { key: 'specialCharacter', label: 'At least one special character', met: false },
     ];
@@ -30,6 +31,16 @@ export class PasswordValidationService {
       const value = control.value;
       if (!value || !/[A-Z]/.test(value)) {
         return { uppercase: true };
+      }
+      return null;
+    };
+  }
+
+  hasLowercase(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const value = control.value;
+      if (!value || !/[a-z]/.test(value)) {
+        return { lowercase: true };
       }
       return null;
     };
@@ -137,8 +148,9 @@ export class PasswordValidationService {
   getPasswordValidators(): ValidatorFn[] {
     return [
       Validators.required,
-      Validators.minLength(8),
+      Validators.minLength(environment.minPWLength),
       this.hasUppercase(),
+      this.hasLowercase(),
       this.hasNumber(),
       this.hasSpecialCharacter(),
     ];

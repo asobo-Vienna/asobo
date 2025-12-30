@@ -158,6 +158,8 @@ export class RegistrationForm {
       return `Minimum length is ${errors['minlength'].requiredLength}`;
     if (errors['uppercase'])
       return 'Must contain at least one uppercase letter';
+    if (errors['lowercase'])
+      return `Must contain at least one lowercase letter`;
     if (errors['number'])
       return 'Must contain at least one number';
     if (errors['specialCharacter'])
