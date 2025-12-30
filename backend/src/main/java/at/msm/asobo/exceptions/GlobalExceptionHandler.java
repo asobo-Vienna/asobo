@@ -108,4 +108,17 @@ public class GlobalExceptionHandler {
         );
         return ResponseEntity.badRequest().body(error);
     }
+
+    @ExceptionHandler(InvalidPasswordFormatException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidPassword(
+            InvalidPasswordFormatException ex) {
+
+        ErrorResponse error = new ErrorResponse(
+                "INVALID_PASSWORD_FORMAT",
+                ex.getMessage(),
+                HttpStatus.BAD_REQUEST.value()
+        );
+
+        return ResponseEntity.badRequest().body(error);
+    }
 }
