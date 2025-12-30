@@ -40,6 +40,10 @@ public class PasswordValidator {
             violations.add("Password must contain at least one digit!");
         }
 
+        if (!SPECIAL_CHAR_PATTERN.matcher(password).matches()) {
+            violations.add("Password must contain at least one special character!");
+        }
+
         if (!violations.isEmpty()) {
             throw new InvalidPasswordFormatException(
                     "Password does not meet requirements!",
