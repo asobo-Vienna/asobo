@@ -1,7 +1,7 @@
 @if (authService.hasAdminAccess()) {
   <h1 class="text-primary component">Admin Section</h1>
 
-  <p-tabs [(value)]="selectedTab">
+  <p-tabs [(value)]="selectedTab" class="admin-page">
     <p-tablist>
       <p-tab value="users">Users</p-tab>
       <p-tab value="events">Events</p-tab>
