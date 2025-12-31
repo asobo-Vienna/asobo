@@ -54,7 +54,7 @@ public class SecurityConfig {
         http.cors(cors -> cors.configurationSource(request -> {
             CorsConfiguration config = new CorsConfiguration();
             config.setAllowedOrigins(List.of(
-                    "http://localhost:4200", // your frontend
+                    "http://localhost:4200", // frontend
                     "http://localhost:63342",
                     "http://localhost:63343"
             ));

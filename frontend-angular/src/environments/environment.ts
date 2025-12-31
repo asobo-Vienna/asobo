@@ -25,7 +25,7 @@ export const environment = {
   eventDescriptionPreviewLength: 50,
   minEventDescriptionLength: 3,
   maxEventDescriptionLength: 1000,
-  specialCharactersForPW: /[!@#$%^&*(),.?":;{}|<>]/,
+  specialCharactersForPW: /[!@#$%^&*(),.?:;{}|<>]/,
   userProfileBaseUrl: '/user/',
   usersSectionBaseUrl: '/users',
   adminSectionBaseUrl: '/admin',

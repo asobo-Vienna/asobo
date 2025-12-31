@@ -22,7 +22,6 @@ public class UserUpdateDTO {
 
     private String location;
 
-    @Size(min = 6, message = "Password must contain at least 6 characters")
     private String password;
 
     @Size(min=1, message = "About me must contain at least 1 character")
