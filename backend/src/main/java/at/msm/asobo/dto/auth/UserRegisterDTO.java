@@ -23,7 +23,6 @@ public class UserRegisterDTO {
     private String email;
 
     @NotBlank(message = "Password is mandatory for user registration")
-    @Size(min = 6, message = "Password must be at least 6 characters")
     private String password;
 
     //@NotBlank(message = "Password confirmation is required")

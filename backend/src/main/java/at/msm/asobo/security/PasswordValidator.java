@@ -15,7 +15,7 @@ public class PasswordValidator {
     private static final Pattern UPPERCASE_PATTERN = Pattern.compile(".*[A-Z].*");
     private static final Pattern LOWERCASE_PATTERN = Pattern.compile(".*[a-z].*");
     private static final Pattern DIGIT_PATTERN = Pattern.compile(".*\\d.*");
-    private static final Pattern SPECIAL_CHAR_PATTERN = Pattern.compile(".*[!@#$%^&*()].*");
+    private static final Pattern SPECIAL_CHAR_PATTERN = Pattern.compile(".*[!@#$%^&*(),.?:;{}|<>].*");
 
     public void validate(String password) {
         List<String> violations = new ArrayList<>();
@@ -25,7 +25,7 @@ public class PasswordValidator {
         }
 
         if (password.length() < MIN_PW_LENGTH) {
-            violations.add("Password must be at least " + MIN_PW_LENGTH + " characters!");
+            violations.add("Password must be at least " + MIN_PW_LENGTH + " characters long!");
         }
 
         if (!UPPERCASE_PATTERN.matcher(password).matches()) {

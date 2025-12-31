@@ -116,6 +116,7 @@ public class GlobalExceptionHandler {
         ErrorResponse error = new ErrorResponse(
                 "INVALID_PASSWORD_FORMAT",
                 ex.getMessage(),
+                ex.getViolations(),
                 HttpStatus.BAD_REQUEST.value()
         );
 
