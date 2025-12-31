@@ -261,4 +261,47 @@ class RoleControllerTest {
 
         verify(roleService).assignRoles(userId, Collections.emptySet());
     }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"ADMIN", "SUPERADMIN"})
+    void assignRole_withMissingUserRole_returns400(String role) throws Exception {
+        Set<RoleDTO> rolesWithoutUser = Set.of(testRole1); // Only ADMIN, no USER
+        UserRolesDTO request = new UserRolesDTO(userId, rolesWithoutUser);
+        String jsonRequest = objectMapper.writeValueAsString(request);
+
+        when(roleService.assignRoles(userId, rolesWithoutUser))
+                .thenThrow(new IllegalArgumentException("Every user requires the role USER"));
+
+        mockMvc.perform(patch(ASSIGN_URL)
+                        .with(user("testuser").roles(role))
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonRequest))
+                .andExpect(status().isBadRequest());
+
+        verify(roleService).assignRoles(userId, rolesWithoutUser);
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"ADMIN", "SUPERADMIN"})
+    void assignRole_withInvalidSuperAdminHierarchy_returns400(String role) throws Exception {
+        RoleDTO superAdminRole = new RoleDTO();
+        superAdminRole.setName("SUPERADMIN");
+
+        Set<RoleDTO> invalidRoles = Set.of(superAdminRole); // SUPERADMIN without ADMIN/USER
+        UserRolesDTO request = new UserRolesDTO(userId, invalidRoles);
+        String jsonRequest = objectMapper.writeValueAsString(request);
+
+        when(roleService.assignRoles(userId, invalidRoles))
+                .thenThrow(new IllegalArgumentException("SUPERADMIN requires ADMIN and USER roles"));
+
+        mockMvc.perform(patch(ASSIGN_URL)
+                        .with(user("testuser").roles(role))
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonRequest))
+                .andExpect(status().isBadRequest());
+
+        verify(roleService).assignRoles(userId, invalidRoles);
+    }
 }

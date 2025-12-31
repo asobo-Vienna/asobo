@@ -8,7 +8,8 @@ import {environment} from '../../../../environments/environment';
 import {jwtDecode} from 'jwt-decode';
 import {UserProfile} from '../../users/user-profile/models/user-profile-model';
 import {UrlUtilService} from '../../../shared/utils/url/url-util-service';
-import {Role} from '../../../shared/enums/Role';
+import {RoleEnum} from '../../../shared/enums/role-enum';
+import {Role} from '../../../shared/entities/role';
 import {UserRegistrationData} from '../models/user-registration-data';
 
 @Injectable({ providedIn: 'root' })
@@ -183,21 +184,29 @@ export class AuthService {
     };
   });
 
-  getUserRoles(): string[] {
+  private normalizeRole(role: string): RoleEnum | undefined {
+    // remove ROLE_ prefix if present
+    const name = role.startsWith('ROLE_') ? role.slice(5) : role;
+    return RoleEnum[name as keyof typeof RoleEnum];
+  }
+
+  getUserRoles(): RoleEnum[] {
     const token = this.getToken();
     if (!token) return [];
 
     try {
       const decoded: any = jwtDecode(token);
-      return decoded.roles || [];
+      const roles: string[] = decoded.roles || [];
+      return roles.map(r => this.normalizeRole(r)).filter(Boolean) as RoleEnum[];
     } catch (error) {
       console.error('Error decoding token for roles:', error);
       return [];
     }
   }
 
+
   hasAdminAccess(): boolean {
-    return this.getUserRoles().some(role => [Role.ADMIN, Role.SUPERADMIN].includes(role as Role));
+    return this.getUserRoles().some(role => [RoleEnum.ADMIN, RoleEnum.SUPERADMIN].includes(role as RoleEnum));
   }
 
 

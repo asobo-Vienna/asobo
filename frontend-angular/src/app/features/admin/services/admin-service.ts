@@ -2,13 +2,11 @@ import {inject, Injectable, signal} from '@angular/core';
 import {Observable} from 'rxjs';
 import {environment} from '../../../../environments/environment';
 import {HttpClient, HttpParams} from '@angular/common/http';
-import {Comment} from '../../events/models/comment'
 import {User} from '../../auth/models/user';
 import {CommentWithEventTitle} from '../../events/models/comment-with-event-title';
-import {MediaItem} from '../../events/models/media-item';
 import {PageResponse} from '../../../shared/entities/page-response';
 import {MediaItemWithEventTitle} from '../../events/models/media-item-with-event-title';
-import {Role} from '../../../shared/enums/Role';
+import {Role} from '../../../shared/entities/role';
 import {UserRoles} from '../../../shared/entities/user-roles';
 
 @Injectable({

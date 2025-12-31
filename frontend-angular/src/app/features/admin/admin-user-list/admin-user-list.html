@@ -65,9 +65,21 @@
               dataKey="id"
               [filter]="true"
               [showToggleAll]="false"
-              [maxSelectedLabels]="0"
-              [selectedItemsLabel]="'View/Edit Roles'">
-            ></p-multiselect>
+              [maxSelectedLabels]="allRoles().length"
+              [selectedItemsLabel]="'View/Edit Roles'"
+              display="chip">
+              <!-- Custom template for selected items -->
+              <ng-template pTemplate="selectedItems" let-selectedItems>
+                @for (role of selectedItems; track role) {
+                  <p-chip
+                    [label]="role.name"
+                    [removable]="role.name !== 'USER'"
+                    (onRemove)="handleChipRemove(role, user)">
+                  </p-chip>
+                }
+              </ng-template>
+
+            </p-multiselect>
           </div>
         </td>
 
