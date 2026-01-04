@@ -77,7 +77,6 @@ public class AuthService {
                 );
 
         Authentication authentication = authenticationManager.authenticate(authToken);
-
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
 
         long expirationTime = EXPIRATION_MS;
@@ -88,7 +87,6 @@ public class AuthService {
         String token = jwtUtil.generateToken(userPrincipal, expirationTime);
 
         User user = userService.getUserById(userPrincipal.getUserId());
-
         UserPublicDTO userPublicDTO = this.userDTOUserMapper.mapUserToUserPublicDTO(user);
 
         return new LoginResponseDTO(token, userPublicDTO);

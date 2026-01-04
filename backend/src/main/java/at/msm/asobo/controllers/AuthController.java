@@ -1,5 +1,6 @@
 package at.msm.asobo.controllers;
 
+import at.msm.asobo.dto.auth.AvailabilityDTO;
 import at.msm.asobo.dto.auth.LoginResponseDTO;
 import at.msm.asobo.dto.auth.UserLoginDTO;
 import at.msm.asobo.dto.auth.UserRegisterDTO;
@@ -33,13 +34,23 @@ public class AuthController {
         return this.authService.loginUser(userLoginDTO);
     }
 
-    @GetMapping("/check-username/{username}")
+    /*@GetMapping("/check-username/{username}")
     public boolean checkUsernameAvailability(@PathVariable String username) {
         return !this.userService.isUsernameAlreadyTaken(username);
+    }*/
+
+    @GetMapping("/check-username")
+    public AvailabilityDTO checkUsernameAvailability(@RequestParam String username) {
+        return new AvailabilityDTO(!this.userService.isUsernameAlreadyTaken(username));
     }
 
-    @GetMapping("/check-email/{email}")
+    /*@GetMapping("/check-email/{email}")
     public boolean checkEmailAvailability(@PathVariable String email) {
         return !this.userService.isEmailAlreadyTaken(email);
+    }*/
+
+    @GetMapping("/check-email")
+    public AvailabilityDTO checkEmailAvailability(@RequestParam String email) {
+        return new AvailabilityDTO(!this.userService.isEmailAlreadyTaken(email));
     }
 }

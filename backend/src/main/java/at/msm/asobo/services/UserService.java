@@ -2,13 +2,10 @@ package at.msm.asobo.services;
 
 import at.msm.asobo.config.FileStorageProperties;
 import at.msm.asobo.dto.auth.LoginResponseDTO;
-import at.msm.asobo.dto.auth.UserRegisterDTO;
 import at.msm.asobo.dto.user.*;
 import at.msm.asobo.entities.User;
 import at.msm.asobo.exceptions.UserNotAuthorizedException;
 import at.msm.asobo.exceptions.UserNotFoundException;
-import at.msm.asobo.exceptions.registration.EmailAlreadyExistsException;
-import at.msm.asobo.exceptions.registration.UsernameAlreadyExistsException;
 import at.msm.asobo.mappers.UserDTOUserMapper;
 import at.msm.asobo.repositories.RoleRepository;
 import at.msm.asobo.repositories.UserRepository;
