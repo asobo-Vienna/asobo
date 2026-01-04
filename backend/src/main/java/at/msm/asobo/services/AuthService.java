@@ -6,6 +6,8 @@ import at.msm.asobo.dto.auth.UserRegisterDTO;
 import at.msm.asobo.dto.user.UserPublicDTO;
 import at.msm.asobo.entities.Role;
 import at.msm.asobo.entities.User;
+import at.msm.asobo.exceptions.registration.EmailAlreadyExistsException;
+import at.msm.asobo.exceptions.registration.UsernameAlreadyExistsException;
 import at.msm.asobo.mappers.UserDTOUserMapper;
 import at.msm.asobo.security.JwtUtil;
 import at.msm.asobo.security.UserPrincipal;
@@ -93,7 +95,19 @@ public class AuthService {
     }
 
     private void validateUserRegistration(UserRegisterDTO userRegisterDTO) {
-        this.userService.validateEmailNotTaken(userRegisterDTO.getEmail());
-        this.userService.validateUsernameNotTaken(userRegisterDTO.getUsername());
+        this.validateEmailNotTaken(userRegisterDTO.getEmail());
+        this.validateUsernameNotTaken(userRegisterDTO.getUsername());
+    }
+
+    private void validateEmailNotTaken(String email) {
+        if (this.userService.isEmailAlreadyTaken(email)) {
+            throw new EmailAlreadyExistsException(email);
+        }
+    }
+
+    private void validateUsernameNotTaken(String username) {
+        if (this.userService.isUsernameAlreadyTaken(username)) {
+            throw new UsernameAlreadyExistsException(username);
+        }
     }
 }

@@ -144,18 +144,6 @@ public class UserService {
         return this.userRepository.existsByEmail(email);
     }
 
-    public void validateEmailNotTaken(String email) {
-        if (this.isEmailAlreadyTaken(email)) {
-            throw new EmailAlreadyExistsException(email);
-        }
-    }
-
-    public void validateUsernameNotTaken(String username) {
-        if (this.isUsernameAlreadyTaken(username)) {
-            throw new UsernameAlreadyExistsException(username);
-        }
-    }
-
     private void handleProfilePictureUpdate(MultipartFile picture, User user) {
         if (picture == null || picture.isEmpty()) {
             return;
