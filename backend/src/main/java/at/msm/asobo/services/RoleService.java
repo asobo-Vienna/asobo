@@ -30,6 +30,12 @@ public class RoleService {
         return this.roleRepository.findAll().stream().map(this.roleMapper::mapRoleToRoleDTO).collect(Collectors.toList());
     }
 
+    // TODO: add unit test
+    public Role getRoleByName(String roleName) {
+        return this.roleRepository.findByName("USER")
+                .orElseThrow(() -> new RuntimeException("Default role ROLE_USER not found"));
+    }
+
     public UserRolesDTO assignRoles(UUID userId, Set<RoleDTO> roles) {
         if (userId == null) {
             throw new IllegalArgumentException("User ID cannot be null");
