@@ -6,9 +6,13 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = "app.file-storage")
 @Component
 public class FileStorageProperties {
+    // application properties: app.file-storage.base-path=uploads
     private String basePath;
+    // application properties: app.file-storage.profile-picture-subfolder=profile-pictures
     private String profilePictureSubfolder;
+    // application properties: app.file-storage.event-coverpicture-subfolder=event-cover-pictures
     private String eventCoverPictureSubfolder;
+    // application properties: app.file-storage.event-galleries-subfolder=event-galleries
     private String eventGalleriesSubfolder;
 
     public String getBasePath() {

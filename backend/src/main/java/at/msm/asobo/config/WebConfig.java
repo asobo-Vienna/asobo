@@ -18,6 +18,7 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        // configured in application-properties: app.file-storage.base-path=uploads
         String basePath = props.getBasePath();
 
         if (basePath == null || basePath.isBlank()) {

@@ -64,6 +64,8 @@ public class SecurityConfig {
             return config;
         }));
 
+        // CSRF (cross-site request forgery) protection is not needed, because application uses stateless
+        // JWT-based authentication and not cookie-based sessions.
         http.csrf(AbstractHttpConfigurer::disable);
 
         http.sessionManagement(
@@ -71,6 +73,7 @@ public class SecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         );
 
+        // disables Spring Security's default form-based login.
         http.formLogin(AbstractHttpConfigurer::disable);
 
         http.authorizeHttpRequests(registry -> registry
@@ -84,6 +87,8 @@ public class SecurityConfig {
                 .anyRequest().authenticated()
         );
 
+        // throws HTTP Error 401 with message 'Invalid credentials or authentication required' if
+        // token is expired/invalid/missing
         http.exceptionHandling(exception -> exception
                 .authenticationEntryPoint(restAuthenticationEntryPoint));
 
