@@ -32,8 +32,8 @@ public class RoleService {
 
     // TODO: add unit test
     public Role getRoleByName(String roleName) {
-        return this.roleRepository.findByName("USER")
-                .orElseThrow(() -> new RuntimeException("Default role ROLE_USER not found"));
+        return this.roleRepository.findByName(roleName)
+                .orElseThrow(() -> new RoleNotFoundException("Role not found: " + roleName));
     }
 
     public UserRolesDTO assignRoles(UUID userId, Set<RoleDTO> roles) {
