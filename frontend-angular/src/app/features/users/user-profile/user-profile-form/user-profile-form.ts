@@ -153,7 +153,7 @@ export class UserProfileForm implements OnInit {
     const fields = this.editingFields();
     fields.add(fieldName);
     this.editingFields.set(new Set(fields));
-    this.updateForm.get(fieldName)?.enable();
+    this.updateForm.get(fieldName)?.enable({ emitEvent: true });
   }
 
   private checkUsernameAvailability(): void {
@@ -172,19 +172,26 @@ export class UserProfileForm implements OnInit {
             return false;
           }
 
+          // Don't check if same as current username
           if (username === this.authService.currentUser()?.username) {
             this.usernameExists.set(false);
             return false;
           }
 
-          return username.length >= environment.minIdentifierLength;
+          // Reset if too short
+          if (!username || username.length < environment.minIdentifierLength) {
+            this.usernameExists.set(false);
+            return false;
+          }
+
+          return true;
         }),
         debounceTime(environment.defaultDebounceTimeForFormFields),
         distinctUntilChanged(),
         switchMap(username => this.userValidationService.checkUsernameAvailability(username))
       )
-      .subscribe(isAvailable => {
-        this.usernameExists.set(!isAvailable);
+      .subscribe(response => {
+        this.usernameExists.set(!response.available);
       });
   }
 
@@ -204,19 +211,26 @@ export class UserProfileForm implements OnInit {
             return false;
           }
 
+          // Don't check if same as current email
           if (email === this.authService.currentUser()?.email) {
             this.emailExists.set(false);
             return false;
           }
 
-          return this.updateForm.get('email')?.valid === true;
+          // Reset if invalid
+          if (!this.updateForm.get('email')?.valid) {
+            this.emailExists.set(false);
+            return false;
+          }
+
+          return true;
         }),
         debounceTime(environment.defaultDebounceTimeForFormFields),
         distinctUntilChanged(),
         switchMap(email => this.userValidationService.checkEmailAvailability(email))
       )
-      .subscribe(isAvailable => {
-        this.emailExists.set(!isAvailable);
+      .subscribe(response => {
+        this.emailExists.set(!response.available);
       });
   }
 

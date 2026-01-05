@@ -92,8 +92,8 @@ export class RegistrationForm {
       customSalutationControl?.updateValueAndValidity();
     });
 
-    this.checkUsernameAvailability();
-    this.checkEmailAvailability();
+    this.setupUsernameValidation();
+    this.setupEmailValidation();
 
     // Password change handler for real-time feedback
     this.registerForm.get('password')?.valueChanges.subscribe(() => {
@@ -104,39 +104,43 @@ export class RegistrationForm {
     });
   }
 
-  private checkUsernameAvailability(): void {
-    const username = this.registerForm.get('username')?.value;
-    if (!username || username.length < environment.minIdentifierLength) {
-      return;
-    }
-
+  private setupUsernameValidation(): void {
     this.registerForm.get('username')?.valueChanges
       .pipe(
-        filter(username => username.length >= environment.minIdentifierLength),
+        filter(username => {
+          // Reset error if too short
+          if (!username || username.length < environment.minIdentifierLength) {
+            this.usernameExists.set(false);
+            return false;
+          }
+          return true;
+        }),
         debounceTime(environment.defaultDebounceTimeForFormFields),
         distinctUntilChanged(),
         switchMap(username => this.userValidationService.checkUsernameAvailability(username))
       )
-      .subscribe(isAvailable => {
-        this.usernameExists.set(!isAvailable);
+      .subscribe(response => {
+        this.usernameExists.set(!response.available);
       });
   }
 
-  private checkEmailAvailability(): void {
-    const email = this.registerForm.get('email')?.value;
-    if (!email || email.length < environment.minIdentifierLength) {
-      return;
-    }
-
+  private setupEmailValidation(): void {
     this.registerForm.get('email')?.valueChanges
       .pipe(
-        filter(() => this.registerForm.get('email')?.valid === true),
+        filter(email => {
+          // Reset error if empty or invalid
+          if (!email || !this.registerForm.get('email')?.valid) {
+            this.emailExists.set(false);
+            return false;
+          }
+          return true;
+        }),
         debounceTime(environment.defaultDebounceTimeForFormFields),
         distinctUntilChanged(),
         switchMap(email => this.userValidationService.checkEmailAvailability(email))
       )
-      .subscribe(isAvailable => {
-        this.emailExists.set(!isAvailable);
+      .subscribe(response => {
+        this.emailExists.set(!response.available);
       });
   }
 
@@ -158,6 +162,8 @@ export class RegistrationForm {
       return `Minimum length is ${errors['minlength'].requiredLength}`;
     if (errors['uppercase'])
       return 'Must contain at least one uppercase letter';
+    if (errors['lowercase'])
+      return `Must contain at least one lowercase letter`;
     if (errors['number'])
       return 'Must contain at least one number';
     if (errors['specialCharacter'])

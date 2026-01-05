@@ -13,6 +13,7 @@ import at.msm.asobo.security.JwtUtil;
 import at.msm.asobo.security.UserPrincipal;
 import at.msm.asobo.services.files.FileStorageService;
 import at.msm.asobo.utils.PatchUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.web.servlet.MultipartProperties;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -25,6 +26,9 @@ import java.util.UUID;
 
 @Service
 public class UserService {
+    @Value("${jwt.expiration-ms}")
+    private long EXPIRATION_MS;
+
     private final UserRepository userRepository;
     private final UserDTOUserMapper userDTOUserMapper;
     private final FileStorageService fileStorageService;
@@ -116,7 +120,7 @@ public class UserService {
                             .toList()
             );
 
-            String newToken = jwtUtil.generateToken(userPrincipal, AuthService.EXPIRATION_MS);
+            String newToken = jwtUtil.generateToken(userPrincipal, EXPIRATION_MS);
             UserPublicDTO userPublicDTO = this.userDTOUserMapper.mapUserToUserPublicDTO(updatedUser);
 
             return new LoginResponseDTO(newToken, userPublicDTO);

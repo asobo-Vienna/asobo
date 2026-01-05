@@ -24,9 +24,9 @@ import java.util.Set;
 @Service
 public class AuthService {
     @Value("${jwt.expiration-ms}")
-    public static long EXPIRATION_MS;
+    private long EXPIRATION_MS;
     @Value("${jwt.remember-me-expiration-ms}")
-    public static long REMEMBER_ME_EXPIRATION_MS;
+    private long REMEMBER_ME_EXPIRATION_MS;
 
     private final UserService userService;
     private final PasswordService passwordService;
@@ -64,7 +64,7 @@ public class AuthService {
                 List.of(new SimpleGrantedAuthority("ROLE_USER"))
         );
 
-        String token = jwtUtil.generateToken(userPrincipal, EXPIRATION_MS);
+        String token = this.jwtUtil.generateToken(userPrincipal, EXPIRATION_MS);
 
         return new LoginResponseDTO(token, this.userDTOUserMapper.mapUserToUserPublicDTO(savedUser));
     }
@@ -76,7 +76,7 @@ public class AuthService {
                         userLoginDTO.getPassword()
                 );
 
-        Authentication authentication = authenticationManager.authenticate(authToken);
+        Authentication authentication = this.authenticationManager.authenticate(authToken);
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
 
         long expirationTime = EXPIRATION_MS;
@@ -84,9 +84,9 @@ public class AuthService {
             expirationTime = REMEMBER_ME_EXPIRATION_MS; // 30 days;
         }
 
-        String token = jwtUtil.generateToken(userPrincipal, expirationTime);
+        String token = this.jwtUtil.generateToken(userPrincipal, expirationTime);
 
-        User user = userService.getUserById(userPrincipal.getUserId());
+        User user = this.userService.getUserById(userPrincipal.getUserId());
         UserPublicDTO userPublicDTO = this.userDTOUserMapper.mapUserToUserPublicDTO(user);
 
         return new LoginResponseDTO(token, userPublicDTO);
