@@ -34,6 +34,12 @@ public class RoleService {
                 .collect(Collectors.toList());
     }
 
+    // TODO: add unit test
+    public Role getRoleByName(String roleName) {
+        return this.roleRepository.findByName(roleName)
+                .orElseThrow(() -> new RoleNotFoundException("Role not found: " + roleName));
+    }
+
     public UserRolesDTO assignRoles(UUID userId, Set<RoleDTO> roles) {
         if (userId == null) {
             throw new IllegalArgumentException("User ID cannot be null");
