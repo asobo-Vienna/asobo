@@ -12,6 +12,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 
 @Component
 public class TokenAuthenticationFilter extends OncePerRequestFilter {
@@ -49,10 +50,9 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
             if (jwtUtil.validateToken(token)) {
                 // extract info from token
-                String username = jwtUtil.getUsernameFromToken(token);
-                //String userId = jwtUtil.getUserIdFromToken(token);
+                UUID userId = UUID.fromString(jwtUtil.getUserIdFromToken(token));
 
-                UserPrincipal userPrincipal = (UserPrincipal) customUserDetailsService.loadUserByUsername(username);
+                UserPrincipal userPrincipal = (UserPrincipal) this.customUserDetailsService.loadUserById(userId);
 
                 UserPrincipalAuthenticationToken authentication =
                         new UserPrincipalAuthenticationToken(userPrincipal);
@@ -60,7 +60,6 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);
-
             }
         }
 

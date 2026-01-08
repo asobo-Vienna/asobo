@@ -10,7 +10,6 @@ public class UserLoginDTO {
     private String identifier;
 
     @NotBlank(message = "Password must be provided")
-    @Size(min = 6, message = "Password must be at least 6 characters")
     private String password;
 
     private boolean rememberMe;
@@ -23,8 +22,7 @@ public class UserLoginDTO {
         this.password = password;
     }
 
-    public UserLoginDTO() {
-    }
+    public UserLoginDTO() {}
 
     public String getIdentifier() {
         return this.identifier;
