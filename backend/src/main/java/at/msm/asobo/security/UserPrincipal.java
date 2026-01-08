@@ -5,6 +5,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.UUID;
 
+// represents the authenticated user in a Spring Security context
 public class UserPrincipal implements UserDetails {
 
     private final UUID userId;
