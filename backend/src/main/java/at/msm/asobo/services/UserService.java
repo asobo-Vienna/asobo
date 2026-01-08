@@ -40,13 +40,11 @@ public class UserService {
     private final UserAuthorizationService userAuthorizationService;
 
     public UserService(UserRepository userRepository,
-                       RoleRepository roleRepository,
                        UserDTOUserMapper userDTOUserMapper,
                        FileStorageService fileStorageService,
                        FileStorageProperties fileStorageProperties,
                        PasswordService passwordService,
                        JwtUtil jwtUtil,
-                       AuthenticationManager authenticationManager,
                        MultipartProperties multipartProperties,
                        UserAuthorizationService userAuthorizationService
     ) {
