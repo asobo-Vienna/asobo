@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import java.util.UUID;
 
 
-@ResponseStatus(HttpStatus.NOT_FOUND)
+@ResponseStatus(HttpStatus.UNAUTHORIZED)
 public class UserNotAuthorizedException extends RuntimeException {
 
     public UserNotAuthorizedException(UUID id) {

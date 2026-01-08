@@ -6,6 +6,7 @@ import at.msm.asobo.dto.auth.UserRegisterDTO;
 import at.msm.asobo.dto.user.UserPublicDTO;
 import at.msm.asobo.entities.Role;
 import at.msm.asobo.entities.User;
+import at.msm.asobo.exceptions.UserNotAuthorizedException;
 import at.msm.asobo.exceptions.registration.EmailAlreadyExistsException;
 import at.msm.asobo.exceptions.registration.UsernameAlreadyExistsException;
 import at.msm.asobo.mappers.UserDTOUserMapper;
@@ -15,6 +16,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 
@@ -76,7 +78,13 @@ public class AuthService {
                         userLoginDTO.getPassword()
                 );
 
-        Authentication authentication = this.authenticationManager.authenticate(authToken);
+        Authentication authentication;
+        try {
+            authentication = this.authenticationManager.authenticate(authToken);
+        } catch (AuthenticationException e) {
+            throw new UserNotAuthorizedException("Invalid identifier or password");
+        }
+
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
 
         long expirationTime = EXPIRATION_MS;

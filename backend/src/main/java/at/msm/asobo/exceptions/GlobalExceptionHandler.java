@@ -98,6 +98,16 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
 
+    @ExceptionHandler(UserCommentNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleUserCommentNotFound(UserCommentNotFoundException ex) {
+        ErrorResponse error = new ErrorResponse(
+                "USERCOMMENT_NOT_FOUND",
+                ex.getMessage(),
+                HttpStatus.NOT_FOUND.value()
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ErrorResponse> handleIllegalArgument(IllegalArgumentException ex) {
         ErrorResponse error = new ErrorResponse(
@@ -123,7 +133,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(InvalidFileUploadException.class)
-    public ResponseEntity<ErrorResponse> handleIllegalArgument(InvalidFileUploadException ex) {
+    public ResponseEntity<ErrorResponse> handleInvalidFileUpload(InvalidFileUploadException ex) {
         ErrorResponse error = new ErrorResponse(
                 "INVALID_FILE_UPLOAD",
                 ex.getMessage(),
