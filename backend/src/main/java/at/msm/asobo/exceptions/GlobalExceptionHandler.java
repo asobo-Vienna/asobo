@@ -122,4 +122,14 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.badRequest().body(error);
     }
+
+    @ExceptionHandler(InvalidFileUploadException.class)
+    public ResponseEntity<ErrorResponse> handleIllegalArgument(InvalidFileUploadException ex) {
+        ErrorResponse error = new ErrorResponse(
+                "INVALID_FILE_UPLOAD",
+                ex.getMessage(),
+                HttpStatus.BAD_REQUEST.value()
+        );
+        return ResponseEntity.badRequest().body(error);
+    }
 }

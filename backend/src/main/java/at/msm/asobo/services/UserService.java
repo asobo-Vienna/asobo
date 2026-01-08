@@ -4,6 +4,7 @@ import at.msm.asobo.config.FileStorageProperties;
 import at.msm.asobo.dto.auth.LoginResponseDTO;
 import at.msm.asobo.dto.user.*;
 import at.msm.asobo.entities.User;
+import at.msm.asobo.exceptions.InvalidFileUploadException;
 import at.msm.asobo.exceptions.UserNotAuthorizedException;
 import at.msm.asobo.exceptions.UserNotFoundException;
 import at.msm.asobo.mappers.UserDTOUserMapper;
@@ -164,12 +165,12 @@ public class UserService {
     private void validateProfilePicture(MultipartFile file) {
         long maxBytes = multipartProperties.getMaxFileSize().toBytes();
         if (file.getSize() > maxBytes) {
-            throw new IllegalArgumentException("Profile picture must be less than " + multipartProperties.getMaxFileSize());
+            throw new InvalidFileUploadException("Profile picture size must be less than " + multipartProperties.getMaxFileSize());
         }
 
         String contentType = file.getContentType();
         if (contentType == null || !contentType.startsWith("image/")) {
-            throw new IllegalArgumentException("Only image files are allowed for profile pictures");
+            throw new InvalidFileUploadException("Only image files are allowed for profile pictures");
         }
     }
 }

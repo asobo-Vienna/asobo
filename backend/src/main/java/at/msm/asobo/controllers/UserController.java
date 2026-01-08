@@ -30,43 +30,29 @@ public class UserController {
     // we need "/id/ before the actual id, because otherwise
     // /{id} and /{username} lead to ambiguity
     @GetMapping(value = "/id/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UserPublicDTO> getUserById(
+    public UserPublicDTO getUserById(
             @PathVariable UUID id,
             @AuthenticationPrincipal UserPrincipal userPrincipal
     ) {
-        UserPublicDTO user = this.userService.getUserDTOById(id);
-
-        if (user == null) {
-            throw new UserNotFoundException("User with id " + id + " not found");
-        }
-
-        return ResponseEntity.ok(user);
+        return this.userService.getUserDTOById(id);
     }
 
     @GetMapping("/{username}")
-    public ResponseEntity<UserPublicDTO> getUserByUsername(
+    public UserPublicDTO getUserByUsername(
             @PathVariable String username,
             @AuthenticationPrincipal UserPrincipal userPrincipal) {
 
-        UserPublicDTO user = this.userService.getUserByUsername(username);
-
-        if (user == null) {
-            throw new UserNotFoundException("User with username " + username + " not found");
-        }
-
-        return ResponseEntity.ok(user);
+        return this.userService.getUserByUsername(username);
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<LoginResponseDTO> updateUser(
+    public LoginResponseDTO updateUser(
             @PathVariable UUID id,
             @RequestBody @Valid UserUpdateDTO userUpdateDTO,
             @AuthenticationPrincipal UserPrincipal userPrincipal) {
 
         UUID loggedInUserId = userPrincipal.getUserId();
-        LoginResponseDTO response = this.userService.updateUserById(id, loggedInUserId, userUpdateDTO);
-
-        return ResponseEntity.ok(response);
+        return this.userService.updateUserById(id, loggedInUserId, userUpdateDTO);
     }
 
     @PatchMapping("/{id}/profile-picture")
