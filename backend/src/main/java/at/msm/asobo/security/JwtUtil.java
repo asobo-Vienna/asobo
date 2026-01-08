@@ -35,21 +35,11 @@ public class JwtUtil {
     }
 
     public String getUsernameFromToken(String token) {
-        Claims claims = Jwts.parser()
-                .verifyWith(getSigningKey())
-                .build()
-                .parseSignedClaims(token)
-                .getPayload();
-        return claims.getSubject();
+        return this.parseClaims(token).getSubject();
     }
 
     public String getUserIdFromToken(String token) {
-        Claims claims = Jwts.parser()
-                .verifyWith(getSigningKey())
-                .build()
-                .parseSignedClaims(token)
-                .getPayload();
-        return claims.get("userId", String.class);
+        return this.parseClaims(token).get("userId", String.class);
     }
 
     private Claims parseClaims(String token) {
