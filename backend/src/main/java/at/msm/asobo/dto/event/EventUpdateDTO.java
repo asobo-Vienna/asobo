@@ -1,17 +1,12 @@
 package at.msm.asobo.dto.event;
 
-import at.msm.asobo.dto.comment.UserCommentDTO;
-import at.msm.asobo.dto.medium.MediumDTO;
 import at.msm.asobo.dto.user.UserPublicDTO;
 import org.springframework.web.multipart.MultipartFile;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class EventUpdateDTO {
-
-    private UUID id;
 
     private String title;
 
@@ -27,18 +22,8 @@ public class EventUpdateDTO {
 
     private List<UserPublicDTO> participants;
 
-    private List<UserCommentDTO> comments;
-
-    private List<MediumDTO> media;
-
     public EventUpdateDTO() {
         this.participants = new ArrayList<>();
-        this.comments = new ArrayList<>();
-        this.media = new ArrayList<>();
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
     }
 
     public void setTitle(String title) {
@@ -63,18 +48,6 @@ public class EventUpdateDTO {
 
     public void setParticipants(List<UserPublicDTO> participants) {
         this.participants = participants;
-    }
-
-    public void setComments(List<UserCommentDTO> comments) {
-        this.comments = comments;
-    }
-
-    public void setMedia(List<MediumDTO> media) {
-        this.media = media;
-    }
-
-    public UUID getId() {
-        return this.id;
     }
 
     public String getTitle() {
@@ -107,13 +80,5 @@ public class EventUpdateDTO {
 
     public MultipartFile getPicture() {
         return this.picture;
-    }
-
-    public List<UserCommentDTO> getComments() {
-        return this.comments;
-    }
-
-    public List<MediumDTO> getMedia() {
-        return this.media;
     }
 }

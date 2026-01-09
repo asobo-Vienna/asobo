@@ -8,7 +8,6 @@ import at.msm.asobo.exceptions.InvalidFileUploadException;
 import at.msm.asobo.exceptions.UserNotAuthorizedException;
 import at.msm.asobo.exceptions.UserNotFoundException;
 import at.msm.asobo.mappers.UserDTOUserMapper;
-import at.msm.asobo.repositories.RoleRepository;
 import at.msm.asobo.repositories.UserRepository;
 import at.msm.asobo.security.JwtUtil;
 import at.msm.asobo.security.UserPrincipal;
@@ -16,7 +15,6 @@ import at.msm.asobo.services.files.FileStorageService;
 import at.msm.asobo.utils.PatchUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.web.servlet.MultipartProperties;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -37,7 +35,7 @@ public class UserService {
     private final PasswordService passwordService;
     private final JwtUtil jwtUtil;
     private final MultipartProperties multipartProperties;
-    private final UserAuthorizationService userAuthorizationService;
+    private final UserPrivilegeService userPrivilegeService;
 
     public UserService(UserRepository userRepository,
                        UserDTOUserMapper userDTOUserMapper,
@@ -46,7 +44,7 @@ public class UserService {
                        PasswordService passwordService,
                        JwtUtil jwtUtil,
                        MultipartProperties multipartProperties,
-                       UserAuthorizationService userAuthorizationService
+                       UserPrivilegeService userPrivilegeService
     ) {
         this.userRepository = userRepository;
         this.userDTOUserMapper = userDTOUserMapper;
@@ -55,7 +53,7 @@ public class UserService {
         this.passwordService = passwordService;
         this.jwtUtil = jwtUtil;
         this.multipartProperties = multipartProperties;
-        this.userAuthorizationService = userAuthorizationService;
+        this.userPrivilegeService = userPrivilegeService;
     }
 
     public List<UserPublicDTO> getAllUsers() {
@@ -89,7 +87,7 @@ public class UserService {
 
     public LoginResponseDTO updateUserById(UUID targetUserId, UUID loggedInUserId, UserUpdateDTO userUpdateDTO) {
         User existingUser = this.getUserById(targetUserId);
-        boolean canUpdateUser = userAuthorizationService.canUpdateEntity(targetUserId, loggedInUserId);
+        boolean canUpdateUser = userPrivilegeService.canUpdateEntity(targetUserId, loggedInUserId);
 
         if (!canUpdateUser) {
             throw new UserNotAuthorizedException("You are not authorized to update this profile");

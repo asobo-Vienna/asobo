@@ -19,18 +19,18 @@ public class UserCommentService {
     private final UserService userService;
     private final UserCommentDTOUserCommentMapper userCommentDTOUserCommentMapper;
     private final EventService eventService;
-    private final UserAuthorizationService userAuthorizationService;
+    private final UserPrivilegeService userPrivilegeService;
 
     public UserCommentService(UserCommentRepository userCommentRepository,
                               UserService userService,
                               UserCommentDTOUserCommentMapper userCommentDTOUserCommentMapper,
                               EventService eventService,
-                              UserAuthorizationService userAuthorizationService) {
+                              UserPrivilegeService userPrivilegeService) {
         this.userCommentRepository = userCommentRepository;
         this.userService = userService;
         this.userCommentDTOUserCommentMapper = userCommentDTOUserCommentMapper;
         this.eventService = eventService;
-        this.userAuthorizationService = userAuthorizationService;
+        this.userPrivilegeService = userPrivilegeService;
     }
 
     public UserCommentDTO getUserCommentDTOById(UUID id) {
@@ -83,7 +83,7 @@ public class UserCommentService {
         UserComment existingComment = userCommentRepository.findUserCommentByEventIdAndId(eventId, commentId)
                 .orElseThrow(() -> new UserCommentNotFoundException(commentId));
 
-        boolean canUpdateComment = userAuthorizationService
+        boolean canUpdateComment = userPrivilegeService
                 .canUpdateEntity(existingComment.getAuthor().getId(), loggedInUserId);
         if (!canUpdateComment) {
             throw new UserNotAuthorizedException("You are not authorized to update this comment");
@@ -101,7 +101,7 @@ public class UserCommentService {
         UserComment existingComment = userCommentRepository.findUserCommentByEventIdAndId(eventId, commentId)
                 .orElseThrow(() -> new UserCommentNotFoundException(commentId));
 
-        boolean canDeleteComment = userAuthorizationService
+        boolean canDeleteComment = userPrivilegeService
                 .canUpdateEntity(existingComment.getAuthor().getId(), loggedInUserId);
         if (!canDeleteComment) {
             throw new UserNotAuthorizedException("You are not authorized to delete this comment");

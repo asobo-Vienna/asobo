@@ -8,9 +8,11 @@ import at.msm.asobo.dto.event.EventUpdateDTO;
 import at.msm.asobo.entities.Event;
 import at.msm.asobo.entities.User;
 import at.msm.asobo.exceptions.EventNotFoundException;
+import at.msm.asobo.exceptions.UserNotAuthorizedException;
 import at.msm.asobo.mappers.*;
 import at.msm.asobo.repositories.EventRepository;
 import at.msm.asobo.services.files.FileStorageService;
+import at.msm.asobo.utils.PatchUtils;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -28,6 +30,7 @@ import java.util.UUID;
 public class EventService {
     private final EventRepository eventRepository;
     private final UserService userService;
+    private final UserPrivilegeService userPrivilegeService;
     private final EventDTOEventMapper eventDTOEventMapper;
     private final UserDTOUserMapper userDTOUserMapper;
     private final FileStorageService fileStorageService;
@@ -42,7 +45,8 @@ public class EventService {
             EventDTOEventMapper eventDTOEventMapper,
             FileStorageService fileStorageService,
             FileStorageProperties fileStorageProperties,
-            UserDTOUserMapper userDTOUserMapper
+            UserDTOUserMapper userDTOUserMapper,
+            UserPrivilegeService userPrivilegeService
     ) {
         this.eventRepository = eventRepository;
         this.userService = userService;
@@ -51,6 +55,7 @@ public class EventService {
         this.fileStorageService = fileStorageService;
         this.fileStorageProperties = fileStorageProperties;
         this.userDTOUserMapper = userDTOUserMapper;
+        this.userPrivilegeService = userPrivilegeService;
     }
 
     public List<EventSummaryDTO> getAllEvents() {
@@ -150,21 +155,30 @@ public class EventService {
         return this.eventDTOEventMapper.mapEventsToEventDTOs(events);
     }
 
-    public EventDTO deleteEventById(UUID id) {
+    public EventDTO deleteEventById(UUID id, UUID loggedInUserId) {
         Event eventToDelete = this.getEventById(id);
+
+        boolean canDeleteEvent = userPrivilegeService
+                .canUpdateEntity(eventToDelete.getCreator().getId(),  loggedInUserId);
+        if (!canDeleteEvent) {
+            throw new UserNotAuthorizedException("You are not authorized to delete this event");
+        }
+
         this.fileStorageService.delete(eventToDelete.getPictureURI());
         this.eventRepository.delete(eventToDelete);
         return this.eventDTOEventMapper.mapEventToEventDTO(eventToDelete);
     }
 
-    public EventDTO updateEvent(EventUpdateDTO eventUpdateDTO) {
-        Event existingEvent = this.getEventById(eventUpdateDTO.getId());
+    public EventDTO updateEventById(UUID eventId, UUID loggedInUserId, EventUpdateDTO eventUpdateDTO) {
+        Event existingEvent = this.getEventById(eventId);
 
-        existingEvent.setTitle(eventUpdateDTO.getTitle());
-        existingEvent.setDescription(eventUpdateDTO.getDescription());
-        existingEvent.setLocation(eventUpdateDTO.getLocation());
-        existingEvent.setDate(eventUpdateDTO.getDate());
-        existingEvent.setPrivateEvent(eventUpdateDTO.isPrivate());
+        boolean canUpdateEvent = userPrivilegeService
+                .canUpdateEntity(existingEvent.getCreator().getId(), loggedInUserId);
+        if (!canUpdateEvent) {
+            throw new UserNotAuthorizedException("You are not authorized to update this event");
+        }
+
+        PatchUtils.copyNonNullProperties(eventUpdateDTO, existingEvent, "picture", "participants");
 
         if (eventUpdateDTO.getParticipants() != null) {
             existingEvent.setParticipants(

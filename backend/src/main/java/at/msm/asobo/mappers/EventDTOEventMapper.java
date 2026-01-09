@@ -1,12 +1,10 @@
 package at.msm.asobo.mappers;
 
-import at.msm.asobo.dto.comment.UserCommentDTO;
 import at.msm.asobo.dto.event.EventCreationDTO;
 import at.msm.asobo.dto.event.EventDTO;
 import at.msm.asobo.dto.event.EventSummaryDTO;
 import at.msm.asobo.dto.event.EventUpdateDTO;
 import at.msm.asobo.entities.Event;
-import at.msm.asobo.interfaces.EventSummaryProjection;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Component;
@@ -121,7 +119,6 @@ public class EventDTOEventMapper {
         }
 
         EventUpdateDTO dto = new EventUpdateDTO();
-        dto.setId(event.getId());
         dto.setTitle(event.getTitle());
         dto.setDescription(event.getDescription());
         // Note: picture is MultipartFile, not mapped from entity
@@ -133,19 +130,6 @@ public class EventDTOEventMapper {
         // Map participants
         if (event.getParticipants() != null) {
             dto.setParticipants(userDTOUserMapper.mapUsersToUserPublicDTOs(event.getParticipants()));
-        }
-
-        // Map comments
-        if (event.getComments() != null) {
-            List<UserCommentDTO> commentDTOs = event.getComments().stream()
-                    .map(userCommentDTOUserCommentMapper::mapUserCommentToUserCommentDTO)
-                    .collect(Collectors.toList());
-            dto.setComments(commentDTOs);
-        }
-
-        // Map media
-        if (event.getMedia() != null) {
-            dto.setMedia(mediumDTOMediumMapper.mapMediaToMediaDTOList(event.getMedia()));
         }
 
         return dto;
