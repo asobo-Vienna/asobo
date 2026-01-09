@@ -11,8 +11,6 @@ import java.util.UUID;
 
 public class EventUpdateDTO {
 
-    private UUID id;
-
     private String title;
 
     private String description;
@@ -35,10 +33,6 @@ public class EventUpdateDTO {
         this.participants = new ArrayList<>();
         this.comments = new ArrayList<>();
         this.media = new ArrayList<>();
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
     }
 
     public void setTitle(String title) {
@@ -71,10 +65,6 @@ public class EventUpdateDTO {
 
     public void setMedia(List<MediumDTO> media) {
         this.media = media;
-    }
-
-    public UUID getId() {
-        return this.id;
     }
 
     public String getTitle() {

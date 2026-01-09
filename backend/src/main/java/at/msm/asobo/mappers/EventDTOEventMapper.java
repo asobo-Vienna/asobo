@@ -121,7 +121,6 @@ public class EventDTOEventMapper {
         }
 
         EventUpdateDTO dto = new EventUpdateDTO();
-        dto.setId(event.getId());
         dto.setTitle(event.getTitle());
         dto.setDescription(event.getDescription());
         // Note: picture is MultipartFile, not mapped from entity

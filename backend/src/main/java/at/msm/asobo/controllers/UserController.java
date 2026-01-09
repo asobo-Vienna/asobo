@@ -46,25 +46,20 @@ public class UserController {
     @PatchMapping("/{id}")
     public LoginResponseDTO updateUser(
             @PathVariable UUID id,
-            @RequestBody @Valid UserUpdateDTO userUpdateDTO,
-            @AuthenticationPrincipal UserPrincipal userPrincipal) {
+            @RequestBody @Valid UserUpdateDTO userUpdateDTO) {
 
-        UUID loggedInUserId = userPrincipal.getUserId();
-        return this.userService.updateUserById(id, loggedInUserId, userUpdateDTO);
+        return this.userService.updateUserById(id, userUpdateDTO);
     }
 
     @PatchMapping("/{id}/profile-picture")
     public LoginResponseDTO updateProfilePicture(
             @PathVariable UUID id,
-            @RequestParam("profilePicture") MultipartFile profilePicture,
-            @AuthenticationPrincipal UserPrincipal principal) {
-
-        UUID loggedInUserId = principal.getUserId();
+            @RequestParam("profilePicture") MultipartFile profilePicture) {
 
         UserUpdateDTO userUpdateDTO = new UserUpdateDTO();
         userUpdateDTO.setProfilePicture(profilePicture);
 
-        return this.userService.updateUserById(id, loggedInUserId, userUpdateDTO);
+        return this.userService.updateUserById(id, userUpdateDTO);
     }
 
     @DeleteMapping("/{id}")

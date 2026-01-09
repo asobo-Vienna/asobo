@@ -1,12 +1,10 @@
 package at.msm.asobo.controllers;
 
 import at.msm.asobo.dto.comment.UserCommentDTO;
-import at.msm.asobo.security.UserPrincipal;
 import at.msm.asobo.services.UserCommentService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -47,27 +45,23 @@ public class UserCommentController {
     public UserCommentDTO updateUserComment(
             @PathVariable UUID eventId,
             @PathVariable UUID commentId,
-            @RequestBody @Valid UserCommentDTO updatedCommentDTO,
-            @AuthenticationPrincipal UserPrincipal loggedInUser
+            @RequestBody @Valid UserCommentDTO updatedCommentDTO
     ) {
         return this.userCommentService.updateUserCommentByEventIdAndCommentId(
                 eventId,
                 commentId,
-                updatedCommentDTO,
-                loggedInUser.getUserId()
+                updatedCommentDTO
         );
     }
 
     @DeleteMapping("/{commentId}")
     public UserCommentDTO deleteUserComment(
             @PathVariable UUID eventId,
-            @PathVariable UUID commentId,
-            @AuthenticationPrincipal UserPrincipal loggedInUser
+            @PathVariable UUID commentId
     ) {
         return this.userCommentService.deleteUserCommentByEventIdAndCommentId(
                 eventId,
-                commentId,
-                loggedInUser.getUserId()
+                commentId
         );
     }
 }

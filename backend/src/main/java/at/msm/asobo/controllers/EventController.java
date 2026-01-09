@@ -3,6 +3,7 @@ package at.msm.asobo.controllers;
 import at.msm.asobo.dto.event.EventCreationDTO;
 import at.msm.asobo.dto.event.EventDTO;
 import at.msm.asobo.dto.event.EventSummaryDTO;
+import at.msm.asobo.dto.event.EventUpdateDTO;
 import at.msm.asobo.services.EventService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
@@ -107,9 +108,12 @@ public class EventController {
         return this.eventService.getEventDTOById(id);
     }
 
+    @PatchMapping("/{id}")
+    public EventDTO updateEventById(@PathVariable UUID id, @RequestBody @Valid EventUpdateDTO eventUpdateDTO) {
+        return this.eventService.updateEventById(id, eventUpdateDTO);
+    }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'SUPERADMIN')")
     public EventDTO deleteEventById(@PathVariable UUID id) {
         return this.eventService.deleteEventById(id);
     }

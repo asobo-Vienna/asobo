@@ -8,6 +8,7 @@ import at.msm.asobo.dto.event.EventUpdateDTO;
 import at.msm.asobo.entities.Event;
 import at.msm.asobo.entities.User;
 import at.msm.asobo.exceptions.EventNotFoundException;
+import at.msm.asobo.exceptions.UserNotAuthorizedException;
 import at.msm.asobo.mappers.*;
 import at.msm.asobo.repositories.EventRepository;
 import at.msm.asobo.services.files.FileStorageService;
@@ -28,6 +29,7 @@ import java.util.UUID;
 public class EventService {
     private final EventRepository eventRepository;
     private final UserService userService;
+    private final UserPrivilegeService userPrivilegeService;
     private final EventDTOEventMapper eventDTOEventMapper;
     private final UserDTOUserMapper userDTOUserMapper;
     private final FileStorageService fileStorageService;
@@ -42,7 +44,8 @@ public class EventService {
             EventDTOEventMapper eventDTOEventMapper,
             FileStorageService fileStorageService,
             FileStorageProperties fileStorageProperties,
-            UserDTOUserMapper userDTOUserMapper
+            UserDTOUserMapper userDTOUserMapper,
+            UserPrivilegeService userPrivilegeService
     ) {
         this.eventRepository = eventRepository;
         this.userService = userService;
@@ -51,6 +54,7 @@ public class EventService {
         this.fileStorageService = fileStorageService;
         this.fileStorageProperties = fileStorageProperties;
         this.userDTOUserMapper = userDTOUserMapper;
+        this.userPrivilegeService = userPrivilegeService;
     }
 
     public List<EventSummaryDTO> getAllEvents() {
@@ -152,13 +156,26 @@ public class EventService {
 
     public EventDTO deleteEventById(UUID id) {
         Event eventToDelete = this.getEventById(id);
+
+        boolean canDeleteEvent = userPrivilegeService
+                .canUpdateEntity(eventToDelete.getCreator().getId());
+        if (!canDeleteEvent) {
+            throw new UserNotAuthorizedException("You are not authorized to delete this event");
+        }
+
         this.fileStorageService.delete(eventToDelete.getPictureURI());
         this.eventRepository.delete(eventToDelete);
         return this.eventDTOEventMapper.mapEventToEventDTO(eventToDelete);
     }
 
-    public EventDTO updateEvent(EventUpdateDTO eventUpdateDTO) {
-        Event existingEvent = this.getEventById(eventUpdateDTO.getId());
+    public EventDTO updateEventById(UUID eventId, EventUpdateDTO eventUpdateDTO) {
+        Event existingEvent = this.getEventById(eventId);
+
+        boolean canUpdateEvent = userPrivilegeService
+                .canUpdateEntity(existingEvent.getCreator().getId());
+        if (!canUpdateEvent) {
+            throw new UserNotAuthorizedException("You are not authorized to update this event");
+        }
 
         existingEvent.setTitle(eventUpdateDTO.getTitle());
         existingEvent.setDescription(eventUpdateDTO.getDescription());
