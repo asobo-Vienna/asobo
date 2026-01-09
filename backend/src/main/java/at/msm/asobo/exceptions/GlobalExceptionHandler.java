@@ -3,6 +3,7 @@ package at.msm.asobo.exceptions;
 import at.msm.asobo.exceptions.registration.EmailAlreadyExistsException;
 import at.msm.asobo.exceptions.registration.UsernameAlreadyExistsException;
 import at.msm.asobo.exceptions.errorResponses.ErrorResponse;
+import jakarta.validation.ConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,8 +12,11 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestControllerAdvice
@@ -170,5 +174,24 @@ public class GlobalExceptionHandler {
                 HttpStatus.NOT_FOUND.value()
         );
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<ErrorResponse>  handleConstraintViolation(ConstraintViolationException ex) {
+
+        List<String> violations = ex.getConstraintViolations()
+                .stream()
+                .map(v -> v.getPropertyPath().toString() + ": " + v.getMessage())
+                .toList();
+
+        ErrorResponse error = new ErrorResponse(
+                "INVALID_EVENT_INFO",
+                "Validation failed",
+                violations,
+                HttpStatus.BAD_REQUEST.value()
+        );
+
+        return ResponseEntity.badRequest().body(error);
     }
 }

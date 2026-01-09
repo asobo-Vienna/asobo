@@ -178,7 +178,7 @@ public class EventService {
             throw new UserNotAuthorizedException("You are not authorized to update this event");
         }
 
-        PatchUtils.copyNonNullProperties(eventUpdateDTO, existingEvent, "picture", "participants", "media", "comments");
+        PatchUtils.copyNonNullProperties(eventUpdateDTO, existingEvent, "picture", "participants");
 
         if (eventUpdateDTO.getParticipants() != null) {
             existingEvent.setParticipants(
