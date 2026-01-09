@@ -12,6 +12,7 @@ import at.msm.asobo.exceptions.UserNotAuthorizedException;
 import at.msm.asobo.mappers.*;
 import at.msm.asobo.repositories.EventRepository;
 import at.msm.asobo.services.files.FileStorageService;
+import at.msm.asobo.utils.PatchUtils;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -168,7 +169,7 @@ public class EventService {
         return this.eventDTOEventMapper.mapEventToEventDTO(eventToDelete);
     }
 
-    public EventDTO updateEventById(UUID eventId, EventUpdateDTO eventUpdateDTO, UUID loggedInUserId) {
+    public EventDTO updateEventById(UUID eventId, UUID loggedInUserId, EventUpdateDTO eventUpdateDTO) {
         Event existingEvent = this.getEventById(eventId);
 
         boolean canUpdateEvent = userPrivilegeService
@@ -177,11 +178,7 @@ public class EventService {
             throw new UserNotAuthorizedException("You are not authorized to update this event");
         }
 
-        existingEvent.setTitle(eventUpdateDTO.getTitle());
-        existingEvent.setDescription(eventUpdateDTO.getDescription());
-        existingEvent.setLocation(eventUpdateDTO.getLocation());
-        existingEvent.setDate(eventUpdateDTO.getDate());
-        existingEvent.setPrivateEvent(eventUpdateDTO.isPrivate());
+        PatchUtils.copyNonNullProperties(eventUpdateDTO, existingEvent, "picture", "participants", "media", "comments");
 
         if (eventUpdateDTO.getParticipants() != null) {
             existingEvent.setParticipants(

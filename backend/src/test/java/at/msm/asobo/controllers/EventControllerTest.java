@@ -322,13 +322,13 @@ class EventControllerTest {
     @ParameterizedTest
     @ValueSource(strings = {"ADMIN", "SUPERADMIN"})
     void deleteEventById_WithAdminRole_DeletesEvent(String role) throws Exception {
-        when(eventService.deleteEventById(eventId)).thenReturn(eventDTO);
+        when(eventService.deleteEventById(eventId, userId)).thenReturn(eventDTO);
 
         mockMvc.perform(delete(SINGLE_EVENT_URL, eventId)
                 .with(user("authenticateduser").roles(role)))
                 .andExpect(status().isOk());
 
-        verify(eventService).deleteEventById(eventId);
+        verify(eventService).deleteEventById(eventId, userId);
     }
 
     @Test
