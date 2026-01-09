@@ -78,12 +78,13 @@ public class UserCommentService {
         return this.userCommentDTOUserCommentMapper.mapUserCommentToUserCommentDTO(savedComment);
     }
 
-    public UserCommentDTO updateUserCommentByEventIdAndCommentId(UUID eventId, UUID commentId, UserCommentDTO updatedCommentDTO) {
+    public UserCommentDTO updateUserCommentByEventIdAndCommentId(UUID eventId, UUID commentId, UserCommentDTO updatedCommentDTO,
+                                                                 UUID loggedInUserId) {
         UserComment existingComment = userCommentRepository.findUserCommentByEventIdAndId(eventId, commentId)
                 .orElseThrow(() -> new UserCommentNotFoundException(commentId));
 
         boolean canUpdateComment = userPrivilegeService
-                .canUpdateEntity(existingComment.getAuthor().getId());
+                .canUpdateEntity(existingComment.getAuthor().getId(), loggedInUserId);
         if (!canUpdateComment) {
             throw new UserNotAuthorizedException("You are not authorized to update this comment");
         }
@@ -96,12 +97,12 @@ public class UserCommentService {
     }
 
 
-    public UserCommentDTO deleteUserCommentByEventIdAndCommentId(UUID eventId, UUID commentId) {
+    public UserCommentDTO deleteUserCommentByEventIdAndCommentId(UUID eventId, UUID commentId, UUID loggedInUserId) {
         UserComment existingComment = userCommentRepository.findUserCommentByEventIdAndId(eventId, commentId)
                 .orElseThrow(() -> new UserCommentNotFoundException(commentId));
 
         boolean canDeleteComment = userPrivilegeService
-                .canUpdateEntity(existingComment.getAuthor().getId());
+                .canUpdateEntity(existingComment.getAuthor().getId(), loggedInUserId);
         if (!canDeleteComment) {
             throw new UserNotAuthorizedException("You are not authorized to delete this comment");
         }

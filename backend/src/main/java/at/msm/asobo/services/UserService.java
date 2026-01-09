@@ -85,9 +85,9 @@ public class UserService {
         return this.userRepository.save(user);
     }
 
-    public LoginResponseDTO updateUserById(UUID targetUserId, UserUpdateDTO userUpdateDTO) {
+    public LoginResponseDTO updateUserById(UUID targetUserId, UUID loggedInUserId, UserUpdateDTO userUpdateDTO) {
         User existingUser = this.getUserById(targetUserId);
-        boolean canUpdateUser = userPrivilegeService.canUpdateEntity(targetUserId);
+        boolean canUpdateUser = userPrivilegeService.canUpdateEntity(targetUserId, loggedInUserId);
 
         if (!canUpdateUser) {
             throw new UserNotAuthorizedException("You are not authorized to update this profile");

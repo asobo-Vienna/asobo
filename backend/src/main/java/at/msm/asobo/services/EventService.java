@@ -154,11 +154,11 @@ public class EventService {
         return this.eventDTOEventMapper.mapEventsToEventDTOs(events);
     }
 
-    public EventDTO deleteEventById(UUID id) {
+    public EventDTO deleteEventById(UUID id, UUID loggedInUserId) {
         Event eventToDelete = this.getEventById(id);
 
         boolean canDeleteEvent = userPrivilegeService
-                .canUpdateEntity(eventToDelete.getCreator().getId());
+                .canUpdateEntity(eventToDelete.getCreator().getId(),  loggedInUserId);
         if (!canDeleteEvent) {
             throw new UserNotAuthorizedException("You are not authorized to delete this event");
         }
@@ -168,11 +168,11 @@ public class EventService {
         return this.eventDTOEventMapper.mapEventToEventDTO(eventToDelete);
     }
 
-    public EventDTO updateEventById(UUID eventId, EventUpdateDTO eventUpdateDTO) {
+    public EventDTO updateEventById(UUID eventId, EventUpdateDTO eventUpdateDTO, UUID loggedInUserId) {
         Event existingEvent = this.getEventById(eventId);
 
         boolean canUpdateEvent = userPrivilegeService
-                .canUpdateEntity(existingEvent.getCreator().getId());
+                .canUpdateEntity(existingEvent.getCreator().getId(), loggedInUserId);
         if (!canUpdateEvent) {
             throw new UserNotAuthorizedException("You are not authorized to update this event");
         }

@@ -4,11 +4,13 @@ import at.msm.asobo.dto.event.EventCreationDTO;
 import at.msm.asobo.dto.event.EventDTO;
 import at.msm.asobo.dto.event.EventSummaryDTO;
 import at.msm.asobo.dto.event.EventUpdateDTO;
+import at.msm.asobo.security.UserPrincipal;
 import at.msm.asobo.services.EventService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import org.springframework.data.domain.Pageable;
@@ -109,12 +111,14 @@ public class EventController {
     }
 
     @PatchMapping("/{id}")
-    public EventDTO updateEventById(@PathVariable UUID id, @RequestBody @Valid EventUpdateDTO eventUpdateDTO) {
-        return this.eventService.updateEventById(id, eventUpdateDTO);
+    public EventDTO updateEventById(@PathVariable UUID id,
+                                    @RequestBody @Valid EventUpdateDTO eventUpdateDTO,
+                                    @AuthenticationPrincipal UserPrincipal loggedInUser) {
+        return this.eventService.updateEventById(id, loggedInUser.getUserId(), eventUpdateDTO);
     }
 
     @DeleteMapping("/{id}")
-    public EventDTO deleteEventById(@PathVariable UUID id) {
-        return this.eventService.deleteEventById(id);
+    public EventDTO deleteEventById(@PathVariable UUID id, @AuthenticationPrincipal UserPrincipal loggedInUser) {
+        return this.eventService.deleteEventById(id, loggedInUser.getUserId());
     }
 }
