@@ -58,6 +58,10 @@ public class EventService {
         return this.eventDTOEventMapper.mapEventsToEventSummaryDTOs(allEvents);
     }
 
+    public List<Event> getAllEventEntities() {
+        return this.eventRepository.findAll();
+    }
+
     public Page<EventSummaryDTO> getAllEventsPaginated(Pageable pageable) {
         Page<Event> events = this.eventRepository.findAllEvents(pageable);
         return events.map(this.eventDTOEventMapper::toEventSummaryDTO);
@@ -121,9 +125,12 @@ public class EventService {
 
     public EventDTO addNewEvent(EventCreationDTO eventCreationDTO) {
         User user = this.userService.getUserById(eventCreationDTO.getCreator().getId());
+        // List<User> eventAdmins = this.userDTOUserMapper.mapUserPublicDTOsToUsers(eventCreationDTO.getEventAdmins());
 
         Event newEvent = this.eventDTOEventMapper.mapEventCreationDTOToEvent(eventCreationDTO);
+
         newEvent.setCreator(user);
+        // newEvent.setEventAdmins(eventAdmins);
 
         if (eventCreationDTO.getEventPicture() != null && !eventCreationDTO.getEventPicture().isEmpty()) {
             String fileURI = fileStorageService.store(eventCreationDTO.getEventPicture(), this.eventCoverPictureSubfolder);

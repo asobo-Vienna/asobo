@@ -9,7 +9,7 @@ import java.util.UUID;
 @ResponseStatus(HttpStatus.UNAUTHORIZED)
 public class UserNotAuthorizedException extends RuntimeException {
 
-    public UserNotAuthorizedException(UUID id) {
+    public UserNotAuthorizedException() {
         super("This user is not authorized to perform this action.");
     }
 

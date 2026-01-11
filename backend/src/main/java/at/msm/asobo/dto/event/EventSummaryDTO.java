@@ -20,6 +20,7 @@ public class EventSummaryDTO {
     private int participantCount;
     private int commentCount;
     private int mediaCount;
+    private int eventAdminCount;
 
     public EventSummaryDTO() {
     }
@@ -126,5 +127,13 @@ public class EventSummaryDTO {
 
     public void setMediaCount(int mediaCount) {
         this.mediaCount = mediaCount;
+    }
+
+    public int getEventAdminCount() {
+        return this.eventAdminCount;
+    }
+
+    public void setEventAdminCount(int eventAdminCount) {
+        this.eventAdminCount = eventAdminCount;
     }
 }
