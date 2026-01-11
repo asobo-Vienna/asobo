@@ -17,7 +17,7 @@ public class Event {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-    
+
     @NotNull(message = "User is mandatory for creating event")
     @ManyToOne
     @JoinColumn(name = "creator_id")
