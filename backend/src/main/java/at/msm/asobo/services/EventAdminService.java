@@ -39,6 +39,14 @@ public class EventAdminService {
         return userDTOUserMapper.mapUsersToUserPublicDTOs(event.getEventAdmins());
     }
 
+    public boolean isUserAdminOfEvent(UUID eventId, UUID userId) {
+        Event event = this.eventService.getEventById(eventId);
+        User user = this.userService.getUserById(userId);
+        List<User> eventAdmins = event.getEventAdmins();
+
+        return eventAdmins.contains(user);
+    }
+
     public EventDTO addAdminToEvent(UUID eventId, UUID userId) {
         Event event = this.eventService.getEventById(eventId);
         User user = this.userService.getUserById(userId);
@@ -49,9 +57,9 @@ public class EventAdminService {
         }
         eventAdmins.add(user);
         event.setEventAdmins(eventAdmins);
-        eventRepository.save(event);
+        Event savedEvent = eventRepository.save(event);
 
-        return eventDTOEventMapper.mapEventToEventDTO(event);
+        return eventDTOEventMapper.mapEventToEventDTO(savedEvent);
     }
 
     public EventDTO removeAdminFromEvent(UUID eventId, UUID userId) {
@@ -64,8 +72,8 @@ public class EventAdminService {
         }
         eventAdmins.remove(user);
         event.setEventAdmins(eventAdmins);
-        eventRepository.save(event);
+        Event savedEvent = eventRepository.save(event);
 
-        return eventDTOEventMapper.mapEventToEventDTO(event);
+        return eventDTOEventMapper.mapEventToEventDTO(savedEvent);
     }
 }

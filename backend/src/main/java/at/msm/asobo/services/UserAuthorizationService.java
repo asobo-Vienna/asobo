@@ -9,16 +9,19 @@ import java.util.UUID;
 @Service
 public class UserAuthorizationService {
     private final UserRepository userRepository;
+    private final EventAdminService eventAdminService;
 
-    public UserAuthorizationService(UserRepository userRepository) {
+    public UserAuthorizationService(UserRepository userRepository,
+                                    EventAdminService eventAdminService) {
+
         this.userRepository = userRepository;
+        this.eventAdminService = eventAdminService;
     }
 
     public boolean canUpdateEntity(UUID targetUserId, UUID loggedInUserId) {
-        if (targetUserId.equals(loggedInUserId)) {
-            return true;
-        }
-        return this.hasAdminRole(loggedInUserId);
+        return targetUserId.equals(loggedInUserId)
+                || this.eventAdminService.isUserAdminOfEvent(targetUserId, loggedInUserId)
+                || this.hasAdminRole(loggedInUserId);
     }
 
     private boolean hasAdminRole(UUID userId) {
