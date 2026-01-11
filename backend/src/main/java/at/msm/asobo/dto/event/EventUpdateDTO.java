@@ -31,6 +31,8 @@ public class EventUpdateDTO {
 
     private List<MediumDTO> media;
 
+    private List<UserPublicDTO> eventAdmins;
+
     public EventUpdateDTO() {
         this.participants = new ArrayList<>();
         this.comments = new ArrayList<>();

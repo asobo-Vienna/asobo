@@ -29,6 +29,8 @@ public class EventDTO {
     // TODO refactor to a new DTO EventCreator (after refactoring mappers to factories) private EventCreatorDTO creator;
     private UserPublicDTO creator;
 
+    private List<UserPublicDTO> eventAdmins;
+
     private boolean isPrivate;
 
     private List<UserPublicDTO> participants;
@@ -145,5 +147,13 @@ public class EventDTO {
 
     public List<MediumDTO> getMedia() {
         return this.media;
+    }
+
+    public List<UserPublicDTO> getEventAdmins() {
+        return eventAdmins;
+    }
+
+    public void setEventAdmins(List<UserPublicDTO> eventAdmins) {
+        this.eventAdmins = eventAdmins;
     }
 }

@@ -42,6 +42,8 @@ public class EventCreationDTO {
     // private EventCreatorDTO creator;
     private UserPublicDTO creator;
 
+    private List<UserPublicDTO> eventAdmins;
+
     private List<UserDTO> participants;
 
     private List<UserCommentDTO> comments;
@@ -152,5 +154,13 @@ public class EventCreationDTO {
 
     public void setEventPicture(MultipartFile eventPicture) {
         this.eventPicture = eventPicture;
+    }
+
+    public List<UserPublicDTO> getEventAdmins() {
+        return this.eventAdmins;
+    }
+
+    public void setEventAdmins(List<UserPublicDTO> eventAdmins) {
+        this.eventAdmins = eventAdmins;
     }
 }

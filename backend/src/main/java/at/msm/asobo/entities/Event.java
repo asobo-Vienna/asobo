@@ -24,6 +24,9 @@ public class Event {
     private User creator;
 
     @ManyToMany
+    private List<User> eventAdmins;
+
+    @ManyToMany
     private List<User> participants;
 
     @NotBlank(message = "Title is mandatory")
@@ -161,5 +164,13 @@ public class Event {
 
     public void setPrivateEvent(boolean isPrivateEvent) {
         this.isPrivateEvent = isPrivateEvent;
+    }
+
+    public List<User> getEventAdmins() {
+        return this.eventAdmins;
+    }
+
+    public void setEventAdmins(List<User> eventAdmins) {
+        this.eventAdmins = eventAdmins;
     }
 }

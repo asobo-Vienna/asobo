@@ -41,6 +41,9 @@ public class User {
     @JsonIgnore
     private List<Event> createdEvents;
 
+    @ManyToMany(mappedBy = "eventAdmins")
+    private List<Event> administeredEvents;
+
     @ManyToMany(mappedBy = "participants")
     private List<Event> attendedEvents;
 
@@ -191,6 +194,14 @@ public class User {
 
     public void setAttendedEvents(List<Event> attendedEvents) {
         this.attendedEvents = attendedEvents;
+    }
+
+    public List<Event> getAdministeredEvents() {
+        return administeredEvents;
+    }
+
+    public void setAdministeredEvents(List<Event> administeredEvents) {
+        this.administeredEvents = administeredEvents;
     }
 
     public String getSalutation() {
