@@ -5,6 +5,8 @@ import at.msm.asobo.dto.user.UserPublicDTO;
 import at.msm.asobo.entities.Event;
 import at.msm.asobo.entities.User;
 import at.msm.asobo.exceptions.EventAdminException;
+import at.msm.asobo.exceptions.UserNotAuthorizedException;
+import at.msm.asobo.interfaces.EventAdminChecker;
 import at.msm.asobo.mappers.EventDTOEventMapper;
 import at.msm.asobo.mappers.UserDTOUserMapper;
 import at.msm.asobo.repositories.EventRepository;
@@ -14,7 +16,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
-public class EventAdminService {
+public class EventAdminService implements EventAdminChecker {
 
     private final EventRepository eventRepository;
     private final EventService eventService;
@@ -39,6 +41,7 @@ public class EventAdminService {
         return userDTOUserMapper.mapUsersToUserPublicDTOs(event.getEventAdmins());
     }
 
+    @Override
     public boolean isUserAdminOfEvent(UUID eventId, UUID userId) {
         Event event = this.eventService.getEventById(eventId);
         User user = this.userService.getUserById(userId);
@@ -49,13 +52,13 @@ public class EventAdminService {
 
     public EventDTO addAdminToEvent(UUID eventId, UUID userId) {
         Event event = this.eventService.getEventById(eventId);
-        User user = this.userService.getUserById(userId);
+        User userToAdd = this.userService.getUserById(userId);
         List<User> eventAdmins = event.getEventAdmins();
 
-        if (eventAdmins.contains(user)) {
+        if (eventAdmins.contains(userToAdd)) {
             throw new EventAdminException("User is already an admin of this event");
         }
-        eventAdmins.add(user);
+        eventAdmins.add(userToAdd);
         event.setEventAdmins(eventAdmins);
         Event savedEvent = eventRepository.save(event);
 
