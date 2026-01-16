@@ -138,6 +138,8 @@ public class UserService {
             this.fileStorageService.delete(userToDelete.getPictureURI());
         }
 
+        // clear the many-to-many relationship before deleting
+        userToDelete.getRoles().clear();
         this.userRepository.delete(userToDelete);
 
         return this.userDTOUserMapper.mapUserToUserPublicDTO(userToDelete);

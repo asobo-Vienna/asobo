@@ -57,6 +57,8 @@ public class AuthService {
         Role userRole = this.roleService.getRoleByName("USER");
         newUser.setRoles(Set.of(userRole));
 
+        newUser.setIsActive(true);
+
         User savedUser = this.userService.saveUser(newUser);
 
         UserPrincipal userPrincipal = new UserPrincipal(
