@@ -33,7 +33,7 @@ export class AdminService {
       .set('page', page.toString())
       .set('size', size.toString());
 
-    return this.http.get<PageResponse<User>>(`${environment.apiBaseUrl}/admin/users`, {params})
+    return this.http.get<PageResponse<User>>(`${environment.apiBaseUrl}/admin/users`, { params })
       .pipe(take(1));
   }
 
@@ -42,7 +42,7 @@ export class AdminService {
       .set('page', page.toString())
       .set('size', size.toString());
 
-    return this.http.get<PageResponse<CommentWithEventTitle>>(`${environment.apiBaseUrl}/admin/comments`, {params})
+    return this.http.get<PageResponse<CommentWithEventTitle>>(`${environment.apiBaseUrl}/admin/comments`, { params })
       .pipe(take(1));
   }
 
@@ -51,7 +51,7 @@ export class AdminService {
       .set('page', page.toString())
       .set('size', size.toString());
 
-    return this.http.get<PageResponse<MediaItemWithEventTitle>>(`${environment.apiBaseUrl}/admin/media`, {params})
+    return this.http.get<PageResponse<MediaItemWithEventTitle>>(`${environment.apiBaseUrl}/admin/media`, { params })
       .pipe(take(1));
   }
 

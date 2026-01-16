@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 import { environment } from '../../../../../environments/environment';
 import { Textarea } from 'primeng/textarea';
 import { Checkbox } from 'primeng/checkbox';
+import {DateUtils} from '../../../../shared/utils/date/date';
 
 @Component({
   selector: 'app-create-event-form',
@@ -47,7 +48,7 @@ export class CreateEventForm {
     formData.append('location', this.createEventForm.value.location!);
 
     const date: Date = this.createEventForm.value.date;
-    const isoLocal = date.toISOString().slice(0, 19); // '2025-11-13T16:33:28'
+    const isoLocal = DateUtils.toLocalISOString(date) // '2025-11-13T16:33:28'
     formData.append('date', isoLocal);
 
     const isPrivate = this.createEventForm.value.isPrivate;

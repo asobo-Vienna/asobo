@@ -47,8 +47,7 @@ export class EventService {
   }
 
   public createNewEvent(formData: FormData): Observable<Event> {
-    return this.http.post<Event>(environment.eventsEndpoint, formData)
-      .pipe(take(1));
+    return this.http.post<Event>(environment.eventsEndpoint, formData);
   }
 
   public getEventById(id: string): Observable<Event> {
