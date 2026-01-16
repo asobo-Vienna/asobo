@@ -1,6 +1,7 @@
 package at.msm.asobo.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.hibernate.annotations.CreationTimestamp;
@@ -18,8 +19,7 @@ public class Event {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    // add this again as soon as we have logged-in users
-    // @NotNull(message = "User is mandatory for creating event")
+    @NotNull(message = "User is mandatory for creating event")
     @ManyToOne
     @JoinColumn(name = "creator_id")
     private User creator;
@@ -37,6 +37,7 @@ public class Event {
     private String description;
 
     @NotNull(message = "Date must be specified")
+    @FutureOrPresent(message = "Date of event must be today or in the future")
     private LocalDateTime date;
 
     @NotBlank(message = "Location is mandatory")

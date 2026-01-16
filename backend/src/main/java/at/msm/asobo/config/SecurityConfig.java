@@ -60,7 +60,7 @@ public class SecurityConfig {
             ));
             config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
             config.setAllowedHeaders(List.of("Authorization", "Content-Type", "Accept"));
-            config.setAllowCredentials(true); // allow cookies or auth headers
+            config.setAllowCredentials(false); // if set to true: allow cookies or auth headers
             return config;
         }));
 

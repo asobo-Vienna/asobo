@@ -24,7 +24,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -82,8 +81,8 @@ public class AuthControllerTest {
 
     private final String REGISTER_URL = "/api/auth/register";
     private final String LOGIN_URL = "/api/auth/login";
-    private final String CHECK_USERNAME_URL = "/api/auth/check-username/{username}";
-    private final String CHECK_EMAIL_URL = "/api/auth/check-email/{email}";
+    private final String CHECK_USERNAME_URL = "/api/auth/check-username";
+    private final String CHECK_EMAIL_URL = "/api/auth/check-email";
 
     @BeforeEach
     void setUp() throws ServletException, IOException {
@@ -185,9 +184,10 @@ public class AuthControllerTest {
         String username = "available";
         when(userService.isUsernameAlreadyTaken(username)).thenReturn(false);
 
-        mockMvc.perform(get(CHECK_USERNAME_URL, username))
+        mockMvc.perform(get(CHECK_USERNAME_URL)
+                .param("username", username))
                 .andExpect(status().isOk())
-                .andExpect(content().string("true"));
+                .andExpect(jsonPath("$.available").value(true));
 
         verify(userService).isUsernameAlreadyTaken(username);
     }
@@ -197,9 +197,10 @@ public class AuthControllerTest {
         String username = "taken";
         when(userService.isUsernameAlreadyTaken(username)).thenReturn(true);
 
-        mockMvc.perform(get(CHECK_USERNAME_URL, username))
+        mockMvc.perform(get(CHECK_USERNAME_URL)
+                        .param("username", username))
                 .andExpect(status().isOk())
-                .andExpect(content().string("false"));
+                .andExpect(jsonPath("$.available").value(false));
 
         verify(userService).isUsernameAlreadyTaken(username);
     }
@@ -209,9 +210,10 @@ public class AuthControllerTest {
         String email = "new@example.com";
         when(userService.isEmailAlreadyTaken(email)).thenReturn(false);
 
-        mockMvc.perform(get(CHECK_EMAIL_URL, email))
+        mockMvc.perform(get(CHECK_EMAIL_URL)
+                .param("email", email))
                 .andExpect(status().isOk())
-                .andExpect(content().string("true"));
+                .andExpect(jsonPath("$.available").value(true));
 
         verify(userService).isEmailAlreadyTaken(email);
     }
@@ -221,9 +223,10 @@ public class AuthControllerTest {
         String email = "taken@example.com";
         when(userService.isEmailAlreadyTaken(email)).thenReturn(true);
 
-        mockMvc.perform(get(CHECK_EMAIL_URL, email))
+        mockMvc.perform(get(CHECK_EMAIL_URL)
+                .param("email", email))
                 .andExpect(status().isOk())
-                .andExpect(content().string("false"));
+                .andExpect(jsonPath("$.available").value(false));
 
         verify(userService).isEmailAlreadyTaken(email);
     }

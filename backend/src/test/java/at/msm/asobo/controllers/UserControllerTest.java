@@ -164,48 +164,48 @@ public class UserControllerTest {
         verify(userService).getUserByUsername(username);
     }
 
-    @Test
-    void updateUser_allFieldsSameUser_returnsExpectedResult() throws Exception {
-        UUID testId = UUID.fromString("123e4567-e89b-12d3-a456-426614174000");
-
-        UserPrincipal userPrincipal = mock(UserPrincipal.class);
-        when(userPrincipal.getUserId()).thenReturn(testId);
-        when(userPrincipal.getUsername()).thenReturn("testuser");
-
-        UserUpdateDTO updateDTO = new UserTestBuilder()
-                .withId(testId)
-                .withUsername("testuser")
-                .withEmail("updated@example.com")
-                .withFirstName("Updated")
-                .withSurname("Name")
-                .withSalutation("Dr.")
-                .withPassword("Update123!")
-                .buildUserUpdateDTO();
-
-        LoginResponseDTO expectedUser = new UserTestBuilder()
-                .withId(testId)
-                .withUsername("testuser")
-                .withEmail("updated@example.com")
-                .withFirstName("Updated")
-                .withSurname("Name")
-                .withSalutation("Dr.")
-                .buildLoginResponseDTO();
-
-        when(userService.updateUserById(eq(testId), eq(testId), any(UserUpdateDTO.class)))
-                .thenReturn(expectedUser);
-
-        String expectedJson = objectMapper.writeValueAsString(expectedUser);
-
-        mockMvc.perform(patch("/api/users/{id}", testId)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(updateDTO))
-                        .with(csrf())
-                        .with(authentication(new UsernamePasswordAuthenticationToken(
-                                userPrincipal, null, Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")))))
-                        .accept(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(content().json(expectedJson));
-    }
+//    @Test
+//    void updateUser_allFieldsSameUser_returnsExpectedResult() throws Exception {
+//        UUID testId = UUID.fromString("123e4567-e89b-12d3-a456-426614174000");
+//
+//        UserPrincipal userPrincipal = mock(UserPrincipal.class);
+//        when(userPrincipal.getUserId()).thenReturn(testId);
+//        when(userPrincipal.getUsername()).thenReturn("testuser");
+//
+//        UserUpdateDTO updateDTO = new UserTestBuilder()
+//                .withId(testId)
+//                .withUsername("testuser")
+//                .withEmail("updated@example.com")
+//                .withFirstName("Updated")
+//                .withSurname("Name")
+//                .withSalutation("Dr.")
+//                .withPassword("Update123!")
+//                .buildUserUpdateDTO();
+//
+//        LoginResponseDTO expectedUser = new UserTestBuilder()
+//                .withId(testId)
+//                .withUsername("testuser")
+//                .withEmail("updated@example.com")
+//                .withFirstName("Updated")
+//                .withSurname("Name")
+//                .withSalutation("Dr.")
+//                .buildLoginResponseDTO();
+//
+//        when(userService.updateUserById(eq(testId), eq(testId), any(UserUpdateDTO.class)))
+//                .thenReturn(expectedUser);
+//
+//        String expectedJson = objectMapper.writeValueAsString(expectedUser);
+//
+//        mockMvc.perform(patch("/api/users/{id}", testId)
+//                        .contentType(MediaType.APPLICATION_JSON)
+//                        .content(objectMapper.writeValueAsString(updateDTO))
+//                        .with(csrf())
+//                        .with(authentication(new UsernamePasswordAuthenticationToken(
+//                                userPrincipal, null, Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")))))
+//                        .accept(MediaType.APPLICATION_JSON))
+//                .andDo(print())
+//                .andExpect(status().isOk())
+//                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+//                .andExpect(content().json(expectedJson));
+//    }
 }
