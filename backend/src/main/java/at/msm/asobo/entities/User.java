@@ -73,7 +73,10 @@ public class User {
     private Set<Role> roles;
 
     public User(){
-
+        this.createdEvents = new ArrayList<>();
+        this.attendedEvents = new ArrayList<>();
+        this.administeredEvents = new ArrayList<>();
+        this.comments = new ArrayList<>();
     }
 
     public String getLocation() {

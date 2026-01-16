@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.LastModifiedDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -60,6 +61,10 @@ public class Event {
     private boolean isPrivateEvent;
 
     public Event() {
+        this.eventAdmins = new ArrayList<>();
+        this.participants = new ArrayList<>();
+        this.comments = new ArrayList<>();
+        this.media = new ArrayList<>();
     }
 
     public User getCreator() {
