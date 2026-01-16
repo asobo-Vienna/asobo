@@ -8,6 +8,7 @@ import at.msm.asobo.mappers.UserDTOUserMapper;
 import at.msm.asobo.repositories.EventRepository;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Service
@@ -30,22 +31,22 @@ public class ParticipantService {
         this.eventDTOEventMapper = eventDTOEventMapper;
     }
 
-    // return list of DTOs
-    public List<UserPublicDTO> getAllParticipantsAsDTOsByEventId(UUID eventId) {
-        List<User> participants = this.getAllParticipantsByEventId(eventId);
+    // return set of DTOs
+    public Set<UserPublicDTO> getAllParticipantsAsDTOsByEventId(UUID eventId) {
+        Set<User> participants = this.getAllParticipantsByEventId(eventId);
         return this.userDTOUserMapper.mapUsersToUserPublicDTOs(participants);
     }
 
-    // return list of user entities
-    private List<User> getAllParticipantsByEventId(UUID eventId) {
+    // return set of user entities
+    private Set<User> getAllParticipantsByEventId(UUID eventId) {
         Event event = this.eventService.getEventById(eventId);
         return event.getParticipants();
     }
 
-    public List<UserPublicDTO> toggleParticipantInEvent(UUID eventId, UserPublicDTO participantDTO) {
+    public Set<UserPublicDTO> toggleParticipantInEvent(UUID eventId, UserPublicDTO participantDTO) {
         User existingParticipant = this.userService.getUserById(participantDTO.getId());
         Event event = this.eventService.getEventById(eventId);
-        List<User> participants = event.getParticipants();
+        Set<User> participants = event.getParticipants();
 
         if (participants.contains(existingParticipant)) {
             participants.remove(existingParticipant);

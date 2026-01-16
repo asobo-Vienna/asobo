@@ -16,7 +16,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -68,7 +68,7 @@ class ParticipantControllerTest {
     @Test
     @WithMockUser(roles = "USER")
     void toggleParticipantInEvent_asUser_returns200() throws Exception {
-        List<UserPublicDTO> participantDTOList = List.of(userPublicDTO1, userPublicDTO2);
+        Set<UserPublicDTO> participantDTOList = Set.of(userPublicDTO1, userPublicDTO2);
         String expectedJson = objectMapper.writeValueAsString(participantDTOList);
 
         when(participantService.toggleParticipantInEvent(eq(eventId), any(UserPublicDTO.class)))
@@ -139,7 +139,7 @@ class ParticipantControllerTest {
     @Test
     @WithMockUser(roles = "USER")
     void getParticipantsByEventId_asUser_returns200() throws Exception {
-        List<UserPublicDTO> participantDTOList = List.of(userPublicDTO1);
+        Set<UserPublicDTO> participantDTOList = Set.of(userPublicDTO1);
         String expectedJson = objectMapper.writeValueAsString(participantDTOList);
 
         when(participantService.getAllParticipantsAsDTOsByEventId(eventId))

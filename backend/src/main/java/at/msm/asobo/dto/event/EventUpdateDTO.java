@@ -4,7 +4,9 @@ import at.msm.asobo.dto.user.UserPublicDTO;
 import org.springframework.web.multipart.MultipartFile;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class EventUpdateDTO {
 
@@ -20,10 +22,10 @@ public class EventUpdateDTO {
 
     private boolean isPrivate;
 
-    private List<UserPublicDTO> participants;
+    private Set<UserPublicDTO> participants;
 
     public EventUpdateDTO() {
-        this.participants = new ArrayList<>();
+        this.participants = new HashSet<>();
     }
 
     public void setTitle(String title) {
@@ -44,10 +46,6 @@ public class EventUpdateDTO {
 
     public void setDate(LocalDateTime date) {
         this.date = date;
-    }
-
-    public void setParticipants(List<UserPublicDTO> participants) {
-        this.participants = participants;
     }
 
     public String getTitle() {
@@ -74,8 +72,12 @@ public class EventUpdateDTO {
         this.isPrivate = isPrivate;
     }
 
-    public List<UserPublicDTO> getParticipants() {
+    public Set<UserPublicDTO> getParticipants() {
         return this.participants;
+    }
+
+    public void setParticipants(Set<UserPublicDTO> participants) {
+        this.participants = participants;
     }
 
     public MultipartFile getPicture() {

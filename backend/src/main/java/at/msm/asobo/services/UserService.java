@@ -4,9 +4,9 @@ import at.msm.asobo.config.FileStorageProperties;
 import at.msm.asobo.dto.auth.LoginResponseDTO;
 import at.msm.asobo.dto.user.*;
 import at.msm.asobo.entities.User;
-import at.msm.asobo.exceptions.InvalidFileUploadException;
-import at.msm.asobo.exceptions.UserNotAuthorizedException;
-import at.msm.asobo.exceptions.UserNotFoundException;
+import at.msm.asobo.exceptions.files.InvalidFileUploadException;
+import at.msm.asobo.exceptions.users.UserNotAuthorizedException;
+import at.msm.asobo.exceptions.users.UserNotFoundException;
 import at.msm.asobo.mappers.UserDTOUserMapper;
 import at.msm.asobo.repositories.UserRepository;
 import at.msm.asobo.security.JwtUtil;
@@ -19,7 +19,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 
@@ -56,12 +56,12 @@ public class UserService {
         this.userPrivilegeService = userPrivilegeService;
     }
 
-    public List<UserPublicDTO> getAllUsers() {
-        return this.userDTOUserMapper.mapUsersToUserPublicDTOs(this.userRepository.findAll());
-    }
-
     public User getUserById(UUID id) {
         return this.userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
+    }
+
+    public Set<User> getUsersByIds(Set<UUID> ids) {
+        return this.userRepository.findAllByIdIn(ids);
     }
 
     public UserPublicDTO getUserDTOById(UUID id) {

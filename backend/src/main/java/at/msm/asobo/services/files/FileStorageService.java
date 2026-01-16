@@ -1,8 +1,12 @@
 package at.msm.asobo.services.files;
 
 import at.msm.asobo.config.FileStorageProperties;
+import at.msm.asobo.exceptions.files.FileDeletionException;
+import at.msm.asobo.exceptions.files.InvalidFilenameException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLEncoder;
@@ -55,6 +59,9 @@ public class FileStorageService {
     }
 
     public void delete(String filename) {
+        if (filename == null) {
+            throw new InvalidFilenameException("Filename must not be null");
+        }
         // get current directory
         Path targetDir = Paths.get(".").toAbsolutePath().normalize();
         // get rid of "/" at the beginning
@@ -63,7 +70,7 @@ public class FileStorageService {
         try {
             Files.delete(deletionPath);
         } catch (IOException e) {
-            throw new RuntimeException("Failed to delete file: " + filename, e);
+            throw new FileDeletionException("Failed to delete file: " + filename);
         }
     }
 }

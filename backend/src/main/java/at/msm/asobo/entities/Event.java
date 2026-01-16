@@ -7,9 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.LastModifiedDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 
 @Entity
@@ -25,10 +23,10 @@ public class Event {
     private User creator;
 
     @ManyToMany
-    private List<User> eventAdmins;
+    private Set<User> eventAdmins;
 
     @ManyToMany
-    private List<User> participants;
+    private Set<User> participants;
 
     @NotBlank(message = "Title is mandatory")
     private String title;
@@ -37,7 +35,6 @@ public class Event {
     private String description;
 
     @NotNull(message = "Date must be specified")
-    @FutureOrPresent(message = "Date of event must be today or in the future")
     private LocalDateTime date;
 
     @NotBlank(message = "Location is mandatory")
@@ -62,8 +59,8 @@ public class Event {
     private boolean isPrivateEvent;
 
     public Event() {
-        this.eventAdmins = new ArrayList<>();
-        this.participants = new ArrayList<>();
+        this.eventAdmins = new HashSet<>();
+        this.participants = new HashSet<>();
         this.comments = new ArrayList<>();
         this.media = new ArrayList<>();
     }
@@ -84,11 +81,11 @@ public class Event {
         this.modificationDate = modificationDate;
     }
 
-    public List<User> getParticipants() {
+    public Set<User> getParticipants() {
         return this.participants;
     }
 
-    public void setParticipants(List<User> participants) {
+    public void setParticipants(Set<User> participants) {
         this.participants = participants;
     }
 
@@ -172,11 +169,11 @@ public class Event {
         this.isPrivateEvent = isPrivateEvent;
     }
 
-    public List<User> getEventAdmins() {
+    public Set<User> getEventAdmins() {
         return this.eventAdmins;
     }
 
-    public void setEventAdmins(List<User> eventAdmins) {
+    public void setEventAdmins(Set<User> eventAdmins) {
         this.eventAdmins = eventAdmins;
     }
 }

@@ -1,9 +1,16 @@
 package at.msm.asobo.exceptions;
 
+import at.msm.asobo.exceptions.events.EventNotFoundException;
+import at.msm.asobo.exceptions.files.FileDeletionException;
+import at.msm.asobo.exceptions.files.InvalidFileUploadException;
 import at.msm.asobo.exceptions.registration.EmailAlreadyExistsException;
 import at.msm.asobo.exceptions.registration.UsernameAlreadyExistsException;
 import at.msm.asobo.exceptions.errorResponses.ErrorResponse;
+import at.msm.asobo.exceptions.users.UserNotAuthenticatedException;
+import at.msm.asobo.exceptions.users.UserNotAuthorizedException;
+import at.msm.asobo.exceptions.users.UserNotFoundException;
 import jakarta.validation.ConstraintViolationException;
+import org.apache.tomcat.util.http.fileupload.InvalidFileNameException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -173,6 +180,26 @@ public class GlobalExceptionHandler {
                 HttpStatus.NOT_FOUND.value()
         );
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+
+    @ExceptionHandler(FileDeletionException.class)
+    public ResponseEntity<ErrorResponse> handleFileDeletion(FileDeletionException ex) {
+        ErrorResponse error = new ErrorResponse(
+                "FILE_DELETION_FAILED",
+                ex.getMessage(),
+                HttpStatus.BAD_REQUEST.value()
+        );
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+    }
+
+    @ExceptionHandler(InvalidFileNameException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidFilename(InvalidFileNameException ex) {
+        ErrorResponse error = new ErrorResponse(
+                "INVALID_FILENAME",
+                ex.getMessage(),
+                HttpStatus.BAD_REQUEST.value()
+        );
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
 
     @ExceptionHandler(ConstraintViolationException.class)

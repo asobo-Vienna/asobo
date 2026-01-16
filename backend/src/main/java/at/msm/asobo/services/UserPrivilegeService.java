@@ -1,7 +1,7 @@
 package at.msm.asobo.services;
 
 import at.msm.asobo.entities.User;
-import at.msm.asobo.exceptions.UserNotFoundException;
+import at.msm.asobo.exceptions.users.UserNotFoundException;
 import at.msm.asobo.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 import java.util.UUID;
@@ -33,7 +33,7 @@ public class UserPrivilegeService {
         return targetUserId.equals(loggedInUserId) || this.hasAdminRole(loggedInUserId);
     }
 
-    private boolean hasAdminRole(UUID userId) {
+    public boolean hasAdminRole(UUID userId) {
         User user = this.userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException(userId));
         return this.hasSuperadminRole(userId) || user.getRoles().stream()

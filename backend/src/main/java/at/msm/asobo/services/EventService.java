@@ -6,15 +6,13 @@ import at.msm.asobo.dto.event.EventDTO;
 import at.msm.asobo.dto.event.EventSummaryDTO;
 import at.msm.asobo.dto.event.EventUpdateDTO;
 import at.msm.asobo.entities.Event;
-import at.msm.asobo.entities.User;
-import at.msm.asobo.exceptions.EventNotFoundException;
-import at.msm.asobo.exceptions.UserNotAuthorizedException;
+import at.msm.asobo.exceptions.events.EventNotFoundException;
+import at.msm.asobo.exceptions.users.UserNotAuthorizedException;
 import at.msm.asobo.mappers.*;
 import at.msm.asobo.repositories.EventRepository;
 import at.msm.asobo.services.files.FileStorageService;
 import at.msm.asobo.utils.PatchUtils;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -22,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 
@@ -30,32 +29,27 @@ import java.util.UUID;
 public class EventService {
     private final EventRepository eventRepository;
     private final UserService userService;
-    private final UserPrivilegeService userPrivilegeService;
+    private final FileStorageService fileStorageService;
+    private final EventAdminService eventAdminService;
+    private final FileStorageProperties fileStorageProperties;
     private final EventDTOEventMapper eventDTOEventMapper;
     private final UserDTOUserMapper userDTOUserMapper;
-    private final FileStorageService fileStorageService;
-    private final FileStorageProperties fileStorageProperties;
-
-    @Value("${app.file-storage.event-coverpicture-subfolder}")
-    private String eventCoverPictureSubfolder;
 
     public EventService(
             EventRepository eventRepository,
             UserService userService,
-            EventDTOEventMapper eventDTOEventMapper,
             FileStorageService fileStorageService,
+            EventAdminService eventAdminService,
             FileStorageProperties fileStorageProperties,
-            UserDTOUserMapper userDTOUserMapper,
-            UserPrivilegeService userPrivilegeService
-    ) {
+            EventDTOEventMapper eventDTOEventMapper,
+            UserDTOUserMapper userDTOUserMapper) {
         this.eventRepository = eventRepository;
         this.userService = userService;
-        this.eventDTOEventMapper = eventDTOEventMapper;
-
         this.fileStorageService = fileStorageService;
-        this.fileStorageProperties = fileStorageProperties;
+        this.eventAdminService = eventAdminService;
+        this.eventDTOEventMapper = eventDTOEventMapper;
         this.userDTOUserMapper = userDTOUserMapper;
-        this.userPrivilegeService = userPrivilegeService;
+        this.fileStorageProperties = fileStorageProperties;
     }
 
     public List<EventSummaryDTO> getAllEvents() {
@@ -129,16 +123,14 @@ public class EventService {
     }
 
     public EventDTO addNewEvent(EventCreationDTO eventCreationDTO) {
-        User user = this.userService.getUserById(eventCreationDTO.getCreator().getId());
-        // List<User> eventAdmins = this.userDTOUserMapper.mapUserPublicDTOsToUsers(eventCreationDTO.getEventAdmins());
+        if (eventCreationDTO.getEventAdmins() == null || eventCreationDTO.getEventAdmins().isEmpty()) {
+            eventCreationDTO.setEventAdmins(Set.of(eventCreationDTO.getCreator()));
+        }
 
         Event newEvent = this.eventDTOEventMapper.mapEventCreationDTOToEvent(eventCreationDTO);
 
-        newEvent.setCreator(user);
-        newEvent.getEventAdmins().add(user);
-
         if (eventCreationDTO.getEventPicture() != null && !eventCreationDTO.getEventPicture().isEmpty()) {
-            String fileURI = fileStorageService.store(eventCreationDTO.getEventPicture(), this.eventCoverPictureSubfolder);
+            String fileURI = fileStorageService.store(eventCreationDTO.getEventPicture(), this.fileStorageProperties.getEventCoverPictureSubfolder());
             newEvent.setPictureURI(fileURI);
         }
 
@@ -162,16 +154,18 @@ public class EventService {
         return this.eventDTOEventMapper.mapEventsToEventDTOs(events);
     }
 
-    public EventDTO deleteEventById(UUID id, UUID loggedInUserId) {
-        Event eventToDelete = this.getEventById(id);
+    public EventDTO deleteEventById(UUID eventId, UUID loggedInUserId) {
+        Event eventToDelete = this.getEventById(eventId);
 
-        boolean canDeleteEvent = userPrivilegeService
-                .canUpdateEntity(eventToDelete.getCreator().getId(),  loggedInUserId);
+        boolean canDeleteEvent = this.eventAdminService.canManageEvent(eventToDelete, loggedInUserId);
         if (!canDeleteEvent) {
             throw new UserNotAuthorizedException("You are not authorized to delete this event");
         }
 
-        this.fileStorageService.delete(eventToDelete.getPictureURI());
+        if (eventToDelete.getPictureURI() != null) {
+            this.fileStorageService.delete(eventToDelete.getPictureURI());
+        }
+
         this.eventRepository.delete(eventToDelete);
         return this.eventDTOEventMapper.mapEventToEventDTO(eventToDelete);
     }
@@ -179,8 +173,7 @@ public class EventService {
     public EventDTO updateEventById(UUID eventId, UUID loggedInUserId, EventUpdateDTO eventUpdateDTO) {
         Event existingEvent = this.getEventById(eventId);
 
-        boolean canUpdateEvent = userPrivilegeService
-                .canUpdateEntity(existingEvent.getCreator().getId(), loggedInUserId);
+        boolean canUpdateEvent = this.eventAdminService.canManageEvent(existingEvent, loggedInUserId);
         if (!canUpdateEvent) {
             throw new UserNotAuthorizedException("You are not authorized to update this event");
         }
@@ -189,7 +182,7 @@ public class EventService {
 
         if (eventUpdateDTO.getParticipants() != null) {
             existingEvent.setParticipants(
-                    userDTOUserMapper.mapUserPublicDTOsToUsers(eventUpdateDTO.getParticipants())
+                    this.userDTOUserMapper.mapUserPublicDTOsToUsers(eventUpdateDTO.getParticipants())
             );
         }
 

@@ -6,6 +6,7 @@ import jakarta.validation.Valid;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @RestController
@@ -21,12 +22,12 @@ public class ParticipantController {
 
     // returns updated participants list
     @PostMapping()
-    public List<UserPublicDTO> toggleParticipantInEvent(@PathVariable UUID eventId, @RequestBody @Valid UserPublicDTO participantDTO) {
+    public Set<UserPublicDTO> toggleParticipantInEvent(@PathVariable UUID eventId, @RequestBody @Valid UserPublicDTO participantDTO) {
         return this.participantService.toggleParticipantInEvent(eventId, participantDTO);
     }
 
     @GetMapping()
-    public List<UserPublicDTO> getParticipantsByEventId(@PathVariable UUID eventId) {
+    public Set<UserPublicDTO> getParticipantsByEventId(@PathVariable UUID eventId) {
         return this.participantService.getAllParticipantsAsDTOsByEventId(eventId);
     }
 }

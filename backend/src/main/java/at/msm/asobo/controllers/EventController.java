@@ -18,6 +18,7 @@ import org.springframework.data.domain.Pageable;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -125,17 +126,21 @@ public class EventController {
         return this.eventService.deleteEventById(id, loggedInUser.getUserId());
     }
 
-    @PostMapping("/{eventId}/admins/{userId}")
-    @PreAuthorize("hasAnyRole('USER','ADMIN','SUPERADMIN') and @userAuthorizationService.canManageEvent(#eventId, authentication.principal.id)")
+    @PatchMapping("/{eventId}/addAdmins")
+    @PreAuthorize("hasAnyRole('USER','ADMIN','SUPERADMIN')")
     @ResponseStatus(HttpStatus.CREATED)
-    public EventDTO addAdmin(@PathVariable UUID eventId, @PathVariable UUID userId, @AuthenticationPrincipal UserPrincipal loggedInUser) {
-        return eventAdminService.addAdminToEvent(eventId, userId);
+    public EventDTO addEventAdmin(@PathVariable UUID eventId,
+                                  @RequestBody Set<UUID> userIds,
+                                  @AuthenticationPrincipal UserPrincipal loggedInUser) {
+        return eventAdminService.addAdminsToEvent(eventId, userIds, loggedInUser.getUserId());
     }
 
-    @DeleteMapping("/{eventId}/admins/{userId}")
-    @PreAuthorize("hasAnyRole('USER','ADMIN','SUPERADMIN') and @userAuthorizationService.canManageEvent(#eventId, authentication.principal.id)")
+    @DeleteMapping("/{eventId}/removeAdmins")
+    @PreAuthorize("hasAnyRole('USER','ADMIN','SUPERADMIN')")
     @ResponseStatus(HttpStatus.OK)
-    public EventDTO removeAdmin(@PathVariable UUID eventId, @PathVariable UUID userId, @AuthenticationPrincipal UserPrincipal loggedInUser) {
-        return eventAdminService.removeAdminFromEvent(eventId, userId);
+    public EventDTO removeEventAdmin(@PathVariable UUID eventId,
+                                     @RequestBody Set<UUID> userIds,
+                                     @AuthenticationPrincipal UserPrincipal loggedInUser) {
+        return eventAdminService.removeAdminsFromEvent(eventId, userIds, loggedInUser.getUserId());
     }
 }

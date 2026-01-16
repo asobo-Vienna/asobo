@@ -1,7 +1,7 @@
 package at.msm.asobo.security;
 
 import at.msm.asobo.entities.User;
-import at.msm.asobo.exceptions.UserNotFoundException;
+import at.msm.asobo.exceptions.users.UserNotFoundException;
 import at.msm.asobo.repositories.UserRepository;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
