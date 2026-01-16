@@ -3,11 +3,14 @@ package at.msm.asobo.controllers;
 import at.msm.asobo.dto.event.EventCreationDTO;
 import at.msm.asobo.dto.event.EventDTO;
 import at.msm.asobo.dto.event.EventSummaryDTO;
+import at.msm.asobo.security.UserPrincipal;
+import at.msm.asobo.services.EventAdminService;
 import at.msm.asobo.services.EventService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import org.springframework.data.domain.Pageable;
@@ -25,9 +28,11 @@ import org.springframework.web.server.ResponseStatusException;
 @RequestMapping("/api/events")
 public class EventController {
     private final EventService eventService;
+    private final EventAdminService eventAdminService;
     
-    public EventController(EventService eventService){
+    public EventController(EventService eventService, EventAdminService eventAdminService){
         this.eventService = eventService;
+        this.eventAdminService = eventAdminService;
     }
 
     @GetMapping
@@ -112,5 +117,19 @@ public class EventController {
     @PreAuthorize("hasAnyRole('ADMIN', 'SUPERADMIN')")
     public EventDTO deleteEventById(@PathVariable UUID id) {
         return this.eventService.deleteEventById(id);
+    }
+
+    @PostMapping("/{eventId}/admins/{userId}")
+    @PreAuthorize("hasAnyRole('USER','ADMIN','SUPERADMIN') and @userAuthorizationService.canManageEvent(#eventId, authentication.principal.id)")
+    @ResponseStatus(HttpStatus.CREATED)
+    public EventDTO addAdmin(@PathVariable UUID eventId, @PathVariable UUID userId, @AuthenticationPrincipal UserPrincipal loggedInUser) {
+        return eventAdminService.addAdminToEvent(eventId, userId);
+    }
+
+    @DeleteMapping("/{eventId}/admins/{userId}")
+    @PreAuthorize("hasAnyRole('USER','ADMIN','SUPERADMIN') and @userAuthorizationService.canManageEvent(#eventId, authentication.principal.id)")
+    @ResponseStatus(HttpStatus.OK)
+    public EventDTO removeAdmin(@PathVariable UUID eventId, @PathVariable UUID userId, @AuthenticationPrincipal UserPrincipal loggedInUser) {
+        return eventAdminService.removeAdminFromEvent(eventId, userId);
     }
 }
