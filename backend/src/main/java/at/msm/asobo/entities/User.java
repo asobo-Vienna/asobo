@@ -3,6 +3,7 @@ package at.msm.asobo.entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -59,6 +60,7 @@ public class User {
     @CreationTimestamp
     private LocalDateTime registerDate;
 
+    @ColumnDefault("true")
     private boolean isActive;
 
     @NotBlank(message = "Salutation is mandatory")
@@ -73,6 +75,7 @@ public class User {
     private Set<Role> roles;
 
     public User(){
+        this.isActive = true;
         this.createdEvents = new ArrayList<>();
         this.attendedEvents = new ArrayList<>();
         this.administeredEvents = new ArrayList<>();

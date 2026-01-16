@@ -3,11 +3,15 @@ package at.msm.asobo.controllers;
 import at.msm.asobo.dto.comment.UserCommentWithEventTitleDTO;
 import at.msm.asobo.dto.medium.MediumWithEventTitleDTO;
 import at.msm.asobo.dto.user.UserAdminSummaryDTO;
+import at.msm.asobo.dto.user.UserPublicDTO;
+import at.msm.asobo.entities.User;
 import at.msm.asobo.services.AdminService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 
 @RestController
@@ -70,11 +74,4 @@ public class AdminController {
 //        User updatedUser = this.userService.updateUserById(id, userUpdateDTO);
 //        return new UserAdminDTO(updatedUser);
 //    }
-
-    /*@DeleteMapping("/{id}")
-    public UserAdminDTO deleteUser(@PathVariable UUID id) {
-        User deletedUser = this.userService.deleteUserById(id);
-        return new UserAdminDTO(deletedUser);
-    }*/
-
 }

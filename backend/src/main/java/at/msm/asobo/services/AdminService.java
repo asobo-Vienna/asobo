@@ -4,6 +4,7 @@ import at.msm.asobo.dto.comment.UserCommentDTO;
 import at.msm.asobo.dto.comment.UserCommentWithEventTitleDTO;
 import at.msm.asobo.dto.medium.MediumWithEventTitleDTO;
 import at.msm.asobo.dto.user.UserAdminSummaryDTO;
+import at.msm.asobo.dto.user.UserPublicDTO;
 import at.msm.asobo.entities.Medium;
 import at.msm.asobo.entities.User;
 import at.msm.asobo.entities.UserComment;
@@ -16,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class AdminService {

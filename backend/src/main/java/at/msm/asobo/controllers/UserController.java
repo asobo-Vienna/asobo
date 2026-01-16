@@ -64,9 +64,9 @@ public class UserController {
         return this.userService.updateUserById(id, loggedInUser.getUserId(), userUpdateDTO);
     }
 
-    @DeleteMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'SUPERADMIN')")
-    public UserPublicDTO deleteUser(@PathVariable UUID id) {
-        return this.userService.deleteUserById(id);
+    @DeleteMapping("/{userId}")
+    public UserPublicDTO deleteUser(@PathVariable UUID userId,
+                                    @AuthenticationPrincipal UserPrincipal loggedInUser) {
+        return this.userService.deleteUserById(userId, loggedInUser.getUserId());
     }
 }

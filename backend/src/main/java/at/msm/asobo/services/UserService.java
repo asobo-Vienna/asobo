@@ -127,9 +127,17 @@ public class UserService {
         return new LoginResponseDTO(null, this.userDTOUserMapper.mapUserToUserPublicDTO(updatedUser));
     }
 
-    public UserPublicDTO deleteUserById(UUID id) {
-        User userToDelete = this.getUserById(id);
-        this.fileStorageService.delete(userToDelete.getPictureURI());
+    public UserPublicDTO deleteUserById(UUID userToDeleteId, UUID loggedInUserId) {
+        if (!this.userPrivilegeService.canUpdateEntity(userToDeleteId, loggedInUserId)) {
+            throw new UserNotAuthorizedException("You are not authorized to delete that user");
+        }
+
+        User userToDelete = this.getUserById(userToDeleteId);
+
+        if (userToDelete.getPictureURI() != null) {
+            this.fileStorageService.delete(userToDelete.getPictureURI());
+        }
+
         this.userRepository.delete(userToDelete);
 
         return this.userDTOUserMapper.mapUserToUserPublicDTO(userToDelete);
