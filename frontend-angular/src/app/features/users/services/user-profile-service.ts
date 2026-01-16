@@ -1,6 +1,6 @@
 import { Injectable, inject, computed, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import {Observable, of, tap} from 'rxjs';
+import {Observable, of, take, tap} from 'rxjs';
 import { AuthService } from '../../auth/services/auth-service';
 import { UrlUtilService } from '../../../shared/utils/url/url-util-service';
 import { environment } from '../../../../environments/environment';
@@ -47,6 +47,7 @@ export class UserProfileService {
 
     // Viewing someone else's profile - fetch from backend
     return this.http.get<User>(`${this.usersEndpointBase}/${username}`)
+      .pipe(take(1))
       .pipe(tap(user => this.viewedUserSignal.set(user)));
   }
 

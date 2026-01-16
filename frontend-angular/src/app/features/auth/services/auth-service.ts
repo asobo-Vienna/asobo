@@ -213,6 +213,7 @@ export class AuthService {
   // Refresh user data from backend
   /*refreshUser(): Observable<User> {
     return this.http.get<User>('/api/auth/me')
+      .pipe(take(1))
       .pipe(
         tap(user => {
           localStorage.setItem(this.USER_KEY, JSON.stringify(user));

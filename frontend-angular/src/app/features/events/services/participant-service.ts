@@ -1,5 +1,5 @@
 import {User} from '../../auth/models/user';
-import {map, Observable} from 'rxjs';
+import {map, Observable, take} from 'rxjs';
 import {Participant} from '../models/participant';
 import {environment} from '../../../../environments/environment';
 import {inject, Injectable} from '@angular/core';
@@ -17,11 +17,13 @@ export class ParticipantService {
   getAllByEventId(eventId: string): Observable<List<Participant>> {
     return this.http
       .get<Participant[]>(this.getEventParticipantsUrl(eventId))
+      .pipe(take(1))
       .pipe(map(participants => new List<Participant>(participants)));
   }
 
   joinOrLeaveEvent(eventId: string, user: User): Observable<List<Participant>> {
     const allParticipants = this.http.post<Participant[]>(this.getEventParticipantsUrl(eventId), user)
+      .pipe(take(1))
       .pipe(map(participants => new List<Participant>(participants)));
     return allParticipants;
   }
