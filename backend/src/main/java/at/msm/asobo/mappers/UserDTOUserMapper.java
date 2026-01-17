@@ -25,6 +25,7 @@ public interface UserDTOUserMapper {
 
     Set<UserPublicDTO> mapUsersToUserPublicDTOs(Set<User> users);
     Set<User> mapUserPublicDTOsToUsers(Set<UserPublicDTO> userDTOs);
+    List<UserPublicDTO> mapUsersToUserPublicDTOsAsList(List<User> users);
 
     UserRegisterDTO mapUserToUserRegisterDTO(User user);
 
