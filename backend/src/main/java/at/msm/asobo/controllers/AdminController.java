@@ -3,6 +3,7 @@ package at.msm.asobo.controllers;
 import at.msm.asobo.dto.comment.UserCommentWithEventTitleDTO;
 import at.msm.asobo.dto.medium.MediumWithEventTitleDTO;
 import at.msm.asobo.dto.user.UserAdminSummaryDTO;
+import at.msm.asobo.dto.user.UserDTO;
 import at.msm.asobo.dto.user.UserPublicDTO;
 import at.msm.asobo.entities.User;
 import at.msm.asobo.services.AdminService;
@@ -11,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 
@@ -27,6 +29,11 @@ public class AdminController {
     @GetMapping("/users")
     public Page<UserAdminSummaryDTO> getAllUsers(Pageable pageable) {
         return this.adminService.getAllUsers(pageable);
+    }
+
+    @GetMapping("/users/entities")
+    public List<UserDTO> getAllUsersAsEntities() {
+        return this.adminService.getAllUsersAsEntities();
     }
 
     // TODO?: On expand get full user details for ONE user
