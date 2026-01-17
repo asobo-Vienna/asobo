@@ -129,7 +129,7 @@ public class UserService {
 
     public UserPublicDTO deleteUserById(UUID userToDeleteId, UUID loggedInUserId) {
         if (!this.userPrivilegeService.canUpdateEntity(userToDeleteId, loggedInUserId)) {
-            throw new UserNotAuthorizedException("You are not authorized to delete that user");
+            throw new UserNotAuthorizedException("You are not authorized to delete this user");
         }
 
         User userToDelete = this.getUserById(userToDeleteId);
@@ -138,8 +138,6 @@ public class UserService {
             this.fileStorageService.delete(userToDelete.getPictureURI());
         }
 
-        // clear the many-to-many relationship before deleting
-        userToDelete.getRoles().clear();
         this.userRepository.delete(userToDelete);
 
         return this.userDTOUserMapper.mapUserToUserPublicDTO(userToDelete);
