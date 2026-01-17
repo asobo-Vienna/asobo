@@ -59,7 +59,7 @@ public class User {
     @CreationTimestamp
     private LocalDateTime registerDate;
 
-    private boolean isActive;
+    private boolean isActive = true;
 
     @NotBlank(message = "Salutation is mandatory")
     private String salutation;

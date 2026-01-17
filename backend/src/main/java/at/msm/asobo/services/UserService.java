@@ -96,7 +96,7 @@ public class UserService {
         boolean usernameChanged = userUpdateDTO.getUsername() != null
                 && !userUpdateDTO.getUsername().equals(existingUser.getUsername());
 
-        PatchUtils.copyNonNullProperties(userUpdateDTO, existingUser, "profilePicture", "password");
+        PatchUtils.copyNonNullProperties(userUpdateDTO, existingUser, "profilePicture", "password", "isActive");
 
         if(userUpdateDTO.getPassword() != null) {
             this.passwordService.validatePasswordFormat(userUpdateDTO.getPassword());
