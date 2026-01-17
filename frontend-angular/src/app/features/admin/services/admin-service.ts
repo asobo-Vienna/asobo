@@ -31,7 +31,7 @@ export class AdminService {
       .set('page', page.toString())
       .set('size', size.toString());
 
-    return this.http.get<PageResponse<User>>(`${environment.apiBaseUrl}/admin/users`, { params });
+    return this.http.get<PageResponse<User>>(`${environment.apiBaseUrl}/admin/users/paginated`, { params });
   }
 
   public getAllCommentsWithEventTitle(page: number, size: number): Observable<PageResponse<CommentWithEventTitle>> {

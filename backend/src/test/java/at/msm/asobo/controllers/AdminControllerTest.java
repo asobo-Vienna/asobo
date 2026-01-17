@@ -60,7 +60,7 @@ class AdminControllerTest {
 
     @ParameterizedTest
     @ValueSource(strings = {USERS_URL, COMMENTS_URL, MEDIA_URL})
-    void getAllUsers_WithoutAuthentication_ReturnsForbidden(String url) throws Exception {
+    void getAllUsers_Paginated_WithoutAuthentication_ReturnsForbidden(String url) throws Exception {
         mockMvc.perform(get(url))
                 .andExpect(status().isUnauthorized());
     }
@@ -68,14 +68,14 @@ class AdminControllerTest {
     @ParameterizedTest
     @ValueSource(strings = {USERS_URL, COMMENTS_URL, MEDIA_URL})
     @WithMockUser(roles = "USER")
-    void getAllUsers_WithUserRole_ReturnsForbidden(String url) throws Exception {
+    void getAllUsers_Paginated_WithUserRole_ReturnsForbidden(String url) throws Exception {
         mockMvc.perform(get(url))
                 .andExpect(status().isForbidden());
     }
 
     @ParameterizedTest
     @ValueSource(strings = {"ADMIN", "SUPERADMIN"})
-    void getAllUsers_WithAdminRole_ReturnsPageOfUsers(String role) throws Exception {
+    void getAllUsers_WithAdminRole_ReturnsPageOfUsersPaginated(String role) throws Exception {
         Pageable pageable = PageRequest.of(0, 10);
         UserAdminSummaryDTO user1 = new UserAdminSummaryDTO();
         user1.setId(UUID.randomUUID());
@@ -86,7 +86,7 @@ class AdminControllerTest {
         Page<UserAdminSummaryDTO> userPage = new PageImpl<>(List.of(user1, user2), pageable, 2);
         String expectedJson = objectMapper.writeValueAsString(userPage);
 
-        when(adminService.getAllUsers(any(Pageable.class))).thenReturn(userPage);
+        when(adminService.getAllUsersPaginated(any(Pageable.class))).thenReturn(userPage);
 
         mockMvc.perform(get(USERS_URL)
                         .with(user("testadmin").roles(role))
@@ -96,7 +96,7 @@ class AdminControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().string(expectedJson));
 
-        verify(adminService).getAllUsers(any(Pageable.class));
+        verify(adminService).getAllUsersPaginated(any(Pageable.class));
     }
 
     @ParameterizedTest

@@ -46,12 +46,12 @@ public class AdminService {
         this.mediumToMediumWithEventTitleDTOMapper =  mediumToMediumWithEventTitleDTOMapper;
     }
 
-    public Page<UserAdminSummaryDTO> getAllUsers(Pageable pageable) {
+    public Page<UserAdminSummaryDTO> getAllUsersPaginated(Pageable pageable) {
         Page<User> users = userRepository.findAll(pageable);
         return this.userDTOUserMapper.mapUsersToAdminSummaryDTOs(users);
     }
 
-    public List<UserDTO> getAllUsersAsEntities() {
+    public List<UserDTO> getAllUsers() {
         return this.userDTOUserMapper.mapUsersToUserDTOs(userRepository.findAll());
     }
 
