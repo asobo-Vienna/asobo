@@ -5,12 +5,14 @@ import at.msm.asobo.dto.comment.UserCommentDTO;
 import at.msm.asobo.dto.user.EventCreatorDTO;
 import at.msm.asobo.dto.user.UserDTO;
 import at.msm.asobo.dto.user.UserPublicDTO;
+import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 public class EventCreationDTO {
@@ -30,6 +32,7 @@ public class EventCreationDTO {
     private boolean isPrivate;
 
     @NotNull(message = "Date is mandatory for event creation")
+    @FutureOrPresent(message = "Date of event must be today or in the future")
     private LocalDateTime date;
 
     private LocalDateTime creationDate;
@@ -41,6 +44,8 @@ public class EventCreationDTO {
     // TODO change this to EventCreatorDTO when we have factory instead of mapper ticket #37
     // private EventCreatorDTO creator;
     private UserPublicDTO creator;
+
+    private Set<UserPublicDTO> eventAdmins;
 
     private List<UserDTO> participants;
 
@@ -152,5 +157,13 @@ public class EventCreationDTO {
 
     public void setEventPicture(MultipartFile eventPicture) {
         this.eventPicture = eventPicture;
+    }
+
+    public Set<UserPublicDTO> getEventAdmins() {
+        return this.eventAdmins;
+    }
+
+    public void setEventAdmins(Set<UserPublicDTO> eventAdmins) {
+        this.eventAdmins = eventAdmins;
     }
 }

@@ -6,7 +6,7 @@ import at.msm.asobo.dto.event.EventCreationDTO;
 import at.msm.asobo.dto.event.EventDTO;
 import at.msm.asobo.dto.event.EventSummaryDTO;
 import at.msm.asobo.dto.event.EventUpdateDTO;
-import at.msm.asobo.exceptions.UserNotAuthorizedException;
+import at.msm.asobo.exceptions.users.UserNotAuthorizedException;
 import at.msm.asobo.security.CustomUserDetailsService;
 import at.msm.asobo.security.JwtUtil;
 import at.msm.asobo.security.RestAuthenticationEntryPoint;

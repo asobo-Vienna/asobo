@@ -3,11 +3,15 @@ package at.msm.asobo.controllers;
 import at.msm.asobo.dto.comment.UserCommentWithEventTitleDTO;
 import at.msm.asobo.dto.medium.MediumWithEventTitleDTO;
 import at.msm.asobo.dto.user.UserAdminSummaryDTO;
+import at.msm.asobo.dto.user.UserDTO;
+import at.msm.asobo.dto.user.UserPublicDTO;
 import at.msm.asobo.services.AdminService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 @RestController
@@ -20,9 +24,15 @@ public class AdminController {
         this.adminService = adminService;
     }
 
+
+    @GetMapping("/users/paginated")
+    public Page<UserAdminSummaryDTO> getAllUsersPaginated(Pageable pageable) {
+        return this.adminService.getAllUsersPaginated(pageable);
+    }
+
     @GetMapping("/users")
-    public Page<UserAdminSummaryDTO> getAllUsers(Pageable pageable) {
-        return this.adminService.getAllUsers(pageable);
+    public List<UserPublicDTO> getAllUsers() {
+        return this.adminService.getAllUsers();
     }
 
     // TODO?: On expand get full user details for ONE user
@@ -70,11 +80,4 @@ public class AdminController {
 //        User updatedUser = this.userService.updateUserById(id, userUpdateDTO);
 //        return new UserAdminDTO(updatedUser);
 //    }
-
-    /*@DeleteMapping("/{id}")
-    public UserAdminDTO deleteUser(@PathVariable UUID id) {
-        User deletedUser = this.userService.deleteUserById(id);
-        return new UserAdminDTO(deletedUser);
-    }*/
-
 }

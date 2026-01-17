@@ -7,76 +7,6 @@ meta:
   modified: 1747385192779
   description: ""
 collection:
-  - url: http://127.0.0.1:8080/api/users
-    name: add new user
-    meta:
-      id: req_b3962e2a055049919a6effa007acd23e
-      created: 1748871739591
-      modified: 1760188347635
-      isPrivate: false
-      description: ""
-      sortKey: -1742056410747
-    method: POST
-    body:
-      mimeType: multipart/form-data
-      params:
-        - name: username
-          value: snoop
-          description: ""
-          disabled: false
-        - name: password
-          value: snoop1
-          description: ""
-          disabled: false
-        - name: salutation
-          value: Mr.
-          description: ""
-          disabled: false
-        - name: location
-          value: Long Beach, CA
-          description: ""
-          disabled: false
-        - name: email
-          value: snoopdogg@gmail.com
-          description: ""
-          disabled: false
-        - name: pictureURI
-          value: /uploads/profile-pictures/873c7814-0c8a-42fc-b37a-76d7e213c658_snoop.jpg
-          description: ""
-          disabled: false
-        - name: firstName
-          value: Calvin Cordozar
-          description: ""
-          disabled: false
-        - name: surname
-          value: Broadus
-          description: ""
-          disabled: false
-    headers:
-      - name: Content-Type
-        value: multipart/form-data
-      - name: User-Agent
-        value: insomnia/10.3.1
-    authentication:
-      type: oauth1
-      disabled: false
-      signatureMethod: HMAC-SHA1
-      consumerKey: ""
-      tokenKey: ""
-      tokenSecret: ""
-      privateKey: ""
-      version: "1.0"
-      nonce: ""
-      timestamp: ""
-      callback: ""
-    settings:
-      renderRequestBody: true
-      encodeUrl: true
-      followRedirects: global
-      cookies:
-        send: true
-        store: true
-      rebuildPath: true
   - url: http://127.0.0.1:8080/api/events/aaed8676-8b38-4c7a-b8b1-66dd683a1a96/media
     name: add new media to event
     meta:
@@ -114,10 +44,10 @@ collection:
     meta:
       id: req_3bcf878498224a15a7ad4ff243c8b41f
       created: 1748938091757
-      modified: 1765543129645
+      modified: 1768671985924
       isPrivate: false
       description: ""
-      sortKey: -1739109212232.9375
+      sortKey: -1739256572156.1406
     method: GET
     body:
       mimeType: application/json
@@ -203,154 +133,6 @@ collection:
       disabled: false
       token: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJiYXRtYW4iLCJ1c2VySWQiOiJjYjBkNzBiNC04YWM2LTQwNDUtOGE3Ny01NWJlMjU4M2YyYTgiLCJyb2xlcyI6WyJST0xFX1VTRVIiXSwiaWF0IjoxNzY2MTMzMTA3LCJleHAiOjE3NjYxMzY3MDd9.OERlk2CFEiIND6PGfU119ttqnn3VmIXumsVHmtjfEWeWI6fXhuTV7qFBlwfjT1wASWPZN8YZ-dZ2kc8s88rj0A
       prefix: ""
-    settings:
-      renderRequestBody: true
-      encodeUrl: true
-      followRedirects: global
-      cookies:
-        send: true
-        store: true
-      rebuildPath: true
-  - url: http://127.0.0.1:8080/api/users/894702c8-1fdc-47ec-8b17-0c9b0f0bfa16
-    name: delete user
-    meta:
-      id: req_ac09ff5eb29447e480b8bcdbb9e0b961
-      created: 1748943312126
-      modified: 1750426339275
-      isPrivate: false
-      description: ""
-      sortKey: -1742056410722
-    method: DELETE
-    body:
-      mimeType: application/json
-      text: ""
-    headers:
-      - name: Content-Type
-        value: application/json
-      - name: User-Agent
-        value: insomnia/10.3.1
-    authentication:
-      type: oauth1
-      disabled: false
-      signatureMethod: HMAC-SHA1
-      consumerKey: ""
-      tokenKey: ""
-      tokenSecret: ""
-      privateKey: ""
-      version: "1.0"
-      nonce: ""
-      timestamp: ""
-      callback: ""
-    settings:
-      renderRequestBody: true
-      encodeUrl: true
-      followRedirects: global
-      cookies:
-        send: true
-        store: true
-      rebuildPath: true
-  - url: http://127.0.0.1:8080/users/f6ad5c40-881b-4aad-97f4-045a578af412
-    name: update user
-    meta:
-      id: req_fab9826283d24978b5f7a289b5901635
-      created: 1748943356878
-      modified: 1750498299599
-      isPrivate: false
-      description: ""
-      sortKey: -1742056410709.5
-    method: PUT
-    body:
-      mimeType: application/json
-      text: |-
-        {
-        	"username": "John Doe",
-        	"email": "jdoe@gmail.com",
-        	"password": "password",
-        	"salutation": "Mr"
-        }
-    headers:
-      - name: Content-Type
-        value: application/json
-      - name: User-Agent
-        value: insomnia/10.3.1
-    authentication:
-      type: oauth1
-      disabled: false
-      signatureMethod: HMAC-SHA1
-      consumerKey: ""
-      tokenKey: ""
-      tokenSecret: ""
-      privateKey: ""
-      version: "1.0"
-      nonce: ""
-      timestamp: ""
-      callback: ""
-    settings:
-      renderRequestBody: true
-      encodeUrl: true
-      followRedirects: global
-      cookies:
-        send: true
-        store: true
-      rebuildPath: true
-  - url: http://127.0.0.1:8080/users/id/f6ad5c40-881b-4aad-97f4-045a578af412
-    name: get user by ID
-    meta:
-      id: req_e1b0daa866a6435085ad520ab4cce3d0
-      created: 1749201772067
-      modified: 1749202352972
-      isPrivate: false
-      description: ""
-      sortKey: -1742056410772
-    method: GET
-    headers:
-      - name: User-Agent
-        value: insomnia/10.3.1
-    authentication:
-      type: oauth1
-      disabled: false
-      signatureMethod: HMAC-SHA1
-      consumerKey: ""
-      tokenKey: ""
-      tokenSecret: ""
-      privateKey: ""
-      version: "1.0"
-      nonce: ""
-      timestamp: ""
-      callback: ""
-    settings:
-      renderRequestBody: true
-      encodeUrl: true
-      followRedirects: global
-      cookies:
-        send: true
-        store: true
-      rebuildPath: true
-  - url: http://127.0.0.1:8080/users/John%20Doe
-    name: get user by username
-    meta:
-      id: req_643fee91282047a08c2a2a5607742b1a
-      created: 1749202371836
-      modified: 1749202407439
-      isPrivate: false
-      description: ""
-      sortKey: -1742056410759.5
-    method: GET
-    headers:
-      - name: User-Agent
-        value: insomnia/10.3.1
-    authentication:
-      type: oauth1
-      disabled: false
-      signatureMethod: HMAC-SHA1
-      consumerKey: ""
-      tokenKey: ""
-      tokenSecret: ""
-      privateKey: ""
-      version: "1.0"
-      nonce: ""
-      timestamp: ""
-      callback: ""
     settings:
       renderRequestBody: true
       encodeUrl: true
@@ -489,23 +271,23 @@ collection:
       sortKey: -1763807686305
       description: ""
     children:
-      - url: http://127.0.0.1:8080/api/admin/users
-        name: get all users
+      - url: http://127.0.0.1:8080/api/admin/users/paginated
+        name: get all users paginated
         meta:
           id: req_8056cace1dbd43159ff6bdfabd14e194
           created: 1748872400468
-          modified: 1763807759916
+          modified: 1768672106552
           isPrivate: false
           description: ""
-          sortKey: -1763807759776
+          sortKey: -1763807760026
         method: GET
         headers:
           - name: User-Agent
             value: insomnia/10.3.1
         authentication:
           type: bearer
-          disabled: true
-          token: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJoYXJsZXkiLCJ1c2VySWQiOiI3ZGE2OWQ4ZS01NWM3LTRhOTYtYWM2ZC1jYjIwN2U0ZThhMjEiLCJpYXQiOjE3NjM3NDQ2NDQsImV4cCI6MTc2Mzc0ODI0NH0.sD9_XYSx_O46pkGea9_TKzDMFeX1Wb0VGf0TmFbZKSWSAOu0BgwGyUUTHNmdH44a0HBYphPNwXKxhZdDjMJgCg
+          disabled: false
+          token: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJoYXJsZXkiLCJ1c2VySWQiOiI3ZGE2OWQ4ZS01NWM3LTRhOTYtYWM2ZC1jYjIwN2U0ZThhMjEiLCJyb2xlcyI6WyJST0xFX1VTRVIiLCJST0xFX1NVUEVSQURNSU4iLCJST0xFX0FETUlOIl0sImlhdCI6MTc2ODY3MjAwMiwiZXhwIjoxNzY4Njc1NjAyfQ.x_1P5LpM5ESySgEkg4pc8CrZQk7UZc3OcFbz_CyC8VPoiyQUTN0m5i5trtVivvzJUWY-FJA5EGi3TCUiuwtNdA
         settings:
           renderRequestBody: true
           encodeUrl: true
@@ -573,6 +355,31 @@ collection:
             send: true
             store: true
           rebuildPath: true
+      - url: http://127.0.0.1:8080/api/admin/users
+        name: get all users raw
+        meta:
+          id: req_84098fc2e43c487b86c5bc943cc3bf44
+          created: 1768662818131
+          modified: 1768672076476
+          isPrivate: false
+          description: ""
+          sortKey: -1763807760076
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/10.3.1
+        authentication:
+          type: bearer
+          disabled: false
+          token: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJoYXJsZXkiLCJ1c2VySWQiOiI3ZGE2OWQ4ZS01NWM3LTRhOTYtYWM2ZC1jYjIwN2U0ZThhMjEiLCJyb2xlcyI6WyJST0xFX1VTRVIiLCJST0xFX1NVUEVSQURNSU4iLCJST0xFX0FETUlOIl0sImlhdCI6MTc2ODY3MjAwMiwiZXhwIjoxNzY4Njc1NjAyfQ.x_1P5LpM5ESySgEkg4pc8CrZQk7UZc3OcFbz_CyC8VPoiyQUTN0m5i5trtVivvzJUWY-FJA5EGi3TCUiuwtNdA
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
   - name: events
     meta:
       id: fld_bf6d1fb12ee947078395a5e788e828a6
@@ -586,7 +393,7 @@ collection:
         meta:
           id: req_43b32bddaab7472caba2227a1b8e4844
           created: 1747385192793
-          modified: 1766159677551
+          modified: 1768583607210
           isPrivate: false
           description: ""
           sortKey: -1766159615963
@@ -595,17 +402,7 @@ collection:
           - name: User-Agent
             value: insomnia/10.3.1
         authentication:
-          type: oauth1
-          disabled: true
-          signatureMethod: HMAC-SHA1
-          consumerKey: ""
-          tokenKey: ""
-          tokenSecret: ""
-          privateKey: ""
-          version: "1.0"
-          nonce: ""
-          timestamp: ""
-          callback: ""
+          type: none
         settings:
           renderRequestBody: true
           encodeUrl: true
@@ -619,31 +416,45 @@ collection:
         meta:
           id: req_77b432e2934a4edea40b2f54d734fed8
           created: 1747385192798
-          modified: 1766159644673
+          modified: 1768159570192
           isPrivate: false
           description: ""
           sortKey: -1766159615763
         method: POST
         body:
-          mimeType: application/json
-          text: ""
+          mimeType: multipart/form-data
+          params:
+            - name: title
+              value: Hockey with Jason
+            - name: description
+              value: Get ready for a great hockey lesson with one of the world's most unique
+                and acclaimed hockey players
+              description: ""
+              disabled: false
+            - name: date
+              value: 2026-01-10T16:15:00
+              description: ""
+              disabled: false
+            - name: location
+              value: Camp Crystal Lake, NJ
+              description: ""
+              disabled: false
+            - name: creator.id
+              value: 7da69d8e-55c7-4a96-ac6d-cb207e4e8a21
+              description: ""
+              disabled: false
+            - name: eventAdmins[0]
+              value: 7da69d8e-55c7-4a96-ac6d-cb207e4e8a21
+              description: ""
+              disabled: true
         headers:
           - name: Content-Type
-            value: application/json
+            value: multipart/form-data
           - name: User-Agent
             value: insomnia/10.3.1
         authentication:
-          type: oauth1
-          disabled: false
-          signatureMethod: HMAC-SHA1
-          consumerKey: ""
-          tokenKey: ""
-          tokenSecret: ""
-          privateKey: ""
-          version: "1.0"
-          nonce: ""
-          timestamp: ""
-          callback: ""
+          type: bearer
+          token: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJoYXJsZXkiLCJ1c2VySWQiOiI3ZGE2OWQ4ZS01NWM3LTRhOTYtYWM2ZC1jYjIwN2U0ZThhMjEiLCJyb2xlcyI6WyJST0xFX1VTRVIiLCJST0xFX1NVUEVSQURNSU4iLCJST0xFX0FETUlOIl0sImlhdCI6MTc2ODE1OTUwNCwiZXhwIjoxNzY4MTYzMTA0fQ.E4SH17qZsGpEZt78ktEjVgz149r7fhFE-_NpmmPUU5r-FQfkZI6JgZScSTOEa7wcQjlENYL_PPLzrAWapeLZhw
         settings:
           renderRequestBody: true
           encodeUrl: true
@@ -652,12 +463,12 @@ collection:
             send: true
             store: true
           rebuildPath: true
-      - url: http://127.0.0.1:8080/api/events/372ea4fc-11bf-4d27-9942-76024b404289
+      - url: http://127.0.0.1:8080/api/events/c16975f7-f823-4598-9539-360bdbc14bb4
         name: remove event
         meta:
           id: req_f22e621a286e4e13ae751d57d6be8ef5
           created: 1747385192802
-          modified: 1767961836285
+          modified: 1768575961044
           isPrivate: false
           description: ""
           sortKey: -1766159615663
@@ -668,7 +479,7 @@ collection:
         authentication:
           type: bearer
           disabled: false
-          token: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJoYXJsZXkiLCJ1c2VySWQiOiI3ZGE2OWQ4ZS01NWM3LTRhOTYtYWM2ZC1jYjIwN2U0ZThhMjEiLCJyb2xlcyI6WyJST0xFX1VTRVIiLCJST0xFX1NVUEVSQURNSU4iLCJST0xFX0FETUlOIl0sImlhdCI6MTc2Nzk2MTc5OCwiZXhwIjoxNzY3OTY1Mzk4fQ.kRj4fs2B0p-WOz60KKZsXC4ywxsBmiG_fVvuIbM_hgr7F0vPNZmF_bscFsq032Pka6SqAB0qhrcRorRLjWHDGw
+          token: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJiYXRtYW4iLCJ1c2VySWQiOiJjYjBkNzBiNC04YWM2LTQwNDUtOGE3Ny01NWJlMjU4M2YyYTgiLCJyb2xlcyI6WyJST0xFX1VTRVIiXSwiaWF0IjoxNzY4NTc0NTU4LCJleHAiOjE3Njg1NzgxNTh9.0nGAA-bxuIKn3HHSna0e8iv8Hvyu_wsmt09KniwooXKUel80WOzg66V_0O1AvN8DbAhHFWGuBavQFrP5kM05Nw
         settings:
           renderRequestBody: true
           encodeUrl: true
@@ -677,12 +488,12 @@ collection:
             send: true
             store: true
           rebuildPath: true
-      - url: http://127.0.0.1:8080/api/events/045fbc61-736a-4be1-baa3-070748e07f17
+      - url: http://127.0.0.1:8080/api/events/94c6fbff-cb33-4f59-8fef-d298ec9e46d2
         name: get event by ID
         meta:
           id: req_9cdcbb062e6245fb8b2f747a589fcd0c
           created: 1747385192805
-          modified: 1766159684288
+          modified: 1768576284073
           isPrivate: false
           description: ""
           sortKey: -1766159615938
@@ -734,12 +545,12 @@ collection:
             send: true
             store: true
           rebuildPath: true
-      - url: http://127.0.0.1:8080/api/events/78cae4d2-b504-4455-9998-5c5b9f4d0435
+      - url: http://127.0.0.1:8080/api/events/94c6fbff-cb33-4f59-8fef-d298ec9e46d2
         name: update event
         meta:
           id: req_adb0f78f6efe41d9885113e009f649d0
           created: 1767962382942
-          modified: 1767966021225
+          modified: 1768576498006
           isPrivate: false
           description: ""
           sortKey: -1766159615713
@@ -748,7 +559,8 @@ collection:
           mimeType: application/json
           text: |-
             {
-            	"title": "Kill Bill"
+            	"date": "2026-01-08T16:45:30",
+            	"title": "Hi"
             }
         headers:
           - name: Content-Type
@@ -758,7 +570,69 @@ collection:
         authentication:
           type: bearer
           disabled: false
-          token: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJoYXJsZXkiLCJ1c2VySWQiOiI3ZGE2OWQ4ZS01NWM3LTRhOTYtYWM2ZC1jYjIwN2U0ZThhMjEiLCJyb2xlcyI6WyJST0xFX1VTRVIiLCJST0xFX1NVUEVSQURNSU4iLCJST0xFX0FETUlOIl0sImlhdCI6MTc2Nzk2NjAwNywiZXhwIjoxNzY3OTY5NjA3fQ.xFA3a5_54q84wlAbCi77KN5OZW_cVY30TYJATemu43wU65xXdexC8TSAFMrCEpJSoOZubJgoyqywQA3xguDUAQ
+          token: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJiYXRtYW4iLCJ1c2VySWQiOiJjYjBkNzBiNC04YWM2LTQwNDUtOGE3Ny01NWJlMjU4M2YyYTgiLCJyb2xlcyI6WyJST0xFX1VTRVIiXSwiaWF0IjoxNzY4NTc2NDQ3LCJleHAiOjE3Njg1ODAwNDd9.SOE8Xc8_ODwOAuWMZ4Y94MkssMYCg8Is2KqtnO2uNIQ6OoktfPuK-N_egUYP4riVgZMZDiB4eWWzN3up6RxAQA
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://127.0.0.1:8080/api/events/aaed8676-8b38-4c7a-b8b1-66dd683a1a96/addAdmins
+        name: add event admins
+        meta:
+          id: req_86e29b0afa6b43cfb38e5f087a7a7bfc
+          created: 1768571541421
+          modified: 1768584641711
+          isPrivate: false
+          description: ""
+          sortKey: -1766159615738
+        method: PATCH
+        body:
+          mimeType: application/json
+          text: |-
+            [
+            	"7da69d8e-55c7-4a96-ac6d-cb207e4e8a21",
+            	"cb0d70b4-8ac6-4045-8a77-55be2583f2a8"
+            ]
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/10.3.1
+        authentication:
+          type: bearer
+          token: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJoYXJsZXkiLCJ1c2VySWQiOiI3ZGE2OWQ4ZS01NWM3LTRhOTYtYWM2ZC1jYjIwN2U0ZThhMjEiLCJyb2xlcyI6WyJST0xFX1VTRVIiLCJST0xFX1NVUEVSQURNSU4iLCJST0xFX0FETUlOIl0sImlhdCI6MTc2ODU4NDU5NiwiZXhwIjoxNzY4NTg4MTk2fQ.7EHaZVqGVr2ebH0dwzk4Vwnl8yhHCgeg5atndhVZSzkRQDZrmUYgCOwxTmbewCanohAEAsIxHc4eQ59yNa13KA
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://127.0.0.1:8080/api/events/c16975f7-f823-4598-9539-360bdbc14bb4/removeAdmins
+        name: remove event admins
+        meta:
+          id: req_ce995e7752d24e0cb4d824390a996433
+          created: 1768572150013
+          modified: 1768580181218
+          isPrivate: false
+          description: ""
+          sortKey: -1766159615725.5
+        method: DELETE
+        body:
+          mimeType: multipart/form-data
+        headers:
+          - name: Content-Type
+            value: multipart/form-data
+          - name: User-Agent
+            value: insomnia/10.3.1
+        authentication:
+          type: bearer
+          disabled: false
+          token: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJnZ2FsbGluIiwidXNlcklkIjoiNzc2NzExOGMtMTliZC00YzI4LTgxMjktYzBhYmRhNzRiNDZjIiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlhdCI6MTc2ODU3MjM3NywiZXhwIjoxNzY4NTc1OTc3fQ.VmjbnwCFcsASHmhbpVoPvChufOGPrv9CKuICHJ5lFcfuFDP8fxr0vMlZXo3hu7WDEAPyJpogq0BfHFLPdIsNKA
         settings:
           renderRequestBody: true
           encodeUrl: true
@@ -775,12 +649,48 @@ collection:
       sortKey: -1767966108139
       description: ""
     children:
+      - url: http://127.0.0.1:8080/api/auth/register
+        name: register new user
+        meta:
+          id: req_b3962e2a055049919a6effa007acd23e
+          created: 1748871739591
+          modified: 1768596814497
+          isPrivate: false
+          description: ""
+          sortKey: -1767966135205
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"username": "MachoMan",
+            	"firstName": "Randy",
+            	"surname": "Savage", 
+            	"email": "machomanrandysavage@wwf.com",
+            	"password": "Test123!",
+            	"salutation": "Mr."
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/10.3.1
+        authentication:
+          type: none
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
       - url: http://127.0.0.1:8080/api/auth/login
         name: login user
         meta:
           id: req_3160ade3cf8a49369c86081747743dfc
           created: 1767961684856
-          modified: 1767966135152
+          modified: 1768597362683
           isPrivate: false
           description: ""
           sortKey: -1767966135105
@@ -799,17 +709,122 @@ collection:
           - name: User-Agent
             value: insomnia/10.3.1
         authentication:
-          type: oauth1
-          disabled: true
-          signatureMethod: HMAC-SHA1
-          consumerKey: ""
-          tokenKey: ""
-          tokenSecret: ""
-          privateKey: ""
-          version: "1.0"
-          nonce: ""
-          timestamp: ""
-          callback: ""
+          type: none
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: users
+    meta:
+      id: fld_9429176ee24f4fcfb0b22a8b0a7cd900
+      created: 1768584730234
+      modified: 1768605626138
+      sortKey: -1768584730234
+      description: ""
+    children:
+      - url: http://127.0.0.1:8080/api/users/f5143ecf-bde5-49a1-b1fa-e235affea3fc
+        name: delete user
+        meta:
+          id: req_ac09ff5eb29447e480b8bcdbb9e0b961
+          created: 1748943312126
+          modified: 1768671482132
+          isPrivate: false
+          description: ""
+          sortKey: -1768584952106
+        method: DELETE
+        headers:
+          - name: User-Agent
+            value: insomnia/10.3.1
+        authentication:
+          type: bearer
+          disabled: false
+          token: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJoYXJsZXkiLCJ1c2VySWQiOiI3ZGE2OWQ4ZS01NWM3LTRhOTYtYWM2ZC1jYjIwN2U0ZThhMjEiLCJyb2xlcyI6WyJST0xFX1VTRVIiLCJST0xFX1NVUEVSQURNSU4iLCJST0xFX0FETUlOIl0sImlhdCI6MTc2ODY3MTQzNCwiZXhwIjoxNzY4Njc1MDM0fQ.TbgEzCpL7THrnjTKJRRHpoxZ8b2QSnwnaZblPabUPUJ37SlYpnxiaUTGDZbsOoMLuMYHOG3Lo3La6zh_q-t0mg
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://127.0.0.1:8080/users/f6ad5c40-881b-4aad-97f4-045a578af412
+        name: update user
+        meta:
+          id: req_fab9826283d24978b5f7a289b5901635
+          created: 1748943356878
+          modified: 1768605659367
+          isPrivate: false
+          description: ""
+          sortKey: -1768584952006
+        method: PATCH
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"username": "John Doe",
+            	"email": "jdoe@gmail.com",
+            	"password": "Test123!",
+            	"salutation": "Mr"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/10.3.1
+        authentication:
+          type: bearer
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://127.0.0.1:8080/api/users/id/cb0d70b4-8ac6-4045-8a77-55be2583f2a8
+        name: get user by ID
+        meta:
+          id: req_e1b0daa866a6435085ad520ab4cce3d0
+          created: 1749201772067
+          modified: 1768605570527
+          isPrivate: false
+          description: ""
+          sortKey: -1768584952206
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/10.3.1
+        authentication:
+          type: bearer
+          token: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJoYXJsZXkiLCJ1c2VySWQiOiI3ZGE2OWQ4ZS01NWM3LTRhOTYtYWM2ZC1jYjIwN2U0ZThhMjEiLCJyb2xlcyI6WyJST0xFX1VTRVIiLCJST0xFX1NVUEVSQURNSU4iLCJST0xFX0FETUlOIl0sImlhdCI6MTc2ODU4NDU5NiwiZXhwIjoxNzY4NTg4MTk2fQ.7EHaZVqGVr2ebH0dwzk4Vwnl8yhHCgeg5atndhVZSzkRQDZrmUYgCOwxTmbewCanohAEAsIxHc4eQ59yNa13KA
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://127.0.0.1:8080/api/users/ggallin
+        name: get user by username
+        meta:
+          id: req_643fee91282047a08c2a2a5607742b1a
+          created: 1749202371836
+          modified: 1768585125813
+          isPrivate: false
+          description: ""
+          sortKey: -1768584952306
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/10.3.1
+        authentication:
+          type: bearer
+          token: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJoYXJsZXkiLCJ1c2VySWQiOiI3ZGE2OWQ4ZS01NWM3LTRhOTYtYWM2ZC1jYjIwN2U0ZThhMjEiLCJyb2xlcyI6WyJST0xFX1VTRVIiLCJST0xFX1NVUEVSQURNSU4iLCJST0xFX0FETUlOIl0sImlhdCI6MTc2ODU4NDU5NiwiZXhwIjoxNzY4NTg4MTk2fQ.7EHaZVqGVr2ebH0dwzk4Vwnl8yhHCgeg5atndhVZSzkRQDZrmUYgCOwxTmbewCanohAEAsIxHc4eQ59yNa13KA
         settings:
           renderRequestBody: true
           encodeUrl: true

@@ -41,6 +41,9 @@ public class User {
     @JsonIgnore
     private List<Event> createdEvents;
 
+    @ManyToMany(mappedBy = "eventAdmins")
+    private List<Event> administeredEvents;
+
     @ManyToMany(mappedBy = "participants")
     private List<Event> attendedEvents;
 
@@ -56,7 +59,7 @@ public class User {
     @CreationTimestamp
     private LocalDateTime registerDate;
 
-    private boolean isActive;
+    private boolean isActive = true;
 
     @NotBlank(message = "Salutation is mandatory")
     private String salutation;
@@ -69,8 +72,11 @@ public class User {
     )
     private Set<Role> roles;
 
-    public User(){
-
+    public User() {
+        this.createdEvents = new ArrayList<>();
+        this.attendedEvents = new ArrayList<>();
+        this.administeredEvents = new ArrayList<>();
+        this.comments = new ArrayList<>();
     }
 
     public String getLocation() {
@@ -191,6 +197,14 @@ public class User {
 
     public void setAttendedEvents(List<Event> attendedEvents) {
         this.attendedEvents = attendedEvents;
+    }
+
+    public List<Event> getAdministeredEvents() {
+        return administeredEvents;
+    }
+
+    public void setAdministeredEvents(List<Event> administeredEvents) {
+        this.administeredEvents = administeredEvents;
     }
 
     public String getSalutation() {

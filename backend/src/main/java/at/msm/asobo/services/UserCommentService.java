@@ -5,7 +5,7 @@ import at.msm.asobo.entities.Event;
 import at.msm.asobo.entities.User;
 import at.msm.asobo.entities.UserComment;
 import at.msm.asobo.exceptions.UserCommentNotFoundException;
-import at.msm.asobo.exceptions.UserNotAuthorizedException;
+import at.msm.asobo.exceptions.users.UserNotAuthorizedException;
 import at.msm.asobo.mappers.UserCommentDTOUserCommentMapper;
 import at.msm.asobo.repositories.UserCommentRepository;
 import org.springframework.stereotype.Service;

@@ -1,4 +1,4 @@
-package at.msm.asobo.exceptions;
+package at.msm.asobo.exceptions.events;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

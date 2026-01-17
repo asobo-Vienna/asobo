@@ -1,15 +1,13 @@
-package at.msm.asobo.exceptions;
+package at.msm.asobo.exceptions.users;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
-
-import java.util.UUID;
 
 
 @ResponseStatus(HttpStatus.FORBIDDEN)
 public class UserNotAuthorizedException extends RuntimeException {
 
-    public UserNotAuthorizedException(UUID id) {
+    public UserNotAuthorizedException() {
         super("This user is not authorized to perform this action.");
     }
 

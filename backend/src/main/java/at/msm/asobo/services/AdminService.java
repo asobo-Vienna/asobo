@@ -4,6 +4,7 @@ import at.msm.asobo.dto.comment.UserCommentDTO;
 import at.msm.asobo.dto.comment.UserCommentWithEventTitleDTO;
 import at.msm.asobo.dto.medium.MediumWithEventTitleDTO;
 import at.msm.asobo.dto.user.UserAdminSummaryDTO;
+import at.msm.asobo.dto.user.UserPublicDTO;
 import at.msm.asobo.entities.Medium;
 import at.msm.asobo.entities.User;
 import at.msm.asobo.entities.UserComment;
@@ -16,13 +17,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class AdminService {
     private final UserRepository userRepository;
     private final UserCommentRepository userCommentRepository;
     private final MediumRepository mediumRepository;
-
     private final UserDTOUserMapper userDTOUserMapper;
     private final UserCommentDTOUserCommentMapper userCommentDTOUserCommentMapper;
     private final UserCommentToUserCommentWithEventTitleDTOMapper userCommentToUserCommentWithEventTitleDTOMapper;
@@ -45,9 +46,14 @@ public class AdminService {
         this.mediumToMediumWithEventTitleDTOMapper =  mediumToMediumWithEventTitleDTOMapper;
     }
 
-    public Page<UserAdminSummaryDTO> getAllUsers(Pageable pageable) {
+    public Page<UserAdminSummaryDTO> getAllUsersPaginated(Pageable pageable) {
         Page<User> users = userRepository.findAll(pageable);
         return this.userDTOUserMapper.mapUsersToAdminSummaryDTOs(users);
+    }
+
+    public List<UserPublicDTO> getAllUsers() {
+        List<User> users = userRepository.findAll();
+        return this.userDTOUserMapper.mapUsersToUserPublicDTOsAsList(users);
     }
 
     public List<UserCommentDTO> getAllUserComments() {

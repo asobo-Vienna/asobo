@@ -3,8 +3,9 @@ package at.msm.asobo.controllers;
 import at.msm.asobo.dto.event.EventCreationDTO;
 import at.msm.asobo.dto.event.EventDTO;
 import at.msm.asobo.dto.event.EventSummaryDTO;
-import at.msm.asobo.dto.event.EventUpdateDTO;
 import at.msm.asobo.security.UserPrincipal;
+import at.msm.asobo.services.EventAdminService;
+import at.msm.asobo.dto.event.EventUpdateDTO;
 import at.msm.asobo.services.EventService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
@@ -17,6 +18,7 @@ import org.springframework.data.domain.Pageable;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,9 +30,11 @@ import org.springframework.web.server.ResponseStatusException;
 @RequestMapping("/api/events")
 public class EventController {
     private final EventService eventService;
-    
-    public EventController(EventService eventService){
+    private final EventAdminService eventAdminService;
+
+    public EventController(EventService eventService, EventAdminService eventAdminService){
         this.eventService = eventService;
+        this.eventAdminService = eventAdminService;
     }
 
     @GetMapping
@@ -120,5 +124,23 @@ public class EventController {
     @DeleteMapping("/{id}")
     public EventDTO deleteEventById(@PathVariable UUID id, @AuthenticationPrincipal UserPrincipal loggedInUser) {
         return this.eventService.deleteEventById(id, loggedInUser.getUserId());
+    }
+
+    @PatchMapping("/{eventId}/addAdmins")
+    @PreAuthorize("hasAnyRole('USER','ADMIN','SUPERADMIN')")
+    @ResponseStatus(HttpStatus.CREATED)
+    public EventDTO addEventAdmin(@PathVariable UUID eventId,
+                                  @RequestBody Set<UUID> userIds,
+                                  @AuthenticationPrincipal UserPrincipal loggedInUser) {
+        return eventAdminService.addAdminsToEvent(eventId, userIds, loggedInUser.getUserId());
+    }
+
+    @DeleteMapping("/{eventId}/removeAdmins")
+    @PreAuthorize("hasAnyRole('USER','ADMIN','SUPERADMIN')")
+    @ResponseStatus(HttpStatus.OK)
+    public EventDTO removeEventAdmin(@PathVariable UUID eventId,
+                                     @RequestBody Set<UUID> userIds,
+                                     @AuthenticationPrincipal UserPrincipal loggedInUser) {
+        return eventAdminService.removeAdminsFromEvent(eventId, userIds, loggedInUser.getUserId());
     }
 }

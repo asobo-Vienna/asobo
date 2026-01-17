@@ -6,7 +6,6 @@ import at.msm.asobo.dto.auth.UserRegisterDTO;
 import at.msm.asobo.dto.user.UserPublicDTO;
 import at.msm.asobo.entities.Role;
 import at.msm.asobo.entities.User;
-import at.msm.asobo.exceptions.UserNotAuthorizedException;
 import at.msm.asobo.exceptions.registration.EmailAlreadyExistsException;
 import at.msm.asobo.exceptions.registration.UsernameAlreadyExistsException;
 import at.msm.asobo.mappers.UserDTOUserMapper;
@@ -57,6 +56,8 @@ public class AuthService {
 
         Role userRole = this.roleService.getRoleByName("USER");
         newUser.setRoles(Set.of(userRole));
+
+        newUser.setIsActive(true);
 
         User savedUser = this.userService.saveUser(newUser);
 

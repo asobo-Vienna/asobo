@@ -9,6 +9,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.springframework.data.domain.Page;
 import java.util.List;
+import java.util.Set;
 
 @Mapper(componentModel = "spring", uses = {UserMapperHelper.class, PictureMapperHelper.class})
 public interface UserDTOUserMapper {
@@ -22,8 +23,9 @@ public interface UserDTOUserMapper {
     UserPublicDTO mapUserToUserPublicDTO(User user);
     User mapUserPublicDTOToUser(UserPublicDTO userPublicDTO);
 
-    List<UserPublicDTO> mapUsersToUserPublicDTOs(List<User> users);
-    List<User> mapUserPublicDTOsToUsers(List<UserPublicDTO> userDTOs);
+    Set<UserPublicDTO> mapUsersToUserPublicDTOs(Set<User> users);
+    Set<User> mapUserPublicDTOsToUsers(Set<UserPublicDTO> userDTOs);
+    List<UserPublicDTO> mapUsersToUserPublicDTOsAsList(List<User> users);
 
     UserRegisterDTO mapUserToUserRegisterDTO(User user);
 

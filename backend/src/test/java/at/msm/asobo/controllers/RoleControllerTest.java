@@ -5,7 +5,7 @@ import at.msm.asobo.dto.user.RoleDTO;
 import at.msm.asobo.dto.user.UserRolesDTO;
 import at.msm.asobo.entities.User;
 import at.msm.asobo.exceptions.RoleNotFoundException;
-import at.msm.asobo.exceptions.UserNotFoundException;
+import at.msm.asobo.exceptions.users.UserNotFoundException;
 import at.msm.asobo.security.CustomUserDetailsService;
 import at.msm.asobo.security.JwtUtil;
 import at.msm.asobo.services.RoleService;

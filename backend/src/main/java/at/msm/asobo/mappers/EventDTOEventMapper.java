@@ -46,6 +46,10 @@ public class EventDTOEventMapper {
         dto.setCreator(this.userDTOUserMapper.mapUserToUserPublicDTO(event.getCreator()));
         dto.setIsPrivate(event.isPrivateEvent());
 
+        if (event.getEventAdmins() != null) {
+            dto.setEventAdmins(userDTOUserMapper.mapUsersToUserPublicDTOs(event.getEventAdmins()));
+        }
+
         // Map participants
         if (event.getParticipants() != null) {
             dto.setParticipants(userDTOUserMapper.mapUsersToUserPublicDTOs(event.getParticipants()));
@@ -108,6 +112,7 @@ public class EventDTOEventMapper {
         dto.setParticipantCount(event.getParticipants().size());
         dto.setCommentCount(event.getComments().size());
         dto.setMediaCount(event.getMedia().size());
+        dto.setEventAdminCount(event.getEventAdmins().size());
 
         return dto;
     }
@@ -185,6 +190,7 @@ public class EventDTOEventMapper {
         event.setDate(dto.getDate());
         event.setCreator(this.userDTOUserMapper.mapUserPublicDTOToUser(dto.getCreator()));
         event.setPrivateEvent(dto.isPrivate());
+        event.setEventAdmins(this.userDTOUserMapper.mapUserPublicDTOsToUsers(dto.getEventAdmins()));
         // pictureURI is ignored and handled in service layer
 
         return event;
