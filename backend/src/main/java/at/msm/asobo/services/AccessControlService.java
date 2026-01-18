@@ -46,17 +46,13 @@ public class AccessControlService {
 
     public void assertCanUploadMedia(Event event, User user) {
         if (!event.getParticipants().contains(user)) {
-            throw new UserNotAuthorizedException(
-                    "You are not allowed to upload media to this event because you are not a participant"
-            );
+            throw new UserNotAuthorizedException("You are not allowed to upload media to this event because you are not a participant");
         }
     }
 
     public void assertCanDeleteMedium(Medium medium, User user) {
         if (!medium.getCreator().getId().equals(user.getId()) && !this.hasAdminRole(user)) {
-            throw new UserNotAuthorizedException(
-                    "You are not allowed to delete media you did not create"
-            );
+            throw new UserNotAuthorizedException("You are not allowed to delete media you did not create");
         }
     }
 
