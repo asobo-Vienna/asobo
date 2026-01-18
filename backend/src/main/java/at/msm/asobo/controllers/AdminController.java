@@ -3,8 +3,7 @@ package at.msm.asobo.controllers;
 import at.msm.asobo.dto.comment.UserCommentWithEventTitleDTO;
 import at.msm.asobo.dto.medium.MediumWithEventTitleDTO;
 import at.msm.asobo.dto.user.UserAdminSummaryDTO;
-import at.msm.asobo.dto.user.UserDTO;
-import at.msm.asobo.dto.user.UserPublicDTO;
+import at.msm.asobo.dto.user.UserFullDTO;
 import at.msm.asobo.services.AdminService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -31,7 +30,7 @@ public class AdminController {
     }
 
     @GetMapping("/users")
-    public List<UserPublicDTO> getAllUsers() {
+    public List<UserFullDTO> getAllUsers() {
         return this.adminService.getAllUsers();
     }
 

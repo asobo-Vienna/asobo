@@ -49,10 +49,7 @@ public class EventAdminService {
             throw new UserNotAuthorizedException("You are not authorized to add event admins to this event");
         }
 
-        Set<User> eventAdmins = event.getEventAdmins();
-        eventAdmins.addAll(usersToAdd);
-
-        event.setEventAdmins(eventAdmins);
+        event.getEventAdmins().addAll(usersToAdd);
         Event savedEvent = this.eventRepository.save(event);
 
         return this.eventDTOEventMapper.mapEventToEventDTO(savedEvent);
@@ -67,10 +64,7 @@ public class EventAdminService {
             throw new UserNotAuthorizedException("You are not authorized to remove event admins from this event");
         }
 
-        Set<User> eventAdmins = event.getEventAdmins();
-        eventAdmins.removeAll(usersToRemove);
-        event.setEventAdmins(eventAdmins);
-
+        event.getEventAdmins().removeAll(usersToRemove);
         Event savedEvent = this.eventRepository.save(event);
 
         return this.eventDTOEventMapper.mapEventToEventDTO(savedEvent);
