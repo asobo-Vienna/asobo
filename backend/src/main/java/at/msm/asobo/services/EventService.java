@@ -11,6 +11,7 @@ import at.msm.asobo.exceptions.events.EventNotFoundException;
 import at.msm.asobo.exceptions.users.UserNotAuthorizedException;
 import at.msm.asobo.mappers.*;
 import at.msm.asobo.repositories.EventRepository;
+import at.msm.asobo.security.UserPrincipal;
 import at.msm.asobo.services.files.FileStorageService;
 import at.msm.asobo.utils.PatchUtils;
 import jakarta.transaction.Transactional;
@@ -155,9 +156,9 @@ public class EventService {
         return this.eventDTOEventMapper.mapEventsToEventDTOs(events);
     }
 
-    public EventDTO deleteEventById(UUID eventId, UUID loggedInUserId) {
+    public EventDTO deleteEventById(UUID eventId, UserPrincipal userPrincipal) {
         Event eventToDelete = this.getEventById(eventId);
-        User loggedInUser = this.userService.getUserById(loggedInUserId);
+        User loggedInUser = this.userService.getUserById(userPrincipal.getUserId());
 
         boolean canDeleteEvent = this.eventAdminService.canManageEvent(eventToDelete, loggedInUser);
         if (!canDeleteEvent) {
@@ -172,9 +173,9 @@ public class EventService {
         return this.eventDTOEventMapper.mapEventToEventDTO(eventToDelete);
     }
 
-    public EventDTO updateEventById(UUID eventId, UUID loggedInUserId, EventUpdateDTO eventUpdateDTO) {
+    public EventDTO updateEventById(UUID eventId, UserPrincipal userPrincipal, EventUpdateDTO eventUpdateDTO) {
         Event existingEvent = this.getEventById(eventId);
-        User loggedInUser = this.userService.getUserById(loggedInUserId);
+        User loggedInUser = this.userService.getUserById(userPrincipal.getUserId());
 
         boolean canUpdateEvent = this.eventAdminService.canManageEvent(existingEvent, loggedInUser);
         if (!canUpdateEvent) {

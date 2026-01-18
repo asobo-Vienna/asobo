@@ -8,6 +8,7 @@ import at.msm.asobo.exceptions.users.UserNotAuthorizedException;
 import at.msm.asobo.security.CustomUserDetailsService;
 import at.msm.asobo.security.JwtUtil;
 import at.msm.asobo.security.RestAuthenticationEntryPoint;
+import at.msm.asobo.security.UserPrincipal;
 import at.msm.asobo.services.MediumService;
 import at.msm.asobo.utils.MockAuthenticationFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -118,7 +119,7 @@ class MediumControllerTest {
     @Test
     @WithMockUser(username = "loggedInUser")
     void getMediumById_ReturnsMedium() throws Exception {
-        when(mediumService.getMediumDTOByEventIdAndMediumId(eventID, mediumID))
+        when(mediumService.getMediumDTOByIdAndEventId(mediumID, eventID))
                 .thenReturn(mediumDTO1);
 
         String expectedJson =  objectMapper.writeValueAsString(mediumDTO1);
@@ -128,13 +129,13 @@ class MediumControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().json(expectedJson));
 
-        verify(mediumService).getMediumDTOByEventIdAndMediumId(eventID, mediumID);
+        verify(mediumService).getMediumDTOByIdAndEventId(mediumID, eventID);
     }
 
     @ParameterizedTest
     @ValueSource(strings = {"ROLE_USER", "ROLE_ADMIN", "ROLE_SUPERADMIN"})
     void addMediumToEventById_WithValidData_ReturnsMedium(String role) throws Exception {
-        when(mediumService.addMediumToEventById(any(UUID.class), any(MediumCreationDTO.class), any(UUID.class)))
+        when(mediumService.addMediumToEventById(any(UUID.class), any(MediumCreationDTO.class), any(UserPrincipal.class)))
                 .thenReturn(mediumDTO1);
 
         MockMultipartFile file = createMockMultipartFile();
@@ -146,7 +147,7 @@ class MediumControllerTest {
                         .with(csrf()))
                 .andExpect(status().isOk());
 
-        verify(mediumService).addMediumToEventById(any(UUID.class), any(MediumCreationDTO.class), any(UUID.class));
+        verify(mediumService).addMediumToEventById(any(UUID.class), any(MediumCreationDTO.class), any(UserPrincipal.class));
     }
 
     @Test
@@ -159,13 +160,13 @@ class MediumControllerTest {
                 .with(csrf()))
                 .andExpect(status().isUnauthorized());
 
-        verify(mediumService, never()).addMediumToEventById(eq(eventID), any(MediumCreationDTO.class), any(UUID.class));
+        verify(mediumService, never()).addMediumToEventById(eq(eventID), any(MediumCreationDTO.class), any(UserPrincipal.class));
     }
 
     @ParameterizedTest
     @ValueSource(strings = {"ROLE_USER", "ROLE_ADMIN", "ROLE_SUPERADMIN"})
     void deleteMediumById_DeletesMedium(String role) throws Exception {
-        when(mediumService.deleteMediumById(eq(mediumID), eq(eventID), any(UUID.class)))
+        when(mediumService.deleteMediumById(eq(mediumID), eq(eventID), any(UserPrincipal.class)))
                 .thenReturn(mediumDTO1);
 
         mockMvc.perform(delete(SINGLE_MEDIUM_URL, eventID, mediumID)
@@ -174,12 +175,12 @@ class MediumControllerTest {
                         .with(csrf()))
                 .andExpect(status().isOk());
 
-        verify(mediumService).deleteMediumById(eq(mediumID), eq(eventID), any(UUID.class));
+        verify(mediumService).deleteMediumById(eq(mediumID), eq(eventID), any(UserPrincipal.class));
     }
 
     @Test
     void deleteMediumById_WithoutAdminRole_ReturnsForbidden() throws Exception {
-        when(mediumService.deleteMediumById(eq(mediumID), eq(eventID), any(UUID.class)))
+        when(mediumService.deleteMediumById(eq(mediumID), eq(eventID), any(UserPrincipal.class)))
                 .thenThrow(new UserNotAuthorizedException("This user is not authorized to perform this action."));
 
         mockMvc.perform(delete(SINGLE_MEDIUM_URL, mediumID, eventID)
@@ -188,6 +189,6 @@ class MediumControllerTest {
                         .with(csrf()))
                 .andExpect(status().isForbidden());
 
-        verify(mediumService, never()).deleteMediumById(eq(mediumID), eq(eventID), any(UUID.class));
+        verify(mediumService, never()).deleteMediumById(eq(mediumID), eq(eventID), any(UserPrincipal.class));
     }
 }

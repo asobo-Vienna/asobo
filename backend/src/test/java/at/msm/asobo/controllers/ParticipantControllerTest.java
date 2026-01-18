@@ -6,6 +6,7 @@ import at.msm.asobo.dto.user.UserPublicDTO;
 import at.msm.asobo.security.CustomUserDetailsService;
 import at.msm.asobo.security.JwtUtil;
 import at.msm.asobo.security.RestAuthenticationEntryPoint;
+import at.msm.asobo.security.UserPrincipal;
 import at.msm.asobo.services.ParticipantService;
 import at.msm.asobo.utils.MockAuthenticationFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -91,7 +92,7 @@ class ParticipantControllerTest {
         Set<UserPublicDTO> participantDTOList = Set.of(userPublicDTO1, userPublicDTO2);
         String expectedJson = objectMapper.writeValueAsString(participantDTOList);
 
-        when(participantService.toggleParticipantInEvent(eq(eventId), any(UUID.class)))
+        when(participantService.toggleParticipantInEvent(eq(eventId), any(UserPrincipal.class)))
                 .thenReturn(participantDTOList);
 
         mockMvc.perform(post(ALL_PARTICIPANTS_URL, eventId)
@@ -105,7 +106,7 @@ class ParticipantControllerTest {
                 .andExpect(content().json(expectedJson));
 
         verify(participantService)
-                .toggleParticipantInEvent(eq(eventId), any(UUID.class));
+                .toggleParticipantInEvent(eq(eventId), any(UserPrincipal.class));
     }
 
 

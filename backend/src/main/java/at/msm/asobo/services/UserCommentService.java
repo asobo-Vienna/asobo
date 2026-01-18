@@ -7,6 +7,7 @@ import at.msm.asobo.entities.UserComment;
 import at.msm.asobo.exceptions.UserCommentNotFoundException;
 import at.msm.asobo.mappers.UserCommentDTOUserCommentMapper;
 import at.msm.asobo.repositories.UserCommentRepository;
+import at.msm.asobo.security.UserPrincipal;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -78,10 +79,10 @@ public class UserCommentService {
     }
 
     public UserCommentDTO updateUserCommentByEventIdAndCommentId(UUID eventId, UUID commentId, UserCommentDTO updatedCommentDTO,
-                                                                 UUID loggedInUserId) {
+                                                                 UserPrincipal userPrincipal) {
         UserComment existingComment = userCommentRepository.findUserCommentByEventIdAndId(eventId, commentId)
                 .orElseThrow(() -> new UserCommentNotFoundException(commentId));
-        User loggedInUser = this.userService.getUserById(loggedInUserId);
+        User loggedInUser = this.userService.getUserById(userPrincipal.getUserId());
 
         this.accessControlService.assertCanUpdateComment(existingComment, loggedInUser);
 
@@ -93,12 +94,13 @@ public class UserCommentService {
     }
 
 
-    public UserCommentDTO deleteUserCommentByEventIdAndCommentId(UUID eventId, UUID commentId, UUID loggedInUserId) {
+    public UserCommentDTO deleteUserCommentByEventIdAndCommentId(UUID eventId, UUID commentId, UserPrincipal userPrincipal) {
+        Event event = eventService.getEventById(eventId);
         UserComment existingComment = userCommentRepository.findUserCommentByEventIdAndId(eventId, commentId)
                 .orElseThrow(() -> new UserCommentNotFoundException(commentId));
-        User loggedInUser = this.userService.getUserById(loggedInUserId);
+        User loggedInUser = this.userService.getUserById(userPrincipal.getUserId());
 
-        this.accessControlService.assertCanDeleteComment(existingComment, loggedInUser);
+        this.accessControlService.assertCanDeleteComment(existingComment, loggedInUser, event);
 
         UserCommentDTO commentToDelete = userCommentDTOUserCommentMapper.mapUserCommentToUserCommentDTO(existingComment);
         this.userCommentRepository.delete(existingComment);

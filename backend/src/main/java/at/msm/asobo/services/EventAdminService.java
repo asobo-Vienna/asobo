@@ -9,6 +9,7 @@ import at.msm.asobo.exceptions.users.UserNotAuthorizedException;
 import at.msm.asobo.mappers.EventDTOEventMapper;
 import at.msm.asobo.mappers.UserDTOUserMapper;
 import at.msm.asobo.repositories.EventRepository;
+import at.msm.asobo.security.UserPrincipal;
 import org.springframework.stereotype.Service;
 
 import java.util.Set;
@@ -40,9 +41,9 @@ public class EventAdminService {
         return this.userDTOUserMapper.mapUsersToUserPublicDTOs(event.getEventAdmins());
     }
 
-    public EventDTO addAdminsToEvent(UUID eventId, Set<UUID> userIds, UUID loggedInUserId) {
+    public EventDTO addAdminsToEvent(UUID eventId, Set<UUID> userIds, UserPrincipal userPrincipal) {
         Event event = this.getEventById(eventId);
-        User loggedInUser = this.userService.getUserById(loggedInUserId);
+        User loggedInUser = this.userService.getUserById(userPrincipal.getUserId());
         Set<User> usersToAdd = this.userService.getUsersByIds(userIds);
 
         if (!this.canManageEvent(event, loggedInUser)) {
@@ -55,9 +56,9 @@ public class EventAdminService {
         return this.eventDTOEventMapper.mapEventToEventDTO(savedEvent);
     }
 
-    public EventDTO removeAdminsFromEvent(UUID eventId, Set<UUID> userIds, UUID loggedInUserId) {
+    public EventDTO removeAdminsFromEvent(UUID eventId, Set<UUID> userIds, UserPrincipal userPrincipal) {
         Event event = this.getEventById(eventId);
-        User loggedInUser = this.userService.getUserById(loggedInUserId);
+        User loggedInUser = this.userService.getUserById(userPrincipal.getUserId());
         Set<User> usersToRemove = this.userService.getUsersByIds(userIds);
 
         if (!this.canManageEvent(event, loggedInUser)) {
@@ -71,8 +72,7 @@ public class EventAdminService {
     }
 
     public boolean canManageEvent(Event event, User loggedInUser) {
-        return this.isUserAdminOfEvent(event, loggedInUser)
-                || this.accessControlService.hasAdminRole(loggedInUser);
+        return this.accessControlService.hasAdminRole(loggedInUser) || this.isUserAdminOfEvent(event, loggedInUser);
     }
 
     private boolean isUserAdminOfEvent(Event event, User user) {

@@ -8,6 +8,7 @@ import at.msm.asobo.entities.User;
 import at.msm.asobo.exceptions.MediumNotFoundException;
 import at.msm.asobo.mappers.MediumDTOMediumMapper;
 import at.msm.asobo.repositories.MediumRepository;
+import at.msm.asobo.security.UserPrincipal;
 import at.msm.asobo.services.files.FileStorageService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -49,23 +50,23 @@ public class MediumService {
     }
 
 
-    public Medium getMediumByEventIdAndMediumId(UUID mediumId, UUID eventId) {
-        Medium medium = this.mediumRepository.findMediumByEventIdAndId(mediumId, eventId)
+    public Medium getMediumByIdAndEventId(UUID mediumId, UUID eventId) {
+        Medium medium = this.mediumRepository.findMediumByIdAndEventId(mediumId, eventId)
                 .orElseThrow(() -> new MediumNotFoundException(mediumId));
         return medium;
     }
 
-    public MediumDTO getMediumDTOByEventIdAndMediumId(UUID mediumId, UUID eventId) {
-        Medium medium = this.getMediumByEventIdAndMediumId(mediumId, eventId);
+    public MediumDTO getMediumDTOByIdAndEventId(UUID mediumId, UUID eventId) {
+        Medium medium = this.getMediumByIdAndEventId(mediumId, eventId);
         return this.mediumDTOMediumMapper.mapMediumToMediumDTO(medium);
     }
 
 
     public MediumDTO addMediumToEventById(UUID eventId,
                                           MediumCreationDTO creationDTO,
-                                          UUID loggedInUserId) {
+                                          UserPrincipal userPrincipal) {
         Event event = eventService.getEventById(eventId);
-        User loggedInUser = this.userService.getUserById(loggedInUserId);
+        User loggedInUser = this.userService.getUserById(userPrincipal.getUserId());
 
         this.accessControlService.assertCanUploadMedia(event, loggedInUser);
 
@@ -85,12 +86,13 @@ public class MediumService {
 
     public MediumDTO deleteMediumById(UUID mediumId,
                                       UUID eventId,
-                                      UUID loggedInUserId) {
+                                      UserPrincipal userPrincipal) {
 
-        Medium mediumToDelete = this.getMediumByEventIdAndMediumId(mediumId, eventId);
-        User loggedInUser = this.userService.getUserById(loggedInUserId);
+        Medium mediumToDelete = this.getMediumByIdAndEventId(mediumId, eventId);
+        Event event = this.eventService.getEventById(eventId);
+        User loggedInUser = this.userService.getUserById(userPrincipal.getUserId());
 
-        this.accessControlService.assertCanDeleteMedium(mediumToDelete, loggedInUser);
+        this.accessControlService.assertCanDeleteMedium(mediumToDelete, loggedInUser, event);
 
         this.fileStorageService.delete(mediumToDelete.getMediumURI());
         mediumRepository.delete(mediumToDelete);

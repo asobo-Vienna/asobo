@@ -27,9 +27,9 @@ public class MediumController {
         return mediumService.getAllMediaByEventId(eventId);
     }
 
-    @GetMapping("/{mediumID}")
-    public MediumDTO getMediumById(@PathVariable UUID eventId, @PathVariable UUID mediumID) {
-        return this.mediumService.getMediumDTOByEventIdAndMediumId(eventId, mediumID);
+    @GetMapping("/{mediumId}")
+    public MediumDTO getMediumById(@PathVariable UUID mediumId, @PathVariable UUID eventId) {
+        return this.mediumService.getMediumDTOByIdAndEventId(mediumId, eventId);
     }
 
     @PostMapping
@@ -37,7 +37,7 @@ public class MediumController {
     public MediumDTO addMediumToEventById(@PathVariable UUID eventId,
                                           @ModelAttribute @Valid MediumCreationDTO medium,
                                           @AuthenticationPrincipal UserPrincipal loggedInUser) {
-        return this.mediumService.addMediumToEventById(eventId, medium, loggedInUser.getUserId());
+        return this.mediumService.addMediumToEventById(eventId, medium, loggedInUser);
     }
 
     @DeleteMapping("/{mediumID}")
@@ -45,6 +45,6 @@ public class MediumController {
     public MediumDTO deleteMediumById(@PathVariable UUID mediumID,
                                       @PathVariable UUID eventId,
                                       @AuthenticationPrincipal UserPrincipal loggedInUser) {
-        return this.mediumService.deleteMediumById(mediumID, eventId, loggedInUser.getUserId());
+        return this.mediumService.deleteMediumById(mediumID, eventId, loggedInUser);
     }
 }

@@ -84,8 +84,8 @@ public class UserService {
         return this.userRepository.save(user);
     }
 
-    public LoginResponseDTO updateUserById(UUID targetUserId, UUID loggedInUserId, UserUpdateDTO userUpdateDTO) {
-        User loggedInUser = this.getUserById(loggedInUserId);
+    public LoginResponseDTO updateUserById(UUID targetUserId, UserPrincipal loggedInPrincipal, UserUpdateDTO userUpdateDTO) {
+        User loggedInUser = this.getUserById(loggedInPrincipal.getUserId());
         User targetUser = this.getUserById(targetUserId);
 
         this.accessControlService.assertCanUpdateOrDeleteUser(targetUser, loggedInUser);
@@ -124,8 +124,8 @@ public class UserService {
         return new LoginResponseDTO(null, this.userDTOUserMapper.mapUserToUserPublicDTO(updatedUser));
     }
 
-    public UserPublicDTO deleteUserById(UUID userToDeleteId, UUID loggedInUserId) {
-        User loggedInUser = this.getUserById(loggedInUserId);
+    public UserPublicDTO deleteUserById(UUID userToDeleteId, UserPrincipal userPrincipal) {
+        User loggedInUser = this.getUserById(userPrincipal.getUserId());
         User userToDelete = this.getUserById(userToDeleteId);
 
         this.accessControlService.assertCanUpdateOrDeleteUser(userToDelete, loggedInUser);

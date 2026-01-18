@@ -230,7 +230,7 @@ class UserCommentControllerTest {
         String jsonCommentResponse =  objectMapper.writeValueAsString(userCommentDTO2);
 
         when(userCommentService.updateUserCommentByEventIdAndCommentId(
-                eq(eventId), eq(commentId), any(UserCommentDTO.class), any(UUID.class)))
+                eq(eventId), eq(commentId), any(UserCommentDTO.class), any(UserPrincipal.class)))
                 .thenReturn(userCommentDTO2);
 
         UserPrincipal loggedInUser = createUserPrincipal(role);
@@ -245,7 +245,7 @@ class UserCommentControllerTest {
                 .andExpect(content().json(jsonCommentResponse));
 
         verify(userCommentService).updateUserCommentByEventIdAndCommentId(
-                eq(eventId), eq(commentId), any(UserCommentDTO.class), any(UUID.class));
+                eq(eventId), eq(commentId), any(UserCommentDTO.class), any(UserPrincipal.class));
     }
 
     @Test
@@ -300,7 +300,7 @@ class UserCommentControllerTest {
     @ValueSource(strings = {"USER", "ADMIN", "SUPERADMIN"})
     void deleteUserComment_withAuthorizedRole_returns200(String role) throws Exception {
         when(userCommentService.deleteUserCommentByEventIdAndCommentId(
-                eq(eventId), eq(commentId), any(UUID.class)))
+                eq(eventId), eq(commentId), any(UserPrincipal.class)))
                 .thenReturn(userCommentDTO1);
 
         UserPrincipal loggedInUser = createUserPrincipal(role);
@@ -313,7 +313,7 @@ class UserCommentControllerTest {
                 .andExpect(content().json(objectMapper.writeValueAsString(userCommentDTO1)));
 
         verify(userCommentService).deleteUserCommentByEventIdAndCommentId(
-                eq(eventId), eq(commentId), any(UUID.class));
+                eq(eventId), eq(commentId), any(UserPrincipal.class));
     }
 
     @Test

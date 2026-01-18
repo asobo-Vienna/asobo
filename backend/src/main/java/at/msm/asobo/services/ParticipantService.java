@@ -3,9 +3,9 @@ package at.msm.asobo.services;
 import at.msm.asobo.dto.user.UserPublicDTO;
 import at.msm.asobo.entities.Event;
 import at.msm.asobo.entities.User;
-import at.msm.asobo.mappers.EventDTOEventMapper;
 import at.msm.asobo.mappers.UserDTOUserMapper;
 import at.msm.asobo.repositories.EventRepository;
+import at.msm.asobo.security.UserPrincipal;
 import org.springframework.stereotype.Service;
 import java.util.Set;
 import java.util.UUID;
@@ -39,8 +39,8 @@ public class ParticipantService {
         return event.getParticipants();
     }
 
-    public Set<UserPublicDTO> toggleParticipantInEvent(UUID eventId, UUID loggedInUserId) {
-        User loggedInUser = this.userService.getUserById(loggedInUserId);
+    public Set<UserPublicDTO> toggleParticipantInEvent(UUID eventId, UserPrincipal userPrincipal) {
+        User loggedInUser = this.userService.getUserById(userPrincipal.getUserId());
         Event event = this.eventService.getEventById(eventId);
         Set<User> participants = event.getParticipants();
 

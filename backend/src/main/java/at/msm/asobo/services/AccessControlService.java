@@ -45,31 +45,31 @@ public class AccessControlService {
     }
 
     public void assertCanUploadMedia(Event event, User user) {
-        if (!event.getParticipants().contains(user)) {
-            throw new UserNotAuthorizedException("You are not allowed to upload media to this event because you are not a participant");
+        if (!event.getParticipants().contains(user) && !event.getEventAdmins().contains(user) && !this.hasAdminRole(user)) {
+            throw new UserNotAuthorizedException("You are not allowed to upload media to this event");
         }
     }
 
-    public void assertCanDeleteMedium(Medium medium, User user) {
-        if (!medium.getCreator().getId().equals(user.getId()) && !this.hasAdminRole(user)) {
-            throw new UserNotAuthorizedException("You are not allowed to delete media you did not create");
+    public void assertCanDeleteMedium(Medium medium, User user, Event event) {
+        if (!medium.getCreator().getId().equals(user.getId()) && !event.getEventAdmins().contains(user) && !this.hasAdminRole(user)) {
+            throw new UserNotAuthorizedException("You are not allowed to delete this media item");
         }
     }
 
     public void assertCanUpdateComment(UserComment comment, User user) {
         if (!comment.getAuthor().getId().equals(user.getId()) && !this.hasAdminRole(user)) {
-            throw new UserNotAuthorizedException("You are not allowed to update a comment you did not create");
+            throw new UserNotAuthorizedException("You are not allowed to update this comment");
         }
     }
 
-    public void assertCanDeleteComment(UserComment comment, User user) {
-        if (!comment.getAuthor().getId().equals(user.getId()) && !this.hasAdminRole(user)) {
-            throw new UserNotAuthorizedException("You are not authorized to delete a comment you did not create");
+    public void assertCanDeleteComment(UserComment comment, User user, Event event) {
+        if (!comment.getAuthor().getId().equals(user.getId()) && !event.getEventAdmins().contains(user) && !this.hasAdminRole(user)) {
+            throw new UserNotAuthorizedException("You are not allowed to delete this comment");
         }
     }
 
     public void assertCanUpdateOrDeleteUser(User targetUser, User loggedInUser) {
-        if (!targetUser.getId().equals(loggedInUser.getId()) && !hasAdminRole(loggedInUser)) {
+        if (!targetUser.getId().equals(loggedInUser.getId()) && !this.hasAdminRole(loggedInUser)) {
             throw new UserNotAuthorizedException("You are not allowed to update or delete this user");
         }
     }

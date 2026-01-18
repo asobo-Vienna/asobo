@@ -25,7 +25,7 @@ public class ParticipantController {
     @PostMapping()
     public Set<UserPublicDTO> toggleParticipantInEvent(@PathVariable UUID eventId,
                                                        @AuthenticationPrincipal UserPrincipal loggedInUser) {
-        return this.participantService.toggleParticipantInEvent(eventId, loggedInUser.getUserId());
+        return this.participantService.toggleParticipantInEvent(eventId, loggedInUser);
     }
 
     @GetMapping()
