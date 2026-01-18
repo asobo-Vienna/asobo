@@ -10,6 +10,7 @@ import at.msm.asobo.exceptions.users.UserNotAuthorizedException;
 import at.msm.asobo.security.CustomUserDetailsService;
 import at.msm.asobo.security.JwtUtil;
 import at.msm.asobo.security.RestAuthenticationEntryPoint;
+import at.msm.asobo.services.EventAdminService;
 import at.msm.asobo.services.EventService;
 import at.msm.asobo.services.AccessControlService;
 import at.msm.asobo.utils.MockAuthenticationFactory;
@@ -59,6 +60,9 @@ class EventControllerTest {
 
     @MockitoBean
     private EventService eventService;
+
+    @MockitoBean
+    private EventAdminService eventAdminService;
 
     @MockitoBean
     private FileStorageProperties fileStorageProperties;
@@ -290,7 +294,7 @@ class EventControllerTest {
     void createEvent_WithValidRole_ReturnsCreatedEvent(String role) throws Exception {
         EventCreationDTO eventCreationDTO = new EventCreationDTO();
         eventCreationDTO.setTitle("Test Title");
-        eventCreationDTO.setCreationDate(LocalDateTime.now());
+        eventCreationDTO.setCreationDate(LocalDateTime.now().plusMinutes(1));
         eventCreationDTO.setDescription("Test Description");
         eventCreationDTO.setLocation("Test Location");
 
@@ -324,7 +328,7 @@ class EventControllerTest {
         mockMvc.perform(post(EVENTS_URL)
                         .param("title", "Test")
                         .param("description", "Test")
-                        .param("date", LocalDateTime.now().toString())
+                        .param("date", LocalDateTime.now().plusMinutes(1).toString())
                         .param("location", "Test")
                         .with(csrf()))
                 .andExpect(status().isForbidden());
