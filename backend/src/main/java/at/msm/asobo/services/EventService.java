@@ -48,9 +48,9 @@ public class EventService {
         this.userService = userService;
         this.fileStorageService = fileStorageService;
         this.eventAdminService = eventAdminService;
+        this.fileStorageProperties = fileStorageProperties;
         this.eventDTOEventMapper = eventDTOEventMapper;
         this.userDTOUserMapper = userDTOUserMapper;
-        this.fileStorageProperties = fileStorageProperties;
     }
 
     public List<EventSummaryDTO> getAllEvents() {
