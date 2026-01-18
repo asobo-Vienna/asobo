@@ -10,7 +10,7 @@
              alt="{{ item.caption }}">
       }
 
-      @if(authService.hasAdminAccess()) {
+      @if (authService.hasAdminAccess()) {
         <button mat-icon-button class="delete-media-button" (click)="mediaDeleted.emit(item);
         $event.stopPropagation();" aria-label="Delete media">
           <mat-icon class="mat-icon-custom">delete_forever</mat-icon>
@@ -33,28 +33,28 @@
   </div>
 </div>
 
-    <!-- CAROUSEL MODAL -->
-    @if (showCarousel) {
-      <div class="carousel-overlay" (click)="closeCarousel()">
-        <div class="carousel-content" (click)="$event.stopPropagation()">
-          <p-carousel [value]="mediaItems.toArray()"
-                      [numVisible]="1"
-                      [numScroll]="1"
-                      [circular]="true"
-                      [page]="activeSlideIndex">
-            <ng-template let-item pTemplate="item">
-              <div class="media-slide">
-                @if(MediaUtilService.isVideo(item.mediumURI)) {
-                  <video [src]="UrlUtilService.getMediaUrl(item.mediumURI)" controls></video>
-                } @else {
-                  <img [src]="UrlUtilService.getMediaUrl(item.mediumURI)" alt="{{ item.caption }}" />
-                }
-              </div>
-            </ng-template>
-          </p-carousel>
-        </div>
-      </div>
-  }
+<!-- CAROUSEL MODAL -->
+@if (showCarousel) {
+  <div class="carousel-overlay" (click)="closeCarousel()">
+    <div class="carousel-content" (click)="$event.stopPropagation()">
+      <p-carousel [value]="mediaItems.toArray()"
+                  [numVisible]="1"
+                  [numScroll]="1"
+                  [circular]="true"
+                  [page]="activeSlideIndex">
+        <ng-template let-item pTemplate="item">
+          <div class="media-slide">
+            @if (MediaUtilService.isVideo(item.mediumURI)) {
+              <video [src]="UrlUtilService.getMediaUrl(item.mediumURI)" controls></video>
+            } @else {
+              <img [src]="UrlUtilService.getMediaUrl(item.mediumURI)" alt="{{ item.caption }}"/>
+            }
+          </div>
+        </ng-template>
+      </p-carousel>
+    </div>
+  </div>
+}
 
 
 
