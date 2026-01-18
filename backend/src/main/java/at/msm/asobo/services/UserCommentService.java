@@ -5,7 +5,6 @@ import at.msm.asobo.entities.Event;
 import at.msm.asobo.entities.User;
 import at.msm.asobo.entities.UserComment;
 import at.msm.asobo.exceptions.UserCommentNotFoundException;
-import at.msm.asobo.exceptions.users.UserNotAuthorizedException;
 import at.msm.asobo.mappers.UserCommentDTOUserCommentMapper;
 import at.msm.asobo.repositories.UserCommentRepository;
 import org.springframework.stereotype.Service;
@@ -19,18 +18,18 @@ public class UserCommentService {
     private final UserService userService;
     private final UserCommentDTOUserCommentMapper userCommentDTOUserCommentMapper;
     private final EventService eventService;
-    private final UserPrivilegeService userPrivilegeService;
+    private final AccessControlService accessControlService;
 
     public UserCommentService(UserCommentRepository userCommentRepository,
                               UserService userService,
                               UserCommentDTOUserCommentMapper userCommentDTOUserCommentMapper,
                               EventService eventService,
-                              UserPrivilegeService userPrivilegeService) {
+                              AccessControlService accessControlService) {
         this.userCommentRepository = userCommentRepository;
         this.userService = userService;
         this.userCommentDTOUserCommentMapper = userCommentDTOUserCommentMapper;
         this.eventService = eventService;
-        this.userPrivilegeService = userPrivilegeService;
+        this.accessControlService = accessControlService;
     }
 
     public UserCommentDTO getUserCommentDTOById(UUID id) {
@@ -82,12 +81,9 @@ public class UserCommentService {
                                                                  UUID loggedInUserId) {
         UserComment existingComment = userCommentRepository.findUserCommentByEventIdAndId(eventId, commentId)
                 .orElseThrow(() -> new UserCommentNotFoundException(commentId));
+        User loggedInUser = this.userService.getUserById(loggedInUserId);
 
-        boolean canUpdateComment = userPrivilegeService
-                .canUpdateEntity(existingComment.getAuthor().getId(), loggedInUserId);
-        if (!canUpdateComment) {
-            throw new UserNotAuthorizedException("You are not authorized to update this comment");
-        }
+        this.accessControlService.assertCanUpdateComment(existingComment, loggedInUser);
 
         existingComment.setText(updatedCommentDTO.getText());
         existingComment.setModificationDate(LocalDateTime.now());
@@ -100,12 +96,9 @@ public class UserCommentService {
     public UserCommentDTO deleteUserCommentByEventIdAndCommentId(UUID eventId, UUID commentId, UUID loggedInUserId) {
         UserComment existingComment = userCommentRepository.findUserCommentByEventIdAndId(eventId, commentId)
                 .orElseThrow(() -> new UserCommentNotFoundException(commentId));
+        User loggedInUser = this.userService.getUserById(loggedInUserId);
 
-        boolean canDeleteComment = userPrivilegeService
-                .canUpdateEntity(existingComment.getAuthor().getId(), loggedInUserId);
-        if (!canDeleteComment) {
-            throw new UserNotAuthorizedException("You are not authorized to delete this comment");
-        }
+        this.accessControlService.assertCanDeleteComment(existingComment, loggedInUser);
 
         UserCommentDTO commentToDelete = userCommentDTOUserCommentMapper.mapUserCommentToUserCommentDTO(existingComment);
         this.userCommentRepository.delete(existingComment);

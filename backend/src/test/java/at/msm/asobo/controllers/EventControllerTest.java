@@ -11,7 +11,7 @@ import at.msm.asobo.security.CustomUserDetailsService;
 import at.msm.asobo.security.JwtUtil;
 import at.msm.asobo.security.RestAuthenticationEntryPoint;
 import at.msm.asobo.services.EventService;
-import at.msm.asobo.services.UserPrivilegeService;
+import at.msm.asobo.services.AccessControlService;
 import at.msm.asobo.utils.MockAuthenticationFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -70,7 +70,7 @@ class EventControllerTest {
     private CustomUserDetailsService customUserDetailsService;
 
     @MockitoBean
-    private UserPrivilegeService userPrivilegeService;
+    private AccessControlService accessControlService;
 
     private final String EVENTS_URL = "/api/events";
     private final String EVENTS_PAGINATED_URL = "/api/events/paginated";

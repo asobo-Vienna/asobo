@@ -19,18 +19,18 @@ public class EventAdminService {
 
     private final EventRepository eventRepository;
     private final UserService userService;
-    private final UserPrivilegeService userPrivilegeService;
+    private final AccessControlService accessControlService;
     private final UserDTOUserMapper userDTOUserMapper;
     private final EventDTOEventMapper eventDTOEventMapper;
 
     public EventAdminService(EventRepository eventRepository,
                              UserService userService,
-                             UserPrivilegeService userPrivilegeService,
+                             AccessControlService accessControlService,
                              UserDTOUserMapper userDTOUserMapper,
                              EventDTOEventMapper eventDTOEventMapper) {
         this.eventRepository = eventRepository;
         this.userService = userService;
-        this.userPrivilegeService = userPrivilegeService;
+        this.accessControlService = accessControlService;
         this.userDTOUserMapper = userDTOUserMapper;
         this.eventDTOEventMapper = eventDTOEventMapper;
     }
@@ -42,9 +42,10 @@ public class EventAdminService {
 
     public EventDTO addAdminsToEvent(UUID eventId, Set<UUID> userIds, UUID loggedInUserId) {
         Event event = this.getEventById(eventId);
+        User loggedInUser = this.userService.getUserById(loggedInUserId);
         Set<User> usersToAdd = this.userService.getUsersByIds(userIds);
 
-        if (!this.canManageEvent(event, loggedInUserId)) {
+        if (!this.canManageEvent(event, loggedInUser)) {
             throw new UserNotAuthorizedException("You are not authorized to add event admins to this event");
         }
 
@@ -59,9 +60,10 @@ public class EventAdminService {
 
     public EventDTO removeAdminsFromEvent(UUID eventId, Set<UUID> userIds, UUID loggedInUserId) {
         Event event = this.getEventById(eventId);
+        User loggedInUser = this.userService.getUserById(loggedInUserId);
         Set<User> usersToRemove = this.userService.getUsersByIds(userIds);
 
-        if (!this.canManageEvent(event, loggedInUserId)) {
+        if (!this.canManageEvent(event, loggedInUser)) {
             throw new UserNotAuthorizedException("You are not authorized to remove event admins from this event");
         }
 
@@ -74,15 +76,13 @@ public class EventAdminService {
         return this.eventDTOEventMapper.mapEventToEventDTO(savedEvent);
     }
 
-    public boolean canManageEvent(Event event, UUID loggedInUserId) {
-        return this.isUserAdminOfEvent(event, loggedInUserId)
-                || this.userPrivilegeService.hasAdminRole(loggedInUserId);
+    public boolean canManageEvent(Event event, User loggedInUser) {
+        return this.isUserAdminOfEvent(event, loggedInUser)
+                || this.accessControlService.hasAdminRole(loggedInUser);
     }
 
-    private boolean isUserAdminOfEvent(Event event, UUID userId) {
-        User user = this.userService.getUserById(userId);
-
-        if (this.isUserEventCreator(event, userId)) {
+    private boolean isUserAdminOfEvent(Event event, User user) {
+        if (this.isUserEventCreator(event, user)) {
             return true;
         }
 
@@ -90,8 +90,8 @@ public class EventAdminService {
         return eventAdmins.contains(user);
     }
 
-    private boolean isUserEventCreator(Event event,  UUID userId) {
-        return event.getCreator().getId().equals(userId);
+    private boolean isUserEventCreator(Event event, User user) {
+        return event.getCreator().getId().equals(user.getId());
     }
 
     private Event getEventById(UUID id) {

@@ -114,7 +114,7 @@ class MediumControllerTest {
     @Test
     @WithMockUser(roles = "USER")
     void addMediumToEventById_WithValidData_ReturnsMedium() throws Exception {
-        when(mediumService.addMediumToEventById(any(UUID.class), any(MediumCreationDTO.class)))
+        when(mediumService.addMediumToEventById(any(UUID.class), any(UUID.class), any(MediumCreationDTO.class)))
                 .thenReturn(mediumDTO1);
 
         MockMultipartFile file = createMockMultipartFile();
@@ -124,7 +124,7 @@ class MediumControllerTest {
                         .with(csrf()))
                 .andExpect(status().isOk());
 
-        verify(mediumService).addMediumToEventById(any(UUID.class), any(MediumCreationDTO.class));
+        verify(mediumService).addMediumToEventById(any(UUID.class), any(UUID.class), any(MediumCreationDTO.class));
     }
 
     @Test
@@ -137,29 +137,29 @@ class MediumControllerTest {
                 .with(csrf()))
                 .andExpect(status().isUnauthorized());
 
-        verify(mediumService, never()).addMediumToEventById(eq(eventID), any(MediumCreationDTO.class));
+        verify(mediumService, never()).addMediumToEventById(eq(eventID), any(UUID.class), any(MediumCreationDTO.class));
     }
 
     @Test
     @WithMockUser(roles = "ADMIN")
     void deleteMediumById_WithAdminRole_DeletesMedium() throws Exception {
-        when(mediumService.deleteMediumById(eventID, mediumID))
+        when(mediumService.deleteMediumById(eq(mediumID), eq(eventID), any(UUID.class)))
                 .thenReturn(mediumDTO1);
 
         mockMvc.perform(delete(SINGLE_MEDIUM_URL, eventID, mediumID)
                         .with(csrf()))
                 .andExpect(status().isOk());
 
-        verify(mediumService).deleteMediumById(eventID, mediumID);
+        verify(mediumService).deleteMediumById(eq(mediumID), eq(eventID), any(UUID.class));
     }
 
     @Test
     @WithMockUser(roles = "USER")
     void deleteMediumById_WithoutAdminRole_ReturnsForbidden() throws Exception {
-        mockMvc.perform(delete(SINGLE_MEDIUM_URL, eventID, mediumID)
+        mockMvc.perform(delete(SINGLE_MEDIUM_URL, mediumID, eventID)
                         .with(csrf()))
                 .andExpect(status().isForbidden());
 
-        verify(mediumService, never()).deleteMediumById(eventID, mediumID);
+        verify(mediumService, never()).deleteMediumById(eq(mediumID), eq(eventID), any(UUID.class));
     }
 }

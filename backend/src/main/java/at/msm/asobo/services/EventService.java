@@ -6,6 +6,7 @@ import at.msm.asobo.dto.event.EventDTO;
 import at.msm.asobo.dto.event.EventSummaryDTO;
 import at.msm.asobo.dto.event.EventUpdateDTO;
 import at.msm.asobo.entities.Event;
+import at.msm.asobo.entities.User;
 import at.msm.asobo.exceptions.events.EventNotFoundException;
 import at.msm.asobo.exceptions.users.UserNotAuthorizedException;
 import at.msm.asobo.mappers.*;
@@ -156,10 +157,11 @@ public class EventService {
 
     public EventDTO deleteEventById(UUID eventId, UUID loggedInUserId) {
         Event eventToDelete = this.getEventById(eventId);
+        User loggedInUser = this.userService.getUserById(loggedInUserId);
 
-        boolean canDeleteEvent = this.eventAdminService.canManageEvent(eventToDelete, loggedInUserId);
+        boolean canDeleteEvent = this.eventAdminService.canManageEvent(eventToDelete, loggedInUser);
         if (!canDeleteEvent) {
-            throw new UserNotAuthorizedException("You are not authorized to delete this event");
+            throw new UserNotAuthorizedException("You are not allowed to delete this event");
         }
 
         if (eventToDelete.getPictureURI() != null) {
@@ -172,10 +174,11 @@ public class EventService {
 
     public EventDTO updateEventById(UUID eventId, UUID loggedInUserId, EventUpdateDTO eventUpdateDTO) {
         Event existingEvent = this.getEventById(eventId);
+        User loggedInUser = this.userService.getUserById(loggedInUserId);
 
-        boolean canUpdateEvent = this.eventAdminService.canManageEvent(existingEvent, loggedInUserId);
+        boolean canUpdateEvent = this.eventAdminService.canManageEvent(existingEvent, loggedInUser);
         if (!canUpdateEvent) {
-            throw new UserNotAuthorizedException("You are not authorized to update this event");
+            throw new UserNotAuthorizedException("You are not allowed to update this event");
         }
 
         PatchUtils.copyNonNullProperties(eventUpdateDTO, existingEvent, "picture", "participants");

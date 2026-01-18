@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import org.hibernate.annotations.CreationTimestamp;
+
+import javax.print.attribute.standard.Media;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -51,6 +53,10 @@ public class User {
     @JsonIgnore
     private List<UserComment> comments;
 
+    @OneToMany(mappedBy = "creator")
+    @JsonIgnore
+    private List<Medium> media;
+
     @Column(length = 4096)
     private String pictureURI;
 
@@ -77,6 +83,7 @@ public class User {
         this.attendedEvents = new ArrayList<>();
         this.administeredEvents = new ArrayList<>();
         this.comments = new ArrayList<>();
+        this.media = new ArrayList<>();
     }
 
     public String getLocation() {
@@ -221,6 +228,14 @@ public class User {
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
+    }
+
+    public List<Medium> getMedia() {
+        return this.media;
+    }
+
+    public void setMedia(List<Medium> media) {
+        this.media = media;
     }
 
     @Override
