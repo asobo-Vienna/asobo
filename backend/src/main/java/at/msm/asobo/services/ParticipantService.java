@@ -7,7 +7,6 @@ import at.msm.asobo.mappers.EventDTOEventMapper;
 import at.msm.asobo.mappers.UserDTOUserMapper;
 import at.msm.asobo.repositories.EventRepository;
 import org.springframework.stereotype.Service;
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -18,17 +17,14 @@ public class ParticipantService {
     private final EventRepository eventRepository;
     private final EventService eventService;
     private final UserDTOUserMapper userDTOUserMapper;
-    private final EventDTOEventMapper eventDTOEventMapper;
 
     public ParticipantService(UserService userService, EventRepository eventRepository,
                               EventService eventService,
-                              UserDTOUserMapper userDTOUserMapper,
-                              EventDTOEventMapper eventDTOEventMapper) {
+                              UserDTOUserMapper userDTOUserMapper) {
         this.userService = userService;
         this.eventRepository = eventRepository;
         this.eventService = eventService;
         this.userDTOUserMapper = userDTOUserMapper;
-        this.eventDTOEventMapper = eventDTOEventMapper;
     }
 
     // return set of DTOs
@@ -43,15 +39,15 @@ public class ParticipantService {
         return event.getParticipants();
     }
 
-    public Set<UserPublicDTO> toggleParticipantInEvent(UUID eventId, UserPublicDTO participantDTO) {
-        User existingParticipant = this.userService.getUserById(participantDTO.getId());
+    public Set<UserPublicDTO> toggleParticipantInEvent(UUID eventId, UUID loggedInUserId) {
+        User loggedInUser = this.userService.getUserById(loggedInUserId);
         Event event = this.eventService.getEventById(eventId);
         Set<User> participants = event.getParticipants();
 
-        if (participants.contains(existingParticipant)) {
-            participants.remove(existingParticipant);
+        if (participants.contains(loggedInUser)) {
+            participants.remove(loggedInUser);
         } else {
-            participants.add(existingParticipant);
+            participants.add(loggedInUser);
         }
 
         this.eventRepository.save(event);

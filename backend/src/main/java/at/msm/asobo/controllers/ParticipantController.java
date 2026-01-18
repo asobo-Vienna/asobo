@@ -1,11 +1,12 @@
 package at.msm.asobo.controllers;
 
 import at.msm.asobo.dto.user.UserPublicDTO;
+import at.msm.asobo.security.UserPrincipal;
 import at.msm.asobo.services.ParticipantService;
 import jakarta.validation.Valid;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -22,8 +23,9 @@ public class ParticipantController {
 
     // returns updated participants list
     @PostMapping()
-    public Set<UserPublicDTO> toggleParticipantInEvent(@PathVariable UUID eventId, @RequestBody @Valid UserPublicDTO participantDTO) {
-        return this.participantService.toggleParticipantInEvent(eventId, participantDTO);
+    public Set<UserPublicDTO> toggleParticipantInEvent(@PathVariable UUID eventId,
+                                                       @AuthenticationPrincipal UserPrincipal loggedInUser) {
+        return this.participantService.toggleParticipantInEvent(eventId, loggedInUser.getUserId());
     }
 
     @GetMapping()
