@@ -41,9 +41,9 @@ public class EventAdminService {
         return this.userDTOUserMapper.mapUsersToUserPublicDTOs(event.getEventAdmins());
     }
 
-    public EventDTO addAdminsToEvent(UUID eventId, Set<UUID> userIds, UserPrincipal userPrincipal) {
+    public EventDTO addAdminsToEvent(UUID eventId, Set<UUID> userIds, UserPrincipal loggedInUserPrincipal) {
         Event event = this.getEventById(eventId);
-        User loggedInUser = this.userService.getUserById(userPrincipal.getUserId());
+        User loggedInUser = this.userService.getUserById(loggedInUserPrincipal.getUserId());
         Set<User> usersToAdd = this.userService.getUsersByIds(userIds);
 
         if (!this.canManageEvent(event, loggedInUser)) {
@@ -56,9 +56,9 @@ public class EventAdminService {
         return this.eventDTOEventMapper.mapEventToEventDTO(savedEvent);
     }
 
-    public EventDTO removeAdminsFromEvent(UUID eventId, Set<UUID> userIds, UserPrincipal userPrincipal) {
+    public EventDTO removeAdminsFromEvent(UUID eventId, Set<UUID> userIds, UserPrincipal loggedInUserPrincipal) {
         Event event = this.getEventById(eventId);
-        User loggedInUser = this.userService.getUserById(userPrincipal.getUserId());
+        User loggedInUser = this.userService.getUserById(loggedInUserPrincipal.getUserId());
         Set<User> usersToRemove = this.userService.getUsersByIds(userIds);
 
         if (!this.canManageEvent(event, loggedInUser)) {

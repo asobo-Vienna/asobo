@@ -68,8 +68,8 @@ public class AccessControlService {
         }
     }
 
-    public void assertCanUpdateOrDeleteUser(User targetUser, User loggedInUser) {
-        if (!targetUser.getId().equals(loggedInUser.getId()) && !this.hasAdminRole(loggedInUser)) {
+    public void assertCanUpdateOrDeleteUser(UUID targetUserId, User loggedInUser) {
+        if (!targetUserId.equals(loggedInUser.getId()) && !this.hasAdminRole(loggedInUser)) {
             throw new UserNotAuthorizedException("You are not allowed to update or delete this user");
         }
     }

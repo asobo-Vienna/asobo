@@ -88,7 +88,7 @@ public class UserService {
         User loggedInUser = this.getUserById(loggedInPrincipal.getUserId());
         User targetUser = this.getUserById(targetUserId);
 
-        this.accessControlService.assertCanUpdateOrDeleteUser(targetUser, loggedInUser);
+        this.accessControlService.assertCanUpdateOrDeleteUser(targetUserId, loggedInUser);
 
         boolean usernameChanged = userUpdateDTO.getUsername() != null
                 && !userUpdateDTO.getUsername().equals(targetUser.getUsername());
@@ -128,7 +128,7 @@ public class UserService {
         User loggedInUser = this.getUserById(userPrincipal.getUserId());
         User userToDelete = this.getUserById(userToDeleteId);
 
-        this.accessControlService.assertCanUpdateOrDeleteUser(userToDelete, loggedInUser);
+        this.accessControlService.assertCanUpdateOrDeleteUser(userToDeleteId, loggedInUser);
 
         if (userToDelete.getPictureURI() != null) {
             this.fileStorageService.delete(userToDelete.getPictureURI());
