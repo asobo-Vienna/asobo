@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import org.hibernate.annotations.CreationTimestamp;
+
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -51,6 +52,10 @@ public class User {
     @JsonIgnore
     private List<UserComment> comments;
 
+    @OneToMany(mappedBy = "creator")
+    @JsonIgnore
+    private List<Medium> media;
+
     @Column(length = 4096)
     private String pictureURI;
 
@@ -77,10 +82,11 @@ public class User {
         this.attendedEvents = new ArrayList<>();
         this.administeredEvents = new ArrayList<>();
         this.comments = new ArrayList<>();
+        this.media = new ArrayList<>();
     }
 
     public String getLocation() {
-        return location;
+        return this.location;
     }
 
     public void setLocation(String location) {
@@ -88,7 +94,7 @@ public class User {
     }
 
     public String getEmail() {
-        return email;
+        return this.email;
     }
 
     public void setEmail(String email) {
@@ -96,7 +102,7 @@ public class User {
     }
 
     public String getUsername() {
-        return username;
+        return this.username;
     }
 
     public void setUsername(String username) {
@@ -104,7 +110,7 @@ public class User {
     }
 
     public String getFirstName() {
-        return firstName;
+        return this.firstName;
     }
 
     public void setFirstName(String firstName) {
@@ -112,7 +118,7 @@ public class User {
     }
 
     public String getSurname() {
-        return surname;
+        return this.surname;
     }
 
     public void setSurname(String surname) {
@@ -120,7 +126,7 @@ public class User {
     }
 
     public String getPassword() {
-        return password;
+        return this.password;
     }
 
     public void setPassword(String password) {
@@ -128,7 +134,7 @@ public class User {
     }
 
     public String getOldPassword() {
-        return oldPassword;
+        return this.oldPassword;
     }
 
     public void setOldPassword(String oldPassword) {
@@ -144,7 +150,7 @@ public class User {
     }
 
     public String getPictureURI() {
-        return pictureURI;
+        return this.pictureURI;
     }
 
     public void setPictureURI(String pictureURI) {
@@ -200,7 +206,7 @@ public class User {
     }
 
     public List<Event> getAdministeredEvents() {
-        return administeredEvents;
+        return this.administeredEvents;
     }
 
     public void setAdministeredEvents(List<Event> administeredEvents) {
@@ -216,11 +222,19 @@ public class User {
     }
 
     public Set<Role> getRoles() {
-        return roles != null ? roles : new HashSet<>();
+        return this.roles != null ? this.roles : new HashSet<>();
     }
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
+    }
+
+    public List<Medium> getMedia() {
+        return this.media;
+    }
+
+    public void setMedia(List<Medium> media) {
+        this.media = media;
     }
 
     @Override

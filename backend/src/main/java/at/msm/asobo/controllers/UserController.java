@@ -29,16 +29,13 @@ public class UserController {
     // /{id} and /{username} lead to ambiguity
     @GetMapping(value = "/id/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public UserPublicDTO getUserById(
-            @PathVariable UUID id,
-            @AuthenticationPrincipal UserPrincipal userPrincipal
-    ) {
+            @PathVariable UUID id) {
         return this.userService.getUserDTOById(id);
     }
 
     @GetMapping("/{username}")
     public UserPublicDTO getUserByUsername(
-            @PathVariable String username,
-            @AuthenticationPrincipal UserPrincipal userPrincipal) {
+            @PathVariable String username) {
 
         return this.userService.getUserByUsername(username);
     }
@@ -49,7 +46,7 @@ public class UserController {
             @RequestBody @Valid UserUpdateDTO userUpdateDTO,
             @AuthenticationPrincipal UserPrincipal loggedInUser) {
 
-        return this.userService.updateUserById(id, loggedInUser.getUserId(), userUpdateDTO);
+        return this.userService.updateUserById(id, loggedInUser, userUpdateDTO);
     }
 
     @PatchMapping("/{id}/profile-picture")
@@ -61,12 +58,12 @@ public class UserController {
         UserUpdateDTO userUpdateDTO = new UserUpdateDTO();
         userUpdateDTO.setProfilePicture(profilePicture);
 
-        return this.userService.updateUserById(id, loggedInUser.getUserId(), userUpdateDTO);
+        return this.userService.updateUserById(id, loggedInUser, userUpdateDTO);
     }
 
     @DeleteMapping("/{userId}")
     public UserPublicDTO deleteUser(@PathVariable UUID userId,
                                     @AuthenticationPrincipal UserPrincipal loggedInUser) {
-        return this.userService.deleteUserById(userId, loggedInUser.getUserId());
+        return this.userService.deleteUserById(userId, loggedInUser);
     }
 }

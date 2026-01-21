@@ -118,12 +118,12 @@ public class EventController {
     public EventDTO updateEventById(@PathVariable UUID id,
                                     @RequestBody @Valid EventUpdateDTO eventUpdateDTO,
                                     @AuthenticationPrincipal UserPrincipal loggedInUser) {
-        return this.eventService.updateEventById(id, loggedInUser.getUserId(), eventUpdateDTO);
+        return this.eventService.updateEventById(id, loggedInUser, eventUpdateDTO);
     }
 
     @DeleteMapping("/{id}")
     public EventDTO deleteEventById(@PathVariable UUID id, @AuthenticationPrincipal UserPrincipal loggedInUser) {
-        return this.eventService.deleteEventById(id, loggedInUser.getUserId());
+        return this.eventService.deleteEventById(id, loggedInUser);
     }
 
     @PatchMapping("/{eventId}/addAdmins")
@@ -132,7 +132,7 @@ public class EventController {
     public EventDTO addEventAdmin(@PathVariable UUID eventId,
                                   @RequestBody Set<UUID> userIds,
                                   @AuthenticationPrincipal UserPrincipal loggedInUser) {
-        return eventAdminService.addAdminsToEvent(eventId, userIds, loggedInUser.getUserId());
+        return eventAdminService.addAdminsToEvent(eventId, userIds, loggedInUser);
     }
 
     @DeleteMapping("/{eventId}/removeAdmins")
@@ -141,6 +141,6 @@ public class EventController {
     public EventDTO removeEventAdmin(@PathVariable UUID eventId,
                                      @RequestBody Set<UUID> userIds,
                                      @AuthenticationPrincipal UserPrincipal loggedInUser) {
-        return eventAdminService.removeAdminsFromEvent(eventId, userIds, loggedInUser.getUserId());
+        return eventAdminService.removeAdminsFromEvent(eventId, userIds, loggedInUser);
     }
 }

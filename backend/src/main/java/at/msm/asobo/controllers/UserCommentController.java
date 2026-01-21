@@ -54,7 +54,7 @@ public class UserCommentController {
                 eventId,
                 commentId,
                 updatedCommentDTO,
-                loggedInUser.getUserId()
+                loggedInUser
         );
     }
 
@@ -67,7 +67,7 @@ public class UserCommentController {
         return this.userCommentService.deleteUserCommentByEventIdAndCommentId(
                 eventId,
                 commentId,
-                loggedInUser.getUserId()
+                loggedInUser
         );
     }
 }
