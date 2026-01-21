@@ -50,7 +50,8 @@ public class AccessControlService {
         }
     }
 
-    public void assertCanDeleteMedium(Medium medium, User user, Event event) {
+    public void assertCanDeleteMedium(Medium medium, User user) {
+        Event event = medium.getEvent();
         if (!medium.getCreator().getId().equals(user.getId()) && !event.getEventAdmins().contains(user) && !this.hasAdminRole(user)) {
             throw new UserNotAuthorizedException("You are not allowed to delete this media item");
         }
@@ -62,7 +63,8 @@ public class AccessControlService {
         }
     }
 
-    public void assertCanDeleteComment(UserComment comment, User user, Event event) {
+    public void assertCanDeleteComment(UserComment comment, User user) {
+        Event event = comment.getEvent();
         if (!comment.getAuthor().getId().equals(user.getId()) && !event.getEventAdmins().contains(user) && !this.hasAdminRole(user)) {
             throw new UserNotAuthorizedException("You are not allowed to delete this comment");
         }

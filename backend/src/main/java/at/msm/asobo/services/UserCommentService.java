@@ -95,12 +95,11 @@ public class UserCommentService {
 
 
     public UserCommentDTO deleteUserCommentByEventIdAndCommentId(UUID eventId, UUID commentId, UserPrincipal userPrincipal) {
-        Event event = eventService.getEventById(eventId);
         UserComment existingComment = userCommentRepository.findUserCommentByEventIdAndId(eventId, commentId)
                 .orElseThrow(() -> new UserCommentNotFoundException(commentId));
         User loggedInUser = this.userService.getUserById(userPrincipal.getUserId());
 
-        this.accessControlService.assertCanDeleteComment(existingComment, loggedInUser, event);
+        this.accessControlService.assertCanDeleteComment(existingComment, loggedInUser);
 
         UserCommentDTO commentToDelete = userCommentDTOUserCommentMapper.mapUserCommentToUserCommentDTO(existingComment);
         this.userCommentRepository.delete(existingComment);

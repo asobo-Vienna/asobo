@@ -89,10 +89,9 @@ public class MediumService {
                                       UserPrincipal userPrincipal) {
 
         Medium mediumToDelete = this.getMediumByIdAndEventId(mediumId, eventId);
-        Event event = this.eventService.getEventById(eventId);
         User loggedInUser = this.userService.getUserById(userPrincipal.getUserId());
 
-        this.accessControlService.assertCanDeleteMedium(mediumToDelete, loggedInUser, event);
+        this.accessControlService.assertCanDeleteMedium(mediumToDelete, loggedInUser);
 
         this.fileStorageService.delete(mediumToDelete.getMediumURI());
         mediumRepository.delete(mediumToDelete);
