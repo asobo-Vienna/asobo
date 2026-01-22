@@ -18,7 +18,7 @@ public interface MediumRepository extends JpaRepository<Medium, UUID> {
 
     List<Medium> findMediaByEventId(UUID eventId);
 
-    Optional<Medium> findMediumByEventIdAndId(UUID eventId, UUID mediumId);
+    Optional<Medium> findMediumByIdAndEventId(UUID mediumId, UUID eventId);
 
     @Query("SELECT m FROM Medium m JOIN FETCH m.event")
     Page<Medium> findAllPageable(Pageable pageable);

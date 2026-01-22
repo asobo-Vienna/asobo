@@ -10,8 +10,10 @@ import at.msm.asobo.exceptions.users.UserNotAuthorizedException;
 import at.msm.asobo.security.CustomUserDetailsService;
 import at.msm.asobo.security.JwtUtil;
 import at.msm.asobo.security.RestAuthenticationEntryPoint;
+import at.msm.asobo.security.UserPrincipal;
+import at.msm.asobo.services.EventAdminService;
 import at.msm.asobo.services.EventService;
-import at.msm.asobo.services.UserPrivilegeService;
+import at.msm.asobo.services.AccessControlService;
 import at.msm.asobo.utils.MockAuthenticationFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -61,6 +63,9 @@ class EventControllerTest {
     private EventService eventService;
 
     @MockitoBean
+    private EventAdminService eventAdminService;
+
+    @MockitoBean
     private FileStorageProperties fileStorageProperties;
 
     @MockitoBean
@@ -70,7 +75,7 @@ class EventControllerTest {
     private CustomUserDetailsService customUserDetailsService;
 
     @MockitoBean
-    private UserPrivilegeService userPrivilegeService;
+    private AccessControlService accessControlService;
 
     private final String EVENTS_URL = "/api/events";
     private final String EVENTS_PAGINATED_URL = "/api/events/paginated";
@@ -290,7 +295,7 @@ class EventControllerTest {
     void createEvent_WithValidRole_ReturnsCreatedEvent(String role) throws Exception {
         EventCreationDTO eventCreationDTO = new EventCreationDTO();
         eventCreationDTO.setTitle("Test Title");
-        eventCreationDTO.setCreationDate(LocalDateTime.now());
+        eventCreationDTO.setCreationDate(LocalDateTime.now().plusMinutes(1));
         eventCreationDTO.setDescription("Test Description");
         eventCreationDTO.setLocation("Test Location");
 
@@ -324,7 +329,7 @@ class EventControllerTest {
         mockMvc.perform(post(EVENTS_URL)
                         .param("title", "Test")
                         .param("description", "Test")
-                        .param("date", LocalDateTime.now().toString())
+                        .param("date", LocalDateTime.now().plusMinutes(1).toString())
                         .param("location", "Test")
                         .with(csrf()))
                 .andExpect(status().isForbidden());
@@ -339,7 +344,7 @@ class EventControllerTest {
         String inputJson = objectMapper.writeValueAsString(eventUpdateDTO);
         String expectedJson = objectMapper.writeValueAsString(eventDTO);
 
-        when(eventService.updateEventById(eq(eventId), eq(userId), any(EventUpdateDTO.class))).thenReturn(eventDTO);
+        when(eventService.updateEventById(eq(eventId), any(UserPrincipal.class), any(EventUpdateDTO.class))).thenReturn(eventDTO);
 
         mockMvc.perform(patch(SINGLE_EVENT_URL, eventId)
                         .with(authentication(MockAuthenticationFactory
@@ -351,7 +356,7 @@ class EventControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().string(expectedJson));
 
-        verify(eventService).updateEventById(eq(eventId), eq(userId), any(EventUpdateDTO.class));
+        verify(eventService).updateEventById(eq(eventId), any(UserPrincipal.class), any(EventUpdateDTO.class));
     }
 
     @Test
@@ -360,7 +365,7 @@ class EventControllerTest {
 
         String inputJson = objectMapper.writeValueAsString(eventUpdateDTO);
 
-        when(eventService.updateEventById(eq(eventId), eq(userId), any(EventUpdateDTO.class)))
+        when(eventService.updateEventById(eq(eventId), any(UserPrincipal.class), any(EventUpdateDTO.class)))
                 .thenThrow(new UserNotAuthorizedException("You are not authorized to update this event"));
 
         mockMvc.perform(patch(SINGLE_EVENT_URL, eventId)
@@ -371,39 +376,39 @@ class EventControllerTest {
                         .with(csrf()))
                 .andExpect(status().isForbidden());
 
-        verify(eventService).updateEventById(eq(eventId), eq(userId), any());
+        verify(eventService).updateEventById(eq(eventId), any(UserPrincipal.class), any());
     }
 
     @ParameterizedTest
     @ValueSource(strings = {"ADMIN", "SUPERADMIN"})
     void deleteEventById_WithAdminRole_DeletesEvent(String role) throws Exception {
-        when(eventService.deleteEventById(eventId, userId)).thenReturn(eventDTO);
+        when(eventService.deleteEventById(any(UUID.class), any(UserPrincipal.class))).thenReturn(eventDTO);
 
         mockMvc.perform(delete(SINGLE_EVENT_URL, eventId)
                 .with(authentication(MockAuthenticationFactory
                         .mockAuth(userId, "testuser", "testuser@test.com", role))))
                 .andExpect(status().isOk());
 
-        verify(eventService).deleteEventById(eventId, userId);
+        verify(eventService).deleteEventById(any(UUID.class), any(UserPrincipal.class));
     }
 
     @Test
     @WithMockUser(roles = "USER")
     void deleteEventById_withCreatorUser_DeletesEvent() throws Exception {
-        when(eventService.deleteEventById(eventId, userId)).thenReturn(eventDTO);
+        when(eventService.deleteEventById(any(UUID.class), any(UserPrincipal.class))).thenReturn(eventDTO);
 
         mockMvc.perform(delete(SINGLE_EVENT_URL, eventId)
                         .with(authentication(MockAuthenticationFactory
                                 .mockAuth(userId, "testuser", "testuser@test.com"))))
                 .andExpect(status().isOk());
 
-        verify(eventService).deleteEventById(eventId, userId);
+        verify(eventService).deleteEventById(any(UUID.class), any(UserPrincipal.class));
     }
 
     @Test
     @WithMockUser(roles = "USER")
     void deleteEventById_withoutCreatorUser_ReturnsForbidden() throws Exception {
-        when(eventService.deleteEventById(eventId, userId))
+        when(eventService.deleteEventById(eq(eventId), any(UserPrincipal.class)))
                 .thenThrow(new UserNotAuthorizedException("You are not authorized to delete this event"));
 
         mockMvc.perform(delete(SINGLE_EVENT_URL, eventId)
@@ -411,7 +416,7 @@ class EventControllerTest {
                                 .mockAuth(userId, "testuser", "testuser@test.com"))))
                 .andExpect(status().isForbidden());
 
-        verify(eventService).deleteEventById(eventId, userId);
+        verify(eventService).deleteEventById(eq(eventId), any(UserPrincipal.class));
     }
 
     @Test

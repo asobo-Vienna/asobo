@@ -55,6 +55,7 @@ class AdminControllerTest {
     private CustomUserDetailsService customUserDetailsService;
 
     private static final String USERS_URL = "/api/admin/users";
+    private static final String USERS_PAGINATED_URL = "/api/admin/users/paginated";
     private static final String COMMENTS_URL = "/api/admin/comments";
     private static final String MEDIA_URL = "/api/admin/media";
 
@@ -88,7 +89,7 @@ class AdminControllerTest {
 
         when(adminService.getAllUsersPaginated(any(Pageable.class))).thenReturn(userPage);
 
-        mockMvc.perform(get(USERS_URL)
+        mockMvc.perform(get(USERS_PAGINATED_URL)
                         .with(user("testadmin").roles(role))
                         .param("page", "0")
                         .param("size", "10"))

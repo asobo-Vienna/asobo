@@ -5,7 +5,6 @@ import at.msm.asobo.dto.auth.LoginResponseDTO;
 import at.msm.asobo.dto.user.*;
 import at.msm.asobo.entities.User;
 import at.msm.asobo.exceptions.files.InvalidFileUploadException;
-import at.msm.asobo.exceptions.users.UserNotAuthorizedException;
 import at.msm.asobo.exceptions.users.UserNotFoundException;
 import at.msm.asobo.mappers.UserDTOUserMapper;
 import at.msm.asobo.repositories.UserRepository;
@@ -35,7 +34,7 @@ public class UserService {
     private final PasswordService passwordService;
     private final JwtUtil jwtUtil;
     private final MultipartProperties multipartProperties;
-    private final UserPrivilegeService userPrivilegeService;
+    private final AccessControlService accessControlService;
 
     public UserService(UserRepository userRepository,
                        UserDTOUserMapper userDTOUserMapper,
@@ -44,7 +43,7 @@ public class UserService {
                        PasswordService passwordService,
                        JwtUtil jwtUtil,
                        MultipartProperties multipartProperties,
-                       UserPrivilegeService userPrivilegeService
+                       AccessControlService accessControlService
     ) {
         this.userRepository = userRepository;
         this.userDTOUserMapper = userDTOUserMapper;
@@ -53,7 +52,7 @@ public class UserService {
         this.passwordService = passwordService;
         this.jwtUtil = jwtUtil;
         this.multipartProperties = multipartProperties;
-        this.userPrivilegeService = userPrivilegeService;
+        this.accessControlService = accessControlService;
     }
 
     public User getUserById(UUID id) {
@@ -85,28 +84,26 @@ public class UserService {
         return this.userRepository.save(user);
     }
 
-    public LoginResponseDTO updateUserById(UUID targetUserId, UUID loggedInUserId, UserUpdateDTO userUpdateDTO) {
-        User existingUser = this.getUserById(targetUserId);
-        boolean canUpdateUser = userPrivilegeService.canUpdateEntity(targetUserId, loggedInUserId);
+    public LoginResponseDTO updateUserById(UUID targetUserId, UserPrincipal loggedInPrincipal, UserUpdateDTO userUpdateDTO) {
+        User loggedInUser = this.getUserById(loggedInPrincipal.getUserId());
+        User targetUser = this.getUserById(targetUserId);
 
-        if (!canUpdateUser) {
-            throw new UserNotAuthorizedException("You are not authorized to update this profile");
-        }
+        this.accessControlService.assertCanUpdateOrDeleteUser(targetUserId, loggedInUser);
 
         boolean usernameChanged = userUpdateDTO.getUsername() != null
-                && !userUpdateDTO.getUsername().equals(existingUser.getUsername());
+                && !userUpdateDTO.getUsername().equals(targetUser.getUsername());
 
-        PatchUtils.copyNonNullProperties(userUpdateDTO, existingUser, "profilePicture", "password", "isActive");
+        PatchUtils.copyNonNullProperties(userUpdateDTO, targetUser, "profilePicture", "password", "isActive");
 
         if(userUpdateDTO.getPassword() != null) {
             this.passwordService.validatePasswordFormat(userUpdateDTO.getPassword());
             String hashedPassword = this.passwordService.hashPassword(userUpdateDTO.getPassword());
-            existingUser.setPassword(hashedPassword);
+            targetUser.setPassword(hashedPassword);
         }
 
-        this.handleProfilePictureUpdate(userUpdateDTO.getProfilePicture(), existingUser);
+        this.handleProfilePictureUpdate(userUpdateDTO.getProfilePicture(), targetUser);
 
-        User updatedUser = this.userRepository.save(existingUser);
+        User updatedUser = this.userRepository.save(targetUser);
 
         if (usernameChanged) {
             UserPrincipal userPrincipal = new UserPrincipal(
@@ -127,12 +124,11 @@ public class UserService {
         return new LoginResponseDTO(null, this.userDTOUserMapper.mapUserToUserPublicDTO(updatedUser));
     }
 
-    public UserPublicDTO deleteUserById(UUID userToDeleteId, UUID loggedInUserId) {
-        if (!this.userPrivilegeService.canUpdateEntity(userToDeleteId, loggedInUserId)) {
-            throw new UserNotAuthorizedException("You are not authorized to delete this user");
-        }
-
+    public UserPublicDTO deleteUserById(UUID userToDeleteId, UserPrincipal userPrincipal) {
+        User loggedInUser = this.getUserById(userPrincipal.getUserId());
         User userToDelete = this.getUserById(userToDeleteId);
+
+        this.accessControlService.assertCanUpdateOrDeleteUser(userToDeleteId, loggedInUser);
 
         if (userToDelete.getPictureURI() != null) {
             this.fileStorageService.delete(userToDelete.getPictureURI());

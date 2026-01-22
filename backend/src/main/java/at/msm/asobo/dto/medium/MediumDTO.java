@@ -1,11 +1,14 @@
 package at.msm.asobo.dto.medium;
 
+import at.msm.asobo.dto.user.UserPublicDTO;
+
 import java.util.UUID;
 
 public class MediumDTO {
     private UUID id;
     private UUID eventId;
     private String mediumURI;
+    private UserPublicDTO creator;
 
     public MediumDTO() {
     }
@@ -15,7 +18,7 @@ public class MediumDTO {
     }
 
     public UUID getEventId() {
-        return eventId;
+        return this.eventId;
     }
 
     public void setEventId(UUID eventId) {
@@ -32,6 +35,14 @@ public class MediumDTO {
 
     public String getMediumURI() {
         return this.mediumURI;
+    }
+
+    public UserPublicDTO getCreator() {
+        return this.creator;
+    }
+
+    public void setCreator(UserPublicDTO creator) {
+        this.creator = creator;
     }
 }
 

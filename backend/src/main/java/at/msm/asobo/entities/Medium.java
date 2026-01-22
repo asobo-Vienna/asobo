@@ -16,6 +16,11 @@ public class Medium {
     @Column(length = 4096)
     private String mediumURI;
 
+    @NotNull(message = "Creator is mandatory for creating media item")
+    @ManyToOne
+    @JoinColumn(name = "creator_id")
+    private User creator;
+
     @ManyToOne
     @JoinColumn(name = "event_id")
     private Event event;
@@ -45,5 +50,13 @@ public class Medium {
 
     public void setEvent(Event event) {
         this.event = event;
+    }
+
+    public User getCreator() {
+        return this.creator;
+    }
+
+    public void setCreator(User creator) {
+        this.creator = creator;
     }
 }
