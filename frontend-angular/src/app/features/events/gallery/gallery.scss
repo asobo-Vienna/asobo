@@ -79,6 +79,13 @@
   object-fit: contain;
 }
 
+.p-button .p-icon {
+  color: white;
+}
+
+.p-button-text.p-button-secondary:not(:disabled):hover .p-icon {
+   color: $asobo-purple;
+}
 
 .p-carousel-indicator-list .p-carousel-indicator-button {
   background-color: $asobo-light-gray !important;
