@@ -49,7 +49,7 @@ CREATE TABLE IF NOT EXISTS "event" (
 	creator_id uuid NULL,
 	id uuid NOT NULL,
 	pictureuri varchar(4096) NULL,
-	description varchar(255) NOT NULL,
+	description varchar(500) NOT NULL,
 	"location" varchar(255) NOT NULL,
 	title varchar(255) NOT NULL,
 	is_private bool DEFAULT true NULL,
