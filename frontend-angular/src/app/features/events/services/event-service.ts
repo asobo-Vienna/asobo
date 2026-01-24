@@ -41,12 +41,12 @@ export class EventService {
     return this.http.get<EventSummary[]>(`${environment.eventsEndpoint}?userId=${userId}&isPrivate=${false}`)
   }
 
-  public createNewEvent(eventData: Partial<Event>): Observable<Event> {
-    return this.http.post<Event>(environment.eventsEndpoint, eventData);
-  }
-
   public getEventById(id: string): Observable<Event> {
     return this.http.get<Event>(`${environment.eventsEndpoint}/${id}`);
+  }
+
+  public createNewEvent(eventData: Partial<Event>): Observable<Event> {
+    return this.http.post<Event>(environment.eventsEndpoint, eventData);
   }
 
   public uploadEventPicture(eventId: string, formData: FormData): Observable<Event> {

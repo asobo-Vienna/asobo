@@ -68,7 +68,7 @@ CREATE TABLE IF NOT EXISTS event_event_admins (
 	administered_events_id uuid NOT NULL,
 	event_admins_id uuid NOT NULL,
 	CONSTRAINT fk536isow46vbmofdyrws7rqiiy FOREIGN KEY (event_admins_id) REFERENCES public.users(id),
-	CONSTRAINT fkku49a4jkyexfeh22eelp24ll7 FOREIGN KEY (administered_events_id) REFERENCES public."event"(id)
+	CONSTRAINT fkku49a4jkyexfeh22eelp24ll7 FOREIGN KEY (administered_events_id) REFERENCES public."event"(id) ON DELETE CASCADE
 );
 
 

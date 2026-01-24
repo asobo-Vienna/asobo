@@ -51,7 +51,7 @@ export class EventDetailPage {
   location!: string;
   description?: string;
   isPrivate!: boolean;
-  
+
   comments = signal<List<Comment>>(new List<Comment>());
   participants = signal<List<Participant>>(new List<Participant>());
   mediaItems = signal<List<MediaItem>>(new List<MediaItem>());
@@ -70,7 +70,7 @@ export class EventDetailPage {
     }
   }
 
-  loadEvent(eventId: string): Observable<Event> {
+  public loadEvent(eventId: string): Observable<Event> {
     return this.eventService.getEventById(eventId);
   }
 
@@ -103,7 +103,7 @@ export class EventDetailPage {
   }
 
 
-  onCommentCreated(comment: Comment) {
+  public onCommentCreated(comment: Comment) {
     if (this.currentUser === null) {
       return;
     }
@@ -114,7 +114,7 @@ export class EventDetailPage {
   }
 
 
-  deleteComment(comment: Comment) {
+  public deleteComment(comment: Comment) {
     this.commentService.delete(comment).subscribe({
       next: () => {
         this.comments().remove(comment);
@@ -126,7 +126,7 @@ export class EventDetailPage {
   }
 
 
-  editComment(comment: Comment) {
+  public editComment(comment: Comment) {
     this.commentService.edit(comment).subscribe({
       next: (updatedComment) => {
         const index = this.comments().findIndex(updatedComment, LambdaFunctions.compareById);
@@ -141,7 +141,7 @@ export class EventDetailPage {
   }
 
 
-  uploadMedia(file: File) {
+  public uploadMedia(file: File) {
     this.mediaService.upload(this.id, file).subscribe({
       next: (mediaItem) => this.mediaItems().add(mediaItem),
       error: (err) => console.error('Failed to upload media!', err)
@@ -149,7 +149,7 @@ export class EventDetailPage {
   }
 
 
-  deleteMedia(item: MediaItem) {
+  public deleteMedia(item: MediaItem) {
     this.mediaItems().remove(item);       // remove immediately
     this.mediaService.delete(this.id, item).subscribe({
       error: (err) => {
@@ -160,7 +160,7 @@ export class EventDetailPage {
   }
 
 
-  joinOrLeaveEvent() {
+  public joinOrLeaveEvent() {
     if (!this.currentUser) {
       return;
     }
