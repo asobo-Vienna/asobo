@@ -7,7 +7,7 @@ import at.msm.asobo.security.CustomUserDetailsService;
 import at.msm.asobo.security.JwtUtil;
 import at.msm.asobo.security.RestAuthenticationEntryPoint;
 import at.msm.asobo.security.UserPrincipal;
-import at.msm.asobo.services.ParticipantService;
+import at.msm.asobo.services.events.ParticipantService;
 import at.msm.asobo.utils.MockAuthenticationFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;

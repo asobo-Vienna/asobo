@@ -249,7 +249,7 @@ export class AdminUserList implements OnInit {
     this.clearCache();
   }
 
-  onDelete(user: any) {
+  onDelete(user: User) {
     console.log('Deleting user:', user);
     this.clearCache();
   }

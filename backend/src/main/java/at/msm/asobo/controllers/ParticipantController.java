@@ -2,8 +2,7 @@ package at.msm.asobo.controllers;
 
 import at.msm.asobo.dto.user.UserPublicDTO;
 import at.msm.asobo.security.UserPrincipal;
-import at.msm.asobo.services.ParticipantService;
-import jakarta.validation.Valid;
+import at.msm.asobo.services.events.ParticipantService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;

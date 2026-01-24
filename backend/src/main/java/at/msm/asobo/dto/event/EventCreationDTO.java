@@ -24,8 +24,6 @@ public class EventCreationDTO {
     @NotBlank(message = "Description is mandatory for event creation")
     private String description;
 
-    private MultipartFile eventPicture;
-
     @NotBlank(message = "Location is mandatory for event creation")
     private String location;
 
@@ -149,14 +147,6 @@ public class EventCreationDTO {
 
     public void setMedia(List<MediumDTO> media) {
         this.media = media;
-    }
-
-    public MultipartFile getEventPicture() {
-        return this.eventPicture;
-    }
-
-    public void setEventPicture(MultipartFile eventPicture) {
-        this.eventPicture = eventPicture;
     }
 
     public Set<UserPublicDTO> getEventAdmins() {

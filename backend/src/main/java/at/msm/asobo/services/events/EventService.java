@@ -1,4 +1,4 @@
-package at.msm.asobo.services;
+package at.msm.asobo.services.events;
 
 import at.msm.asobo.config.FileStorageProperties;
 import at.msm.asobo.dto.event.EventCreationDTO;
@@ -12,7 +12,9 @@ import at.msm.asobo.exceptions.users.UserNotAuthorizedException;
 import at.msm.asobo.mappers.*;
 import at.msm.asobo.repositories.EventRepository;
 import at.msm.asobo.security.UserPrincipal;
+import at.msm.asobo.services.UserService;
 import at.msm.asobo.services.files.FileStorageService;
+import at.msm.asobo.services.files.FileValidationService;
 import at.msm.asobo.utils.PatchUtils;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
@@ -32,6 +34,7 @@ public class EventService {
     private final EventRepository eventRepository;
     private final UserService userService;
     private final FileStorageService fileStorageService;
+    private final FileValidationService fileValidationService;
     private final EventAdminService eventAdminService;
     private final FileStorageProperties fileStorageProperties;
     private final EventDTOEventMapper eventDTOEventMapper;
@@ -41,6 +44,7 @@ public class EventService {
             EventRepository eventRepository,
             UserService userService,
             FileStorageService fileStorageService,
+            FileValidationService fileValidationService,
             EventAdminService eventAdminService,
             FileStorageProperties fileStorageProperties,
             EventDTOEventMapper eventDTOEventMapper,
@@ -48,6 +52,7 @@ public class EventService {
         this.eventRepository = eventRepository;
         this.userService = userService;
         this.fileStorageService = fileStorageService;
+        this.fileValidationService = fileValidationService;
         this.eventAdminService = eventAdminService;
         this.fileStorageProperties = fileStorageProperties;
         this.eventDTOEventMapper = eventDTOEventMapper;
@@ -131,11 +136,6 @@ public class EventService {
 
         Event newEvent = this.eventDTOEventMapper.mapEventCreationDTOToEvent(eventCreationDTO);
 
-        if (eventCreationDTO.getEventPicture() != null && !eventCreationDTO.getEventPicture().isEmpty()) {
-            String fileURI = fileStorageService.store(eventCreationDTO.getEventPicture(), this.fileStorageProperties.getEventCoverPictureSubfolder());
-            newEvent.setPictureURI(fileURI);
-        }
-
         Event savedEvent = this.eventRepository.save(newEvent);
         return this.eventDTOEventMapper.mapEventToEventDTO(savedEvent);
     }
@@ -184,19 +184,30 @@ public class EventService {
 
         PatchUtils.copyNonNullProperties(eventUpdateDTO, existingEvent, "picture", "participants");
 
+        this.handleEventPictureUpdate(eventUpdateDTO.getPicture(), existingEvent);
+
         if (eventUpdateDTO.getParticipants() != null) {
             existingEvent.setParticipants(
                     this.userDTOUserMapper.mapUserPublicDTOsToUsers(eventUpdateDTO.getParticipants())
             );
         }
 
-        MultipartFile picture = eventUpdateDTO.getPicture();
-        if (picture != null && !picture.isEmpty()) {
-            String pictureURI = this.fileStorageService.store(picture, this.fileStorageProperties.getEventCoverPictureSubfolder());
-            existingEvent.setPictureURI(pictureURI);
-        }
-
         Event savedEvent = this.eventRepository.save(existingEvent);
         return this.eventDTOEventMapper.mapEventToEventDTO(savedEvent);
+    }
+
+    private void handleEventPictureUpdate(MultipartFile picture, Event event) {
+        if (picture == null || picture.isEmpty()) {
+            return;
+        }
+
+        this.fileValidationService.validateImage(picture);
+
+        if (event.getPictureURI() != null) {
+            this.fileStorageService.delete(event.getPictureURI());
+        }
+
+        String pictureURI = this.fileStorageService.store(picture, this.fileStorageProperties.getEventCoverPictureSubfolder());
+        event.setPictureURI(pictureURI);
     }
 }
