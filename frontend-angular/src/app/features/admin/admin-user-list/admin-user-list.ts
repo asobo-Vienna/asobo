@@ -13,6 +13,7 @@ import {Role} from '../../../shared/entities/role';
 import {RoleEnum} from '../../../shared/enums/role-enum';
 import {Chip} from 'primeng/chip';
 import {UserRoles} from '../../../shared/entities/user-roles';
+import {LambdaFunctions} from '../../../shared/utils/lambda-functions';
 
 @Component({
   selector: 'app-admin-user-list',
@@ -251,6 +252,15 @@ export class AdminUserList implements OnInit {
 
   onDelete(user: User) {
     console.log('Deleting user:', user);
+    this.adminService.deleteUserById(user.id).subscribe({
+      next: () => {
+        this.users.update(currentUsers =>
+          LambdaFunctions.removeById(currentUsers, user.id)
+        );
+      },
+      error: (err) => console.log('Error deleting user:', err),
+    });
+
     this.clearCache();
   }
 
