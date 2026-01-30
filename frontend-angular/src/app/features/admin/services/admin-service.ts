@@ -51,6 +51,6 @@ export class AdminService {
   }
 
   public deleteUserById(userId: string): Observable<User> {
-    return this.http.delete<User>(`${environment.apiBaseUrl}/admin/users/${userId}`);
+    return this.http.delete<User>(`${environment.apiBaseUrl}/users/${userId}`);
   }
 }
