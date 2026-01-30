@@ -79,8 +79,21 @@
   object-fit: contain;
 }
 
-.p-carousel .p-carousel-prev-button .p-icon,
-.p-carousel .p-carousel-next-button .p-icon {
-  color: rgba(255, 255, 255, 0.7);
-  height: 2rem;
+.p-button .p-icon {
+  color: white;
 }
+
+.p-button-text.p-button-secondary:not(:disabled):hover .p-icon {
+   color: $asobo-purple;
+}
+
+.p-carousel-indicator-list .p-carousel-indicator-button {
+  background-color: $asobo-light-gray !important;
+}
+
+.p-carousel-indicator-active .p-carousel-indicator-button {
+  background-color: $asobo-purple !important;
+}
+
+
+
