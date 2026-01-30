@@ -87,7 +87,6 @@ export class CreateEventForm {
       },
       error: (err) => {
         console.log('Error uploading event picture', err);
-        this.router.navigate(['/events', eventId]);
       }
     });
   }
