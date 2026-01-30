@@ -33,7 +33,7 @@ export class CreateEventForm {
 
   constructor() {
     const today = new Date();
-    today.setMinutes(today.getMinutes() + 15);
+    today.setMinutes(today.getMinutes() + 30);
 
     this.createEventForm = this.formBuilder.group({
       title: ['', [Validators.required, Validators.minLength(environment.minEventTitleLength), Validators.maxLength(environment.maxEventTitleLength)]],
