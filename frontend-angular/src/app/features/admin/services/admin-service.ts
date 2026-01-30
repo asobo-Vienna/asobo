@@ -50,4 +50,7 @@ export class AdminService {
     return this.http.get<PageResponse<MediaItemWithEventTitle>>(`${environment.apiBaseUrl}/admin/media`, { params});
   }
 
+  public deleteUserById(userId: string): Observable<User> {
+    return this.http.delete<User>(`${environment.apiBaseUrl}/users/${userId}`);
+  }
 }

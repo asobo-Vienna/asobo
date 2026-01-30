@@ -9,6 +9,7 @@ import at.msm.asobo.exceptions.MediumNotFoundException;
 import at.msm.asobo.mappers.MediumDTOMediumMapper;
 import at.msm.asobo.repositories.MediumRepository;
 import at.msm.asobo.security.UserPrincipal;
+import at.msm.asobo.services.events.EventService;
 import at.msm.asobo.services.files.FileStorageService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

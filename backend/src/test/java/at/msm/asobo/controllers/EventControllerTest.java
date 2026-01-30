@@ -11,8 +11,8 @@ import at.msm.asobo.security.CustomUserDetailsService;
 import at.msm.asobo.security.JwtUtil;
 import at.msm.asobo.security.RestAuthenticationEntryPoint;
 import at.msm.asobo.security.UserPrincipal;
-import at.msm.asobo.services.EventAdminService;
-import at.msm.asobo.services.EventService;
+import at.msm.asobo.services.events.EventAdminService;
+import at.msm.asobo.services.events.EventService;
 import at.msm.asobo.services.AccessControlService;
 import at.msm.asobo.utils.MockAuthenticationFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -86,6 +86,7 @@ class EventControllerTest {
     private EventSummaryDTO eventSummary2;
     private EventDTO eventDTO;
     private EventUpdateDTO eventUpdateDTO;
+    private EventCreationDTO eventCreationDTO;
 
     @TestConfiguration
     static class TestConfig {
@@ -110,6 +111,12 @@ class EventControllerTest {
         eventDTO.setId(eventId);
 
         eventUpdateDTO = new EventUpdateDTO();
+
+        eventCreationDTO = new EventCreationDTO();
+        eventCreationDTO.setTitle("Test Event");
+        eventCreationDTO.setDescription("Test Event");
+        eventCreationDTO.setLocation("Test Location");
+        eventCreationDTO.setDate(LocalDateTime.now().plusMinutes(30));
     }
 
     @Test
@@ -293,23 +300,15 @@ class EventControllerTest {
     @ParameterizedTest
     @ValueSource(strings = {"USER", "ADMIN", "SUPERADMIN"})
     void createEvent_WithValidRole_ReturnsCreatedEvent(String role) throws Exception {
-        EventCreationDTO eventCreationDTO = new EventCreationDTO();
-        eventCreationDTO.setTitle("Test Title");
-        eventCreationDTO.setCreationDate(LocalDateTime.now().plusMinutes(1));
-        eventCreationDTO.setDescription("Test Description");
-        eventCreationDTO.setLocation("Test Location");
-
         String expectedJson = objectMapper.writeValueAsString(eventDTO);
 
         when(eventService.addNewEvent(any(EventCreationDTO.class))).thenReturn(eventDTO);
 
         mockMvc.perform(multipart(EVENTS_URL)
                         .with(user("authenticateduser").roles(role))
-                        .param("title", eventCreationDTO.getTitle())
-                        .param("description", eventCreationDTO.getDescription())
-                        .param("date", eventCreationDTO.getCreationDate().toString())
-                        .param("location", eventCreationDTO.getLocation())
-                        .with(csrf()))
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(eventCreationDTO)))
                 .andExpect(status().isCreated())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().string(expectedJson));
@@ -327,11 +326,9 @@ class EventControllerTest {
     @WithMockUser(roles = "X")
     void createEvent_WithInsufficientRole_ReturnsForbidden() throws Exception {
         mockMvc.perform(post(EVENTS_URL)
-                        .param("title", "Test")
-                        .param("description", "Test")
-                        .param("date", LocalDateTime.now().plusMinutes(1).toString())
-                        .param("location", "Test")
-                        .with(csrf()))
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(eventCreationDTO)))
                 .andExpect(status().isForbidden());
     }
 

@@ -47,7 +47,7 @@ public class AuthService {
     }
 
     public LoginResponseDTO registerUser(UserRegisterDTO userRegisterDTO) {
-        validateUserRegistration(userRegisterDTO);
+        this.validateUserRegistration(userRegisterDTO);
 
         User newUser = this.userDTOUserMapper.mapUserRegisterDTOToUser(userRegisterDTO);
 

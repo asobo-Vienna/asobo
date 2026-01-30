@@ -4,9 +4,9 @@ import at.msm.asobo.dto.event.EventCreationDTO;
 import at.msm.asobo.dto.event.EventDTO;
 import at.msm.asobo.dto.event.EventSummaryDTO;
 import at.msm.asobo.security.UserPrincipal;
-import at.msm.asobo.services.EventAdminService;
+import at.msm.asobo.services.events.EventAdminService;
 import at.msm.asobo.dto.event.EventUpdateDTO;
-import at.msm.asobo.services.EventService;
+import at.msm.asobo.services.events.EventService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -23,6 +23,7 @@ import java.util.UUID;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 
@@ -105,8 +106,20 @@ public class EventController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasAnyRole('USER', 'ADMIN', 'SUPERADMIN')")
-    public EventDTO createEvent(@ModelAttribute @Valid EventCreationDTO eventCreationDTO) {
+    public EventDTO createEvent(@RequestBody @Valid EventCreationDTO eventCreationDTO) {
         return this.eventService.addNewEvent(eventCreationDTO);
+    }
+
+    @PatchMapping("/{id}/picture")
+    public EventDTO updateEventPicture(
+            @PathVariable UUID id,
+            @RequestParam("eventPicture") MultipartFile eventPicture,
+            @AuthenticationPrincipal UserPrincipal loggedInUser) {
+
+        EventUpdateDTO eventUpdateDTO = new EventUpdateDTO();
+        eventUpdateDTO.setPicture(eventPicture);
+
+        return this.eventService.updateEventById(id, loggedInUser, eventUpdateDTO);
     }
 
     @GetMapping("/{id}")

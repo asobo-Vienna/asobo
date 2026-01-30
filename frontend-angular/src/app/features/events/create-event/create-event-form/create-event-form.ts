@@ -32,44 +32,61 @@ export class CreateEventForm {
   selectedImage: File | null = null;
 
   constructor() {
+    const today = new Date();
+    today.setMinutes(today.getMinutes() + 30);
+
     this.createEventForm = this.formBuilder.group({
       title: ['', [Validators.required, Validators.minLength(environment.minEventTitleLength), Validators.maxLength(environment.maxEventTitleLength)]],
       description: ['', [Validators.required, Validators.minLength(environment.minEventDescriptionLength), Validators.maxLength(environment.maxEventDescriptionLength)]],
       location: ['', [Validators.required]],
-      date: [new Date(), [Validators.required, this.validateDate]],
+      date: [today, [Validators.required, this.validateDate]],
       isPrivate: [false]
     });
   }
 
   onSubmit() {
-    const formData = new FormData();
-    formData.append('title', this.createEventForm.value.title!);
-    formData.append('description', this.createEventForm.value.description!);
-    formData.append('location', this.createEventForm.value.location!);
+    if (!this.createEventForm.valid) {
+      console.log('Form is invalid, stopping event submission');
+      return;
+    }
 
-    const date: Date = this.createEventForm.value.date;
-    const isoLocal = DateUtils.toLocalISOString(date) // '2025-11-13T16:33:28'
-    formData.append('date', isoLocal);
-
-    const isPrivate = this.createEventForm.value.isPrivate;
-    formData.append('private', String(isPrivate));
+    const eventData = {
+      ...this.createEventForm.value,
+      date: DateUtils.toLocalISOString(this.createEventForm.value.date)
+    };
 
     const creator = this.authService.currentUser();
     if (creator) {
-      formData.append('creator.id', creator.id);
+      eventData.creator = { id: creator.id };
     }
 
-    if (this.selectedImage) {
-      formData.append('eventPicture', this.selectedImage);
-    }
-
-    this.eventService.createNewEvent(formData).subscribe({
+    this.eventService.createNewEvent(eventData).subscribe({
       next: (event) => {
-        alert(`Event ${event.title} created!`);
-        this.router.navigate(['/events', event.id]);
+        console.log(`Event ${event.title} created!`);
+
+        if (this.selectedImage) {
+          this.uploadEventPicture(event.id);
+        } else {
+          this.router.navigate(['/events', event.id]);
+        }
       },
       error: (err) => {
         console.log('Error creating new event', err);
+      }
+    });
+  }
+
+  private uploadEventPicture(eventId: string) {
+    const formData = new FormData();
+    formData.append('eventPicture', this.selectedImage!);
+
+    this.eventService.uploadEventPicture(eventId, formData).subscribe({
+      next: () => {
+        console.log('Event picture uploaded successfully!');
+        this.router.navigate(['/events', eventId]);
+      },
+      error: (err) => {
+        console.log('Error uploading event picture', err);
       }
     });
   }

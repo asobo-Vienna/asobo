@@ -3,9 +3,7 @@ package at.msm.asobo.dto.event;
 import at.msm.asobo.dto.user.UserPublicDTO;
 import org.springframework.web.multipart.MultipartFile;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 public class EventUpdateDTO {
@@ -18,9 +16,9 @@ public class EventUpdateDTO {
 
     private String location;
 
-    private LocalDateTime date;
-
     private boolean isPrivate;
+
+    private LocalDateTime date;
 
     private Set<UserPublicDTO> participants;
 

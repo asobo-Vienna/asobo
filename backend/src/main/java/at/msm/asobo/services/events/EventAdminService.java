@@ -1,4 +1,4 @@
-package at.msm.asobo.services;
+package at.msm.asobo.services.events;
 
 import at.msm.asobo.dto.event.EventDTO;
 import at.msm.asobo.dto.user.UserPublicDTO;
@@ -10,6 +10,8 @@ import at.msm.asobo.mappers.EventDTOEventMapper;
 import at.msm.asobo.mappers.UserDTOUserMapper;
 import at.msm.asobo.repositories.EventRepository;
 import at.msm.asobo.security.UserPrincipal;
+import at.msm.asobo.services.AccessControlService;
+import at.msm.asobo.services.UserService;
 import org.springframework.stereotype.Service;
 
 import java.util.Set;

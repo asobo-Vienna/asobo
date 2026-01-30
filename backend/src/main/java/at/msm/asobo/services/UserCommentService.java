@@ -8,6 +8,7 @@ import at.msm.asobo.exceptions.UserCommentNotFoundException;
 import at.msm.asobo.mappers.UserCommentDTOUserCommentMapper;
 import at.msm.asobo.repositories.UserCommentRepository;
 import at.msm.asobo.security.UserPrincipal;
+import at.msm.asobo.services.events.EventService;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
