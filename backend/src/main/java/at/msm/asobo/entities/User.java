@@ -9,7 +9,13 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 @Entity
-@Table(name="users")
+@Table(name="users", indexes = {
+        @Index(name = "idx_user_username", columnList = "username"),
+        @Index(name = "idx_user_first_name", columnList = "firstName"),
+        @Index(name = "idx_user_surname", columnList = "surname"),
+        @Index(name = "idx_user_email", columnList = "email"),
+        @Index(name = "idx_user_active", columnList = "isActive")
+})
 public class User {
 
     @Id

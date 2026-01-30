@@ -81,6 +81,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers(HttpMethod.GET,"/api/events/**").permitAll()
                 .requestMatchers("/api/users/**").hasAnyRole("USER", "ADMIN", "SUPERADMIN")
+                .requestMatchers("/api/search").permitAll()
                 .requestMatchers("/api/admin/**").hasAnyRole("ADMIN", "SUPERADMIN")
                 .requestMatchers("/uploads/**").permitAll()
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
