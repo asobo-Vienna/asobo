@@ -1,5 +1,5 @@
-import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import {Injectable, inject} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
 import {map, Observable} from 'rxjs';
 import {
   AutocompleteItem,
@@ -8,6 +8,7 @@ import {
   UserSearchResult
 } from '../../../shared/entities/search';
 import {environment} from '../../../../environments/environment';
+import {UrlUtilService} from '../../../shared/utils/url/url-util-service';
 
 @Injectable({
   providedIn: 'root',
@@ -23,11 +24,17 @@ export class SearchService {
           ...response.events.map((e: EventSearchResult) => ({
             ...e,
             name: e.title,
+            pictureURI: UrlUtilService.getMediaUrl(
+              e.pictureURI || '/uploads/event-cover-pictures/event-cover-default.svg'
+            ),
             type: 'EVENT' as const,
           })),
           ...response.users.map((u: UserSearchResult) => ({
             ...u,
             name: `${u.username} (${u.firstName} ${u.surname})`,
+            pictureURI: UrlUtilService.getMediaUrl(
+              u.pictureURI || '/uploads/profile-pictures/default.png'
+            ),
             type: 'USER' as const,
           })),
         ])

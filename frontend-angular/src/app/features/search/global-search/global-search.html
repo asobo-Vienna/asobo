@@ -17,11 +17,15 @@
       [inputStyleClass]="'form-control search-input'"
     >
       <ng-template let-item pTemplate="item">
-        <div class="flex align-items-center gap-2">
+        <div class="flex align-items-center gap-2 global-search-item-wrapper">
           <i [class]="item.type === 'EVENT' ? 'pi pi-calendar' : 'pi pi-user'"></i>
-          <div class="global-search-item-container">
-            <div class="font-bold">{{ item.name }}</div>
-            <div class="text-sm text-gray-500">{{ item.type }}</div>
+          <div class="global-search-item-container mt-1 mb-2">
+            <img class="search-result-img" [src]="item.pictureURI"
+                 alt="{{ item.type === 'EVENT' ? 'Event cover picture' : 'User profile picture' }}"/>
+            <div class="item-text-content">
+              <div class="font-bold">{{ item.name }}</div>
+              <div class="text-sm text-gray-500">{{ item.type }}</div>
+            </div>
           </div>
         </div>
       </ng-template>
