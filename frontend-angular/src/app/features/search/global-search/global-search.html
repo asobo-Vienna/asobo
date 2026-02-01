@@ -1,21 +1,34 @@
-<p-autoComplete
-  [formControl]="searchControl"
-  [suggestions]="searchResults"
-  field="name"
-  [dropdown]="true"
-  [minQueryLength]="2"
-  [showEmptyMessage]="true"
-  emptyMessage="No results found"
-  [forceSelection]="false"
-  (onSelect)="onSelect($event)"
->
-  <ng-template let-item pTemplate="item">
-    <div class="flex align-items-center gap-2">
-      <i [class]="item.type === 'EVENT' ? 'pi pi-calendar' : 'pi pi-user'"></i>
-      <div>
-        <div class="font-bold">{{ item.name }}</div>
-        <div class="text-sm text-gray-500">{{ item.type }}</div>
-      </div>
-    </div>
-  </ng-template>
-</p-autoComplete>
+<div class="search-bar d-flex align-items-center me-auto">
+  <div class="search-div d-flex w-100 position-relative">
+    <p-autoComplete
+      [formControl]="searchControl"
+      [suggestions]="searchResults"
+      (completeMethod)="search($event)"
+      field="name"
+      optionLabel="name"
+      [dropdown]="false"
+      [minQueryLength]="2"
+      [showEmptyMessage]="true"
+      emptyMessage="No results found"
+      [forceSelection]="false"
+      (onSelect)="onSelect($event)"
+      placeholder="Search for events"
+      class="w-100"
+      [inputStyleClass]="'form-control search-input'"
+    >
+      <ng-template let-item pTemplate="item">
+        <div class="flex align-items-center gap-2">
+          <i [class]="item.type === 'EVENT' ? 'pi pi-calendar' : 'pi pi-user'"></i>
+          <div class="global-search-item-container">
+            <div class="font-bold">{{ item.name }}</div>
+            <div class="text-sm text-gray-500">{{ item.type }}</div>
+          </div>
+        </div>
+      </ng-template>
+    </p-autoComplete>
+
+    <button class="btn-search btn" type="button" (click)="triggerSearch()">
+      <img class="btn-search-img" src="images/icons/magnifying_glass_purple.png" alt="Search Button">
+    </button>
+  </div>
+</div>

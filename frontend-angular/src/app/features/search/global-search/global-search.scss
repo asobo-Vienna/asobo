@@ -1,0 +1,76 @@
+@use '../../../../styles/variables' as *;
+
+.search-button {
+  color: $asobo-purple;
+  border-color: $asobo-purple;
+}
+
+.btn-search-img {
+  width: 25px;
+  height: 25px;
+}
+
+.search-bar {
+  justify-content: space-between !important;
+}
+
+.search-bar .search-div {
+  max-width: 37vw;
+  display: flex;
+}
+
+.search-bar .btn-search {
+  transform: translateX(-100%);
+  border: none;
+  padding-right: 8px;
+}
+
+.navbar .search-bar {
+  flex-grow: 1;
+  max-width: 450px;
+}
+
+.navbar .search-div {
+  width: 100%;
+}
+
+.navbar .form-control {
+  flex-grow: 1;
+}
+
+// PrimeNG AutoComplete overrides to match original search bar
+.search-div {
+  position: relative;
+
+  ::ng-deep .p-autocomplete {
+    width: 100%;
+    flex: 1;
+  }
+
+  ::ng-deep .p-autocomplete .p-autocomplete-input {
+    width: 100%;
+    flex-grow: 1;
+  }
+
+  // Make sure the input inherits form-control styling
+  ::ng-deep .p-autocomplete-input.form-control {
+    // Your existing form-control styles will apply
+  }
+
+  // Style the dropdown panel
+  ::ng-deep .p-autocomplete-panel {
+    margin-top: 2px;
+    z-index: 1050; // Make sure it appears above navbar
+  }
+
+  // Optional: Ensure dropdown is full width
+  ::ng-deep .p-autocomplete-panel .p-autocomplete-items {
+    max-height: 400px;
+  }
+}
+
+.global-search-item-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
