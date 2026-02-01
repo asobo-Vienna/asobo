@@ -31,5 +31,6 @@ export interface GlobalSearchResponse {
 }
 
 // Type used for autocomplete items
-export type AutocompleteItem = (EventSearchResult & { name: string; type: 'EVENT' })
-  | (UserSearchResult & { name: string; type: 'USER' });
+export type AutocompleteItem =
+  (EventSearchResult & { name: string; pictureURI: string, additionalInfo: string, location: string, type: 'EVENT' })
+  | (UserSearchResult & { name: string; pictureURI: string, additionalInfo: string, location: string, type: 'USER' });

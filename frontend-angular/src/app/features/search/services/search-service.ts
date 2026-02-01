@@ -23,18 +23,24 @@ export class SearchService {
         map((response) => [
           ...response.events.map((e: EventSearchResult) => ({
             ...e,
-            name: e.title,
+            name: e.title ?? 'Untitled event',
             pictureURI: UrlUtilService.getMediaUrl(
               e.pictureURI || '/uploads/event-cover-pictures/event-cover-default.svg'
             ),
+            additionalInfo: e.date
+              ? new Date(e.date).toLocaleDateString()
+              : '',
+            location: e.location ?? 'Unknown location',
             type: 'EVENT' as const,
           })),
           ...response.users.map((u: UserSearchResult) => ({
             ...u,
-            name: `${u.username} (${u.firstName} ${u.surname})`,
+            name: u.username ?? 'Unknown user',
             pictureURI: UrlUtilService.getMediaUrl(
               u.pictureURI || '/uploads/profile-pictures/default.png'
             ),
+            additionalInfo: u.fullName ?? '',
+            location: u.location ?? 'Unknown location',
             type: 'USER' as const,
           })),
         ])
