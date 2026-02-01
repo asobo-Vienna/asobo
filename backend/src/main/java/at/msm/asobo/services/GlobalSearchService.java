@@ -52,7 +52,7 @@ public class GlobalSearchService {
             List<User> users = userRepository.searchUsers(query);
             response.setUsers(users.stream()
                     .map(this::mapToUserResult)
-                    .limit(10)
+                    .limit(15)
                     .collect(Collectors.toList()));
 
             response.setTotalResults(

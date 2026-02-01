@@ -27,13 +27,19 @@ public interface UserRepository extends JpaRepository<User, UUID> {
     boolean existsByUsername(String username);
     boolean existsByEmail(String email);
 
-    @Query("SELECT u FROM User u WHERE " +
-            "u.isActive = true AND (" +
-            "LOWER(u.firstName) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
-            "LOWER(u.surname) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
-            "LOWER(CONCAT(u.firstName, ' ', u.surname)) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
-            "LOWER(u.username) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
-            "LOWER(u.aboutMe) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
-            "LOWER(u.location) LIKE LOWER(CONCAT('%', :query, '%')))")
+    @Query("""
+    SELECT u FROM User u 
+    WHERE :query IS NOT NULL
+      AND TRIM(:query) <> ''
+      AND (
+        LOWER(u.firstName) LIKE LOWER(CONCAT('%', :query, '%')) OR
+        LOWER(u.surname) LIKE LOWER(CONCAT('%', :query, '%')) OR
+        LOWER(CONCAT(u.firstName, ' ', u.surname)) LIKE LOWER(CONCAT('%', :query, '%')) OR
+        LOWER(u.username) LIKE LOWER(CONCAT('%', :query, '%')) OR
+        LOWER(u.aboutMe) LIKE LOWER(CONCAT('%', :query, '%')) OR
+        LOWER(u.location) LIKE LOWER(CONCAT('%', :query, '%'))
+      )
+    """)
     List<User> searchUsers(@Param("query") String query);
+
 }

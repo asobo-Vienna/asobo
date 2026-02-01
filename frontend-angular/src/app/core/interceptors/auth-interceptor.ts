@@ -36,6 +36,8 @@ export class AuthInterceptor implements HttpInterceptor {
             this.router.navigate(['/login'], {
               queryParams: { returnUrl: this.router.url, expired: true }
             });
+          } else if (error.status === 403) {
+            console.warn('Access denied to', req.url);
           }
           return throwError(() => error);
         })

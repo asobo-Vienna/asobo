@@ -43,18 +43,29 @@ public interface EventRepository extends JpaRepository<Event, UUID> {
     List<Event> findByParticipants_IdAndIsPrivateEventFalse(UUID userId);
     Page<Event> findByParticipants_IdAndIsPrivateEventFalse(UUID userId, Pageable pageable);
 
-    @Query("SELECT DISTINCT e FROM Event e " +
-            "LEFT JOIN e.creator c " +
-            "WHERE (:includePrivate = true OR e.isPrivateEvent = false) " +
-            "AND (:query IS NULL OR " +
-            "  LOWER(e.title) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
-            "  LOWER(e.description) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
-            "  LOWER(e.location) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
-            "  LOWER(c.username) LIKE LOWER(CONCAT('%', :query, '%'))) " +
-            "AND (:startDate IS NULL OR e.date >= :startDate) " +
-            "AND (:endDate IS NULL OR e.date <= :endDate) " +
-            "AND (:location IS NULL OR LOWER(e.location) LIKE LOWER(CONCAT('%', :location, '%'))) " +
-            "ORDER BY e.date ASC")
+    @Query(value = """
+    SELECT DISTINCT e.* 
+    FROM event e
+    LEFT JOIN users c ON c.id = e.creator_id
+    WHERE 
+      (:includePrivate = true OR e.is_private = false)
+
+      AND (
+        :query IS NULL 
+        OR LOWER(e.title) LIKE LOWER(CONCAT('%', :query, '%')) 
+        OR LOWER(e.description) LIKE LOWER(CONCAT('%', :query, '%')) 
+        OR LOWER(e.location) LIKE LOWER(CONCAT('%', :query, '%')) 
+        OR LOWER(c.username) LIKE LOWER(CONCAT('%', :query, '%'))
+      )
+
+      AND e.date >= COALESCE(:startDate, e.date)
+      AND e.date <= COALESCE(:endDate, e.date)
+
+      AND LOWER(e.location) LIKE LOWER(CONCAT('%', COALESCE(:location, ''), '%'))
+
+    ORDER BY e.date ASC
+    """,
+            nativeQuery = true)
     List<Event> globalSearch(
             @Param("query") String query,
             @Param("startDate") LocalDateTime startDate,
@@ -62,4 +73,5 @@ public interface EventRepository extends JpaRepository<Event, UUID> {
             @Param("location") String location,
             @Param("includePrivate") boolean includePrivate
     );
+
 }

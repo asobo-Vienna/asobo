@@ -1,17 +1,19 @@
 <p-autoComplete
   [formControl]="searchControl"
   [suggestions]="searchResults"
+  field="name"
   [dropdown]="true"
   [minQueryLength]="2"
   [showEmptyMessage]="true"
   emptyMessage="No results found"
   [forceSelection]="false"
+  (onSelect)="onSelect($event)"
 >
   <ng-template let-item pTemplate="item">
     <div class="flex align-items-center gap-2">
       <i [class]="item.type === 'EVENT' ? 'pi pi-calendar' : 'pi pi-user'"></i>
       <div>
-        <div class="font-bold">{{ item.name || item.fullName }}</div>
+        <div class="font-bold">{{ item.name }}</div>
         <div class="text-sm text-gray-500">{{ item.type }}</div>
       </div>
     </div>
