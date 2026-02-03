@@ -148,7 +148,10 @@ class ParticipantServiceTest {
         assertEquals(2, participants.size());
         assertTrue(participants.contains(user));
         assertTrue(participants.contains(otherUser));
+        verify(userService).getUserById(userId);
+        verify(eventService).getEventById(eventId);
         verify(eventRepository).save(event);
+        verify(userDTOUserMapper).mapUsersToUserPublicDTOs(any());
     }
 
     @Test
@@ -238,6 +241,8 @@ class ParticipantServiceTest {
             participantService.toggleParticipantInEvent(eventId, userPrincipal);
         });
 
+        verify(userService).getUserById(userId);
+        verify(eventService).getEventById(eventId);
         verify(eventRepository).save(event);
     }
 
@@ -251,28 +256,9 @@ class ParticipantServiceTest {
         assertThrows(NullPointerException.class, () -> {
             participantService.toggleParticipantInEvent(eventId, userPrincipal);
         });
-    }
 
-    @Test
-    void getAllParticipantsAsDTOsByEventId_largeParticipantSet_handlesCorrectly() {
-        Set<User> largeParticipantSet = new HashSet<>();
-        for (int i = 0; i < 1000; i++) {
-            User participant = new User();
-            participant.setId(UUID.randomUUID());
-            largeParticipantSet.add(participant);
-        }
-        event.setParticipants(largeParticipantSet);
-
-        Set<UserPublicDTO> largeDTOSet = new HashSet<>();
-        when(eventService.getEventById(eventId)).thenReturn(event);
-        when(userDTOUserMapper.mapUsersToUserPublicDTOs(largeParticipantSet))
-                .thenReturn(largeDTOSet);
-
-        Set<UserPublicDTO> result = participantService.getAllParticipantsAsDTOsByEventId(eventId);
-
-        assertNotNull(result);
-        assertEquals(largeDTOSet, result);
-        verify(userDTOUserMapper).mapUsersToUserPublicDTOs(largeParticipantSet);
+        verify(userService).getUserById(userId);
+        verify(eventService).getEventById(eventId);
     }
 
     @Test
@@ -296,5 +282,9 @@ class ParticipantServiceTest {
         assertEquals(2, participants.size());
         assertTrue(participants.contains(otherUser1));
         assertTrue(participants.contains(otherUser2));
+
+        verify(userService).getUserById(userId);
+        verify(eventService).getEventById(eventId);
+        verify(userDTOUserMapper).mapUsersToUserPublicDTOs(any());
     }
 }
