@@ -4,6 +4,7 @@ import at.msm.asobo.dto.auth.LoginResponseDTO;
 import at.msm.asobo.dto.user.UserPublicDTO;
 import at.msm.asobo.dto.auth.UserRegisterDTO;
 import at.msm.asobo.dto.user.UserUpdateDTO;
+import at.msm.asobo.entities.User;
 
 import java.util.UUID;
 
@@ -72,6 +73,18 @@ public class UserTestBuilder {
     public UserTestBuilder withAboutMe(String aboutMe) {
         this.aboutMe = aboutMe;
         return this;
+    }
+
+    public User buildUserEntityWithFixedId(UUID id) {
+        User user = new User();
+        user.setId(id);
+        user.setUsername(this.username);
+        user.setEmail(this.email);
+        user.setFirstName(this.firstName);
+        user.setSurname(this.surname);
+        user.setSalutation(this.salutation);
+        user.setPassword(this.password);
+        return user;
     }
 
     public UserPublicDTO buildUserPublicDTO() {
