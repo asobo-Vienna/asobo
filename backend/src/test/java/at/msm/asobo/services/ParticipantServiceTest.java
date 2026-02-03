@@ -103,10 +103,8 @@ class ParticipantServiceTest {
         when(eventService.getEventById(eventId)).thenReturn(event);
         when(userDTOUserMapper.mapUsersToUserPublicDTOs(any())).thenReturn(participantDTOs);
 
-        // Act
         Set<UserPublicDTO> result = participantService.toggleParticipantInEvent(eventId, userPrincipal);
 
-        // Assert
         assertTrue(participants.contains(user));
         assertEquals(1, participants.size());
         verify(userService).getUserById(userId);
@@ -123,11 +121,9 @@ class ParticipantServiceTest {
         when(userService.getUserById(userId)).thenReturn(user);
         when(eventService.getEventById(eventId)).thenReturn(event);
         when(userDTOUserMapper.mapUsersToUserPublicDTOs(any())).thenReturn(new HashSet<>());
-
-        // Act
+        
         Set<UserPublicDTO> result = participantService.toggleParticipantInEvent(eventId, userPrincipal);
 
-        // Assert
         assertFalse(participants.contains(user));
         assertEquals(0, participants.size());
         verify(userService).getUserById(userId);
