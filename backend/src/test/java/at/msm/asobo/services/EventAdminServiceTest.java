@@ -132,6 +132,8 @@ class EventAdminServiceTest {
 
         assertNotNull(result);
         assertTrue(result.isEmpty());
+        verify(eventRepository).findById(eventId);
+        verify(userDTOUserMapper).mapUsersToUserPublicDTOs(eventAdmins);
     }
 
     @Test
@@ -152,6 +154,9 @@ class EventAdminServiceTest {
 
         assertTrue(eventAdmins.contains(user));
         assertNotNull(result);
+        verify(eventRepository).findById(eventId);
+        verify(userService).getUserById(creatorId);
+        verify(userService).getUsersByIds(userIdsToAdd);
         verify(eventRepository).save(event);
         verify(eventDTOEventMapper).mapEventToEventDTO(event);
     }
@@ -159,7 +164,9 @@ class EventAdminServiceTest {
     @Test
     void addAdminsToEvent_userIsAdmin_addsAdmins() {
         Set<UUID> userIdsToAdd = Set.of(UUID.randomUUID());
-        Set<User> usersToAdd = Set.of(new User());
+        User userToAdd = new User();
+        userToAdd.setId(userIdsToAdd.iterator().next());
+        Set<User> usersToAdd = Set.of(userToAdd);
 
         when(eventRepository.findById(eventId)).thenReturn(Optional.of(event));
         when(userService.getUserById(userId)).thenReturn(user);
@@ -171,14 +178,27 @@ class EventAdminServiceTest {
         EventDTO result = eventAdminService.addAdminsToEvent(eventId, userIdsToAdd, userPrincipal);
 
         assertNotNull(result);
+        assertEquals(eventDTO, result);
+        assertTrue(eventAdmins.contains(userToAdd));
+        assertEquals(1, eventAdmins.size());
+
+        verify(eventRepository).findById(eventId);
+        verify(userService).getUserById(userId);
+        verify(userService).getUsersByIds(userIdsToAdd);
+        verify(accessControlService).hasAdminRole(user);
         verify(eventRepository).save(event);
+        verify(eventDTOEventMapper).mapEventToEventDTO(event);
     }
 
     @Test
     void addAdminsToEvent_userIsEventAdmin_addsAdmins() {
         eventAdmins.add(user); // User is already an event admin
-        Set<UUID> userIdsToAdd = Set.of(UUID.randomUUID());
-        Set<User> usersToAdd = Set.of(new User());
+
+        UUID newAdminId = UUID.randomUUID();
+        User newAdmin = new User();
+        newAdmin.setId(newAdminId);
+        Set<UUID> userIdsToAdd = Set.of(newAdminId);
+        Set<User> usersToAdd = Set.of(newAdmin);
 
         when(eventRepository.findById(eventId)).thenReturn(Optional.of(event));
         when(userService.getUserById(userId)).thenReturn(user);
@@ -190,7 +210,17 @@ class EventAdminServiceTest {
         EventDTO result = eventAdminService.addAdminsToEvent(eventId, userIdsToAdd, userPrincipal);
 
         assertNotNull(result);
+        assertEquals(eventDTO, result);
+        assertTrue(eventAdmins.contains(user));
+        assertTrue(eventAdmins.contains(newAdmin));
+        assertEquals(2, eventAdmins.size());
+
+        verify(eventRepository).findById(eventId);
+        verify(userService).getUserById(userId);
+        verify(userService).getUsersByIds(userIdsToAdd);
+        verify(accessControlService).hasAdminRole(user);
         verify(eventRepository).save(event);
+        verify(eventDTOEventMapper).mapEventToEventDTO(event);
     }
 
     @Test
@@ -207,7 +237,12 @@ class EventAdminServiceTest {
             eventAdminService.addAdminsToEvent(eventId, userIdsToAdd, userPrincipal);
         });
 
+        verify(eventRepository).findById(eventId);
+        verify(userService).getUserById(userId);
+        verify(userService).getUsersByIds(userIdsToAdd);
+        verify(accessControlService).hasAdminRole(user);
         verify(eventRepository, never()).save(any());
+        verify(eventDTOEventMapper, never()).mapEventToEventDTO(any());
     }
 
     @Test
@@ -219,6 +254,7 @@ class EventAdminServiceTest {
             eventAdminService.addAdminsToEvent(eventId, userIdsToAdd, userPrincipal);
         });
 
+        verify(eventRepository).findById(eventId);
         verify(eventRepository, never()).save(any());
     }
 
@@ -235,14 +271,23 @@ class EventAdminServiceTest {
         when(eventRepository.findById(eventId)).thenReturn(Optional.of(event));
         when(userService.getUserById(creatorId)).thenReturn(creator);
         when(userService.getUsersByIds(userIdsToRemove)).thenReturn(usersToRemove);
+        when(accessControlService.hasAdminRole(creator)).thenReturn(false);
         when(eventRepository.save(event)).thenReturn(event);
         when(eventDTOEventMapper.mapEventToEventDTO(event)).thenReturn(eventDTO);
 
         EventDTO result = eventAdminService.removeAdminsFromEvent(eventId, userIdsToRemove, creatorPrincipal);
 
-        assertFalse(eventAdmins.contains(adminToRemove));
         assertNotNull(result);
+        assertEquals(eventDTO, result);
+        assertFalse(eventAdmins.contains(adminToRemove));
+        assertEquals(0, eventAdmins.size());
+
+        verify(eventRepository).findById(eventId);
+        verify(userService).getUserById(creatorId);
+        verify(userService).getUsersByIds(userIdsToRemove);
+        verify(accessControlService).hasAdminRole(creator);
         verify(eventRepository).save(event);
+        verify(eventDTOEventMapper).mapEventToEventDTO(event);
     }
 
     @Test
@@ -259,7 +304,11 @@ class EventAdminServiceTest {
             eventAdminService.removeAdminsFromEvent(eventId, userIdsToRemove, userPrincipal);
         });
 
+        verify(eventRepository).findById(eventId);
+        verify(userService).getUserById(userId);
+        verify(userService).getUsersByIds(userIdsToRemove);
         verify(eventRepository, never()).save(any());
+        verify(eventDTOEventMapper, never()).mapEventToEventDTO(any());
     }
 
     @Test
@@ -279,6 +328,7 @@ class EventAdminServiceTest {
         boolean result = eventAdminService.canManageEvent(event, creator);
 
         assertTrue(result);
+        verify(accessControlService).hasAdminRole(creator);
     }
 
     @Test
@@ -289,6 +339,7 @@ class EventAdminServiceTest {
         boolean result = eventAdminService.canManageEvent(event, user);
 
         assertTrue(result);
+        verify(accessControlService).hasAdminRole(user);
     }
 
     @Test
@@ -298,5 +349,6 @@ class EventAdminServiceTest {
         boolean result = eventAdminService.canManageEvent(event, user);
 
         assertFalse(result);
+        verify(accessControlService).hasAdminRole(user);
     }
 }
