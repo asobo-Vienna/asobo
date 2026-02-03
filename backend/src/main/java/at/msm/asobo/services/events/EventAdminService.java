@@ -91,8 +91,7 @@ public class EventAdminService {
     }
 
     private Event getEventById(UUID id) {
-        Event event = this.eventRepository.findById(id)
+        return this.eventRepository.findById(id)
                 .orElseThrow(() -> new EventNotFoundException(id));
-        return event;
     }
 }
