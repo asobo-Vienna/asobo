@@ -39,6 +39,7 @@ class UserServiceTest {
 
         User result = userService.getUserById(userId);
 
+        assertNotNull(result);
         assertEquals(user, result);
         verify(userRepository).findById(userId);
     }
@@ -48,6 +49,7 @@ class UserServiceTest {
         when(userRepository.findById(userId)).thenReturn(Optional.empty());
 
         assertThrows(UserNotFoundException.class, () -> userService.getUserById(userId));
+        verify(userRepository).findById(userId);
     }
 
 }
