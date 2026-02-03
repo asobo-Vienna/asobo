@@ -13,7 +13,6 @@ import at.msm.asobo.services.files.FileStorageService;
 import at.msm.asobo.services.files.FileValidationService;
 import at.msm.asobo.utils.PatchUtils;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.web.servlet.MultipartProperties;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
