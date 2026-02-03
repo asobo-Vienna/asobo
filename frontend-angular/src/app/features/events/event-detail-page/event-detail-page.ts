@@ -21,6 +21,18 @@ import {ParticipantService} from '../services/participant-service';
 import {LambdaFunctions} from '../../../shared/utils/lambda-functions';
 import {environment} from '../../../../environments/environment';
 import {Tag} from 'primeng/tag';
+import {InputText} from 'primeng/inputtext';
+import {
+  AbstractControl, FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  ValidationErrors,
+  Validators
+} from '@angular/forms';
+import {DatePicker} from 'primeng/datepicker';
+import {DateUtils} from '../../../shared/utils/date/date-utils';
+import {CdkTextareaAutosize} from '@angular/cdk/text-field';
 
 @Component({
   selector: 'app-event-detail-page',
@@ -30,7 +42,12 @@ import {Tag} from 'primeng/tag';
     Participants,
     CommentsList,
     Gallery,
-    Tag
+    Tag,
+    InputText,
+    FormsModule,
+    ReactiveFormsModule,
+    DatePicker,
+    CdkTextareaAutosize,
   ],
   templateUrl: './event-detail-page.html',
   styleUrl: './event-detail-page.scss'
@@ -43,6 +60,8 @@ export class EventDetailPage {
   authService = inject(AuthService);
   participantService = inject(ParticipantService);
 
+  private formBuilder = inject(FormBuilder);
+
   id!: string;
   title!: string;
   pictureURI!: string;
@@ -52,13 +71,27 @@ export class EventDetailPage {
   description?: string;
   isPrivate!: boolean;
 
+  editEventForm: FormGroup;
+  isEditing: boolean = false;
+
   comments = signal<List<Comment>>(new List<Comment>());
   participants = signal<List<Participant>>(new List<Participant>());
   mediaItems = signal<List<MediaItem>>(new List<MediaItem>());
+
+  event = signal<Event | null>(null);
   currentUser: User | null = this.authService.currentUser();
   isUserAlreadyPartOfEvent = signal(false);
   protected readonly UrlUtilService = UrlUtilService;
 
+  constructor() {
+    this.editEventForm = this.formBuilder.group({
+      title: ['', [Validators.required, Validators.minLength(environment.minEventTitleLength), Validators.maxLength(environment.maxEventTitleLength)]],
+      description: ['', [Validators.required, Validators.minLength(environment.minEventDescriptionLength), Validators.maxLength(environment.maxEventDescriptionLength)]],
+      location: ['', [Validators.required]],
+      date: ['', [Validators.required, this.validateDate]],
+      isPrivate: ['', [Validators.required]],
+    });
+  }
 
   ngOnInit(): void {
     const eventId = this.route.snapshot.paramMap.get('id');
@@ -75,6 +108,16 @@ export class EventDetailPage {
   }
 
   private populateEvent(event: Event): void {
+    this.event.set(event);
+
+    this.editEventForm.patchValue({
+      title: event.title,
+      description: event.description,
+      location: event.location,
+      date: event.date ? new Date(event.date) : null,
+      isPrivate: event.isPrivate
+    });
+
     this.id = event.id;
     this.title = event.title;
     this.pictureURI = event.pictureURI;
@@ -186,5 +229,64 @@ export class EventDetailPage {
     });
   }
 
+  public toggleEdit() {
+    this.isEditing = !this.isEditing;
+    if (!this.isEditing) {
+      // reset form to the original values
+      this.editEventForm.reset({
+        title: this.title,
+        description: this.description,
+        location: this.location,
+        date: this.date ? new Date(this.date) : null,
+        isPrivate: this.isPrivate
+      });
+    }
+  }
+
+  protected isCurrentUserEventAdmin(event: Event, currentUser: User): boolean {
+    return event.eventAdmins.contains(currentUser);
+  }
+
+  onSubmit() {
+    if (!this.editEventForm.valid) {
+      console.log('Form is invalid, stopping event submission');
+      return;
+    }
+
+    const eventData = {
+      ...this.editEventForm.value,
+      date: DateUtils.toLocalISOString(this.editEventForm.value.date)
+    };
+
+    this.eventService.updateEvent(this.id, eventData).subscribe({
+      next: (event) => {
+        alert(`Event ${event.title} updated successfully!`);
+
+        // update local properties so view mode shows correct info
+        this.title = this.editEventForm.value.title;
+        this.description = this.editEventForm.value.description;
+        this.location = this.editEventForm.value.location;
+        this.date = this.editEventForm.value.date;
+        this.time = this.editEventForm.value.date;
+        this.isPrivate = this.editEventForm.value.isPrivate;
+
+        this.isEditing = false;
+      },
+      error: (err) => {
+        console.log('Error updating event', err);
+      }
+    });
+  }
+
+  validateDate(control: AbstractControl): ValidationErrors | null {
+    if (!control.value) return null;
+    const selected = new Date(control.value);
+    if (selected < new Date()) {
+      return { pastDate: true };
+    }
+    return null;
+  }
+
   protected readonly environment = environment;
 }
+

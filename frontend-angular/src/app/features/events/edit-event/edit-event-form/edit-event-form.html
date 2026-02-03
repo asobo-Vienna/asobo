@@ -1,0 +1,113 @@
+<form [formGroup]="editEventForm" (ngSubmit)="onSubmit()" class="create-event-form">
+
+  <div class="form-group position-relative mt-4">
+    <input
+      type="text"
+      placeholder="Title"
+      formControlName="title"
+      class="form-control"
+      id="create-event-title"
+      autofocus
+    >
+
+    @if (this.getFormControls['title'].touched && this.getFormControls['title'].hasError('required')) {
+      <small class="error-message">
+        Title is required.
+      </small>
+    }
+
+    @if (this.getFormControls['title'].touched && this.getFormControls['title'].hasError('minlength')) {
+      <small class="error-message">
+        Title must have at least {{ environment.minEventTitleLength }} characters.
+      </small>
+    }
+
+    @if (this.getFormControls['title'].touched && this.getFormControls['title'].hasError('maxlength')) {
+      <small class="error-message">
+        Title cannot exceed {{ environment.maxEventTitleLength }} characters.
+      </small>
+    }
+  </div>
+
+  <div class="form-group position-relative">
+    <textarea
+      pTextarea
+      rows="6"
+      placeholder="Description"
+      formControlName="description"
+      class="form-control"
+      id="create-event-description"
+      autofocus
+    ></textarea>
+    @if (this.getFormControls['description'].touched && this.getFormControls['description'].hasError('required')) {
+      <small class="error-message">
+        Description is required.
+      </small>
+    }
+
+    @if (this.getFormControls['description'].touched && this.getFormControls['description'].hasError('minlength')) {
+      <small class="error-message">
+        Description must have at least {{ environment.minEventDescriptionLength }} characters.
+      </small>
+    }
+
+    @if (this.getFormControls['description'].touched && this.getFormControls['description'].hasError('maxlength')) {
+      <small class="error-message">
+        Description cannot exceed {{ environment.maxEventDescriptionLength }} characters.
+      </small>
+    }
+  </div>
+
+  <div class="form-group position-relative">
+    <input
+      type="text"
+      placeholder="Location"
+      formControlName="location"
+      class="form-control"
+      id="create-event-location"
+      autofocus
+    >
+    @if (this.getFormControls['location'].touched && this.getFormControls['location'].hasError('required')) {
+      <small class="error-message">
+        Location is required.
+      </small>
+    }
+  </div>
+
+  <div class="form-group position-relative">
+    <p-datepicker
+      formControlName="date"
+      name="date"
+      [showIcon]="true"
+      dateFormat="dd MM yy at"
+      [showTime]="true"
+      hourFormat="12"
+      [readonlyInput]="false"
+    >
+    </p-datepicker>
+    @if (this.getFormControls['date'].touched && this.getFormControls['date'].hasError('required')) {
+      <small class="error-message">
+        Date is required.
+      </small>
+    }
+
+    @if (this.getFormControls['date'].touched && this.getFormControls['date'].hasError('pastDate')) {
+      <small class="error-message">
+        Date and/or time cannot be in the past.
+      </small>
+    }
+  </div>
+
+  <div class="d-flex justify-content-center">
+    <div class="checkbox-wrapper">
+      <p-checkbox formControlName="isPrivate" [binary]="true" inputId="isPrivate"/>
+      <label for="isPrivate">Private Event?</label>
+    </div>
+  </div>
+
+  <div class="form-group d-flex justify-content-center">
+    <button class="btn btn-purple btn-primary mt-4" id="create-event-button" type="submit">
+      Edit Event
+    </button>
+  </div>
+</form>

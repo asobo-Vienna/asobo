@@ -52,4 +52,8 @@ export class EventService {
   public uploadEventPicture(eventId: string, formData: FormData): Observable<Event> {
     return this.http.patch<Event>(`${environment.eventsEndpoint}/${eventId}/picture`, formData);
   }
+
+  public updateEvent(eventId: string, eventData: Partial<Event>): Observable<Event> {
+    return this.http.patch<Event>(`${environment.eventsEndpoint}/${eventId}`, eventData);
+  }
 }
