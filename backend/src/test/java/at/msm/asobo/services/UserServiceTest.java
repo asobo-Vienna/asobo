@@ -221,6 +221,7 @@ class UserServiceTest {
 
         assertNotNull(result);
         assertEquals(userJohn, result);
+
         verify(userRepository).save(userJohn);
     }
 
@@ -315,6 +316,7 @@ class UserServiceTest {
     @Test
     void isUserNameAlreadyTaken_returnsFalseForNewUsername() {
         String username = "NewUsername";
+        
         when(userRepository.existsByUsername(username)).thenReturn(false);
 
         boolean result = userService.isUsernameAlreadyTaken(username);
@@ -327,6 +329,7 @@ class UserServiceTest {
     @Test
     void isUsernameAlreadyTaken_returnsTrueForExistingUsername() {
         String username = "ExistentUsername";
+
         when(userRepository.existsByUsername(username)).thenReturn(true);
 
         boolean result = userService.isUsernameAlreadyTaken(username);
@@ -339,6 +342,7 @@ class UserServiceTest {
     @Test
     void isEmailAlreadyTaken_returnsFalseForNewUsername() {
         String email = "newUsername@email.com";
+
         when(userRepository.existsByEmail(email)).thenReturn(false);
 
         boolean result = userService.isEmailAlreadyTaken(email);
@@ -351,6 +355,7 @@ class UserServiceTest {
     @Test
     void isEmailAlreadyTaken_returnsTrueForExistingUsername() {
         String email = "existingUsername@email.com";
+
         when(userRepository.existsByEmail(email)).thenReturn(true);
 
         boolean result = userService.isEmailAlreadyTaken(email);
