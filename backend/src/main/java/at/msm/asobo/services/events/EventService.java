@@ -64,10 +64,6 @@ public class EventService {
         return this.eventDTOEventMapper.mapEventsToEventSummaryDTOs(allEvents);
     }
 
-    public List<Event> getAllEventEntities() {
-        return this.eventRepository.findAll();
-    }
-
     public Page<EventSummaryDTO> getAllEventsPaginated(Pageable pageable) {
         Page<Event> events = this.eventRepository.findAllEvents(pageable);
         return events.map(this.eventDTOEventMapper::toEventSummaryDTO);
