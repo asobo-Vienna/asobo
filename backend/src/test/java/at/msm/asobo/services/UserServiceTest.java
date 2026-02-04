@@ -89,6 +89,7 @@ class UserServiceTest {
 
         assertNotNull(result);
         assertEquals(userJohn, result);
+
         verify(userRepository).findById(userIdJohn);
     }
 
@@ -97,6 +98,7 @@ class UserServiceTest {
         when(userRepository.findById(userIdJohn)).thenReturn(Optional.empty());
 
         assertThrows(UserNotFoundException.class, () -> userService.getUserById(userIdJohn));
+
         verify(userRepository).findById(userIdJohn);
     }
 
@@ -104,33 +106,42 @@ class UserServiceTest {
     void getUsersByIds_existingUsers_returnsUsers() {
         Set<UUID> ids = Set.of(userIdJohn, userIdJane);
         Set<User> users = Set.of(userJohn, userJane);
+
         when(userRepository.findAllByIdIn(ids)).thenReturn(users);
 
         Set<User> result = userService.getUsersByIds(ids);
 
+        assertNotNull(result);
         assertEquals(users, result);
+
         verify(userRepository).findAllByIdIn(ids);
     }
 
     @Test
     void getUsersByIds_noUsersFound_returnsEmptySet() {
         Set<UUID> ids = Set.of(userIdJane);
+
         when(userRepository.findAllByIdIn(ids)).thenReturn(Set.of());
 
         Set<User> result = userService.getUsersByIds(ids);
 
+        assertNotNull(result);
         assertTrue(result.isEmpty());
+
         verify(userRepository).findAllByIdIn(ids);
     }
 
     @Test
     void getUsersByIds_emptyInput_returnsEmptySet() {
         Set<UUID> ids = Set.of();
+
         when(userRepository.findAllByIdIn(ids)).thenReturn(Set.of());
 
         Set<User> result = userService.getUsersByIds(ids);
 
+        assertNotNull(result);
         assertTrue(result.isEmpty());
+
         verify(userRepository).findAllByIdIn(ids);
     }
 
@@ -141,7 +152,9 @@ class UserServiceTest {
 
         UserPublicDTO result = userService.getUserDTOById(userIdJohn);
 
+        assertNotNull(result);
         assertEquals(userPublicDTO, result);
+
         verify(userRepository).findById(userIdJohn);
         verify(userDTOUserMapper).mapUserToUserPublicDTO(userJohn);
     }
@@ -158,20 +171,24 @@ class UserServiceTest {
 
     @Test
     void getUserDTOByUsername_returnsUserDTOWhenUserExists() {
-        String username = "john";
+        String username = "Existent";
+
         when(userRepository.findByUsername(username)).thenReturn(Optional.of(userJohn));
         when(userDTOUserMapper.mapUserToUserPublicDTO(userJohn)).thenReturn(userPublicDTO);
 
         UserPublicDTO result = userService.getUserByUsername(username);
 
+        assertNotNull(result);
         assertEquals(userPublicDTO, result);
+
         verify(userRepository).findByUsername(username);
         verify(userDTOUserMapper).mapUserToUserPublicDTO(userJohn);
     }
 
     @Test
     void getUserDTOByUsername_throwsExceptionWhenUserNotFound() {
-        String username = "User doesn't exist";
+        String username = "Nonexistent";
+
         when(userRepository.findByUsername(username)).thenReturn(Optional.empty());
 
         assertThrows(UserNotFoundException.class, () -> userService.getUserByUsername(username));
@@ -188,6 +205,7 @@ class UserServiceTest {
 
         UserPublicDTO result = userService.createUser(userDTO);
 
+        assertNotNull(result);
         assertEquals(userPublicDTO, result);
 
         verify(userDTOUserMapper).mapUserDTOToUser(userDTO);
@@ -201,6 +219,7 @@ class UserServiceTest {
 
         User result = userService.saveUser(userJohn);
 
+        assertNotNull(result);
         assertEquals(userJohn, result);
         verify(userRepository).save(userJohn);
     }
@@ -257,6 +276,7 @@ class UserServiceTest {
         LoginResponseDTO result =
                 userService.updateUserById(userIdJohn, principalJohn, dto);
 
+        assertNotNull(result);
         assertEquals("token", result.getToken());
 
         verify(userRepository, times(2)).findById(userIdJohn);
@@ -283,6 +303,7 @@ class UserServiceTest {
         UserPublicDTO result =
                 userService.deleteUserById(userIdJohn, principalJohn);
 
+        assertNotNull(result);
         assertEquals(userPublicDTO, result);
 
         verify(userRepository, times(2)).findById(userIdJohn);
@@ -293,7 +314,7 @@ class UserServiceTest {
 
     @Test
     void isUserNameAlreadyTaken_returnsFalseForNewUsername() {
-        String username = "newUsername";
+        String username = "NewUsername";
         when(userRepository.existsByUsername(username)).thenReturn(false);
 
         boolean result = userService.isUsernameAlreadyTaken(username);
@@ -305,7 +326,7 @@ class UserServiceTest {
 
     @Test
     void isUsernameAlreadyTaken_returnsTrueForExistingUsername() {
-        String username = "existingUsername";
+        String username = "ExistentUsername";
         when(userRepository.existsByUsername(username)).thenReturn(true);
 
         boolean result = userService.isUsernameAlreadyTaken(username);
@@ -317,7 +338,7 @@ class UserServiceTest {
 
     @Test
     void isEmailAlreadyTaken_returnsFalseForNewUsername() {
-        String email = "new@email.com";
+        String email = "newUsername@email.com";
         when(userRepository.existsByEmail(email)).thenReturn(false);
 
         boolean result = userService.isEmailAlreadyTaken(email);
@@ -329,7 +350,7 @@ class UserServiceTest {
 
     @Test
     void isEmailAlreadyTaken_returnsTrueForExistingUsername() {
-        String email = "existing@email.com";
+        String email = "existingUsername@email.com";
         when(userRepository.existsByEmail(email)).thenReturn(true);
 
         boolean result = userService.isEmailAlreadyTaken(email);
