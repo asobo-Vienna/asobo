@@ -5,7 +5,9 @@ import at.msm.asobo.dto.user.UserPublicDTO;
 import at.msm.asobo.dto.auth.UserRegisterDTO;
 import at.msm.asobo.dto.user.UserUpdateDTO;
 import at.msm.asobo.entities.User;
+import at.msm.asobo.security.UserPrincipal;
 
+import java.util.List;
 import java.util.UUID;
 
 public class UserTestBuilder {
@@ -129,5 +131,14 @@ public class UserTestBuilder {
         user.setSalutation(this.salutation);
 
         return new LoginResponseDTO("any-token", user);
+    }
+
+    public UserPrincipal buildUserPrincipal() {
+        return new UserPrincipal(
+                this.id,
+                this.username,
+                this.password,
+                List.of()
+        );
     }
 }

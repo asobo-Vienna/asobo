@@ -1,11 +1,16 @@
 package at.msm.asobo.services;
 
 import at.msm.asobo.builders.UserTestBuilder;
+import at.msm.asobo.dto.auth.LoginResponseDTO;
+import at.msm.asobo.dto.user.UserDTO;
 import at.msm.asobo.dto.user.UserPublicDTO;
+import at.msm.asobo.dto.user.UserUpdateDTO;
 import at.msm.asobo.entities.User;
 import at.msm.asobo.exceptions.users.UserNotFoundException;
 import at.msm.asobo.mappers.UserDTOUserMapper;
 import at.msm.asobo.repositories.UserRepository;
+import at.msm.asobo.security.JwtUtil;
+import at.msm.asobo.security.UserPrincipal;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,7 +32,13 @@ class UserServiceTest {
     private UserRepository userRepository;
 
     @Mock
+    AccessControlService accessControlService;
+
+    @Mock
     private UserDTOUserMapper userDTOUserMapper;
+
+    @Mock
+    JwtUtil jwtUtil;
 
     @InjectMocks
     private UserService userService;
@@ -37,6 +48,9 @@ class UserServiceTest {
     private User userJohn;
     private User userJane;
     private UserPublicDTO userPublicDTO;
+    private UserDTO userDTO;
+    private UserPrincipal principalJohn;
+    private UserPrincipal principalJane;
 
 
     @BeforeEach void setup() {
@@ -54,6 +68,17 @@ class UserServiceTest {
                 .buildUserEntityWithFixedId(userIdJane);
 
         userPublicDTO = new UserPublicDTO();
+        userDTO = new UserDTO();
+
+        principalJohn = new UserTestBuilder()
+                .withUsername("john")
+                .withId(userIdJohn)
+                .buildUserPrincipal();
+
+        principalJane = new UserTestBuilder()
+                .withUsername("jane")
+                .withId(userIdJane)
+                .buildUserPrincipal();
     }
 
     @Test
@@ -110,7 +135,7 @@ class UserServiceTest {
     }
 
     @Test
-    void shouldReturnDTOWhenUserExists() {
+    void getUserDTOById_returnsDTOWhenUserExists() {
         when(userRepository.findById(userIdJohn)).thenReturn(Optional.of(userJohn));
         when(userDTOUserMapper.mapUserToUserPublicDTO(userJohn)).thenReturn(userPublicDTO);
 
@@ -122,7 +147,7 @@ class UserServiceTest {
     }
 
     @Test
-    void shouldThrowExceptionWhenUserNotFound() {
+    void getUserDTOById_throwsExceptionWhenUserNotFound() {
         when(userRepository.findById(userIdJohn)).thenReturn(Optional.empty());
 
         assertThrows(UserNotFoundException.class, () -> userService.getUserDTOById(userIdJohn));
@@ -131,4 +156,186 @@ class UserServiceTest {
         verify(userDTOUserMapper, never()).mapUserToUserPublicDTO(any());
     }
 
+    @Test
+    void getUserDTOByUsername_returnsUserDTOWhenUserExists() {
+        String username = "john";
+        when(userRepository.findByUsername(username)).thenReturn(Optional.of(userJohn));
+        when(userDTOUserMapper.mapUserToUserPublicDTO(userJohn)).thenReturn(userPublicDTO);
+
+        UserPublicDTO result = userService.getUserByUsername(username);
+
+        assertEquals(userPublicDTO, result);
+        verify(userRepository).findByUsername(username);
+        verify(userDTOUserMapper).mapUserToUserPublicDTO(userJohn);
+    }
+
+    @Test
+    void getUserDTOByUsername_throwsExceptionWhenUserNotFound() {
+        String username = "User doesn't exist";
+        when(userRepository.findByUsername(username)).thenReturn(Optional.empty());
+
+        assertThrows(UserNotFoundException.class, () -> userService.getUserByUsername(username));
+
+        verify(userRepository).findByUsername(username);
+        verify(userDTOUserMapper, never()).mapUserToUserPublicDTO(any());
+    }
+
+    @Test
+    void createUser_returnsDTOWhenSuccessful() {
+        when(userDTOUserMapper.mapUserDTOToUser(userDTO)).thenReturn(userJohn);
+        when(userRepository.save(userJohn)).thenReturn(userJohn);
+        when(userDTOUserMapper.mapUserToUserPublicDTO(userJohn)).thenReturn(userPublicDTO);
+
+        UserPublicDTO result = userService.createUser(userDTO);
+
+        assertEquals(userPublicDTO, result);
+
+        verify(userDTOUserMapper).mapUserDTOToUser(userDTO);
+        verify(userRepository).save(userJohn);
+        verify(userDTOUserMapper).mapUserToUserPublicDTO(userJohn);
+    }
+
+    @Test
+    void saveUser_returnsUserWhenSuccessful() {
+        when(userRepository.save(userJohn)).thenReturn(userJohn);
+
+        User result = userService.saveUser(userJohn);
+
+        assertEquals(userJohn, result);
+        verify(userRepository).save(userJohn);
+    }
+
+    @Test
+    void updateUser_usernameNotChanged_doesNotGenerateToken() {
+
+        when(userRepository.findById(userIdJane))
+                .thenReturn(Optional.of(userJane));
+
+        doNothing().when(accessControlService)
+                .assertCanUpdateOrDeleteUser(userIdJane, userJane);
+
+        when(userRepository.save(userJane))
+                .thenReturn(userJane);
+
+        when(userDTOUserMapper.mapUserToUserPublicDTO(userJane))
+                .thenReturn(userPublicDTO);
+
+        UserUpdateDTO dto = new UserUpdateDTO();
+        dto.setUsername(userJane.getUsername());
+
+        LoginResponseDTO result =
+                userService.updateUserById(userIdJane, principalJane, dto);
+
+        assertNull(result.getToken());
+
+        verify(userRepository, times(2)).findById(userIdJane);
+        verify(accessControlService).assertCanUpdateOrDeleteUser(userIdJane, userJane);
+        verify(userRepository).save(userJane);
+        verify(userDTOUserMapper).mapUserToUserPublicDTO(userJane);
+    }
+
+    @Test
+    void updateUser_usernameChanged_generatesToken() {
+        when(userRepository.findById(userIdJohn))
+                .thenReturn(Optional.of(userJohn));
+
+        doNothing().when(accessControlService)
+                .assertCanUpdateOrDeleteUser(userIdJohn, userJohn);
+
+        when(userRepository.save(userJohn))
+                .thenReturn(userJohn);
+
+        when(jwtUtil.generateToken(any(UserPrincipal.class), anyLong()))
+                .thenReturn("token");
+
+        when(userDTOUserMapper.mapUserToUserPublicDTO(userJohn))
+                .thenReturn(userPublicDTO);
+
+        UserUpdateDTO dto = new UserUpdateDTO();
+        dto.setUsername("newUsername");
+
+        LoginResponseDTO result =
+                userService.updateUserById(userIdJohn, principalJohn, dto);
+
+        assertEquals("token", result.getToken());
+
+        verify(userRepository, times(2)).findById(userIdJohn);
+        verify(accessControlService).assertCanUpdateOrDeleteUser(userIdJohn, userJohn);
+        verify(userRepository).save(userJohn);
+        verify(jwtUtil).generateToken(any(UserPrincipal.class), anyLong());
+        verify(userDTOUserMapper).mapUserToUserPublicDTO(userJohn);
+    }
+
+    @Test
+    void deleteUserById_withValidCredentials_deletesUser() {
+        when(userRepository.findById(userIdJohn))
+                .thenReturn(Optional.of(userJohn));
+
+        doNothing().when(accessControlService)
+                .assertCanUpdateOrDeleteUser(userIdJohn, userJohn);
+
+        doNothing().when(userRepository)
+                .delete(userJohn);
+
+        when(userDTOUserMapper.mapUserToUserPublicDTO(userJohn))
+                .thenReturn(userPublicDTO);
+
+        UserPublicDTO result =
+                userService.deleteUserById(userIdJohn, principalJohn);
+
+        assertEquals(userPublicDTO, result);
+
+        verify(userRepository, times(2)).findById(userIdJohn);
+        verify(accessControlService).assertCanUpdateOrDeleteUser(userIdJohn, userJohn);
+        verify(userRepository).delete(userJohn);
+        verify(userDTOUserMapper).mapUserToUserPublicDTO(userJohn);
+    }
+
+    @Test
+    void isUserNameAlreadyTaken_returnsFalseForNewUsername() {
+        String username = "newUsername";
+        when(userRepository.existsByUsername(username)).thenReturn(false);
+
+        boolean result = userService.isUsernameAlreadyTaken(username);
+
+        assertFalse(result);
+
+        verify(userRepository).existsByUsername(username);
+    }
+
+    @Test
+    void isUsernameAlreadyTaken_returnsTrueForExistingUsername() {
+        String username = "existingUsername";
+        when(userRepository.existsByUsername(username)).thenReturn(true);
+
+        boolean result = userService.isUsernameAlreadyTaken(username);
+
+        assertTrue(result);
+
+        verify(userRepository).existsByUsername(username);
+    }
+
+    @Test
+    void isEmailAlreadyTaken_returnsFalseForNewUsername() {
+        String email = "new@email.com";
+        when(userRepository.existsByEmail(email)).thenReturn(false);
+
+        boolean result = userService.isEmailAlreadyTaken(email);
+
+        assertFalse(result);
+
+        verify(userRepository).existsByEmail(email);
+    }
+
+    @Test
+    void isEmailAlreadyTaken_returnsTrueForExistingUsername() {
+        String email = "existing@email.com";
+        when(userRepository.existsByEmail(email)).thenReturn(true);
+
+        boolean result = userService.isEmailAlreadyTaken(email);
+
+        assertTrue(result);
+
+        verify(userRepository).existsByEmail(email);
+    }
 }
