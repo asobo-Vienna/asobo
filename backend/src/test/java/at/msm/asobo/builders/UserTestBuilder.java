@@ -31,6 +31,11 @@ public class UserTestBuilder {
         return this;
     }
 
+    public UserTestBuilder withUsername(String username) {
+        this.username = username;
+        return this;
+    }
+
     public UserTestBuilder withUsernameAndEmail(String username) {
         this.username = username;
         this.email = username + "@example.com";

@@ -248,7 +248,7 @@ class UserServiceTest {
                 userService.updateUserById(userIdJane, principalJane, dto);
 
         assertNotNull(result);
-        assertNotNull(result.getUser());
+        assertNotNull(result.getUserDTO());
         assertNull(result.getToken());
 
         verify(jwtUtil, never()).generateToken(any(UserPrincipal.class), anyLong());
