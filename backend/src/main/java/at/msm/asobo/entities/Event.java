@@ -1,5 +1,6 @@
 package at.msm.asobo.entities;
 
+import at.msm.asobo.interfaces.PictureEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -10,7 +11,7 @@ import java.util.*;
 
 
 @Entity
-public class Event {
+public class Event implements PictureEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -121,10 +122,12 @@ public class Event {
         this.location = location;
     }
 
+    @Override
     public String getPictureURI() {
         return this.pictureURI;
     }
 
+    @Override
     public void setPictureURI(String pictureURI) {
         this.pictureURI = pictureURI;
     }

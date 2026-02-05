@@ -1,5 +1,6 @@
 package at.msm.asobo.entities;
 
+import at.msm.asobo.interfaces.PictureEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -10,7 +11,7 @@ import java.util.*;
 
 @Entity
 @Table(name="users")
-public class User {
+public class User implements PictureEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -149,10 +150,12 @@ public class User {
         this.aboutMe = aboutMe;
     }
 
+    @Override
     public String getPictureURI() {
         return this.pictureURI;
     }
 
+    @Override
     public void setPictureURI(String pictureURI) {
         this.pictureURI = pictureURI;
     }

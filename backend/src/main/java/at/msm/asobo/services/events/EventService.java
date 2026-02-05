@@ -187,7 +187,7 @@ public class EventService {
 
         PatchUtils.copyNonNullProperties(eventUpdateDTO, existingEvent, "picture", "participants");
 
-        this.handleEventPictureUpdate(eventUpdateDTO.getPicture(), existingEvent);
+        this.fileStorageService.handleEventPictureUpdate(eventUpdateDTO.getPicture(), existingEvent);
 
         if (eventUpdateDTO.getParticipants() != null) {
             existingEvent.setParticipants(
@@ -197,20 +197,5 @@ public class EventService {
 
         Event savedEvent = this.eventRepository.save(existingEvent);
         return this.eventDTOEventMapper.mapEventToEventDTO(savedEvent);
-    }
-
-    private void handleEventPictureUpdate(MultipartFile picture, Event event) {
-        if (picture == null || picture.isEmpty()) {
-            return;
-        }
-
-        this.fileValidationService.validateImage(picture);
-
-        if (event.getPictureURI() != null) {
-            this.fileStorageService.delete(event.getPictureURI());
-        }
-
-        String pictureURI = this.fileStorageService.store(picture, this.fileStorageProperties.getEventCoverPictureSubfolder());
-        event.setPictureURI(pictureURI);
     }
 }

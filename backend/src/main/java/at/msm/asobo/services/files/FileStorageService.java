@@ -1,9 +1,11 @@
 package at.msm.asobo.services.files;
 
 import at.msm.asobo.config.FileStorageProperties;
+import at.msm.asobo.entities.Event;
 import at.msm.asobo.entities.User;
 import at.msm.asobo.exceptions.files.FileDeletionException;
 import at.msm.asobo.exceptions.files.InvalidFilenameException;
+import at.msm.asobo.interfaces.PictureEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -14,6 +16,8 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.util.UUID;
+import java.util.function.Consumer;
+
 import static java.nio.file.Files.*;
 
 @Service
@@ -83,18 +87,34 @@ public class FileStorageService {
         }
     }
 
-    public void handleProfilePictureUpdate(MultipartFile picture, User user) {
+    private void handlePictureUpdate(MultipartFile picture, PictureEntity entity, String subfolder) {
         if (picture == null || picture.isEmpty()) {
             return;
         }
 
         this.fileValidationService.validateImage(picture);
 
-        if (user.getPictureURI() != null) {
-            this.delete(user.getPictureURI());
+        if (entity.getPictureURI() != null) {
+            this.delete(entity.getPictureURI());
         }
 
-        String pictureURI = this.store(picture, this.fileStorageProperties.getProfilePictureSubfolder());
-        user.setPictureURI(pictureURI);
+        String pictureURI = this.store(picture, subfolder);
+        entity.setPictureURI(pictureURI);
+    }
+
+    public void handleProfilePictureUpdate(MultipartFile picture, User user) {
+        handlePictureUpdate(
+                picture,
+                user,
+                this.fileStorageProperties.getProfilePictureSubfolder()
+        );
+    }
+
+    public void handleEventPictureUpdate(MultipartFile picture, Event event) {
+        handlePictureUpdate(
+                picture,
+                event,
+                this.fileStorageProperties.getEventCoverPictureSubfolder()
+        );
     }
 }
