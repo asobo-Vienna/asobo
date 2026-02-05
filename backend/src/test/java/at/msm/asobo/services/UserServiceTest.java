@@ -11,6 +11,7 @@ import at.msm.asobo.mappers.UserDTOUserMapper;
 import at.msm.asobo.repositories.UserRepository;
 import at.msm.asobo.security.JwtUtil;
 import at.msm.asobo.security.UserPrincipal;
+import at.msm.asobo.services.files.FileStorageService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -33,6 +34,9 @@ class UserServiceTest {
 
     @Mock
     AccessControlService accessControlService;
+
+    @Mock
+    FileStorageService fileStorageService;
 
     @Mock
     private UserDTOUserMapper userDTOUserMapper;
@@ -59,24 +63,24 @@ class UserServiceTest {
 
         userJohn = new UserTestBuilder()
                 .withId(userIdJohn)
-                .withUsername("john")
-                .buildUserEntityWithFixedId(userIdJohn);
+                .withUsernameAndEmail("john")
+                .buildUserEntity();
 
         userJane = new UserTestBuilder()
                 .withId(userIdJane)
-                .withUsername("jane")
-                .buildUserEntityWithFixedId(userIdJane);
+                .withUsernameAndEmail("jane")
+                .buildUserEntity();
 
         userPublicDTO = new UserPublicDTO();
         userDTO = new UserDTO();
 
         principalJohn = new UserTestBuilder()
-                .withUsername("john")
+                .withUsernameAndEmail(userJohn.getUsername())
                 .withId(userIdJohn)
                 .buildUserPrincipal();
 
         principalJane = new UserTestBuilder()
-                .withUsername("jane")
+                .withUsernameAndEmail(userJane.getUsername())
                 .withId(userIdJane)
                 .buildUserPrincipal();
     }
@@ -170,7 +174,7 @@ class UserServiceTest {
     }
 
     @Test
-    void getUserDTOByUsername_returnsUserDTOWhenUserExists() {
+    void getUserByUsername_returnsUserDTOWhenUserExists() {
         String username = "Existent";
 
         when(userRepository.findByUsername(username)).thenReturn(Optional.of(userJohn));
@@ -186,7 +190,7 @@ class UserServiceTest {
     }
 
     @Test
-    void getUserDTOByUsername_throwsExceptionWhenUserNotFound() {
+    void getUserByUsername_throwsExceptionWhenUserNotFound() {
         String username = "Nonexistent";
 
         when(userRepository.findByUsername(username)).thenReturn(Optional.empty());
@@ -226,13 +230,10 @@ class UserServiceTest {
     }
 
     @Test
-    void updateUser_usernameNotChanged_doesNotGenerateToken() {
+    void updateUserById_usernameNotChanged_doesNotGenerateToken() {
 
         when(userRepository.findById(userIdJane))
                 .thenReturn(Optional.of(userJane));
-
-        doNothing().when(accessControlService)
-                .assertCanUpdateOrDeleteUser(userIdJane, userJane);
 
         when(userRepository.save(userJane))
                 .thenReturn(userJane);
@@ -246,8 +247,11 @@ class UserServiceTest {
         LoginResponseDTO result =
                 userService.updateUserById(userIdJane, principalJane, dto);
 
+        assertNotNull(result);
+        assertNotNull(result.getUser());
         assertNull(result.getToken());
 
+        verify(jwtUtil, never()).generateToken(any(UserPrincipal.class), anyLong());
         verify(userRepository, times(2)).findById(userIdJane);
         verify(accessControlService).assertCanUpdateOrDeleteUser(userIdJane, userJane);
         verify(userRepository).save(userJane);
@@ -255,12 +259,9 @@ class UserServiceTest {
     }
 
     @Test
-    void updateUser_usernameChanged_generatesToken() {
+    void updateUserById_usernameChanged_generatesToken() {
         when(userRepository.findById(userIdJohn))
                 .thenReturn(Optional.of(userJohn));
-
-        doNothing().when(accessControlService)
-                .assertCanUpdateOrDeleteUser(userIdJohn, userJohn);
 
         when(userRepository.save(userJohn))
                 .thenReturn(userJohn);
@@ -291,12 +292,6 @@ class UserServiceTest {
     void deleteUserById_withValidCredentials_deletesUser() {
         when(userRepository.findById(userIdJohn))
                 .thenReturn(Optional.of(userJohn));
-
-        doNothing().when(accessControlService)
-                .assertCanUpdateOrDeleteUser(userIdJohn, userJohn);
-
-        doNothing().when(userRepository)
-                .delete(userJohn);
 
         when(userDTOUserMapper.mapUserToUserPublicDTO(userJohn))
                 .thenReturn(userPublicDTO);
