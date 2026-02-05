@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.UUID;
 
 public class UserTestBuilder {
-    private UUID id = UUID.randomUUID();
+    private UUID id = UUID.fromString("00000000-0000-0000-0000-000000000001");
     private String username = "testuser";
     private String email = "test@example.com";
     private String firstName = "Test";
@@ -32,6 +32,11 @@ public class UserTestBuilder {
     }
 
     public UserTestBuilder withUsername(String username) {
+        this.username = username;
+        return this;
+    }
+
+    public UserTestBuilder withUsernameAndEmail(String username) {
         this.username = username;
         this.email = username + "@example.com";
         return this;
@@ -79,7 +84,7 @@ public class UserTestBuilder {
 
     public User buildUserEntity() {
         User user = new User();
-        user.setId(id);
+        user.setId(this.id);
         user.setUsername(this.username);
         user.setEmail(this.email);
         user.setFirstName(this.firstName);
