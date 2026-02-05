@@ -188,7 +188,9 @@ class EventAdminServiceTest {
         when(eventRepository.save(event)).thenReturn(event);
         when(eventDTOEventMapper.mapEventToEventDTO(event)).thenReturn(eventDTO);
 
-        UserPrincipal adminPrincipal = new UserPrincipal(admin.getId(), admin.getUsername(), admin.getPassword(), null);
+        UserPrincipal adminPrincipal = new UserTestBuilder()
+                .fromUser(admin)
+                .buildUserPrincipal();
 
         EventDTO result = eventAdminService.addAdminsToEvent(event.getId(), userIdsToAdd, adminPrincipal);
 
