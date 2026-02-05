@@ -1,9 +1,11 @@
 package at.msm.asobo.builders;
 
+import at.msm.asobo.dto.event.EventDTO;
 import at.msm.asobo.entities.Event;
 import at.msm.asobo.entities.Medium;
 import at.msm.asobo.entities.User;
 import at.msm.asobo.entities.UserComment;
+import at.msm.asobo.mappers.*;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -28,6 +30,10 @@ public class EventTestBuilder {
     private List<Medium> media;
     private boolean isPrivateEvent;
 
+    private final UserDTOUserMapper userDTOUserMapper;
+    private final UserCommentDTOUserCommentMapper userCommentDTOUserCommentMapper;
+    private final MediumDTOMediumMapper mediumDTOMediumMapper;
+
     public EventTestBuilder() {
         this.id = FIXED_EVENT_ID;
         this.creator = defaultCreator();
@@ -49,6 +55,10 @@ public class EventTestBuilder {
         this.media = new ArrayList<>();
 
         this.isPrivateEvent = false;
+
+        this.userDTOUserMapper = new UserDTOUserMapperImpl();
+        this.userCommentDTOUserCommentMapper = new UserCommentDTOUserCommentMapper();
+        this.mediumDTOMediumMapper = new MediumDTOMediumMapperImpl();
     }
 
     public EventTestBuilder fromEvent(Event event) {
@@ -156,5 +166,25 @@ public class EventTestBuilder {
         event.setPrivateEvent(this.isPrivateEvent);
 
         return event;
+    }
+
+    public EventDTO buildEventDTO() {
+        EventDTO eventDTO = new EventDTO();
+        eventDTO.setId(this.id);
+        eventDTO.setCreator(this.userDTOUserMapper.mapUserToUserPublicDTO(this.creator));
+        eventDTO.setDate(this.date);
+        eventDTO.setDescription(this.description);
+        eventDTO.setTitle(this.title);
+        eventDTO.setEventAdmins(this.userDTOUserMapper.mapUsersToUserPublicDTOs(this.eventAdmins));
+        eventDTO.setParticipants(this.userDTOUserMapper.mapUsersToUserPublicDTOs(this.participants));
+        eventDTO.setLocation(this.location);
+        eventDTO.setPictureURI(this.pictureURI);
+        eventDTO.setCreationDate(this.creationDate);
+        eventDTO.setModificationDate(this.modificationDate);
+        eventDTO.setComments(this.userCommentDTOUserCommentMapper.mapUserCommentsToUserCommentDTOs(this.comments));
+        eventDTO.setMedia(this.mediumDTOMediumMapper.mapMediaToMediaDTOList(this.media));
+        eventDTO.setIsPrivate(this.isPrivateEvent);
+
+        return eventDTO;
     }
 }

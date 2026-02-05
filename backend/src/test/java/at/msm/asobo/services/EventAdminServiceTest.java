@@ -1,5 +1,6 @@
 package at.msm.asobo.services;
 
+import at.msm.asobo.builders.EventTestBuilder;
 import at.msm.asobo.builders.UserTestBuilder;
 import at.msm.asobo.dto.event.EventDTO;
 import at.msm.asobo.dto.user.UserPublicDTO;
@@ -55,7 +56,6 @@ class EventAdminServiceTest {
     private Event event;
     private UserPrincipal userPrincipal;
     private UserPrincipal creatorPrincipal;
-    private Set<User> eventAdmins;
     private Set<UserPublicDTO> eventAdminDTOs;
     private EventDTO eventDTO;
 
@@ -83,11 +83,11 @@ class EventAdminServiceTest {
                 .withPassword("password")
                 .buildUserEntity();
 
-        event = new Event();
-        event.setId(UUID.randomUUID());
-        event.setCreator(creator);
-        eventAdmins = new HashSet<>();
-        event.setEventAdmins(eventAdmins);
+        event = new EventTestBuilder()
+                .withId(UUID.randomUUID())
+                .withCreator(creator)
+                .withEventAdmins(new HashSet<>())
+                .buildEventEntity();
 
         userPrincipal = new UserTestBuilder()
                 .fromUser(userJohn)
@@ -104,12 +104,14 @@ class EventAdminServiceTest {
 
         eventAdminDTOs.add(userJohnDto);
 
-        eventDTO = new EventDTO();
-        eventDTO.setId(event.getId());
+        eventDTO = new EventTestBuilder()
+                .fromEvent(event)
+                .buildEventDTO();
     }
 
     @Test
     void getAllEventAdminsByEventId_existingEvent_returnsAdminDTOs() {
+        Set<User> eventAdmins = event.getEventAdmins();
         eventAdmins.add(admin);
 
         when(eventRepository.findById(event.getId())).thenReturn(Optional.of(event));
@@ -139,7 +141,7 @@ class EventAdminServiceTest {
     @Test
     void getAllEventAdminsByEventId_emptyAdminList_returnsEmptySet() {
         when(eventRepository.findById(event.getId())).thenReturn(Optional.of(event));
-        when(userDTOUserMapper.mapUsersToUserPublicDTOs(eventAdmins))
+        when(userDTOUserMapper.mapUsersToUserPublicDTOs(event.getEventAdmins()))
                 .thenReturn(new HashSet<>());
 
         Set<UserPublicDTO> result = eventAdminService.getAllEventAdminsByEventId(event.getId());
@@ -147,7 +149,7 @@ class EventAdminServiceTest {
         assertNotNull(result);
         assertTrue(result.isEmpty());
         verify(eventRepository).findById(event.getId());
-        verify(userDTOUserMapper).mapUsersToUserPublicDTOs(eventAdmins);
+        verify(userDTOUserMapper).mapUsersToUserPublicDTOs(event.getEventAdmins());
     }
 
     @Test
@@ -165,7 +167,7 @@ class EventAdminServiceTest {
 
         EventDTO result = eventAdminService.addAdminsToEvent(event.getId(), userIdsToAdd, creatorPrincipal);
 
-        assertTrue(eventAdmins.contains(userJohn));
+        assertTrue(event.getEventAdmins().contains(userJohn));
         assertNotNull(result);
         verify(eventRepository).findById(event.getId());
         verify(userService).getUserById(creator.getId());
@@ -192,8 +194,8 @@ class EventAdminServiceTest {
 
         assertNotNull(result);
         assertEquals(eventDTO, result);
-        assertTrue(eventAdmins.containsAll(Set.of(userJohn, userJane)));
-        assertEquals(2, eventAdmins.size());
+        assertTrue(event.getEventAdmins().containsAll(Set.of(userJohn, userJane)));
+        assertEquals(2, event.getEventAdmins().size());
 
         verify(eventRepository).findById(event.getId());
         verify(userService).getUserById(admin.getId());
@@ -205,7 +207,7 @@ class EventAdminServiceTest {
 
     @Test
     void addAdminsToEvent_userIsEventAdmin_addsAdmins() {
-        eventAdmins.add(userJohn); // User is already an event admin
+        event.getEventAdmins().add(userJohn); // makes sure that userJohn is an event admin
 
         Set<UUID> userIdsToAdd = Set.of(userJane.getId());
         Set<User> usersToAdd = Set.of(userJane);
@@ -221,9 +223,9 @@ class EventAdminServiceTest {
 
         assertNotNull(result);
         assertEquals(eventDTO, result);
-        assertTrue(eventAdmins.contains(userJohn));
-        assertTrue(eventAdmins.contains(userJane));
-        assertEquals(2, eventAdmins.size());
+        assertTrue(event.getEventAdmins().contains(userJohn));
+        assertTrue(event.getEventAdmins().contains(userJane));
+        assertEquals(2, event.getEventAdmins().size());
 
         verify(eventRepository).findById(event.getId());
         verify(userService).getUserById(userJohn.getId());
@@ -270,7 +272,7 @@ class EventAdminServiceTest {
 
     @Test
     void removeAdminsFromEvent_userIsEventCreator_removesAdmins() {
-        eventAdmins.add(userJohn);
+        event.getEventAdmins().add(userJohn);
 
         Set<UUID> userIdsToRemove = Set.of(userJohn.getId());
         Set<User> usersToRemove = Set.of(userJohn);
@@ -286,8 +288,8 @@ class EventAdminServiceTest {
 
         assertNotNull(result);
         assertEquals(eventDTO, result);
-        assertFalse(eventAdmins.contains(userJohn));
-        assertEquals(0, eventAdmins.size());
+        assertFalse(event.getEventAdmins().contains(userJohn));
+        assertEquals(0, event.getEventAdmins().size());
 
         verify(eventRepository).findById(event.getId());
         verify(userService).getUserById(creator.getId());
@@ -340,7 +342,7 @@ class EventAdminServiceTest {
 
     @Test
     void canManageEvent_userIsEventAdmin_returnsTrue() {
-        eventAdmins.add(userJohn);
+        event.getEventAdmins().add(userJohn);
         when(accessControlService.hasAdminRole(userJohn)).thenReturn(false);
 
         boolean result = eventAdminService.canManageEvent(event, userJohn);
