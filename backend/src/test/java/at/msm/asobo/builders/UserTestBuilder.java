@@ -22,6 +22,20 @@ public class UserTestBuilder {
     private String aboutMe = "I am him";
     private String password = "password";
 
+    public UserTestBuilder fromUser(User user) {
+        this.id = user.getId();
+        this.username = user.getUsername();
+        this.email = user.getEmail();
+        this.firstName = user.getFirstName();
+        this.surname = user.getSurname();
+        this.salutation = user.getSalutation();
+        this.location = user.getLocation();
+        this.isActive = user.getIsActive();
+        this.aboutMe = user.getAboutMe();
+        this.password = user.getPassword();
+        return this;
+    }
+
     public UserTestBuilder withoutId() {
         return this;
     }
@@ -39,6 +53,12 @@ public class UserTestBuilder {
     public UserTestBuilder withUsernameAndEmail(String username) {
         this.username = username;
         this.email = username + "@example.com";
+        return this;
+    }
+
+    public UserTestBuilder withUsernameAndEmail(String username, String email) {
+        this.username = username;
+        this.email = email;
         return this;
     }
 

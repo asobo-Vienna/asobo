@@ -69,13 +69,11 @@ class UserServiceTest {
         userDTO = new UserDTO();
 
         principalJohn = new UserTestBuilder()
-                .withUsernameAndEmail(userJohn.getUsername())
-                .withId(userJohn.getId())
+                .fromUser(userJohn)
                 .buildUserPrincipal();
 
         principalJane = new UserTestBuilder()
-                .withUsernameAndEmail(userJane.getUsername())
-                .withId(userJane.getId())
+                .fromUser(userJane)
                 .buildUserPrincipal();
     }
 
