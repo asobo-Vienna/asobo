@@ -117,9 +117,7 @@ class EventAdminServiceTest {
 
     @Test
     void getAllEventAdminsByEventId_existingEvent_returnsAdminDTOs() {
-        User admin1 = new User();
-        admin1.setId(UUID.randomUUID());
-        eventAdmins.add(admin1);
+        eventAdmins.add(admin);
 
         when(eventRepository.findById(eventId)).thenReturn(Optional.of(event));
         when(userDTOUserMapper.mapUsersToUserPublicDTOs(eventAdmins))
