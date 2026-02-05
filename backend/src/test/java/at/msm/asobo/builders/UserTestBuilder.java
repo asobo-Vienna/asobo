@@ -111,6 +111,7 @@ public class UserTestBuilder {
         user.setSurname(this.surname);
         user.setSalutation(this.salutation);
         user.setPassword(this.password);
+
         return user;
     }
 
@@ -122,6 +123,7 @@ public class UserTestBuilder {
         user.setFirstName(this.firstName);
         user.setSurname(this.surname);
         user.setSalutation(this.salutation);
+
         return user;
     }
 
@@ -133,6 +135,7 @@ public class UserTestBuilder {
         user.setSurname(this.surname);
         user.setSalutation(this.salutation);
         user.setPassword(this.password);
+
         return user;
     }
 
@@ -144,6 +147,7 @@ public class UserTestBuilder {
         user.setSurname(this.surname);
         user.setSalutation(this.salutation);
         user.setPassword(this.password);
+
         return user;
     }
 
