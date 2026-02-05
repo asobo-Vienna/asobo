@@ -81,7 +81,7 @@ public class UserControllerTest {
     private UserPublicDTO createDefaultTestUser() {
         return new UserTestBuilder()
                 .withId(UUID.fromString("123e4567-e89b-12d3-a456-426614174000"))
-                .withUsername("testuser")
+                .withUsernameAndEmail("testuser")
                 .withEmail("test@example.com")
                 .buildUserPublicDTO();
     }
@@ -126,7 +126,7 @@ public class UserControllerTest {
 
         UserPublicDTO expectedUser = new UserTestBuilder()
                 .withId(testId)
-                .withUsername("testuser")
+                .withUsernameAndEmail("testuser")
                 .buildUserPublicDTO();
 
         when(userService.getUserByUsername("testuser")).thenReturn(expectedUser);
