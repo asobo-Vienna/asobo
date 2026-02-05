@@ -1,5 +1,6 @@
 package at.msm.asobo.services;
 
+import at.msm.asobo.builders.EventTestBuilder;
 import at.msm.asobo.dto.event.EventSummaryDTO;
 import at.msm.asobo.entities.Event;
 import at.msm.asobo.mappers.EventDTOEventMapper;
@@ -33,71 +34,74 @@ class EventServiceTest {
     @InjectMocks
     private EventService eventService;
 
-    private UUID event1Id;
-    private UUID event2Id;
-    private UUID event3Id;
-    private UUID event4Id;
-    private Event event1;
-    private Event event2;
-    private Event event3;
-    private Event event4;
-    private EventSummaryDTO eventSummaryDTO1;
-    private EventSummaryDTO eventSummaryDTO2;
-    private EventSummaryDTO eventSummaryDTO3;
-    private EventSummaryDTO eventSummaryDTO4;
-
-
+    private Event publicEvent1;
+    private Event publicEvent2;
+    private Event privateEvent1;
+    private Event privateEvent2;
+    private EventSummaryDTO publicEventSummaryDTO1;
+    private EventSummaryDTO publicEventSummaryDTO2;
+    private EventSummaryDTO privateEventSummaryDTO1;
+    private EventSummaryDTO privateEventSummaryDTO2;
+    private Pageable pageable02;
+    private Pageable pageable12;
+    
     @BeforeEach
     void setup() {
-        event1Id = UUID.randomUUID();
-        event2Id = UUID.randomUUID();
-        event3Id = UUID.randomUUID();
-        event4Id = UUID.randomUUID();
-
         // Public events
-        event1 = new Event();
-        event1.setId(event1Id);
-        event1.setTitle("Public Event 1");
-        event1.setPrivateEvent(false);
+        publicEvent1 = new EventTestBuilder()
+                .withId(UUID.randomUUID())
+                .withTitle("Public Event 1")
+                .withIsPrivateEvent(false)
+                .buildEventEntity();
 
-        event2 = new Event();
-        event2.setId(event2Id);
-        event2.setTitle("Public Event 2");
-        event2.setPrivateEvent(false);
+        publicEvent2 = new EventTestBuilder()
+                .withId(UUID.randomUUID())
+                .withTitle("Public Event 2")
+                .withIsPrivateEvent(false)
+                .buildEventEntity();
 
         // Private events
-        event3 = new Event();
-        event3.setId(event3Id);
-        event3.setTitle("Private Event 1");
-        event3.setPrivateEvent(true);
+        privateEvent1 = new EventTestBuilder()
+                .withId(UUID.randomUUID())
+                .withTitle("Private Event 1")
+                .withIsPrivateEvent(true)
+                .buildEventEntity();
 
-        event4 = new Event();
-        event4.setId(event4Id);
-        event4.setTitle("Private Event 2");
-        event4.setPrivateEvent(true);
+        privateEvent2 = new EventTestBuilder()
+                .withId(UUID.randomUUID())
+                .withTitle("Private Event 2")
+                .withIsPrivateEvent(true)
+                .buildEventEntity();
 
-        eventSummaryDTO1 = new EventSummaryDTO();
-        eventSummaryDTO1.setId(event1.getId());
-        eventSummaryDTO1.setIsPrivate(event1.isPrivateEvent());
+        publicEventSummaryDTO1 = new EventTestBuilder()
+                .withId(publicEvent1.getId())
+                .withIsPrivateEvent(publicEvent1.isPrivateEvent())
+                .buildEventSummaryDTO();
 
-        eventSummaryDTO2 = new EventSummaryDTO();
-        eventSummaryDTO2.setId(event2.getId());
-        eventSummaryDTO2.setIsPrivate(event2.isPrivateEvent());
+        publicEventSummaryDTO2 = new EventTestBuilder()
+                .withId(publicEvent2.getId())
+                .withIsPrivateEvent(publicEvent2.isPrivateEvent())
+                .buildEventSummaryDTO();
 
-        eventSummaryDTO3 = new EventSummaryDTO();
-        eventSummaryDTO3.setId(event3.getId());
-        eventSummaryDTO3.setIsPrivate(event3.isPrivateEvent());
+        privateEventSummaryDTO1 = new EventTestBuilder()
+                .withId(privateEvent1.getId())
+                .withIsPrivateEvent(privateEvent1.isPrivateEvent())
+                .buildEventSummaryDTO();
 
-        eventSummaryDTO4 = new EventSummaryDTO();
-        eventSummaryDTO4.setId(event4.getId());
-        eventSummaryDTO4.setIsPrivate(event4.isPrivateEvent());
+        privateEventSummaryDTO2 = new EventTestBuilder()
+                .withId(privateEvent2.getId())
+                .withIsPrivateEvent(privateEvent2.isPrivateEvent())
+                .buildEventSummaryDTO();
+
+        pageable02 = PageRequest.of(0, 2); // page 1
+        pageable12 = PageRequest.of(1, 2); // page 2
     }
 
     @Test
     void getAllEvents_returnsMappedEventSummaries() {
-        List<Event> events = List.of(event1, event2);
+        List<Event> events = List.of(publicEvent1, publicEvent2);
 
-        List<EventSummaryDTO> mappedDtos = List.of(eventSummaryDTO1, eventSummaryDTO2);
+        List<EventSummaryDTO> mappedDtos = List.of(publicEventSummaryDTO1, publicEventSummaryDTO2);
 
         when(eventRepository.findAll()).thenReturn(events);
         when(eventDTOEventMapper.mapEventsToEventSummaryDTOs(events))
@@ -131,63 +135,60 @@ class EventServiceTest {
 
     @Test
     void getAllEventsPaginated_returnsMappedPage() {
-        Pageable pageable = PageRequest.of(0, 2);
-        List<Event> events = List.of(event1, event2);
-        Page<Event> eventPage = new PageImpl<>(events, pageable, events.size());
+        List<Event> events = List.of(publicEvent1, publicEvent2);
+        Page<Event> eventPage = new PageImpl<>(events, pageable02, events.size());
 
-        when(eventRepository.findAllEvents(pageable)).thenReturn(eventPage);
-        when(eventDTOEventMapper.toEventSummaryDTO(event1)).thenReturn(eventSummaryDTO1);
-        when(eventDTOEventMapper.toEventSummaryDTO(event2)).thenReturn(eventSummaryDTO2);
+        when(eventRepository.findAllEvents(pageable02)).thenReturn(eventPage);
+        when(eventDTOEventMapper.toEventSummaryDTO(publicEvent1)).thenReturn(publicEventSummaryDTO1);
+        when(eventDTOEventMapper.toEventSummaryDTO(publicEvent2)).thenReturn(publicEventSummaryDTO2);
 
-        Page<EventSummaryDTO> result = eventService.getAllEventsPaginated(pageable);
+        Page<EventSummaryDTO> result = eventService.getAllEventsPaginated(pageable02);
 
         assertNotNull(result);
-        assertThat(result.getContent()).containsExactly(eventSummaryDTO1, eventSummaryDTO2);
+        assertThat(result.getContent()).containsExactly(publicEventSummaryDTO1, publicEventSummaryDTO2);
         assertThat(result.getTotalElements()).isEqualTo(2);
-        assertThat(result.getPageable()).isEqualTo(pageable);
+        assertThat(result.getPageable()).isEqualTo(pageable02);
 
-        verify(eventRepository).findAllEvents(pageable);
-        verify(eventDTOEventMapper).toEventSummaryDTO(event1);
-        verify(eventDTOEventMapper).toEventSummaryDTO(event2);
+        verify(eventRepository).findAllEvents(pageable02);
+        verify(eventDTOEventMapper).toEventSummaryDTO(publicEvent1);
+        verify(eventDTOEventMapper).toEventSummaryDTO(publicEvent2);
         verifyNoMoreInteractions(eventRepository, eventDTOEventMapper);
     }
 
     @Test
     void getAllEventsPaginated_secondPage_returnsCorrectPage() {
-        Pageable pageable = PageRequest.of(1, 2); // page 2
-        List<Event> events = List.of(event3);
-        Page<Event> eventPage = new PageImpl<>(events, pageable, 5);  // Total 5 events
+        List<Event> events = List.of(privateEvent1);
+        Page<Event> eventPage = new PageImpl<>(events, pageable12, 5);  // Total 5 events
 
-        when(eventRepository.findAllEvents(pageable)).thenReturn(eventPage);
-        when(eventDTOEventMapper.toEventSummaryDTO(event3)).thenReturn(eventSummaryDTO3);
+        when(eventRepository.findAllEvents(pageable12)).thenReturn(eventPage);
+        when(eventDTOEventMapper.toEventSummaryDTO(privateEvent1)).thenReturn(privateEventSummaryDTO1);
 
-        Page<EventSummaryDTO> result = eventService.getAllEventsPaginated(pageable);
+        Page<EventSummaryDTO> result = eventService.getAllEventsPaginated(pageable12);
 
         assertThat(result.getContent()).hasSize(1);
         assertThat(result.getTotalElements()).isEqualTo(5);
         assertThat(result.getNumber()).isEqualTo(1);
         assertThat(result.getTotalPages()).isEqualTo(3);
 
-        verify(eventRepository).findAllEvents(pageable);
-        verify(eventDTOEventMapper).toEventSummaryDTO(event3);
+        verify(eventRepository).findAllEvents(pageable12);
+        verify(eventDTOEventMapper).toEventSummaryDTO(privateEvent1);
         verifyNoMoreInteractions(eventRepository, eventDTOEventMapper);
     }
 
     @Test
     void getAllEventsPaginated_whenEmpty_shouldReturnEmptyPage() {
-        Pageable pageable = PageRequest.of(0, 2);
-        Page<Event> emptyPage = new PageImpl<>(List.of(), pageable, 0);
+        Page<Event> emptyPage = new PageImpl<>(List.of(), pageable02, 0);
 
-        when(eventRepository.findAllEvents(pageable)).thenReturn(emptyPage);
+        when(eventRepository.findAllEvents(pageable02)).thenReturn(emptyPage);
 
-        Page<EventSummaryDTO> result = eventService.getAllEventsPaginated(pageable);
+        Page<EventSummaryDTO> result = eventService.getAllEventsPaginated(pageable02);
 
         assertNotNull(result);
         assertThat(result.getContent()).isEmpty();
         assertThat(result.getTotalElements()).isZero();
-        assertThat(result.getPageable()).isEqualTo(pageable);
+        assertThat(result.getPageable()).isEqualTo(pageable02);
 
-        verify(eventRepository).findAllEvents(pageable);
+        verify(eventRepository).findAllEvents(pageable02);
         verifyNoMoreInteractions(eventRepository, eventDTOEventMapper);
     }
 
@@ -212,9 +213,9 @@ class EventServiceTest {
 
     @Test
     void getAllPublicEvents_returnsMappedEventSummaries() {
-        List<Event> events = List.of(event1, event2);
+        List<Event> events = List.of(publicEvent1, publicEvent2);
 
-        List<EventSummaryDTO> mappedDtos = List.of(eventSummaryDTO1, eventSummaryDTO2);
+        List<EventSummaryDTO> mappedDtos = List.of(publicEventSummaryDTO1, publicEventSummaryDTO2);
 
         when(eventRepository.findByIsPrivateEventFalse()).thenReturn(events);
         when(eventDTOEventMapper.mapEventsToEventSummaryDTOs(events))
@@ -248,63 +249,60 @@ class EventServiceTest {
 
     @Test
     void getAllPublicEventsPaginated_returnsMappedPage() {
-        Pageable pageable = PageRequest.of(0, 2);
-        List<Event> events = List.of(event1, event2);
-        Page<Event> eventPage = new PageImpl<>(events, pageable, events.size());
+        List<Event> events = List.of(publicEvent1, publicEvent2);
+        Page<Event> eventPage = new PageImpl<>(events, pageable02, events.size());
 
-        when(eventRepository.findByIsPrivateEventFalse(pageable)).thenReturn(eventPage);
-        when(eventDTOEventMapper.toEventSummaryDTO(event1)).thenReturn(eventSummaryDTO1);
-        when(eventDTOEventMapper.toEventSummaryDTO(event2)).thenReturn(eventSummaryDTO2);
+        when(eventRepository.findByIsPrivateEventFalse(pageable02)).thenReturn(eventPage);
+        when(eventDTOEventMapper.toEventSummaryDTO(publicEvent1)).thenReturn(publicEventSummaryDTO1);
+        when(eventDTOEventMapper.toEventSummaryDTO(publicEvent2)).thenReturn(publicEventSummaryDTO2);
 
-        Page<EventSummaryDTO> result = eventService.getAllPublicEventsPaginated(pageable);
+        Page<EventSummaryDTO> result = eventService.getAllPublicEventsPaginated(pageable02);
 
         assertNotNull(result);
-        assertThat(result.getContent()).containsExactly(eventSummaryDTO1, eventSummaryDTO2);
+        assertThat(result.getContent()).containsExactly(publicEventSummaryDTO1, publicEventSummaryDTO2);
         assertThat(result.getTotalElements()).isEqualTo(2);
-        assertThat(result.getPageable()).isEqualTo(pageable);
+        assertThat(result.getPageable()).isEqualTo(pageable02);
 
-        verify(eventRepository).findByIsPrivateEventFalse(pageable);
-        verify(eventDTOEventMapper).toEventSummaryDTO(event1);
-        verify(eventDTOEventMapper).toEventSummaryDTO(event2);
+        verify(eventRepository).findByIsPrivateEventFalse(pageable02);
+        verify(eventDTOEventMapper).toEventSummaryDTO(publicEvent1);
+        verify(eventDTOEventMapper).toEventSummaryDTO(publicEvent2);
         verifyNoMoreInteractions(eventRepository, eventDTOEventMapper);
     }
 
     @Test
     void getAllPublicEventsPaginated_secondPage_returnsCorrectPage() {
-        Pageable pageable = PageRequest.of(1, 2); // page 2
-        List<Event> events = List.of(event1);
-        Page<Event> eventPage = new PageImpl<>(events, pageable, 5);  // Total 5 events
+        List<Event> events = List.of(publicEvent1);
+        Page<Event> eventPage = new PageImpl<>(events, pageable12, 5);  // Total 5 events
 
-        when(eventRepository.findByIsPrivateEventFalse(pageable)).thenReturn(eventPage);
-        when(eventDTOEventMapper.toEventSummaryDTO(event1)).thenReturn(eventSummaryDTO3);
+        when(eventRepository.findByIsPrivateEventFalse(pageable12)).thenReturn(eventPage);
+        when(eventDTOEventMapper.toEventSummaryDTO(publicEvent1)).thenReturn(privateEventSummaryDTO1);
 
-        Page<EventSummaryDTO> result = eventService.getAllPublicEventsPaginated(pageable);
+        Page<EventSummaryDTO> result = eventService.getAllPublicEventsPaginated(pageable12);
 
         assertThat(result.getContent()).hasSize(1);
         assertThat(result.getTotalElements()).isEqualTo(5);
         assertThat(result.getNumber()).isEqualTo(1);
         assertThat(result.getTotalPages()).isEqualTo(3);
 
-        verify(eventRepository).findByIsPrivateEventFalse(pageable);
-        verify(eventDTOEventMapper).toEventSummaryDTO(event1);
+        verify(eventRepository).findByIsPrivateEventFalse(pageable12);
+        verify(eventDTOEventMapper).toEventSummaryDTO(publicEvent1);
         verifyNoMoreInteractions(eventRepository, eventDTOEventMapper);
     }
 
     @Test
     void getAllPublicEventsPaginated_whenEmpty_shouldReturnEmptyPage() {
-        Pageable pageable = PageRequest.of(0, 2);
-        Page<Event> emptyPage = new PageImpl<>(List.of(), pageable, 0);
+        Page<Event> emptyPage = new PageImpl<>(List.of(), pageable02, 0);
 
-        when(eventRepository.findByIsPrivateEventFalse(pageable)).thenReturn(emptyPage);
+        when(eventRepository.findByIsPrivateEventFalse(pageable02)).thenReturn(emptyPage);
 
-        Page<EventSummaryDTO> result = eventService.getAllPublicEventsPaginated(pageable);
+        Page<EventSummaryDTO> result = eventService.getAllPublicEventsPaginated(pageable02);
 
         assertNotNull(result);
         assertThat(result.getContent()).isEmpty();
         assertThat(result.getTotalElements()).isZero();
-        assertThat(result.getPageable()).isEqualTo(pageable);
+        assertThat(result.getPageable()).isEqualTo(pageable02);
 
-        verify(eventRepository).findByIsPrivateEventFalse(pageable);
+        verify(eventRepository).findByIsPrivateEventFalse(pageable02);
         verifyNoMoreInteractions(eventRepository, eventDTOEventMapper);
     }
 
@@ -329,9 +327,9 @@ class EventServiceTest {
 
     @Test
     void getAllPrivateEvents_returnsMappedEventSummaries() {
-        List<Event> events = List.of(event3, event4);
+        List<Event> events = List.of(privateEvent1, privateEvent2);
 
-        List<EventSummaryDTO> mappedDtos = List.of(eventSummaryDTO1, eventSummaryDTO2);
+        List<EventSummaryDTO> mappedDtos = List.of(publicEventSummaryDTO1, publicEventSummaryDTO2);
 
         when(eventRepository.findByIsPrivateEventTrue()).thenReturn(events);
         when(eventDTOEventMapper.mapEventsToEventSummaryDTOs(events))
@@ -365,63 +363,60 @@ class EventServiceTest {
 
     @Test
     void getAllPrivateEventsPaginated_returnsMappedPage() {
-        Pageable pageable = PageRequest.of(0, 2);
-        List<Event> events = List.of(event3, event4);
-        Page<Event> eventPage = new PageImpl<>(events, pageable, events.size());
+        List<Event> events = List.of(privateEvent1, privateEvent2);
+        Page<Event> eventPage = new PageImpl<>(events, pageable02, events.size());
 
-        when(eventRepository.findByIsPrivateEventTrue(pageable)).thenReturn(eventPage);
-        when(eventDTOEventMapper.toEventSummaryDTO(event3)).thenReturn(eventSummaryDTO3);
-        when(eventDTOEventMapper.toEventSummaryDTO(event4)).thenReturn(eventSummaryDTO4);
+        when(eventRepository.findByIsPrivateEventTrue(pageable02)).thenReturn(eventPage);
+        when(eventDTOEventMapper.toEventSummaryDTO(privateEvent1)).thenReturn(privateEventSummaryDTO1);
+        when(eventDTOEventMapper.toEventSummaryDTO(privateEvent2)).thenReturn(privateEventSummaryDTO2);
 
-        Page<EventSummaryDTO> result = eventService.getAllPrivateEventsPaginated(pageable);
+        Page<EventSummaryDTO> result = eventService.getAllPrivateEventsPaginated(pageable02);
 
         assertNotNull(result);
-        assertThat(result.getContent()).containsExactly(eventSummaryDTO3, eventSummaryDTO4);
+        assertThat(result.getContent()).containsExactly(privateEventSummaryDTO1, privateEventSummaryDTO2);
         assertThat(result.getTotalElements()).isEqualTo(2);
-        assertThat(result.getPageable()).isEqualTo(pageable);
+        assertThat(result.getPageable()).isEqualTo(pageable02);
 
-        verify(eventRepository).findByIsPrivateEventTrue(pageable);
-        verify(eventDTOEventMapper).toEventSummaryDTO(event3);
-        verify(eventDTOEventMapper).toEventSummaryDTO(event4);
+        verify(eventRepository).findByIsPrivateEventTrue(pageable02);
+        verify(eventDTOEventMapper).toEventSummaryDTO(privateEvent1);
+        verify(eventDTOEventMapper).toEventSummaryDTO(privateEvent2);
         verifyNoMoreInteractions(eventRepository, eventDTOEventMapper);
     }
 
     @Test
     void getAllPrivateEventsPaginated_secondPage_returnsCorrectPage() {
-        Pageable pageable = PageRequest.of(1, 2); // page 2
-        List<Event> events = List.of(event3);
-        Page<Event> eventPage = new PageImpl<>(events, pageable, 5);  // Total 5 events
+        List<Event> events = List.of(privateEvent1);
+        Page<Event> eventPage = new PageImpl<>(events, pageable12, 5);  // Total 5 events
 
-        when(eventRepository.findByIsPrivateEventTrue(pageable)).thenReturn(eventPage);
-        when(eventDTOEventMapper.toEventSummaryDTO(event3)).thenReturn(eventSummaryDTO3);
+        when(eventRepository.findByIsPrivateEventTrue(pageable12)).thenReturn(eventPage);
+        when(eventDTOEventMapper.toEventSummaryDTO(privateEvent1)).thenReturn(privateEventSummaryDTO1);
 
-        Page<EventSummaryDTO> result = eventService.getAllPrivateEventsPaginated(pageable);
+        Page<EventSummaryDTO> result = eventService.getAllPrivateEventsPaginated(pageable12);
 
         assertThat(result.getContent()).hasSize(1);
         assertThat(result.getTotalElements()).isEqualTo(5);
         assertThat(result.getNumber()).isEqualTo(1);
         assertThat(result.getTotalPages()).isEqualTo(3);
 
-        verify(eventRepository).findByIsPrivateEventTrue(pageable);
-        verify(eventDTOEventMapper).toEventSummaryDTO(event3);
+        verify(eventRepository).findByIsPrivateEventTrue(pageable12);
+        verify(eventDTOEventMapper).toEventSummaryDTO(privateEvent1);
         verifyNoMoreInteractions(eventRepository, eventDTOEventMapper);
     }
 
     @Test
     void getAllPrivateEventsPaginated_whenEmpty_shouldReturnEmptyPage() {
-        Pageable pageable = PageRequest.of(0, 2);
-        Page<Event> emptyPage = new PageImpl<>(List.of(), pageable, 0);
+        Page<Event> emptyPage = new PageImpl<>(List.of(), pageable02, 0);
 
-        when(eventRepository.findByIsPrivateEventTrue(pageable)).thenReturn(emptyPage);
+        when(eventRepository.findByIsPrivateEventTrue(pageable02)).thenReturn(emptyPage);
 
-        Page<EventSummaryDTO> result = eventService.getAllPrivateEventsPaginated(pageable);
+        Page<EventSummaryDTO> result = eventService.getAllPrivateEventsPaginated(pageable02);
 
         assertNotNull(result);
         assertThat(result.getContent()).isEmpty();
         assertThat(result.getTotalElements()).isZero();
-        assertThat(result.getPageable()).isEqualTo(pageable);
+        assertThat(result.getPageable()).isEqualTo(pageable02);
 
-        verify(eventRepository).findByIsPrivateEventTrue(pageable);
+        verify(eventRepository).findByIsPrivateEventTrue(pageable02);
         verifyNoMoreInteractions(eventRepository, eventDTOEventMapper);
     }
 
@@ -447,8 +442,8 @@ class EventServiceTest {
     @Test
     void getEventsByParticipantId_isPrivateNull_returnsAllEvents() {
         UUID participantId = UUID.randomUUID();
-        List<Event> events = List.of(event1, event3);
-        List<EventSummaryDTO> mappedDtos = List.of(eventSummaryDTO1, eventSummaryDTO3);
+        List<Event> events = List.of(publicEvent1, privateEvent1);
+        List<EventSummaryDTO> mappedDtos = List.of(publicEventSummaryDTO1, privateEventSummaryDTO1);
 
         when(eventRepository.findByParticipants_Id(participantId)).thenReturn(events);
         when(eventDTOEventMapper.mapEventsToEventSummaryDTOs(events)).thenReturn(mappedDtos);
@@ -470,8 +465,8 @@ class EventServiceTest {
     @Test
     void getEventsByParticipantId_isPrivateTrue_returnsOnlyPrivateEvents() {
         UUID participantId = UUID.randomUUID();
-        List<Event> privateEvents = List.of(event3, event4);
-        List<EventSummaryDTO> mappedDtos = List.of(eventSummaryDTO3, eventSummaryDTO4);
+        List<Event> privateEvents = List.of(privateEvent1, privateEvent2);
+        List<EventSummaryDTO> mappedDtos = List.of(privateEventSummaryDTO1, privateEventSummaryDTO2);
 
         when(eventRepository.findByParticipants_IdAndIsPrivateEventTrue(participantId))
                 .thenReturn(privateEvents);
@@ -496,8 +491,8 @@ class EventServiceTest {
     @Test
     void getEventsByParticipantId_isPrivateFalse_returnsOnlyPublicEvents() {
         UUID participantId = UUID.randomUUID();
-        List<Event> publicEvents = List.of(event1, event2);
-        List<EventSummaryDTO> mappedDtos = List.of(eventSummaryDTO1, eventSummaryDTO2);
+        List<Event> publicEvents = List.of(publicEvent1, publicEvent2);
+        List<EventSummaryDTO> mappedDtos = List.of(publicEventSummaryDTO1, publicEventSummaryDTO2);
 
         when(eventRepository.findByParticipants_IdAndIsPrivateEventFalse(participantId))
                 .thenReturn(publicEvents);
