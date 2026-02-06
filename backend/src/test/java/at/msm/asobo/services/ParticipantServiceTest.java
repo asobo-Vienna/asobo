@@ -279,7 +279,6 @@ class ParticipantServiceTest {
         });
 
         verify(eventService).getEventById(event.getId());
-        // check if mapUsersToUserPublicDTOs() has never been called
         verify(userDTOUserMapper, never()).mapUsersToUserPublicDTOs(any());
     }
 
