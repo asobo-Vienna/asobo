@@ -1,5 +1,6 @@
 package at.msm.asobo.services;
 
+import at.msm.asobo.builders.EventTestBuilder;
 import at.msm.asobo.builders.UserTestBuilder;
 import at.msm.asobo.dto.user.UserPublicDTO;
 import at.msm.asobo.entities.Event;
@@ -48,7 +49,6 @@ class ParticipantServiceTest {
     private User participant2;
     private User participant3;
     private UserPrincipal userPrincipal;
-    private Set<User> participants;
     private Set<UserPublicDTO> participantDTOs;
 
     @BeforeEach
@@ -74,35 +74,29 @@ class ParticipantServiceTest {
                 .withSurname("User3")
                 .buildUserEntity();
 
-        // refactor with EventTestBuilder once available
-        event = new Event();
-        event.setId(UUID.randomUUID());
-        participants = new HashSet<>();
-        event.setParticipants(participants);
+        event = new EventTestBuilder()
+                .withId(UUID.randomUUID())
+                .withParticipants(new HashSet<>())
+                .buildEventEntity();
 
-        // refactor once the fromUser method is available
         userPrincipal = new UserTestBuilder()
-                .withId(participant1.getId())
-                .withUsernameAndEmail(participant1.getUsername())
-                .withPassword(participant1.getPassword())
+                .fromUser(participant1)
                 .buildUserPrincipal();
 
         participantDTOs = new HashSet<>();
-        // refactor once the fromUser method is available
         UserPublicDTO dto = new UserTestBuilder()
-                .withId(participant1.getId())
-                .withUsernameAndEmail(participant1.getUsername())
+                .fromUser(participant1)
                 .buildUserPublicDTO();
         participantDTOs.add(dto);
     }
 
     @Test
     void getAllParticipantsAsDTOsByEventId_returnsParticipantDTOs() {
-        participants.add(participant1);
-        participants.add(participant2);
+        event.getParticipants().add(participant1);
+        event.getParticipants().add(participant2);
 
         when(eventService.getEventById(event.getId())).thenReturn(event);
-        when(userDTOUserMapper.mapUsersToUserPublicDTOs(participants))
+        when(userDTOUserMapper.mapUsersToUserPublicDTOs(event.getParticipants()))
                 .thenReturn(participantDTOs);
 
         Set<UserPublicDTO> result = participantService.getAllParticipantsAsDTOsByEventId(event.getId());
@@ -110,7 +104,7 @@ class ParticipantServiceTest {
         assertNotNull(result);
         assertEquals(participantDTOs, result);
         verify(eventService).getEventById(event.getId());
-        verify(userDTOUserMapper).mapUsersToUserPublicDTOs(participants);
+        verify(userDTOUserMapper).mapUsersToUserPublicDTOs(event.getParticipants());
     }
 
     @Test
@@ -121,18 +115,18 @@ class ParticipantServiceTest {
 
         Set<UserPublicDTO> result = participantService.toggleParticipantInEvent(event.getId(), userPrincipal);
 
-        assertTrue(participants.contains(participant1));
-        assertEquals(1, participants.size());
+        assertTrue(event.getParticipants().contains(participant1));
+        assertEquals(1, event.getParticipants().size());
         verify(userService).getUserById(participant1.getId());
         verify(eventService).getEventById(event.getId());
         verify(eventRepository).save(event);
-        verify(userDTOUserMapper).mapUsersToUserPublicDTOs(participants);
+        verify(userDTOUserMapper).mapUsersToUserPublicDTOs(event.getParticipants());
         assertNotNull(result);
     }
 
     @Test
     void toggleParticipantInEvent_userAlreadyParticipating_removesUser() {
-        participants.add(participant1); // make sure participant1 is already participating
+        event.getParticipants().add(participant1); // make sure participant1 is already participating
 
         when(userService.getUserById(participant1.getId())).thenReturn(participant1);
         when(eventService.getEventById(event.getId())).thenReturn(event);
@@ -140,18 +134,18 @@ class ParticipantServiceTest {
 
         Set<UserPublicDTO> result = participantService.toggleParticipantInEvent(event.getId(), userPrincipal);
 
-        assertFalse(participants.contains(participant1));
-        assertEquals(0, participants.size());
+        assertFalse(event.getParticipants().contains(participant1));
+        assertEquals(0, event.getParticipants().size());
         verify(userService).getUserById(participant1.getId());
         verify(eventService).getEventById(event.getId());
         verify(eventRepository).save(event);
-        verify(userDTOUserMapper).mapUsersToUserPublicDTOs(participants);
+        verify(userDTOUserMapper).mapUsersToUserPublicDTOs(event.getParticipants());
         assertNotNull(result);
     }
 
     @Test
     void toggleParticipantInEvent_multipleParticipants_onlyTogglesLoggedInUser() {
-        participants.add(participant2);
+        event.getParticipants().add(participant2);
 
         when(userService.getUserById(participant1.getId())).thenReturn(participant1);
         when(eventService.getEventById(event.getId())).thenReturn(event);
@@ -159,9 +153,9 @@ class ParticipantServiceTest {
 
         participantService.toggleParticipantInEvent(event.getId(), userPrincipal);
 
-        assertEquals(2, participants.size());
-        assertTrue(participants.contains(participant1));
-        assertTrue(participants.contains(participant2));
+        assertEquals(2, event.getParticipants().size());
+        assertTrue(event.getParticipants().contains(participant1));
+        assertTrue(event.getParticipants().contains(participant2));
         verify(userService).getUserById(participant1.getId());
         verify(eventService).getEventById(event.getId());
         verify(eventRepository).save(event);
@@ -249,9 +243,9 @@ class ParticipantServiceTest {
 
     @Test
     void toggleParticipantInEvent_withMultipleExistingParticipants_onlyRemovesTargetUser() {
-        participants.add(participant1);
-        participants.add(participant2);
-        participants.add(participant3);
+        event.getParticipants().add(participant1);
+        event.getParticipants().add(participant2);
+        event.getParticipants().add(participant3);
 
         when(userService.getUserById(participant1.getId())).thenReturn(participant1);
         when(eventService.getEventById(event.getId())).thenReturn(event);
@@ -259,10 +253,10 @@ class ParticipantServiceTest {
 
         participantService.toggleParticipantInEvent(event.getId(), userPrincipal);
 
-        assertFalse(participants.contains(participant1));
-        assertEquals(2, participants.size());
-        assertTrue(participants.contains(participant2));
-        assertTrue(participants.contains(participant3));
+        assertFalse(event.getParticipants().contains(participant1));
+        assertEquals(2, event.getParticipants().size());
+        assertTrue(event.getParticipants().contains(participant2));
+        assertTrue(event.getParticipants().contains(participant3));
 
         verify(userService).getUserById(participant1.getId());
         verify(eventService).getEventById(event.getId());
@@ -285,7 +279,7 @@ class ParticipantServiceTest {
     @Test
     void getAllParticipantsAsDTOsByEventId_emptyParticipantsList_returnsEmptySet() {
         when(eventService.getEventById(event.getId())).thenReturn(event);
-        when(userDTOUserMapper.mapUsersToUserPublicDTOs(participants))
+        when(userDTOUserMapper.mapUsersToUserPublicDTOs(event.getParticipants()))
                 .thenReturn(new HashSet<>());
 
         Set<UserPublicDTO> result = participantService.getAllParticipantsAsDTOsByEventId(event.getId());
@@ -293,6 +287,6 @@ class ParticipantServiceTest {
         assertNotNull(result);
         assertTrue(result.isEmpty());
         verify(eventService).getEventById(event.getId());
-        verify(userDTOUserMapper).mapUsersToUserPublicDTOs(participants);
+        verify(userDTOUserMapper).mapUsersToUserPublicDTOs(event.getParticipants());
     }
 }
