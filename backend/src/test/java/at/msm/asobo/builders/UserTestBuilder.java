@@ -11,16 +11,43 @@ import java.util.List;
 import java.util.UUID;
 
 public class UserTestBuilder {
-    private UUID id = UUID.fromString("00000000-0000-0000-0000-000000000001");
-    private String username = "testuser";
-    private String email = "test@example.com";
-    private String firstName = "Test";
-    private String surname = "User";
-    private String salutation = "Mr.";
-    private String location = "Vienna";
-    private Boolean isActive = true;
-    private String aboutMe = "I am him";
-    private String password = "password";
+    private UUID id;
+    private String username;
+    private String email;
+    private String firstName;
+    private String surname;
+    private String salutation;
+    private String location;
+    private Boolean isActive;
+    private String aboutMe;
+    private String password;
+
+    public UserTestBuilder() {
+        this.id = UUID.fromString("00000000-0000-0000-0000-000000000001");
+        this.username = "testuser";
+        this.email = "test@example.com";
+        this.firstName = "Test";
+        this.surname = "User";
+        this.salutation = "Mr.";
+        this.location = "Vienna";
+        this.isActive = true;
+        this.aboutMe = "I am him";
+        this.password = "password";
+    }
+
+    public UserTestBuilder fromUser(User user) {
+        this.id = user.getId();
+        this.username = user.getUsername();
+        this.email = user.getEmail();
+        this.firstName = user.getFirstName();
+        this.surname = user.getSurname();
+        this.salutation = user.getSalutation();
+        this.location = user.getLocation();
+        this.isActive = user.getIsActive();
+        this.aboutMe = user.getAboutMe();
+        this.password = user.getPassword();
+        return this;
+    }
 
     public UserTestBuilder withoutId() {
         return this;
@@ -39,6 +66,12 @@ public class UserTestBuilder {
     public UserTestBuilder withUsernameAndEmail(String username) {
         this.username = username;
         this.email = username + "@example.com";
+        return this;
+    }
+
+    public UserTestBuilder withUsernameAndEmail(String username, String email) {
+        this.username = username;
+        this.email = email;
         return this;
     }
 
@@ -91,6 +124,7 @@ public class UserTestBuilder {
         user.setSurname(this.surname);
         user.setSalutation(this.salutation);
         user.setPassword(this.password);
+
         return user;
     }
 
@@ -102,6 +136,7 @@ public class UserTestBuilder {
         user.setFirstName(this.firstName);
         user.setSurname(this.surname);
         user.setSalutation(this.salutation);
+
         return user;
     }
 
@@ -113,6 +148,7 @@ public class UserTestBuilder {
         user.setSurname(this.surname);
         user.setSalutation(this.salutation);
         user.setPassword(this.password);
+
         return user;
     }
 
@@ -124,6 +160,7 @@ public class UserTestBuilder {
         user.setSurname(this.surname);
         user.setSalutation(this.salutation);
         user.setPassword(this.password);
+
         return user;
     }
 
