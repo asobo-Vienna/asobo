@@ -1,8 +1,13 @@
 package at.msm.asobo.services;
 
 import at.msm.asobo.builders.EventTestBuilder;
+import at.msm.asobo.builders.UserTestBuilder;
+import at.msm.asobo.dto.event.EventCreationDTO;
+import at.msm.asobo.dto.event.EventDTO;
 import at.msm.asobo.dto.event.EventSummaryDTO;
+import at.msm.asobo.dto.user.UserPublicDTO;
 import at.msm.asobo.entities.Event;
+import at.msm.asobo.entities.User;
 import at.msm.asobo.mappers.EventDTOEventMapper;
 import at.msm.asobo.repositories.EventRepository;
 import at.msm.asobo.services.events.EventService;
@@ -17,11 +22,11 @@ import org.springframework.data.domain.*;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -44,6 +49,10 @@ class EventServiceTest {
     private EventSummaryDTO publicEventSummaryDTO2;
     private EventSummaryDTO privateEventSummaryDTO1;
     private EventSummaryDTO privateEventSummaryDTO2;
+    private User creator;
+    private UserPublicDTO creatorDTO;
+    private UserPublicDTO eventAdminDTO1;
+    private UserPublicDTO eventAdminDTO2;
     private Pageable pageable02;
     private Pageable pageable12;
     private LocalDateTime searchDate;
@@ -79,6 +88,25 @@ class EventServiceTest {
                 .withIsPrivateEvent(true)
                 .withDate(LocalDateTime.now().plusDays(1))
                 .buildEventEntity();
+
+        creator = new UserTestBuilder()
+                .withId(UUID.randomUUID())
+                .withUsernameAndEmail("creator")
+                .buildUserEntity();
+
+        creatorDTO = new UserTestBuilder()
+                .fromUser(creator)
+                .buildUserPublicDTO();
+
+        eventAdminDTO1 = new UserTestBuilder()
+                .withId(UUID.randomUUID())
+                .withUsernameAndEmail("Event Admin 1")
+                .buildUserPublicDTO();
+
+        eventAdminDTO2 = new UserTestBuilder()
+                .withId(UUID.randomUUID())
+                .withUsernameAndEmail("Event Admin 2")
+                .buildUserPublicDTO();
 
         publicEventSummaryDTO1 = new EventTestBuilder()
                 .withId(publicEvent1.getId())
@@ -669,6 +697,174 @@ class EventServiceTest {
 
         verify(eventRepository).findEventsByLocation(location);
         verify(eventDTOEventMapper).mapEventsToEventSummaryDTOs(List.of());
+        verifyNoMoreInteractions(eventRepository, eventDTOEventMapper);
+    }
+
+    @Test
+    void addNewEvent_withEventAdmins_createsEventWithProvidedAdmins() {
+        // refactor using Builder
+        EventCreationDTO creationDTO = new EventCreationDTO();
+        creationDTO.setCreator(creatorDTO);
+        creationDTO.setEventAdmins(Set.of(eventAdminDTO1, eventAdminDTO2));
+        creationDTO.setTitle("Test Event");
+        creationDTO.setDate(LocalDateTime.now().plusDays(5));
+
+        Event newEvent = new EventTestBuilder()
+                .withCreator(creator)
+                .withTitle(creationDTO.getTitle())
+                .withDate(creationDTO.getDate())
+                .buildEventEntity();
+
+        Event savedEvent = new EventTestBuilder()
+                .withId(UUID.randomUUID())
+                .fromEvent(newEvent)
+                .buildEventEntity();
+
+        EventDTO eventDTO = new EventTestBuilder()
+                .fromEvent(savedEvent)
+                .buildEventDTO();
+
+        when(eventDTOEventMapper.mapEventCreationDTOToEvent(creationDTO))
+                .thenReturn(newEvent);
+        when(eventRepository.save(newEvent)).thenReturn(savedEvent);
+        when(eventDTOEventMapper.mapEventToEventDTO(savedEvent)).thenReturn(eventDTO);
+
+        EventDTO result = eventService.addNewEvent(creationDTO);
+
+        assertNotNull(result);
+        assertEquals(eventDTO, result);
+
+        assertThat(creationDTO.getEventAdmins())
+                .hasSize(2)
+                .contains(eventAdminDTO1, eventAdminDTO2);
+
+        verify(eventDTOEventMapper).mapEventCreationDTOToEvent(creationDTO);
+        verify(eventRepository).save(newEvent);
+        verify(eventDTOEventMapper).mapEventToEventDTO(savedEvent);
+        verifyNoMoreInteractions(eventRepository, eventDTOEventMapper);
+    }
+
+    @Test
+    void addNewEvent_withoutEventAdmins_setsCreatorAsAdmin() {
+        EventCreationDTO creationDTO = new EventCreationDTO();
+        creationDTO.setCreator(creatorDTO);
+        creationDTO.setEventAdmins(null);
+        creationDTO.setTitle("Test Event");
+
+        Event newEvent = new EventTestBuilder()
+                .withCreator(creator)
+                .withTitle(creationDTO.getTitle())
+                .buildEventEntity();
+
+        Event savedEvent = new EventTestBuilder()
+                .withId(UUID.randomUUID())
+                .fromEvent(newEvent)
+                .buildEventEntity();
+
+        EventDTO eventDTO = new EventTestBuilder()
+                .fromEvent(savedEvent)
+                .buildEventDTO();
+
+        when(eventDTOEventMapper.mapEventCreationDTOToEvent(creationDTO))
+                .thenReturn(newEvent);
+        when(eventRepository.save(newEvent)).thenReturn(savedEvent);
+        when(eventDTOEventMapper.mapEventToEventDTO(savedEvent)).thenReturn(eventDTO);
+
+        EventDTO result = eventService.addNewEvent(creationDTO);
+
+        assertNotNull(result);
+        assertEquals(eventDTO, result);
+
+        assertThat(creationDTO.getEventAdmins())
+                .isNotNull()
+                .hasSize(1)
+                .containsExactly(creatorDTO);
+
+        verify(eventDTOEventMapper).mapEventCreationDTOToEvent(creationDTO);
+        verify(eventRepository).save(newEvent);
+        verify(eventDTOEventMapper).mapEventToEventDTO(savedEvent);
+        verifyNoMoreInteractions(eventRepository, eventDTOEventMapper);
+    }
+
+    @Test
+    void addNewEvent_withEmptyEventAdmins_setsCreatorAsAdmin() {
+        EventCreationDTO creationDTO = new EventCreationDTO();
+        creationDTO.setCreator(creatorDTO);
+        creationDTO.setEventAdmins(Collections.emptySet());
+        creationDTO.setTitle("Test Event");
+
+        Event newEvent = new EventTestBuilder()
+                .withCreator(creator)
+                .withTitle(creationDTO.getTitle())
+                .buildEventEntity();
+
+        Event savedEvent = new EventTestBuilder()
+                .withId(UUID.randomUUID())
+                .fromEvent(newEvent)
+                .buildEventEntity();
+
+        EventDTO eventDTO = new EventTestBuilder()
+                .fromEvent(savedEvent)
+                .buildEventDTO();
+
+        when(eventDTOEventMapper.mapEventCreationDTOToEvent(creationDTO))
+                .thenReturn(newEvent);
+        when(eventRepository.save(newEvent)).thenReturn(savedEvent);
+        when(eventDTOEventMapper.mapEventToEventDTO(savedEvent)).thenReturn(eventDTO);
+
+        EventDTO result = eventService.addNewEvent(creationDTO);
+
+        assertNotNull(result);
+        assertEquals(eventDTO, result);
+
+        assertThat(creationDTO.getEventAdmins())
+                .isNotNull()
+                .hasSize(1)
+                .containsExactly(creatorDTO);
+
+        verify(eventDTOEventMapper).mapEventCreationDTOToEvent(creationDTO);
+        verify(eventRepository).save(newEvent);
+        verify(eventDTOEventMapper).mapEventToEventDTO(savedEvent);
+        verifyNoMoreInteractions(eventRepository, eventDTOEventMapper);
+    }
+
+    @Test
+    void addNewEvent_creatorAlreadyInAdmins_doesNotDuplicate() {
+        EventCreationDTO creationDTO = new EventCreationDTO();
+        creationDTO.setCreator(creatorDTO);
+        creationDTO.setEventAdmins(Set.of(creatorDTO, eventAdminDTO1));
+        creationDTO.setTitle("Test Event");
+
+        Event newEvent = new EventTestBuilder()
+                .withCreator(creator)
+                .withTitle(creationDTO.getTitle())
+                .buildEventEntity();
+
+        Event savedEvent = new EventTestBuilder()
+                .withId(UUID.randomUUID())
+                .fromEvent(newEvent)
+                .buildEventEntity();
+
+        EventDTO eventDTO = new EventTestBuilder()
+                .fromEvent(savedEvent)
+                .buildEventDTO();
+
+        when(eventDTOEventMapper.mapEventCreationDTOToEvent(creationDTO))
+                .thenReturn(newEvent);
+        when(eventRepository.save(newEvent)).thenReturn(savedEvent);
+        when(eventDTOEventMapper.mapEventToEventDTO(savedEvent)).thenReturn(eventDTO);
+
+        EventDTO result = eventService.addNewEvent(creationDTO);
+
+        assertNotNull(result);
+
+        assertThat(creationDTO.getEventAdmins())
+                .hasSize(2)
+                .contains(creatorDTO, eventAdminDTO1);
+
+        verify(eventDTOEventMapper).mapEventCreationDTOToEvent(creationDTO);
+        verify(eventRepository).save(newEvent);
+        verify(eventDTOEventMapper).mapEventToEventDTO(savedEvent);
         verifyNoMoreInteractions(eventRepository, eventDTOEventMapper);
     }
 }

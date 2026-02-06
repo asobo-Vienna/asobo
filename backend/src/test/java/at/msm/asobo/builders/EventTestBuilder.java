@@ -1,5 +1,6 @@
 package at.msm.asobo.builders;
 
+import at.msm.asobo.dto.event.EventCreationDTO;
 import at.msm.asobo.dto.event.EventDTO;
 import at.msm.asobo.dto.event.EventSummaryDTO;
 import at.msm.asobo.entities.Event;
@@ -13,7 +14,7 @@ import java.util.*;
 
 public class EventTestBuilder {
     private static final UUID FIXED_EVENT_ID = UUID.fromString("00000000-0000-0000-0000-000000000001");
-    private static final LocalDateTime FIXED_TIME =  LocalDateTime.of(2026, 1, 1, 12, 0);
+    private static final LocalDateTime FIXED_TIME = LocalDateTime.of(2026, 1, 1, 12, 0);
     private static final String DEFAULT_PICTURE_URI = "http://localhost:8080/uploads/event-cover-pictures/event-cover-default.svg";
 
     private UUID id;
@@ -34,6 +35,7 @@ public class EventTestBuilder {
     private final UserDTOUserMapper userDTOUserMapper;
     private final UserCommentDTOUserCommentMapper userCommentDTOUserCommentMapper;
     private final MediumDTOMediumMapper mediumDTOMediumMapper;
+    private final EventDTOEventMapper eventDTOEventMapper;
 
     public EventTestBuilder() {
         this.id = FIXED_EVENT_ID;
@@ -60,6 +62,11 @@ public class EventTestBuilder {
         this.userDTOUserMapper = new UserDTOUserMapperImpl();
         this.userCommentDTOUserCommentMapper = new UserCommentDTOUserCommentMapper();
         this.mediumDTOMediumMapper = new MediumDTOMediumMapperImpl();
+        this.eventDTOEventMapper = new EventDTOEventMapper(
+                this.userDTOUserMapper,
+                this.userCommentDTOUserCommentMapper,
+                this.mediumDTOMediumMapper
+        );
     }
 
     public EventTestBuilder fromEvent(Event event) {
@@ -79,6 +86,23 @@ public class EventTestBuilder {
         this.isPrivateEvent = event.isPrivateEvent();
         return this;
     }
+
+    /*public EventTestBuilder fromEventCreationDTO(EventCreationDTO creationDTO) {
+        this.id = creationDTO.getId();
+        this.creator = this.userDTOUserMapper.mapUserPublicDTOToUser(creationDTO.getCreator());
+        this.eventAdmins = this.userDTOUserMapper.mapUserPublicDTOsToUsers(creationDTO.getEventAdmins());
+        this.participants = this.userDTOUserMapper.mapUserPublicDTOsToUsers(creationDTO.getParticipants());
+        this.title = creationDTO.getTitle();
+        this.description = creationDTO.getDescription();
+        this.date = creationDTO.getDate();
+        this.creationDate = creationDTO.getCreationDate();
+        this.modificationDate = creationDTO.getModificationDate();
+        this.location = creationDTO.getLocation();
+        this.comments = creationDTO.getComments();
+        this.media = creationDTO.getMedia();
+        this.isPrivateEvent = creationDTO.isPrivate();
+        return this;
+    }*/
 
     public User defaultCreator() {
         return new UserTestBuilder()

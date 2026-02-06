@@ -45,7 +45,7 @@ public class EventCreationDTO {
 
     private Set<UserPublicDTO> eventAdmins;
 
-    private List<UserDTO> participants;
+    private Set<UserPublicDTO> participants;
 
     private List<UserCommentDTO> comments;
 
@@ -85,7 +85,7 @@ public class EventCreationDTO {
         return this.creator;
     }
 
-    public List<UserDTO> getParticipants() {
+    public Set<UserPublicDTO> getParticipants() {
         return this.participants;
     }
 
@@ -137,7 +137,7 @@ public class EventCreationDTO {
         this.isPrivate = isPrivate;
     }
 
-    public void setParticipants(List<UserDTO> participants) {
+    public void setParticipants(Set<UserPublicDTO> participants) {
         this.participants = participants;
     }
 
