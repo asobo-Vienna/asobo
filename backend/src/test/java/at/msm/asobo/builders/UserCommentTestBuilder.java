@@ -93,6 +93,9 @@ public class UserCommentTestBuilder {
         this.id = userComment.getId();
         this.text = userComment.getText();
         this.author = userComment.getAuthor();
+        this.event = userComment.getEvent();
+        this.creationDate = userComment.getCreationDate();
+        this.modificationDate = userComment.getModificationDate();
         return this;
     }
 
