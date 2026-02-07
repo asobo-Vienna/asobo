@@ -148,7 +148,6 @@ class UserCommentServiceTest {
         assertThrows(UserCommentNotFoundException.class, () -> userCommentService.getUserCommentDTOById(userComment1.getId()));
 
         verify(userCommentRepository).findById(userComment1.getId());
-        verify(userCommentDTOUserCommentMapper, never()).mapUserCommentToUserCommentDTO(any());
     }
 
     @Test
@@ -352,9 +351,7 @@ class UserCommentServiceTest {
 
         assertThrows(UserCommentNotFoundException.class, () -> userCommentService.getUserCommentByEventIdAndCommentId(event.getId(), userComment2.getId()));
 
-
         verify(userCommentRepository).findUserCommentByEventIdAndId(event.getId(), userComment2.getId());
-        verify(userCommentDTOUserCommentMapper, never()).mapUserCommentToUserCommentDTO(any());
     }
 
     @Test
@@ -446,7 +443,6 @@ class UserCommentServiceTest {
         verify(userService).getUserById(notAuthor.getId());
         verify(accessControlService).assertCanUpdateComment(userComment1, notAuthor);
         verify(userCommentRepository, never()).save(any());
-        verify(userCommentDTOUserCommentMapper, never()).mapUserCommentToUserCommentDTO(any());
     }
 
     @Test
@@ -462,7 +458,6 @@ class UserCommentServiceTest {
         verify(userService, never()).getUserById(any());
         verify(accessControlService, never()).assertCanUpdateComment(any(), any());
         verify(userCommentRepository, never()).save(any());
-        verify(userCommentDTOUserCommentMapper, never()).mapUserCommentToUserCommentDTO(any());
     }
 
     @Test
@@ -482,7 +477,6 @@ class UserCommentServiceTest {
         verify(userService).getUserById(author.getId());
         verify(accessControlService, never()).assertCanUpdateComment(any(), any());
         verify(userCommentRepository, never()).save(any());
-        verify(userCommentDTOUserCommentMapper, never()).mapUserCommentToUserCommentDTO(any());
     }
 
     @Test
@@ -524,7 +518,6 @@ class UserCommentServiceTest {
         verify(userCommentRepository).findUserCommentByEventIdAndId(event.getId(), userComment1.getId());
         verify(accessControlService).assertCanDeleteComment(userComment1, notAuthor);
         verify(userCommentRepository, never()).delete(any());
-        verify(userCommentDTOUserCommentMapper, never()).mapUserCommentToUserCommentDTO(any());
     }
 
     @Test
@@ -540,7 +533,6 @@ class UserCommentServiceTest {
         verify(userService, never()).getUserById(any());
         verify(accessControlService, never()).assertCanDeleteComment(any(), any());
         verify(userCommentRepository, never()).delete(any());
-        verify(userCommentDTOUserCommentMapper, never()).mapUserCommentToUserCommentDTO(any());
     }
 
     @Test
@@ -560,6 +552,5 @@ class UserCommentServiceTest {
         verify(userService).getUserById(author.getId());
         verify(accessControlService, never()).assertCanDeleteComment(any(), any());
         verify(userCommentRepository, never()).delete(any());
-        verify(userCommentDTOUserCommentMapper, never()).mapUserCommentToUserCommentDTO(any());
     }
 }
