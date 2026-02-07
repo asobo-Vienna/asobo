@@ -5,11 +5,11 @@ import at.msm.asobo.dto.user.UserPublicDTO;
 public class LoginResponseDTO {
 
     private String token;
-    private UserPublicDTO userDTO;
+    private UserPublicDTO user;
 
-    public LoginResponseDTO(String token, UserPublicDTO userDTO) {
+    public LoginResponseDTO(String token, UserPublicDTO user) {
         this.token = token;
-        this.userDTO = userDTO;
+        this.user = user;
     }
 
     // Getters & setters
@@ -21,12 +21,12 @@ public class LoginResponseDTO {
         this.token = token;
     }
 
-    public UserPublicDTO getUserDTO() {
-        return userDTO;
+    public UserPublicDTO getUser() {
+        return user;
     }
 
-    public void setUserDTO(UserPublicDTO user) {
-        this.userDTO = user;
+    public void setUser(UserPublicDTO user) {
+        this.user = user;
     }
 }
 
