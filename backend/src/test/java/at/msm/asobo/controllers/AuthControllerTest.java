@@ -125,8 +125,8 @@ public class AuthControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.token").isString())
-                .andExpect(jsonPath("$.userDTO.username").exists())
-                .andExpect(jsonPath("$.userDTO.email").exists());
+                .andExpect(jsonPath("$.user.username").exists())
+                .andExpect(jsonPath("$.user.email").exists());
 
         verify(authService).registerUser(any(UserRegisterDTO.class));
     }

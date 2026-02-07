@@ -49,9 +49,6 @@ class UserCommentServiceTest {
     @InjectMocks
     UserCommentService userCommentService;
 
-    private UUID commentId1;
-    private UUID commentId2;
-
     private LocalDateTime dateTimeNow;
 
     private UserComment userComment1;
@@ -73,12 +70,9 @@ class UserCommentServiceTest {
     private UserPrincipal loggedInNotAuthor;
 
     private Event event;
-    private UUID eventId;
 
     @BeforeEach
     void setUp() {
-        commentId1 = UUID.randomUUID();
-        commentId2 = UUID.randomUUID();
 
         dateTimeNow = LocalDateTime.now();
 
@@ -100,23 +94,21 @@ class UserCommentServiceTest {
                 .fromUser(notAuthor)
                 .buildUserPrincipal();
 
-        eventId = UUID.randomUUID();
-
         event = new EventTestBuilder()
-                .withId(eventId)
+                .withId(UUID.randomUUID())
                 .withCreator(author)
                 .withEventAdmins(new HashSet<>())
                 .buildEventEntity();
 
         userComment1 = new UserCommentTestBuilder()
-                .withId(commentId1)
+                .withId(UUID.randomUUID())
                 .withText("Test comment #1")
                 .withAuthor(author)
                 .withEvent(event)
                 .buildUserComment();
 
         userComment2 = new UserCommentTestBuilder()
-                .withId(commentId2)
+                .withId(UUID.randomUUID())
                 .withText("Test comment #2")
                 .withAuthor(author)
                 .withEvent(event)
@@ -135,55 +127,54 @@ class UserCommentServiceTest {
     }
 
     @Test
-    void getUserCommentDTOById_returnsCommentIfExists() {
-
-        when(userCommentRepository.findById(commentId1)).thenReturn(Optional.of(userComment1));
+    void getUserCommentDTOById_returnsComment() {
+        when(userCommentRepository.findById(userComment1.getId())).thenReturn(Optional.of(userComment1));
         when(userCommentDTOUserCommentMapper.mapUserCommentToUserCommentDTO(userComment1))
                 .thenReturn(userCommentDTO1);
 
-        UserCommentDTO result = userCommentService.getUserCommentDTOById(commentId1);
+        UserCommentDTO result = userCommentService.getUserCommentDTOById(userComment1.getId());
 
         assertNotNull(result);
         assertEquals(result, userCommentDTO1);
 
-        verify(userCommentRepository).findById(commentId1);
+        verify(userCommentRepository).findById(userComment1.getId());
         verify(userCommentDTOUserCommentMapper).mapUserCommentToUserCommentDTO(userComment1);
     }
 
     @Test
     void getUserCommentDTOById_throwsExceptionIfNotFound() {
-        when(userCommentRepository.findById(commentId1)).thenReturn(Optional.empty());
+        when(userCommentRepository.findById(userComment1.getId())).thenReturn(Optional.empty());
 
-        assertThrows(UserCommentNotFoundException.class, () -> userCommentService.getUserCommentDTOById(commentId1));
+        assertThrows(UserCommentNotFoundException.class, () -> userCommentService.getUserCommentDTOById(userComment1.getId()));
 
-        verify(userCommentRepository).findById(commentId1);
+        verify(userCommentRepository).findById(userComment1.getId());
         verify(userCommentDTOUserCommentMapper, never()).mapUserCommentToUserCommentDTO(any());
     }
 
     @Test
-    void getUserCommentById_returnsCommentIfExists() {
+    void getUserCommentById_returnsComment() {
 
-        when(userCommentRepository.findById(commentId1)).thenReturn(Optional.of(userComment1));
+        when(userCommentRepository.findById(userComment1.getId())).thenReturn(Optional.of(userComment1));
 
-        UserComment result = userCommentService.getUserCommentById(commentId1);
+        UserComment result = userCommentService.getUserCommentById(userComment1.getId());
 
         assertNotNull(result);
         assertEquals(result, userComment1);
 
-        verify(userCommentRepository).findById(commentId1);
+        verify(userCommentRepository).findById(userComment1.getId());
     }
 
     @Test
     void getUserCommentById_throwsExceptionIfNotFound() {
-        when(userCommentRepository.findById(commentId1)).thenReturn(Optional.empty());
+        when(userCommentRepository.findById(userComment1.getId())).thenReturn(Optional.empty());
 
-        assertThrows(UserCommentNotFoundException.class, () -> userCommentService.getUserCommentById(commentId1));
+        assertThrows(UserCommentNotFoundException.class, () -> userCommentService.getUserCommentById(userComment1.getId()));
 
-        verify(userCommentRepository).findById(commentId1);
+        verify(userCommentRepository).findById(userComment1.getId());
     }
 
     @Test
-    void getUserCommentsByCreationDate_returnsSingleCommentIfExists() {
+    void getUserCommentsByCreationDate_returnsSingleCommentList() {
         List<UserComment> singleComment = List.of(userComment1);
         List<UserCommentDTO> singleCommentDTO = List.of(userCommentDTO1);
 
@@ -198,6 +189,7 @@ class UserCommentServiceTest {
         assertEquals(result, singleCommentDTO);
 
         verify(userCommentRepository).findUserCommentsByCreationDate(dateTimeNow);
+        verify(userCommentDTOUserCommentMapper).mapUserCommentsToUserCommentDTOs(singleComment);
     }
 
     @Test
@@ -228,6 +220,7 @@ class UserCommentServiceTest {
 
         assertNotNull(result);
         assertTrue(result.isEmpty());
+        assertEquals(result, userCommentDTOsEmpty);
 
         verify(userCommentRepository).findUserCommentsByCreationDate(dateTimeNow);
         verify(userCommentDTOUserCommentMapper).mapUserCommentsToUserCommentDTOs(userCommentsEmpty);
@@ -261,6 +254,7 @@ class UserCommentServiceTest {
 
         assertNotNull(result);
         assertTrue(result.isEmpty());
+        assertEquals(result, userCommentDTOsEmpty);
 
         verify(userCommentRepository).findUserCommentsByAuthor(author);
         verify(userCommentDTOUserCommentMapper).mapUserCommentsToUserCommentDTOs(userCommentsEmpty);
@@ -294,6 +288,7 @@ class UserCommentServiceTest {
 
         assertNotNull(result);
         assertTrue(result.isEmpty());
+        assertEquals(result, userCommentDTOsEmpty);
 
         verify(userCommentRepository).findUserCommentsByEvent(event);
         verify(userCommentDTOUserCommentMapper).mapUserCommentsToUserCommentDTOs(userCommentsEmpty);
@@ -301,68 +296,70 @@ class UserCommentServiceTest {
 
     @Test
     void getUserCommentsByEventId_returnsCommentsIfExist() {
-        when(userCommentRepository.findUserCommentsByEventIdOrderByCreationDate(eventId))
+        when(userCommentRepository.findUserCommentsByEventIdOrderByCreationDate(event.getId()))
                 .thenReturn(userComments);
         when(userCommentDTOUserCommentMapper.mapUserCommentsToUserCommentDTOs(userComments))
                 .thenReturn(userCommentDTOs);
 
-        List<UserCommentDTO> result = userCommentService.getUserCommentsByEventId(eventId);
+        List<UserCommentDTO> result = userCommentService.getUserCommentsByEventId(event.getId());
 
         assertNotNull(result);
         assertEquals(result, userCommentDTOs);
         assertEquals(2, result.size());
 
-        verify(userCommentRepository).findUserCommentsByEventIdOrderByCreationDate(eventId);
+        verify(userCommentRepository).findUserCommentsByEventIdOrderByCreationDate(event.getId());
         verify(userCommentDTOUserCommentMapper).mapUserCommentsToUserCommentDTOs(userComments);
     }
 
     @Test
     void getUserCommentsByEventId_returnsEmptyListIfNoComments() {
 
-        when(userCommentRepository.findUserCommentsByEventIdOrderByCreationDate(eventId))
+        when(userCommentRepository.findUserCommentsByEventIdOrderByCreationDate(event.getId()))
                 .thenReturn(userCommentsEmpty);
         when(userCommentDTOUserCommentMapper.mapUserCommentsToUserCommentDTOs(userCommentsEmpty))
                 .thenReturn(userCommentDTOsEmpty);
 
-        List<UserCommentDTO> result = userCommentService.getUserCommentsByEventId(eventId);
+        List<UserCommentDTO> result = userCommentService.getUserCommentsByEventId(event.getId());
 
+        assertNotNull(result);
         assertTrue(result.isEmpty());
+        assertEquals(result, userCommentDTOsEmpty);
 
-        verify(userCommentRepository).findUserCommentsByEventIdOrderByCreationDate(eventId);
+        verify(userCommentRepository).findUserCommentsByEventIdOrderByCreationDate(event.getId());
         verify(userCommentDTOUserCommentMapper).mapUserCommentsToUserCommentDTOs(userCommentsEmpty);
     }
 
     @Test
     void getUserCommentByEventIdAndCommentId_returnsCommentIfExists() {
-        when(userCommentRepository.findUserCommentByEventIdAndId(eventId, commentId1))
+        when(userCommentRepository.findUserCommentByEventIdAndId(event.getId(), userComment1.getId()))
                 .thenReturn(Optional.of(userComment1));
         when(userCommentDTOUserCommentMapper.mapUserCommentToUserCommentDTO(userComment1))
                 .thenReturn(userCommentDTO1);
 
-        UserCommentDTO result = userCommentService.getUserCommentByEventIdAndCommentId(eventId, commentId1);
+        UserCommentDTO result = userCommentService.getUserCommentByEventIdAndCommentId(event.getId(), userComment1.getId());
 
         assertNotNull(result);
         assertEquals(result, userCommentDTO1);
 
-        verify(userCommentRepository).findUserCommentByEventIdAndId(eventId, commentId1);
+        verify(userCommentRepository).findUserCommentByEventIdAndId(event.getId(), userComment1.getId());
         verify(userCommentDTOUserCommentMapper).mapUserCommentToUserCommentDTO(userComment1);
     }
 
     @Test
     void getUserCommentByEventIdAndCommentId_throwsExceptionIfNotFound() {
-        when(userCommentRepository.findUserCommentByEventIdAndId(eventId, commentId2))
+        when(userCommentRepository.findUserCommentByEventIdAndId(event.getId(), userComment2.getId()))
                 .thenReturn(Optional.empty());
 
-        assertThrows(UserCommentNotFoundException.class, () -> userCommentService.getUserCommentByEventIdAndCommentId(eventId, commentId2));
+        assertThrows(UserCommentNotFoundException.class, () -> userCommentService.getUserCommentByEventIdAndCommentId(event.getId(), userComment2.getId()));
 
 
-        verify(userCommentRepository).findUserCommentByEventIdAndId(eventId, commentId2);
+        verify(userCommentRepository).findUserCommentByEventIdAndId(event.getId(), userComment2.getId());
         verify(userCommentDTOUserCommentMapper, never()).mapUserCommentToUserCommentDTO(any());
     }
 
     @Test
     void addNewUserCommentToEventById_addsNewComment() {
-        when(eventService.getEventById(eventId)).thenReturn(event);
+        when(eventService.getEventById(event.getId())).thenReturn(event);
         when(userService.getUserById(author.getId())).thenReturn(author);
         when(userCommentDTOUserCommentMapper
                 .mapUserCommentDTOToUserComment(userCommentDTO2, author, event)).thenReturn(userComment2);
@@ -370,12 +367,12 @@ class UserCommentServiceTest {
         when(userCommentDTOUserCommentMapper
                 .mapUserCommentToUserCommentDTO(userComment2)).thenReturn(userCommentDTO2);
 
-        UserCommentDTO result = userCommentService.addNewUserCommentToEventById(eventId, userCommentDTO2);
+        UserCommentDTO result = userCommentService.addNewUserCommentToEventById(event.getId(), userCommentDTO2);
 
         assertNotNull(result);
         assertEquals(result, userCommentDTO2);
 
-        verify(eventService).getEventById(eventId);
+        verify(eventService).getEventById(event.getId());
         verify(userService).getUserById(userCommentDTO2.getAuthorId());
         verify(userCommentRepository).save(userComment2);
         verify(userCommentDTOUserCommentMapper).mapUserCommentDTOToUserComment(userCommentDTO2, author, event);
@@ -384,32 +381,32 @@ class UserCommentServiceTest {
 
     @Test
     void addNewUserCommentToEventById_throwsExceptionIfEventNotFound() {
-        when(eventService.getEventById(eventId))
-                .thenThrow(new EventNotFoundException(eventId));
+        when(eventService.getEventById(event.getId()))
+                .thenThrow(new EventNotFoundException(event.getId()));
 
-        assertThrows(EventNotFoundException.class, () -> userCommentService.addNewUserCommentToEventById(eventId, userCommentDTO1));
+        assertThrows(EventNotFoundException.class, () -> userCommentService.addNewUserCommentToEventById(event.getId(), userCommentDTO1));
 
-        verify(eventService).getEventById(eventId);
+        verify(eventService).getEventById(event.getId());
         verify(userService, never()).getUserById(any());
         verify(userCommentRepository, never()).save(any());
     }
 
     @Test
     void addNewUserCommentToEventById_throwsExceptionIfAuthorNotFound() {
-        when(eventService.getEventById(eventId)).thenReturn(event);
+        when(eventService.getEventById(event.getId())).thenReturn(event);
         when(userService.getUserById(userCommentDTO1.getAuthorId()))
                 .thenThrow(new UserNotFoundException(userCommentDTO1.getAuthorId()));
 
-        assertThrows(UserNotFoundException.class, () -> userCommentService.addNewUserCommentToEventById(eventId, userCommentDTO1));
+        assertThrows(UserNotFoundException.class, () -> userCommentService.addNewUserCommentToEventById(event.getId(), userCommentDTO1));
 
-        verify(eventService).getEventById(eventId);
+        verify(eventService).getEventById(event.getId());
         verify(userService).getUserById(userCommentDTO1.getAuthorId());
         verify(userCommentRepository, never()).save(any());
     }
 
     @Test
     void updateUserCommentByEventIdAndCommentId_updatesCommentIfExists() {
-        when(userCommentRepository.findUserCommentByEventIdAndId(eventId, commentId1)).thenReturn(Optional.of(userComment1));
+        when(userCommentRepository.findUserCommentByEventIdAndId(event.getId(), userComment1.getId())).thenReturn(Optional.of(userComment1));
 
         when(userService.getUserById(author.getId())).thenReturn(author);
 
@@ -418,12 +415,13 @@ class UserCommentServiceTest {
         when(userCommentDTOUserCommentMapper.mapUserCommentToUserCommentDTO(userComment1)).thenReturn(userCommentDTO1);
 
         UserCommentDTO result = userCommentService
-                .updateUserCommentByEventIdAndCommentId(eventId, userComment1.getId(), userCommentDTO1, loggedInAuthor);
+                .updateUserCommentByEventIdAndCommentId(event.getId(), userComment1.getId(), userCommentDTO1, loggedInAuthor);
 
         assertNotNull(result);
         assertEquals(result, userCommentDTO1);
 
-        verify(userCommentRepository).findUserCommentByEventIdAndId(eventId, commentId1);
+        verify(userCommentRepository).findUserCommentByEventIdAndId(event.getId(), userComment1.getId());
+        verify(accessControlService).assertCanUpdateComment(userComment1, author);
         verify(userService).getUserById(userCommentDTO1.getAuthorId());
         verify(userCommentRepository).save(userComment1);
         verify(userCommentDTOUserCommentMapper).mapUserCommentToUserCommentDTO(userComment1);
@@ -431,7 +429,7 @@ class UserCommentServiceTest {
 
     @Test
     void updateUserCommentByEventIdAndCommentId_throwsExceptionIfUserIsNotAuthor() {
-        when(userCommentRepository.findUserCommentByEventIdAndId(eventId, commentId1))
+        when(userCommentRepository.findUserCommentByEventIdAndId(event.getId(), userComment1.getId()))
                 .thenReturn(Optional.of(userComment1));
 
         when(userService.getUserById(notAuthor.getId())).thenReturn(notAuthor);
@@ -441,10 +439,11 @@ class UserCommentServiceTest {
 
         assertThrows(UserNotAuthorizedException.class, () ->
                 userCommentService
-                        .updateUserCommentByEventIdAndCommentId(eventId, userComment1.getId(), userCommentDTO1, loggedInNotAuthor)
+                        .updateUserCommentByEventIdAndCommentId(event.getId(), userComment1.getId(), userCommentDTO1, loggedInNotAuthor)
         );
 
-        verify(userCommentRepository).findUserCommentByEventIdAndId(eventId, commentId1);
+        verify(userCommentRepository).findUserCommentByEventIdAndId(event.getId(), userComment1.getId());
+        verify(userService).getUserById(notAuthor.getId());
         verify(accessControlService).assertCanUpdateComment(userComment1, notAuthor);
         verify(userCommentRepository, never()).save(any());
         verify(userCommentDTOUserCommentMapper, never()).mapUserCommentToUserCommentDTO(any());
@@ -452,14 +451,14 @@ class UserCommentServiceTest {
 
     @Test
     void updateUserCommentByEventIdAndCommentId_throwsExceptionIfCommentNotFound() {
-        when(userCommentRepository.findUserCommentByEventIdAndId(eventId, commentId1))
+        when(userCommentRepository.findUserCommentByEventIdAndId(event.getId(), userComment1.getId()))
                 .thenReturn(Optional.empty());
 
         assertThrows(UserCommentNotFoundException.class, () ->
-                userCommentService.updateUserCommentByEventIdAndCommentId(eventId, commentId1, userCommentDTO1, loggedInAuthor)
+                userCommentService.updateUserCommentByEventIdAndCommentId(event.getId(), userComment1.getId(), userCommentDTO1, loggedInAuthor)
         );
 
-        verify(userCommentRepository).findUserCommentByEventIdAndId(eventId, commentId1);
+        verify(userCommentRepository).findUserCommentByEventIdAndId(event.getId(), userComment1.getId());
         verify(userService, never()).getUserById(any());
         verify(accessControlService, never()).assertCanUpdateComment(any(), any());
         verify(userCommentRepository, never()).save(any());
@@ -468,7 +467,7 @@ class UserCommentServiceTest {
 
     @Test
     void updateUserCommentByEventIdAndCommentId_throwsExceptionIfAuthorNotFound() {
-        when(userCommentRepository.findUserCommentByEventIdAndId(eventId, commentId1))
+        when(userCommentRepository.findUserCommentByEventIdAndId(event.getId(), userComment1.getId()))
                 .thenReturn(Optional.of(userComment1));
 
         when(userService.getUserById(author.getId()))
@@ -476,10 +475,10 @@ class UserCommentServiceTest {
 
         assertThrows(UserNotFoundException.class, () ->
                 userCommentService
-                        .updateUserCommentByEventIdAndCommentId(eventId, userComment1.getId(), userCommentDTO1, loggedInAuthor)
+                        .updateUserCommentByEventIdAndCommentId(event.getId(), userComment1.getId(), userCommentDTO1, loggedInAuthor)
         );
 
-        verify(userCommentRepository).findUserCommentByEventIdAndId(eventId, commentId1);
+        verify(userCommentRepository).findUserCommentByEventIdAndId(event.getId(), userComment1.getId());
         verify(userService).getUserById(author.getId());
         verify(accessControlService, never()).assertCanUpdateComment(any(), any());
         verify(userCommentRepository, never()).save(any());
@@ -487,28 +486,29 @@ class UserCommentServiceTest {
     }
 
     @Test
-    void deleteUserCommentByEventIdAndCommentId_deletesCommentIfExists() {
-        when(userCommentRepository.findUserCommentByEventIdAndId(eventId, commentId1)).thenReturn(Optional.of(userComment1));
+    void deleteUserCommentByEventIdAndCommentId_deletesComment() {
+        when(userCommentRepository.findUserCommentByEventIdAndId(event.getId(), userComment1.getId())).thenReturn(Optional.of(userComment1));
 
         when(userService.getUserById(author.getId())).thenReturn(author);
 
         when(userCommentDTOUserCommentMapper.mapUserCommentToUserCommentDTO(userComment1)).thenReturn(userCommentDTO1);
 
         UserCommentDTO result = userCommentService
-                .deleteUserCommentByEventIdAndCommentId(eventId, userComment1.getId(), loggedInAuthor);
+                .deleteUserCommentByEventIdAndCommentId(event.getId(), userComment1.getId(), loggedInAuthor);
 
         assertNotNull(result);
         assertEquals(result, userCommentDTO1);
 
-        verify(userCommentRepository).findUserCommentByEventIdAndId(eventId, commentId1);
+        verify(userCommentRepository).findUserCommentByEventIdAndId(event.getId(), userComment1.getId());
         verify(userService).getUserById(userCommentDTO1.getAuthorId());
+        verify(accessControlService).assertCanDeleteComment(userComment1, author);
         verify(userCommentRepository).delete(userComment1);
         verify(userCommentDTOUserCommentMapper).mapUserCommentToUserCommentDTO(userComment1);
     }
 
     @Test
     void deleteUserCommentByEventIdAndCommentId_throwsExceptionIfUserIsNotAuthor() {
-        when(userCommentRepository.findUserCommentByEventIdAndId(eventId, commentId1))
+        when(userCommentRepository.findUserCommentByEventIdAndId(event.getId(), userComment1.getId()))
                 .thenReturn(Optional.of(userComment1));
 
         when(userService.getUserById(notAuthor.getId())).thenReturn(notAuthor);
@@ -518,10 +518,10 @@ class UserCommentServiceTest {
 
         assertThrows(UserNotAuthorizedException.class, () ->
                 userCommentService
-                        .deleteUserCommentByEventIdAndCommentId(eventId, userComment1.getId(), loggedInNotAuthor)
+                        .deleteUserCommentByEventIdAndCommentId(event.getId(), userComment1.getId(), loggedInNotAuthor)
         );
 
-        verify(userCommentRepository).findUserCommentByEventIdAndId(eventId, commentId1);
+        verify(userCommentRepository).findUserCommentByEventIdAndId(event.getId(), userComment1.getId());
         verify(accessControlService).assertCanDeleteComment(userComment1, notAuthor);
         verify(userCommentRepository, never()).delete(any());
         verify(userCommentDTOUserCommentMapper, never()).mapUserCommentToUserCommentDTO(any());
@@ -529,23 +529,23 @@ class UserCommentServiceTest {
 
     @Test
     void deleteUserCommentByEventIdAndCommentId_throwsExceptionIfCommentNotFound() {
-        when(userCommentRepository.findUserCommentByEventIdAndId(eventId, commentId1))
+        when(userCommentRepository.findUserCommentByEventIdAndId(event.getId(), userComment1.getId()))
                 .thenReturn(Optional.empty());
 
         assertThrows(UserCommentNotFoundException.class, () ->
-                userCommentService.deleteUserCommentByEventIdAndCommentId(eventId, commentId1, loggedInAuthor)
+                userCommentService.deleteUserCommentByEventIdAndCommentId(event.getId(), userComment1.getId(), loggedInAuthor)
         );
 
-        verify(userCommentRepository).findUserCommentByEventIdAndId(eventId, commentId1);
+        verify(userCommentRepository).findUserCommentByEventIdAndId(event.getId(), userComment1.getId());
         verify(userService, never()).getUserById(any());
         verify(accessControlService, never()).assertCanDeleteComment(any(), any());
-        verify(userCommentRepository, never()).save(any());
+        verify(userCommentRepository, never()).delete(any());
         verify(userCommentDTOUserCommentMapper, never()).mapUserCommentToUserCommentDTO(any());
     }
 
     @Test
     void deleteUserCommentByEventIdAndCommentId_throwsExceptionIfAuthorNotFound() {
-        when(userCommentRepository.findUserCommentByEventIdAndId(eventId, commentId1))
+        when(userCommentRepository.findUserCommentByEventIdAndId(event.getId(), userComment1.getId()))
                 .thenReturn(Optional.of(userComment1));
 
         when(userService.getUserById(author.getId()))
@@ -553,13 +553,13 @@ class UserCommentServiceTest {
 
         assertThrows(UserNotFoundException.class, () ->
                 userCommentService
-                        .deleteUserCommentByEventIdAndCommentId(eventId, userComment1.getId(), loggedInAuthor)
+                        .deleteUserCommentByEventIdAndCommentId(event.getId(), userComment1.getId(), loggedInAuthor)
         );
 
-        verify(userCommentRepository).findUserCommentByEventIdAndId(eventId, commentId1);
+        verify(userCommentRepository).findUserCommentByEventIdAndId(event.getId(), userComment1.getId());
         verify(userService).getUserById(author.getId());
         verify(accessControlService, never()).assertCanDeleteComment(any(), any());
-        verify(userCommentRepository, never()).save(any());
+        verify(userCommentRepository, never()).delete(any());
         verify(userCommentDTOUserCommentMapper, never()).mapUserCommentToUserCommentDTO(any());
     }
 }
