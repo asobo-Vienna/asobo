@@ -68,7 +68,10 @@ class UserCommentServiceTest {
     private final List<UserCommentDTO> userCommentDTOsEmpty = new ArrayList<>();
 
     private User author;
+    private User notAuthor;
+
     private UserPrincipal loggedInAuthor;
+    private UserPrincipal loggedInNotAuthor;
 
     private Event event;
     private UUID eventId;
@@ -87,6 +90,15 @@ class UserCommentServiceTest {
 
         loggedInAuthor = new UserTestBuilder()
                 .fromUser(author)
+                .buildUserPrincipal();
+
+        notAuthor = new UserTestBuilder()
+                .withId(UUID.randomUUID())
+                .withUsernameAndEmail("NotTestAuthor")
+                .buildUserEntity();
+
+        loggedInNotAuthor = new UserTestBuilder()
+                .fromUser(notAuthor)
                 .buildUserPrincipal();
 
         eventId = UUID.randomUUID();
@@ -401,7 +413,7 @@ class UserCommentServiceTest {
     }
 
     @Test
-    void updatedUserCommentByEventIdAndCommentId_updatesCommentIfExists() {
+    void updateUserCommentByEventIdAndCommentId_updatesCommentIfExists() {
         when(userCommentRepository.findUserCommentByEventIdAndId(eventId, commentId1)).thenReturn(Optional.of(userComment1));
 
         when(userService.getUserById(author.getId())).thenReturn(author);
@@ -423,16 +435,7 @@ class UserCommentServiceTest {
     }
 
     @Test
-    void updatedUserCommentByEventIdAndCommentId_throwsExceptionIfUserIsNotAuthor() {
-        User notAuthor = new UserTestBuilder()
-                .withId(UUID.randomUUID())
-                .withUsernameAndEmail("NotTestAuthor")
-                .buildUserEntity();
-
-        UserPrincipal loggedInNotAuthor = new UserTestBuilder()
-                .fromUser(notAuthor)
-                .buildUserPrincipal();
-
+    void updateUserCommentByEventIdAndCommentId_throwsExceptionIfUserIsNotAuthor() {
         when(userCommentRepository.findUserCommentByEventIdAndId(eventId, commentId1))
                 .thenReturn(Optional.of(userComment1));
 
@@ -453,7 +456,7 @@ class UserCommentServiceTest {
     }
 
     @Test
-    void updatedUserCommentByEventIdAndCommentId_throwsExceptionIfCommentNotFound() {
+    void updateUserCommentByEventIdAndCommentId_throwsExceptionIfCommentNotFound() {
         when(userCommentRepository.findUserCommentByEventIdAndId(eventId, commentId1))
                 .thenReturn(Optional.empty());
 
@@ -469,19 +472,98 @@ class UserCommentServiceTest {
     }
 
     @Test
-    void updatedUserCommentByEventIdAndCommentId_throwsExceptionIfAuthorNotFound() {
+    void updateUserCommentByEventIdAndCommentId_throwsExceptionIfAuthorNotFound() {
         when(userCommentRepository.findUserCommentByEventIdAndId(eventId, commentId1))
                 .thenReturn(Optional.of(userComment1));
+
         when(userService.getUserById(author.getId()))
                 .thenThrow(new UserNotFoundException(author.getId()));
 
         assertThrows(UserNotFoundException.class, () ->
-                userCommentService.updateUserCommentByEventIdAndCommentId(eventId, userComment1.getId(), userCommentDTO1, loggedInAuthor)
+                userCommentService
+                        .updateUserCommentByEventIdAndCommentId(eventId, userComment1.getId(), userCommentDTO1, loggedInAuthor)
         );
 
         verify(userCommentRepository).findUserCommentByEventIdAndId(eventId, commentId1);
         verify(userService).getUserById(author.getId());
         verify(accessControlService, never()).assertCanUpdateComment(any(), any());
+        verify(userCommentRepository, never()).save(any());
+        verify(userCommentDTOUserCommentMapper, never()).mapUserCommentToUserCommentDTO(any());
+    }
+
+    @Test
+    void deleteUserCommentByEventIdAndCommentId_deletesCommentIfExists() {
+        when(userCommentRepository.findUserCommentByEventIdAndId(eventId, commentId1)).thenReturn(Optional.of(userComment1));
+
+        when(userService.getUserById(author.getId())).thenReturn(author);
+
+        when(userCommentDTOUserCommentMapper.mapUserCommentToUserCommentDTO(userComment1)).thenReturn(userCommentDTO1);
+
+        UserCommentDTO result = userCommentService
+                .deleteUserCommentByEventIdAndCommentId(eventId, userComment1.getId(), loggedInAuthor);
+
+        assertNotNull(result);
+        assertEquals(result, userCommentDTO1);
+
+        verify(userCommentRepository).findUserCommentByEventIdAndId(eventId, commentId1);
+        verify(userService).getUserById(userCommentDTO1.getAuthorId());
+        verify(userCommentRepository).delete(userComment1);
+        verify(userCommentDTOUserCommentMapper).mapUserCommentToUserCommentDTO(userComment1);
+    }
+
+    @Test
+    void deleteUserCommentByEventIdAndCommentId_throwsExceptionIfUserIsNotAuthor() {
+        when(userCommentRepository.findUserCommentByEventIdAndId(eventId, commentId1))
+                .thenReturn(Optional.of(userComment1));
+
+        when(userService.getUserById(notAuthor.getId())).thenReturn(notAuthor);
+
+        doThrow(new UserNotAuthorizedException("You are not allowed to delete this comment"))
+                .when(accessControlService).assertCanDeleteComment(userComment1, notAuthor);
+
+        assertThrows(UserNotAuthorizedException.class, () ->
+                userCommentService
+                        .deleteUserCommentByEventIdAndCommentId(eventId, userComment1.getId(), loggedInNotAuthor)
+        );
+
+        verify(userCommentRepository).findUserCommentByEventIdAndId(eventId, commentId1);
+        verify(accessControlService).assertCanDeleteComment(userComment1, notAuthor);
+        verify(userCommentRepository, never()).delete(any());
+        verify(userCommentDTOUserCommentMapper, never()).mapUserCommentToUserCommentDTO(any());
+    }
+
+    @Test
+    void deleteUserCommentByEventIdAndCommentId_throwsExceptionIfCommentNotFound() {
+        when(userCommentRepository.findUserCommentByEventIdAndId(eventId, commentId1))
+                .thenReturn(Optional.empty());
+
+        assertThrows(UserCommentNotFoundException.class, () ->
+                userCommentService.deleteUserCommentByEventIdAndCommentId(eventId, commentId1, loggedInAuthor)
+        );
+
+        verify(userCommentRepository).findUserCommentByEventIdAndId(eventId, commentId1);
+        verify(userService, never()).getUserById(any());
+        verify(accessControlService, never()).assertCanDeleteComment(any(), any());
+        verify(userCommentRepository, never()).save(any());
+        verify(userCommentDTOUserCommentMapper, never()).mapUserCommentToUserCommentDTO(any());
+    }
+
+    @Test
+    void deleteUserCommentByEventIdAndCommentId_throwsExceptionIfAuthorNotFound() {
+        when(userCommentRepository.findUserCommentByEventIdAndId(eventId, commentId1))
+                .thenReturn(Optional.of(userComment1));
+
+        when(userService.getUserById(author.getId()))
+                .thenThrow(new UserNotFoundException(author.getId()));
+
+        assertThrows(UserNotFoundException.class, () ->
+                userCommentService
+                        .deleteUserCommentByEventIdAndCommentId(eventId, userComment1.getId(), loggedInAuthor)
+        );
+
+        verify(userCommentRepository).findUserCommentByEventIdAndId(eventId, commentId1);
+        verify(userService).getUserById(author.getId());
+        verify(accessControlService, never()).assertCanDeleteComment(any(), any());
         verify(userCommentRepository, never()).save(any());
         verify(userCommentDTOUserCommentMapper, never()).mapUserCommentToUserCommentDTO(any());
     }
