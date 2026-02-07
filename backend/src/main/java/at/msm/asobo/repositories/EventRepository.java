@@ -8,12 +8,16 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
 public interface EventRepository extends JpaRepository<Event, UUID> {
     @Query("SELECT e FROM Event e")
     Page<Event> findAllEvents(Pageable pageable);
+
+    @Query("SELECT e FROM Event e WHERE e.id = :id")
+    Optional<Event> findById(UUID id);
 
     List<Event> findByIsPrivateEventTrue();
     Page<Event> findByIsPrivateEventTrue(Pageable pageable);

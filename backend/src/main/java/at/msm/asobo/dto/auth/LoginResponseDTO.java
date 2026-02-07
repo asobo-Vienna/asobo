@@ -1,10 +1,13 @@
 package at.msm.asobo.dto.auth;
 
 import at.msm.asobo.dto.user.UserPublicDTO;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class LoginResponseDTO {
 
     private String token;
+
+    @JsonProperty("user")
     private UserPublicDTO userDTO;
 
     public LoginResponseDTO(String token, UserPublicDTO userDTO) {
@@ -12,7 +15,6 @@ public class LoginResponseDTO {
         this.userDTO = userDTO;
     }
 
-    // Getters & setters
     public String getToken() {
         return token;
     }
@@ -25,8 +27,8 @@ public class LoginResponseDTO {
         return userDTO;
     }
 
-    public void setUserDTO(UserPublicDTO user) {
-        this.userDTO = user;
+    public void setUserDTO(UserPublicDTO userDTO) {
+        this.userDTO = userDTO;
     }
 }
 
