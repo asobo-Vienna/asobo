@@ -101,7 +101,7 @@ public class AuthControllerTest {
     void registerUser_returnsExpectedResult() throws Exception {
         UserRegisterDTO registerDTO = new UserTestBuilder()
                 .withoutId()
-                .withUsername("testuser")
+                .withUsernameAndEmail("testuser")
                 .withEmail("testuser@example.com")
                 .withFirstName("Test")
                 .withSurname("User")
@@ -110,7 +110,7 @@ public class AuthControllerTest {
                 .buildUserRegisterDTO();
 
         UserPublicDTO expectedUser = new UserTestBuilder()
-                .withUsername("testuser")
+                .withUsernameAndEmail("testuser")
                 .withEmail("test@example.com")
                 .buildUserPublicDTO();
 
@@ -148,7 +148,7 @@ public class AuthControllerTest {
         UserLoginDTO loginDTO = new UserLoginDTO("testuser", "password123");
 
         UserPublicDTO expectedUser = new UserTestBuilder()
-                .withUsername("testuser")
+                .withUsernameAndEmail("testuser")
                 .buildUserPublicDTO();
 
         LoginResponseDTO mockResponse = new LoginResponseDTO("token-456", expectedUser);

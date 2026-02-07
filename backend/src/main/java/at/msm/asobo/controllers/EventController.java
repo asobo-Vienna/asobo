@@ -111,6 +111,7 @@ public class EventController {
     }
 
     @PatchMapping("/{id}/picture")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN', 'SUPERADMIN')")
     public EventDTO updateEventPicture(
             @PathVariable UUID id,
             @RequestParam("eventPicture") MultipartFile eventPicture,
@@ -128,6 +129,7 @@ public class EventController {
     }
 
     @PatchMapping("/{id}")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN', 'SUPERADMIN')")
     public EventDTO updateEventById(@PathVariable UUID id,
                                     @RequestBody @Valid EventUpdateDTO eventUpdateDTO,
                                     @AuthenticationPrincipal UserPrincipal loggedInUser) {
@@ -135,6 +137,7 @@ public class EventController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN', 'SUPERADMIN')")
     public EventDTO deleteEventById(@PathVariable UUID id, @AuthenticationPrincipal UserPrincipal loggedInUser) {
         return this.eventService.deleteEventById(id, loggedInUser);
     }
@@ -150,7 +153,6 @@ public class EventController {
 
     @DeleteMapping("/{eventId}/removeAdmins")
     @PreAuthorize("hasAnyRole('USER','ADMIN','SUPERADMIN')")
-    @ResponseStatus(HttpStatus.OK)
     public EventDTO removeEventAdmin(@PathVariable UUID eventId,
                                      @RequestBody Set<UUID> userIds,
                                      @AuthenticationPrincipal UserPrincipal loggedInUser) {
