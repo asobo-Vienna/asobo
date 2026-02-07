@@ -22,7 +22,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.nio.file.AccessDeniedException;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -366,21 +365,21 @@ class UserCommentServiceTest {
         when(eventService.getEventById(eventId)).thenReturn(event);
         when(userService.getUserById(author.getId())).thenReturn(author);
         when(userCommentDTOUserCommentMapper
-                .mapUserCommentDTOToUserComment(userCommentDTO1, author, event)).thenReturn(userComment1);
-        when(userCommentRepository.save(userComment1)).thenReturn(userComment1);
+                .mapUserCommentDTOToUserComment(userCommentDTO2, author, event)).thenReturn(userComment2);
+        when(userCommentRepository.save(userComment2)).thenReturn(userComment2);
         when(userCommentDTOUserCommentMapper
-                .mapUserCommentToUserCommentDTO(userComment1)).thenReturn(userCommentDTO1);
+                .mapUserCommentToUserCommentDTO(userComment2)).thenReturn(userCommentDTO2);
 
-        UserCommentDTO result = userCommentService.addNewUserCommentToEventById(eventId, userCommentDTO1);
+        UserCommentDTO result = userCommentService.addNewUserCommentToEventById(eventId, userCommentDTO2);
 
         assertNotNull(result);
-        assertEquals(result, userCommentDTO1);
+        assertEquals(result, userCommentDTO2);
 
         verify(eventService).getEventById(eventId);
-        verify(userService).getUserById(userCommentDTO1.getAuthorId());
-        verify(userCommentRepository).save(userComment1);
-        verify(userCommentDTOUserCommentMapper).mapUserCommentDTOToUserComment(userCommentDTO1, author, event);
-        verify(userCommentDTOUserCommentMapper).mapUserCommentToUserCommentDTO(userComment1);
+        verify(userService).getUserById(userCommentDTO2.getAuthorId());
+        verify(userCommentRepository).save(userComment2);
+        verify(userCommentDTOUserCommentMapper).mapUserCommentDTOToUserComment(userCommentDTO2, author, event);
+        verify(userCommentDTOUserCommentMapper).mapUserCommentToUserCommentDTO(userComment2);
     }
 
     @Test
@@ -388,9 +387,7 @@ class UserCommentServiceTest {
         when(eventService.getEventById(eventId))
                 .thenThrow(new EventNotFoundException(eventId));
 
-        assertThrows(EventNotFoundException.class, () -> {
-            userCommentService.addNewUserCommentToEventById(eventId, userCommentDTO1);
-        });
+        assertThrows(EventNotFoundException.class, () -> userCommentService.addNewUserCommentToEventById(eventId, userCommentDTO1));
 
         verify(eventService).getEventById(eventId);
         verify(userService, never()).getUserById(any());
@@ -403,9 +400,7 @@ class UserCommentServiceTest {
         when(userService.getUserById(userCommentDTO1.getAuthorId()))
                 .thenThrow(new UserNotFoundException(userCommentDTO1.getAuthorId()));
 
-        assertThrows(UserNotFoundException.class, () -> {
-            userCommentService.addNewUserCommentToEventById(eventId, userCommentDTO1);
-        });
+        assertThrows(UserNotFoundException.class, () -> userCommentService.addNewUserCommentToEventById(eventId, userCommentDTO1));
 
         verify(eventService).getEventById(eventId);
         verify(userService).getUserById(userCommentDTO1.getAuthorId());
@@ -567,5 +562,4 @@ class UserCommentServiceTest {
         verify(userCommentRepository, never()).save(any());
         verify(userCommentDTOUserCommentMapper, never()).mapUserCommentToUserCommentDTO(any());
     }
-
 }
