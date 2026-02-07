@@ -193,7 +193,7 @@ class UserCommentServiceTest {
     }
 
     @Test
-    void getUserCommentsByCreationDate_returnsCommentsIfExist() {
+    void getUserCommentsByCreationDate_returnsComments() {
         when(userCommentRepository.findUserCommentsByCreationDate(dateTimeNow))
                 .thenReturn(userComments);
         when(userCommentDTOUserCommentMapper.mapUserCommentsToUserCommentDTOs(userComments))
@@ -227,7 +227,7 @@ class UserCommentServiceTest {
     }
 
     @Test
-    void getUserCommentsByAuthor_returnsCommentsIfExist() {
+    void getUserCommentsByAuthor_returnsComments() {
         when(userCommentRepository.findUserCommentsByAuthor(author))
                 .thenReturn(userComments);
         when(userCommentDTOUserCommentMapper.mapUserCommentsToUserCommentDTOs(userComments))
@@ -261,7 +261,7 @@ class UserCommentServiceTest {
     }
 
     @Test
-    void getUserCommentsByEvent_returnsCommentsIfExist() {
+    void getUserCommentsByEvent_returnsComments() {
         when(userCommentRepository.findUserCommentsByEvent(event))
                 .thenReturn(userComments);
         when(userCommentDTOUserCommentMapper.mapUserCommentsToUserCommentDTOs(userComments))
@@ -295,7 +295,7 @@ class UserCommentServiceTest {
     }
 
     @Test
-    void getUserCommentsByEventId_returnsCommentsIfExist() {
+    void getUserCommentsByEventId_returnsComments() {
         when(userCommentRepository.findUserCommentsByEventIdOrderByCreationDate(event.getId()))
                 .thenReturn(userComments);
         when(userCommentDTOUserCommentMapper.mapUserCommentsToUserCommentDTOs(userComments))
@@ -330,7 +330,7 @@ class UserCommentServiceTest {
     }
 
     @Test
-    void getUserCommentByEventIdAndCommentId_returnsCommentIfExists() {
+    void getUserCommentByEventIdAndCommentId_returnsComment() {
         when(userCommentRepository.findUserCommentByEventIdAndId(event.getId(), userComment1.getId()))
                 .thenReturn(Optional.of(userComment1));
         when(userCommentDTOUserCommentMapper.mapUserCommentToUserCommentDTO(userComment1))
@@ -405,7 +405,7 @@ class UserCommentServiceTest {
     }
 
     @Test
-    void updateUserCommentByEventIdAndCommentId_updatesCommentIfExists() {
+    void updateUserCommentByEventIdAndCommentId_updatesComment() {
         when(userCommentRepository.findUserCommentByEventIdAndId(event.getId(), userComment1.getId())).thenReturn(Optional.of(userComment1));
 
         when(userService.getUserById(author.getId())).thenReturn(author);
