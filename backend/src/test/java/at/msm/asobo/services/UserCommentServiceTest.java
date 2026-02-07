@@ -175,21 +175,21 @@ class UserCommentServiceTest {
 
     @Test
     void getUserCommentsByCreationDate_returnsSingleCommentList() {
-        List<UserComment> singleComment = List.of(userComment1);
-        List<UserCommentDTO> singleCommentDTO = List.of(userCommentDTO1);
+        List<UserComment> singleCommentList = List.of(userComment1);
+        List<UserCommentDTO> singleCommentDTOList = List.of(userCommentDTO1);
 
         when(userCommentRepository.findUserCommentsByCreationDate(dateTimeNow))
-                .thenReturn(singleComment);
-        when(userCommentDTOUserCommentMapper.mapUserCommentsToUserCommentDTOs(singleComment))
-                .thenReturn(singleCommentDTO);
+                .thenReturn(singleCommentList);
+        when(userCommentDTOUserCommentMapper.mapUserCommentsToUserCommentDTOs(singleCommentList))
+                .thenReturn(singleCommentDTOList);
 
         List<UserCommentDTO> result = userCommentService.getUserCommentsByCreationDate(dateTimeNow);
 
         assertEquals(1, result.size());
-        assertEquals(result, singleCommentDTO);
+        assertEquals(result, singleCommentDTOList);
 
         verify(userCommentRepository).findUserCommentsByCreationDate(dateTimeNow);
-        verify(userCommentDTOUserCommentMapper).mapUserCommentsToUserCommentDTOs(singleComment);
+        verify(userCommentDTOUserCommentMapper).mapUserCommentsToUserCommentDTOs(singleCommentList);
     }
 
     @Test
