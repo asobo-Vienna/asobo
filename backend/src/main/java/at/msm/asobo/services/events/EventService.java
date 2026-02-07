@@ -195,6 +195,8 @@ public class EventService {
             );
         }
 
+        existingEvent.setModificationDate(LocalDateTime.now());
+
         Event savedEvent = this.eventRepository.save(existingEvent);
         return this.eventDTOEventMapper.mapEventToEventDTO(savedEvent);
     }
