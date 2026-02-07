@@ -9,9 +9,11 @@ import at.msm.asobo.entities.User;
 import at.msm.asobo.entities.UserComment;
 import at.msm.asobo.exceptions.UserCommentNotFoundException;
 import at.msm.asobo.exceptions.events.EventNotFoundException;
+import at.msm.asobo.exceptions.users.UserNotAuthorizedException;
 import at.msm.asobo.exceptions.users.UserNotFoundException;
 import at.msm.asobo.mappers.UserCommentDTOUserCommentMapper;
 import at.msm.asobo.repositories.UserCommentRepository;
+import at.msm.asobo.security.UserPrincipal;
 import at.msm.asobo.services.events.EventService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,6 +22,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.nio.file.AccessDeniedException;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -65,6 +68,8 @@ class UserCommentServiceTest {
     private final List<UserCommentDTO> userCommentDTOsEmpty = new ArrayList<>();
 
     private User author;
+    private UserPrincipal loggedInAuthor;
+
     private Event event;
     private UUID eventId;
 
@@ -79,6 +84,10 @@ class UserCommentServiceTest {
                 .withId(UUID.randomUUID())
                 .withUsernameAndEmail("TestAuthor")
                 .buildUserEntity();
+
+        loggedInAuthor = new UserTestBuilder()
+                .fromUser(author)
+                .buildUserPrincipal();
 
         eventId = UUID.randomUUID();
 
@@ -389,6 +398,92 @@ class UserCommentServiceTest {
         verify(eventService).getEventById(eventId);
         verify(userService).getUserById(userCommentDTO1.getAuthorId());
         verify(userCommentRepository, never()).save(any());
+    }
+
+    @Test
+    void updatedUserCommentByEventIdAndCommentId_updatesCommentIfExists() {
+        when(userCommentRepository.findUserCommentByEventIdAndId(eventId, commentId1)).thenReturn(Optional.of(userComment1));
+
+        when(userService.getUserById(author.getId())).thenReturn(author);
+
+        when(userCommentRepository.save(userComment1)).thenReturn(userComment1);
+
+        when(userCommentDTOUserCommentMapper.mapUserCommentToUserCommentDTO(userComment1)).thenReturn(userCommentDTO1);
+
+        UserCommentDTO result = userCommentService
+                .updateUserCommentByEventIdAndCommentId(eventId, userComment1.getId(), userCommentDTO1, loggedInAuthor);
+
+        assertNotNull(result);
+        assertEquals(result, userCommentDTO1);
+
+        verify(userCommentRepository).findUserCommentByEventIdAndId(eventId, commentId1);
+        verify(userService).getUserById(userCommentDTO1.getAuthorId());
+        verify(userCommentRepository).save(userComment1);
+        verify(userCommentDTOUserCommentMapper).mapUserCommentToUserCommentDTO(userComment1);
+    }
+
+    @Test
+    void updatedUserCommentByEventIdAndCommentId_throwsExceptionIfUserIsNotAuthor() {
+        User notAuthor = new UserTestBuilder()
+                .withId(UUID.randomUUID())
+                .withUsernameAndEmail("NotTestAuthor")
+                .buildUserEntity();
+
+        UserPrincipal loggedInNotAuthor = new UserTestBuilder()
+                .fromUser(notAuthor)
+                .buildUserPrincipal();
+
+        when(userCommentRepository.findUserCommentByEventIdAndId(eventId, commentId1))
+                .thenReturn(Optional.of(userComment1));
+
+        when(userService.getUserById(notAuthor.getId())).thenReturn(notAuthor);
+
+        doThrow(new UserNotAuthorizedException("You are not allowed to update this comment"))
+                .when(accessControlService).assertCanUpdateComment(userComment1, notAuthor);
+
+        assertThrows(UserNotAuthorizedException.class, () ->
+                userCommentService
+                        .updateUserCommentByEventIdAndCommentId(eventId, userComment1.getId(), userCommentDTO1, loggedInNotAuthor)
+        );
+
+        verify(userCommentRepository).findUserCommentByEventIdAndId(eventId, commentId1);
+        verify(accessControlService).assertCanUpdateComment(userComment1, notAuthor);
+        verify(userCommentRepository, never()).save(any());
+        verify(userCommentDTOUserCommentMapper, never()).mapUserCommentToUserCommentDTO(any());
+    }
+
+    @Test
+    void updatedUserCommentByEventIdAndCommentId_throwsExceptionIfCommentNotFound() {
+        when(userCommentRepository.findUserCommentByEventIdAndId(eventId, commentId1))
+                .thenReturn(Optional.empty());
+
+        assertThrows(UserCommentNotFoundException.class, () ->
+                userCommentService.updateUserCommentByEventIdAndCommentId(eventId, commentId1, userCommentDTO1, loggedInAuthor)
+        );
+
+        verify(userCommentRepository).findUserCommentByEventIdAndId(eventId, commentId1);
+        verify(userService, never()).getUserById(any());
+        verify(accessControlService, never()).assertCanUpdateComment(any(), any());
+        verify(userCommentRepository, never()).save(any());
+        verify(userCommentDTOUserCommentMapper, never()).mapUserCommentToUserCommentDTO(any());
+    }
+
+    @Test
+    void updatedUserCommentByEventIdAndCommentId_throwsExceptionIfAuthorNotFound() {
+        when(userCommentRepository.findUserCommentByEventIdAndId(eventId, commentId1))
+                .thenReturn(Optional.of(userComment1));
+        when(userService.getUserById(author.getId()))
+                .thenThrow(new UserNotFoundException(author.getId()));
+
+        assertThrows(UserNotFoundException.class, () ->
+                userCommentService.updateUserCommentByEventIdAndCommentId(eventId, userComment1.getId(), userCommentDTO1, loggedInAuthor)
+        );
+
+        verify(userCommentRepository).findUserCommentByEventIdAndId(eventId, commentId1);
+        verify(userService).getUserById(author.getId());
+        verify(accessControlService, never()).assertCanUpdateComment(any(), any());
+        verify(userCommentRepository, never()).save(any());
+        verify(userCommentDTOUserCommentMapper, never()).mapUserCommentToUserCommentDTO(any());
     }
 
 }
