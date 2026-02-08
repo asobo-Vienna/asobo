@@ -13,7 +13,7 @@ export class AccessControlService {
       return false;
     }
 
-    console.log('event admin? = ',event.eventAdmins.contains(currentUser, LambdaFunctions.compareById));
+    // console.log('event admin? = ',event.eventAdmins.contains(currentUser, LambdaFunctions.compareById));
 
     return event.eventAdmins.contains(currentUser, LambdaFunctions.compareById);
   }

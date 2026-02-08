@@ -30,11 +30,14 @@
                 </div>
               } @else {
                   <p class="mt-2 flex-grow-1">{{ comment.text }}</p>
-                @if (authService.currentUser()?.id === comment.authorId || authService.hasAdminAccess()) {
-                  <div class="comment-actions mt-2 ms-2">
-                    <mat-icon class="mat-icon-custom clickable" (click)="startEdit(comment)">edit</mat-icon>
-                    <mat-icon class="mat-icon-custom clickable" (click)="commentDeleted.emit(comment)">delete_forever
-                    </mat-icon>
+                @if (authService.hasAdminAccess() || authService.currentUser()?.id === comment.authorId) {
+                  <div class="comment-actions mt-3 ms-2">
+                    <i class="pi pi-pen-to-square" (click)="startEdit(comment)" style="cursor: pointer;"></i>
+                    <i class="pi pi-trash" (click)="commentDeleted.emit(comment)" style="cursor: pointer;"></i>
+                  </div>
+                } @else if (this.accessControlService.isCurrentUserEventAdmin(this.event(), this.currentUser())) {
+                  <div class="comment-actions mt-3 ms-2">
+                    <i class="pi pi-trash" (click)="commentDeleted.emit(comment)" style="cursor: pointer;"></i>
                   </div>
                 }
               }

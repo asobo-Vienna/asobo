@@ -9,6 +9,9 @@ import {environment} from '../../../../environments/environment';
 import {RouterLink} from '@angular/router';
 import {Textarea} from 'primeng/textarea';
 import {AuthService} from '../../auth/services/auth-service';
+import {AccessControlService} from '../../../shared/services/access-control-service';
+import {User} from '../../auth/models/user';
+import {Event} from '../models/event';
 
 
 @Component({
@@ -25,10 +28,15 @@ import {AuthService} from '../../auth/services/auth-service';
 })
 export class CommentsList {
   authService = inject(AuthService);
+  accessControlService = inject(AccessControlService);
 
   comments = input<List<Comment>>(new List());
+  event = input<Event | null>(null);
+  currentUser = input<User | null>(null);
+
   commentDeleted = output<Comment>();
   commentEdited = output<Comment>();
+
   protected readonly UrlUtilService = UrlUtilService;
   protected readonly environment = environment;
 

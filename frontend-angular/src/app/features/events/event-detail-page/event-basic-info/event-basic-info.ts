@@ -49,7 +49,7 @@ export class EventBasicInfo implements OnInit {
   event = input<Event | null>(null);
   currentUser = input<User | null>(null);
 
-  canEditEventInfo = computed(() => {
+  isAdminOrEventAdmin = computed(() => {
     return this.authService.hasAdminAccess() ||
       this.accessControlService.isCurrentUserEventAdmin(this.event(), this.currentUser());
   });

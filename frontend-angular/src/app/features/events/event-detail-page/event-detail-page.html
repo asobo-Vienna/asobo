@@ -72,6 +72,8 @@
     <div class="col-md-6 text-start">
       <app-comments-list
         [comments]="comments()"
+        [event]="event()"
+        [currentUser]="currentUser"
         (commentDeleted)="deleteComment($event)"
         (commentEdited)="editComment($event)"
       />

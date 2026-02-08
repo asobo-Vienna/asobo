@@ -62,7 +62,7 @@
           ></textarea>
       </div>
 
-      @if (canEditEventInfo()) {
+      @if (isAdminOrEventAdmin()) {
         <div class="d-flex justify-content-end gap-2">
           <i class="pi pi-pen-to-square" (click)="toggleEdit()" style="cursor: pointer;"></i>
           <i class="pi pi-trash" (click)="onDelete()" style="cursor: pointer;"></i>
