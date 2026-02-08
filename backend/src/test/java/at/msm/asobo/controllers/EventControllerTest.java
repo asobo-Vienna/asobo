@@ -333,7 +333,7 @@ class EventControllerTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"ADMIN", "SUPERADMIN", "USER"})
+    @ValueSource(strings = {"ROLE_ADMIN", "ROLE_SUPERADMIN", "ROLE_USER"})
     void updateEventById_CorrectRole_UpdatesEvent(String role) throws Exception {
         eventUpdateDTO.setTitle("Test Title");
         eventDTO.setTitle("Test Title");
@@ -367,7 +367,7 @@ class EventControllerTest {
 
         mockMvc.perform(patch(SINGLE_EVENT_URL, eventId)
                         .with(authentication(MockAuthenticationFactory
-                                .mockAuth(userId, "testuser", "testuser@test.com")))
+                                .mockAuth(userId, "testuser", "testuser@test.com", "ROLE_USER")))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(inputJson)
                         .with(csrf()))
@@ -377,7 +377,7 @@ class EventControllerTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"ADMIN", "SUPERADMIN"})
+    @ValueSource(strings = {"ROLE_ADMIN", "ROLE_SUPERADMIN"})
     void deleteEventById_WithAdminRole_DeletesEvent(String role) throws Exception {
         when(eventService.deleteEventById(any(UUID.class), any(UserPrincipal.class))).thenReturn(eventDTO);
 
@@ -396,7 +396,7 @@ class EventControllerTest {
 
         mockMvc.perform(delete(SINGLE_EVENT_URL, eventId)
                         .with(authentication(MockAuthenticationFactory
-                                .mockAuth(userId, "testuser", "testuser@test.com"))))
+                                .mockAuth(userId, "testuser", "testuser@test.com", "ROLE_USER"))))
                 .andExpect(status().isOk());
 
         verify(eventService).deleteEventById(any(UUID.class), any(UserPrincipal.class));
@@ -410,7 +410,7 @@ class EventControllerTest {
 
         mockMvc.perform(delete(SINGLE_EVENT_URL, eventId)
                         .with(authentication(MockAuthenticationFactory
-                                .mockAuth(userId, "testuser", "testuser@test.com"))))
+                                .mockAuth(userId, "testuser", "testuser@test.com", "ROLE_USER"))))
                 .andExpect(status().isForbidden());
 
         verify(eventService).deleteEventById(eq(eventId), any(UserPrincipal.class));

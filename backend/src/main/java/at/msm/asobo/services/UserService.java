@@ -13,10 +13,8 @@ import at.msm.asobo.services.files.FileStorageService;
 import at.msm.asobo.services.files.FileValidationService;
 import at.msm.asobo.utils.PatchUtils;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.web.servlet.MultipartProperties;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Set;
 import java.util.UUID;
@@ -101,7 +99,7 @@ public class UserService {
             targetUser.setPassword(hashedPassword);
         }
 
-        this.handleProfilePictureUpdate(userUpdateDTO.getProfilePicture(), targetUser);
+        this.fileStorageService.handleProfilePictureUpdate(userUpdateDTO.getProfilePicture(), targetUser);
 
         User updatedUser = this.userRepository.save(targetUser);
 
@@ -147,18 +145,4 @@ public class UserService {
         return this.userRepository.existsByEmail(email);
     }
 
-    private void handleProfilePictureUpdate(MultipartFile picture, User user) {
-        if (picture == null || picture.isEmpty()) {
-            return;
-        }
-
-        this.fileValidationService.validateImage(picture);
-
-        if (user.getPictureURI() != null) {
-            this.fileStorageService.delete(user.getPictureURI());
-        }
-
-        String pictureURI = this.fileStorageService.store(picture, this.fileStorageProperties.getProfilePictureSubfolder());
-        user.setPictureURI(pictureURI);
-    }
 }

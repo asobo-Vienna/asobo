@@ -1,6 +1,7 @@
 package at.msm.asobo.services.files;
 
 import at.msm.asobo.config.FileStorageProperties;
+import at.msm.asobo.entities.User;
 import at.msm.asobo.exceptions.files.FileDeletionException;
 import at.msm.asobo.exceptions.files.InvalidFilenameException;
 import org.springframework.stereotype.Service;
@@ -17,9 +18,17 @@ import static java.nio.file.Files.*;
 
 @Service
 public class FileStorageService {
+
+    private final FileStorageProperties fileStorageProperties;
+
+    private final FileValidationService fileValidationService;
+
     private final String baseStoragePath;
 
-    public FileStorageService(FileStorageProperties fileStorageProperties) throws IOException {
+    public FileStorageService(FileStorageProperties fileStorageProperties,
+                              FileValidationService fileValidationService) throws IOException {
+        this.fileStorageProperties = fileStorageProperties;
+        this.fileValidationService = fileValidationService;
         this.baseStoragePath = fileStorageProperties.getBasePath();
         createDirectories(Path.of(baseStoragePath));
     }
@@ -72,5 +81,20 @@ public class FileStorageService {
         } catch (IOException e) {
             throw new FileDeletionException("Failed to delete file: " + filename);
         }
+    }
+
+    public void handleProfilePictureUpdate(MultipartFile picture, User user) {
+        if (picture == null || picture.isEmpty()) {
+            return;
+        }
+
+        this.fileValidationService.validateImage(picture);
+
+        if (user.getPictureURI() != null) {
+            this.delete(user.getPictureURI());
+        }
+
+        String pictureURI = this.store(picture, this.fileStorageProperties.getProfilePictureSubfolder());
+        user.setPictureURI(pictureURI);
     }
 }
