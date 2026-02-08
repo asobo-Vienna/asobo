@@ -56,4 +56,8 @@ export class EventService {
   public updateEvent(eventId: string, eventData: Partial<Event>): Observable<Event> {
     return this.http.patch<Event>(`${environment.eventsEndpoint}/${eventId}`, eventData);
   }
+
+  public deleteEvent(eventId: string): Observable<Event> {
+    return this.http.delete<Event>(`${environment.eventsEndpoint}/${eventId}`);
+  }
 }

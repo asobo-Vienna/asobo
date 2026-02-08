@@ -1,0 +1,89 @@
+<form [formGroup]="editEventForm" (ngSubmit)="onSubmit()" [class.editing]="isEditing">
+  <div class="mb-3">
+    <div class="row">
+      <div class="col" id="event-basic-info-container">
+        <div class="d-flex justify-content-between">
+            <textarea
+              type="text"
+              id="event-title"
+              class="event-title-textarea fw-bold"
+              formControlName="title"
+              pInputText
+              cdkTextareaAutosize
+              cdkAutosizeMinRows="3"
+              [readonly]="!isEditing"
+            ></textarea>
+
+          @if (isEditing) {
+            <p-datepicker
+              formControlName="date"
+              name="date"
+              [showIcon]="true"
+              dateFormat="dd MM yy at"
+              [showTime]="true"
+              hourFormat="12"
+              [readonlyInput]="!isEditing"
+            >
+            </p-datepicker>
+          }
+
+          <div id="event-date" class="date-font-color ms-1 flex-shrink-0">
+            {{ event()?.date | date : 'EEE, MMMM d, y' }}
+            <div id="event-time" class="date-font-color ms-1 small event-time">
+              {{ event()?.time | date : 'h:mm a' }}
+            </div>
+          </div>
+        </div>
+
+        <div class="d-flex justify-content-between">
+          <input
+            type="text"
+            id="event-location"
+            class="date-font-color small flex-grow-1"
+            formControlName="location"
+            pInputText
+            [readonly]="!isEditing"
+          />
+        </div>
+      </div>
+      <div class="col-md-4"><!-- spacer --></div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-8">
+      <div id="event-description-container" class="mb-3 p-3 infobox">
+          <textarea
+            formControlName="description"
+            cdkTextareaAutosize
+            cdkAutosizeMinRows="3"
+            class="event-description-textarea"
+            [readonly]="!isEditing"
+          ></textarea>
+      </div>
+
+      @if (canEditEventInfo()) {
+        <div class="d-flex justify-content-end gap-2">
+          <i class="pi pi-pen-to-square" (click)="toggleEdit()" style="cursor: pointer;"></i>
+          <i class="pi pi-trash" (click)="onDelete()" style="cursor: pointer;"></i>
+        </div>
+      }
+
+      @if (isEditing) {
+        <div class="form-group d-flex justify-content-center">
+          <button class="btn btn-purple btn-primary mt-4 me-2" id="create-event-button" type="submit">
+            Update
+          </button>
+          <button class="btn btn-secondary mt-4" id="create-event-button" type="button" (click)="toggleEdit()">
+            Cancel
+          </button>
+        </div>
+      }
+
+    </div>
+  </div>
+  <div class="col-md-4"><!-- spacer --></div>
+</form>
+
+
+

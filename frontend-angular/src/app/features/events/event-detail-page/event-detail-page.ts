@@ -2,7 +2,6 @@ import {Component, inject, signal} from '@angular/core';
 import {EventService} from '../services/event-service';
 import {Event} from '../models/event';
 import {ActivatedRoute} from '@angular/router';
-import {DatePipe} from '@angular/common';
 import {CreateComment} from "../create-comment/create-comment";
 import {Participants} from '../participants/participants';
 import {CommentsList} from '../comments-list/comments-list';
@@ -21,33 +20,24 @@ import {ParticipantService} from '../services/participant-service';
 import {LambdaFunctions} from '../../../shared/utils/lambda-functions';
 import {environment} from '../../../../environments/environment';
 import {Tag} from 'primeng/tag';
-import {InputText} from 'primeng/inputtext';
+
 import {
-  AbstractControl, FormBuilder,
-  FormGroup,
   FormsModule,
   ReactiveFormsModule,
-  ValidationErrors,
-  Validators
 } from '@angular/forms';
-import {DatePicker} from 'primeng/datepicker';
-import {DateUtils} from '../../../shared/utils/date/date-utils';
-import {CdkTextareaAutosize} from '@angular/cdk/text-field';
+import {EventInfo} from './event-info/event-info';
 
 @Component({
   selector: 'app-event-detail-page',
   imports: [
-    DatePipe,
     CreateComment,
     Participants,
     CommentsList,
     Gallery,
     Tag,
-    InputText,
     FormsModule,
     ReactiveFormsModule,
-    DatePicker,
-    CdkTextareaAutosize,
+    EventInfo,
   ],
   templateUrl: './event-detail-page.html',
   styleUrl: './event-detail-page.scss'
@@ -60,38 +50,17 @@ export class EventDetailPage {
   authService = inject(AuthService);
   participantService = inject(ParticipantService);
 
-  private formBuilder = inject(FormBuilder);
-
-  id!: string;
-  title!: string;
-  pictureURI!: string;
-  date!: string;
-  time!: string;
-  location!: string;
-  description?: string;
-  isPrivate!: boolean;
-
-  editEventForm: FormGroup;
-  isEditing: boolean = false;
-
+  event = signal<Event | null>(null);
   comments = signal<List<Comment>>(new List<Comment>());
   participants = signal<List<Participant>>(new List<Participant>());
   mediaItems = signal<List<MediaItem>>(new List<MediaItem>());
 
-  event = signal<Event | null>(null);
-  currentUser: User | null = this.authService.currentUser();
   isUserAlreadyPartOfEvent = signal(false);
-  protected readonly UrlUtilService = UrlUtilService;
 
-  constructor() {
-    this.editEventForm = this.formBuilder.group({
-      title: ['', [Validators.required, Validators.minLength(environment.minEventTitleLength), Validators.maxLength(environment.maxEventTitleLength)]],
-      description: ['', [Validators.required, Validators.minLength(environment.minEventDescriptionLength), Validators.maxLength(environment.maxEventDescriptionLength)]],
-      location: ['', [Validators.required]],
-      date: ['', [Validators.required, this.validateDate]],
-      isPrivate: ['', [Validators.required]],
-    });
-  }
+  currentUser: User | null = this.authService.currentUser();
+
+  protected readonly UrlUtilService = UrlUtilService;
+  protected readonly environment = environment;
 
   ngOnInit(): void {
     const eventId = this.route.snapshot.paramMap.get('id');
@@ -108,24 +77,10 @@ export class EventDetailPage {
   }
 
   private populateEvent(event: Event): void {
+    event.eventAdmins = new List(event.eventAdmins as unknown as User[]);
+
+
     this.event.set(event);
-
-    this.editEventForm.patchValue({
-      title: event.title,
-      description: event.description,
-      location: event.location,
-      date: event.date ? new Date(event.date) : null,
-      isPrivate: event.isPrivate
-    });
-
-    this.id = event.id;
-    this.title = event.title;
-    this.pictureURI = event.pictureURI;
-    this.date = event.date;
-    this.time = event.date;
-    this.location = event.location;
-    this.description = event.description;
-    this.isPrivate = event.isPrivate;
 
     this.participantService.getAllByEventId(event.id).subscribe((participants: List<Participant>) => {
       this.participants.set(participants);
@@ -185,7 +140,10 @@ export class EventDetailPage {
 
 
   public uploadMedia(file: File) {
-    this.mediaService.upload(this.id, file).subscribe({
+    const currentEvent = this.event();
+    if (!currentEvent) return;
+
+    this.mediaService.upload(currentEvent.id, file).subscribe({
       next: (mediaItem) => this.mediaItems().add(mediaItem),
       error: (err) => console.error('Failed to upload media!', err)
     });
@@ -193,8 +151,11 @@ export class EventDetailPage {
 
 
   public deleteMedia(item: MediaItem) {
+    const currentEvent = this.event();
+    if (!currentEvent) return;
+
     this.mediaItems().remove(item);       // remove immediately
-    this.mediaService.delete(this.id, item).subscribe({
+    this.mediaService.delete(currentEvent.id, item).subscribe({
       error: (err) => {
         console.error('Failed to delete media!', err);
         this.mediaItems().add(item);     // revert if backend fails
@@ -208,7 +169,10 @@ export class EventDetailPage {
       return;
     }
 
-    this.participantService.joinOrLeaveEvent(this.id, this.currentUser).subscribe({
+    const currentEvent = this.event();
+    if (!currentEvent) return;
+
+    this.participantService.joinOrLeaveEvent(currentEvent.id, this.currentUser).subscribe({
       next: (participants: List<Participant>) => {
         if (!this.currentUser) {
           return;
@@ -229,64 +193,9 @@ export class EventDetailPage {
     });
   }
 
-  public toggleEdit() {
-    this.isEditing = !this.isEditing;
-    if (!this.isEditing) {
-      // reset form to the original values
-      this.editEventForm.reset({
-        title: this.title,
-        description: this.description,
-        location: this.location,
-        date: this.date ? new Date(this.date) : null,
-        isPrivate: this.isPrivate
-      });
-    }
+
+  public onEventUpdated(updatedEvent: Event) {
+    this.event.set(updatedEvent);
   }
-
-  protected isCurrentUserEventAdmin(event: Event, currentUser: User): boolean {
-    return event.eventAdmins.contains(currentUser);
-  }
-
-  onSubmit() {
-    if (!this.editEventForm.valid) {
-      console.log('Form is invalid, stopping event submission');
-      return;
-    }
-
-    const eventData = {
-      ...this.editEventForm.value,
-      date: DateUtils.toLocalISOString(this.editEventForm.value.date)
-    };
-
-    this.eventService.updateEvent(this.id, eventData).subscribe({
-      next: (event) => {
-        alert(`Event ${event.title} updated successfully!`);
-
-        // update local properties so view mode shows correct info
-        this.title = this.editEventForm.value.title;
-        this.description = this.editEventForm.value.description;
-        this.location = this.editEventForm.value.location;
-        this.date = this.editEventForm.value.date;
-        this.time = this.editEventForm.value.date;
-        this.isPrivate = this.editEventForm.value.isPrivate;
-
-        this.isEditing = false;
-      },
-      error: (err) => {
-        console.log('Error updating event', err);
-      }
-    });
-  }
-
-  validateDate(control: AbstractControl): ValidationErrors | null {
-    if (!control.value) return null;
-    const selected = new Date(control.value);
-    if (selected < new Date()) {
-      return { pastDate: true };
-    }
-    return null;
-  }
-
-  protected readonly environment = environment;
 }
 
