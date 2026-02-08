@@ -10,7 +10,7 @@
               formControlName="title"
               pInputText
               cdkTextareaAutosize
-              cdkAutosizeMinRows="2"
+              cdkAutosizeMinRows="3"
               [readonly]="!isEditing"
             ></textarea>
 
@@ -64,8 +64,8 @@
 
       @if (isAdminOrEventAdmin()) {
         <div class="d-flex justify-content-end gap-2">
-          <i class="pi pi-pen-to-square" (click)="toggleEdit()" style="cursor: pointer;"></i>
-          <i class="pi pi-trash" (click)="onDelete()" style="cursor: pointer;"></i>
+          <i class="pi pi-pen-to-square clickable" (click)="toggleEdit()"></i>
+          <i class="pi pi-trash clickable" (click)="onDelete()"></i>
         </div>
       }
 

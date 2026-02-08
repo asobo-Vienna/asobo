@@ -1,13 +1,14 @@
-import {Component, EventEmitter, inject, Input, Output, ViewEncapsulation} from '@angular/core';
+import {Component, EventEmitter, inject, input, Input, Output, ViewEncapsulation} from '@angular/core';
 import {MediaItem} from '../models/media-item';
 import {List} from "../../../core/data_structures/lists/list";
 import {UrlUtilService} from '../../../shared/utils/url/url-util-service';
 import {Carousel} from 'primeng/carousel';
 import {PrimeTemplate} from 'primeng/api';
-import {MatIcon} from '@angular/material/icon';
-import {MatIconButton} from '@angular/material/button';
 import {MediaUtilService} from '../../../shared/utils/media/media-util-service';
 import {AuthService} from '../../auth/services/auth-service';
+import {AccessControlService} from '../../../shared/services/access-control-service';
+import {Event} from '../models/event';
+import {User} from '../../auth/models/user';
 
 @Component({
   selector: 'app-gallery',
@@ -16,18 +17,22 @@ import {AuthService} from '../../auth/services/auth-service';
   encapsulation: ViewEncapsulation.None,
   imports: [
     Carousel,
-    PrimeTemplate,
-    MatIcon,
-    MatIconButton
+    PrimeTemplate
   ]
 })
 
 export class Gallery {
-  authService = inject(AuthService);
+  protected authService = inject(AuthService);
+  protected accessControlService = inject(AccessControlService);
+
   @Input() mediaItems: List<MediaItem> = new List([]);
   @Output() mediaAdded = new EventEmitter<File>();
   @Output() mediaDeleted = new EventEmitter<MediaItem>();
+
   protected readonly UrlUtilService = UrlUtilService;
+
+  event = input<Event | null>(null);
+  currentUser = input<User | null>(null);
 
   showCarousel = false;
   activeSlideIndex = 0;
@@ -41,7 +46,7 @@ export class Gallery {
     this.showCarousel = false;
   }
 
-  onFileSelected(event: Event) {
+  onFileSelected(event: globalThis.Event) {
     const input = event.target as HTMLInputElement;
     const file = input.files?.[0];
     if (!file) return;

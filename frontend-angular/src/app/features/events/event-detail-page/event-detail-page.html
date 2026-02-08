@@ -23,15 +23,15 @@
       <app-event-info
         [event]="event()"
         [eventCoreInfo]="{
-        id: event()!.id,
-      title: event()!.title,
-      pictureURI: event()!.pictureURI,
-      description: event()!.description,
-      location: event()!.location,
-      date: event()!.date,
-      time: event()!.date,
-      isPrivate: event()!.isPrivate
-    }"
+          id: event()!.id,
+          title: event()!.title,
+          pictureURI: event()!.pictureURI,
+          description: event()!.description,
+          location: event()!.location,
+          date: event()!.date,
+          time: event()!.date,
+          isPrivate: event()!.isPrivate
+        }"
         [currentUser]="currentUser"
         (eventUpdated)="onEventUpdated($event)"
       />
@@ -83,6 +83,8 @@
     <div class="col-md-6 mt-3 text-start">
       <app-gallery
         [mediaItems]="mediaItems()"
+        [event]="event()"
+        [currentUser]="currentUser"
         (mediaAdded)="uploadMedia($event)"
         (mediaDeleted)="deleteMedia($event)"
       />

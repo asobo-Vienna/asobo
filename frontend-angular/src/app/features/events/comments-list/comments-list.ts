@@ -2,7 +2,6 @@ import {Component, inject, input, output, signal} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {Comment} from '../models/comment';
 import {DatePipe} from '@angular/common';
-import {MatIcon} from '@angular/material/icon';
 import {List} from '../../../core/data_structures/lists/list';
 import {UrlUtilService} from '../../../shared/utils/url/url-util-service';
 import {environment} from '../../../../environments/environment';
@@ -19,7 +18,6 @@ import {Event} from '../models/event';
   imports: [
     FormsModule,
     DatePipe,
-    MatIcon,
     RouterLink,
     Textarea
   ],
