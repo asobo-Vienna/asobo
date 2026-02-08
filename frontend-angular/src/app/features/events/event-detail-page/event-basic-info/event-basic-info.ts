@@ -20,6 +20,7 @@ import {EventCoreInfo} from '../../models/event-core-info';
 import {EventService} from '../../services/event-service';
 import {AuthService} from '../../../auth/services/auth-service';
 import {AccessControlService} from '../../../../shared/services/access-control-service';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-event-info',
@@ -31,14 +32,15 @@ import {AccessControlService} from '../../../../shared/services/access-control-s
     InputText,
     ReactiveFormsModule
   ],
-  templateUrl: './event-info.html',
-  styleUrl: './event-info.scss',
+  templateUrl: './event-basic-info.html',
+  styleUrl: './event-basic-info.scss',
 })
-export class EventInfo implements OnInit {
+export class EventBasicInfo implements OnInit {
   private formBuilder = inject(FormBuilder);
   private eventService = inject(EventService);
   protected accessControlService = inject(AccessControlService);
   protected authService = inject(AuthService);
+  private router = inject(Router);
 
   protected readonly environment = environment;
 
@@ -148,7 +150,13 @@ export class EventInfo implements OnInit {
       return;
     }
 
-    console.log('delete event', eventId);
-    // this.eventService.deleteEvent(eventId);
+    this.eventService.deleteEvent(eventId).subscribe({
+      next: (response: Event) => {
+        this.router.navigate(['/events']);
+      },
+      error: (err) => {
+        console.error('Failed to delete event', err);
+      }
+    });
   }
 }

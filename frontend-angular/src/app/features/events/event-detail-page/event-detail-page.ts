@@ -25,7 +25,7 @@ import {
   FormsModule,
   ReactiveFormsModule,
 } from '@angular/forms';
-import {EventInfo} from './event-info/event-info';
+import {EventBasicInfo} from './event-basic-info/event-basic-info';
 
 @Component({
   selector: 'app-event-detail-page',
@@ -37,7 +37,7 @@ import {EventInfo} from './event-info/event-info';
     Tag,
     FormsModule,
     ReactiveFormsModule,
-    EventInfo,
+    EventBasicInfo,
   ],
   templateUrl: './event-detail-page.html',
   styleUrl: './event-detail-page.scss'
@@ -78,7 +78,6 @@ export class EventDetailPage {
 
   private populateEvent(event: Event): void {
     event.eventAdmins = new List(event.eventAdmins as unknown as User[]);
-
 
     this.event.set(event);
 
