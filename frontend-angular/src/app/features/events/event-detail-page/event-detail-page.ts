@@ -72,14 +72,14 @@ export class EventDetailPage {
     }
   }
 
+
   public loadEvent(eventId: string): Observable<Event> {
     return this.eventService.getEventById(eventId);
   }
 
-  private populateEvent(event: Event): void {
-    event.eventAdmins = new List(event.eventAdmins as unknown as User[]);
 
-    this.event.set(event);
+  private populateEvent(event: Event): void {
+    this.event.set(this.eventService.convertEventAdminsToList(event));
 
     this.participantService.getAllByEventId(event.id).subscribe((participants: List<Participant>) => {
       this.participants.set(participants);
@@ -194,7 +194,7 @@ export class EventDetailPage {
 
 
   public onEventUpdated(updatedEvent: Event) {
-    this.event.set(updatedEvent);
+    this.event.set(this.eventService.convertEventAdminsToList(updatedEvent));
   }
 }
 

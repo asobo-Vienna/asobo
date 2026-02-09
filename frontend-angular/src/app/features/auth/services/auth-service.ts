@@ -204,12 +204,6 @@ export class AuthService {
     }
   }
 
-
-  hasAdminAccess(): boolean {
-    return this.getUserRoles().some(role => [RoleEnum.ADMIN, RoleEnum.SUPERADMIN].includes(role as RoleEnum));
-  }
-
-
   // Refresh user data from backend
   /*refreshUser(): Observable<User> {
     return this.http.get<User>('/api/auth/me')

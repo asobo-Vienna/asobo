@@ -1,4 +1,4 @@
-import {Component, computed, inject, input, OnInit, output} from '@angular/core';
+import {Component, computed, inject, input, OnInit, output, signal} from '@angular/core';
 import {CdkTextareaAutosize} from "@angular/cdk/text-field";
 import {DatePicker} from "primeng/datepicker";
 import {DatePipe} from "@angular/common";
@@ -23,7 +23,7 @@ import {AccessControlService} from '../../../../shared/services/access-control-s
 import {Router} from '@angular/router';
 
 @Component({
-  selector: 'app-event-info',
+  selector: 'app-event-basic-info',
   imports: [
     CdkTextareaAutosize,
     DatePicker,
@@ -58,7 +58,7 @@ export class EventBasicInfo implements OnInit {
   eventUpdated = output<Event>();
 
   editEventForm: FormGroup;
-  isEditing: boolean = false;
+  isEditing = signal(false);
 
 
   constructor() {
@@ -67,11 +67,11 @@ export class EventBasicInfo implements OnInit {
       description: ['', [Validators.required, Validators.minLength(environment.minEventDescriptionLength), Validators.maxLength(environment.maxEventDescriptionLength)]],
       location: ['', [Validators.required]],
       date: ['', [Validators.required, this.validateDate]],
-      isPrivate: ['', [Validators.required]],
+      isPrivate: [false, [Validators.required]],
     });
   }
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     const coreInfo = this.eventCoreInfo();
     if (coreInfo) {
       this.editEventForm.patchValue({
@@ -84,7 +84,7 @@ export class EventBasicInfo implements OnInit {
     }
   }
 
-  onSubmit() {
+  public onSubmit() {
     if (!this.editEventForm.valid) {
       console.log('Form is invalid, stopping event submission');
       return;
@@ -103,9 +103,9 @@ export class EventBasicInfo implements OnInit {
 
     this.eventService.updateEvent(currentEvent.id, eventData).subscribe({
       next: (event) => {
-        alert(`Event ${event.title} updated successfully!`);
+        console.log(`Event ${event.title} updated successfully!`);
         this.eventUpdated.emit(event);
-        this.isEditing = false;
+        this.isEditing.set(false);
       },
       error: (err) => {
         console.log('Error updating event', err);
@@ -114,27 +114,26 @@ export class EventBasicInfo implements OnInit {
   }
 
 
-  public toggleEdit() {
-    this.isEditing = !this.isEditing;
-    if (!this.isEditing) {
-      const coreInfo = this.eventCoreInfo();
-
-      if (!coreInfo) {
-        return;
-      }
-
-      // reset form to the original values
-      this.editEventForm.reset({
-        title: coreInfo!.title,
-        description: coreInfo.description,
-        location: coreInfo.location,
-        date: coreInfo.date ? new Date(coreInfo.date) : null,
-        isPrivate: coreInfo.isPrivate
-      });
-    }
+  public enterEdit() {
+    this.isEditing.set(true);
   }
 
-  validateDate(control: AbstractControl): ValidationErrors | null {
+  public cancelEdit() {
+    const coreInfo = this.eventCoreInfo();
+    if (!coreInfo) return;
+
+    this.editEventForm.reset({
+      title: coreInfo.title,
+      description: coreInfo.description,
+      location: coreInfo.location,
+      date: coreInfo.date ? new Date(coreInfo.date) : null,
+      isPrivate: coreInfo.isPrivate
+    });
+
+    this.isEditing.set(false);
+  }
+
+  public validateDate(control: AbstractControl): ValidationErrors | null {
     if (!control.value) return null;
     const selected = new Date(control.value);
     if (selected < new Date()) {
@@ -143,7 +142,7 @@ export class EventBasicInfo implements OnInit {
     return null;
   }
 
-  onDelete() {
+  public onDelete() {
     const eventId: string | undefined = this.event()?.id;
     if (!eventId) {
       console.error('No event ID available');
@@ -151,7 +150,7 @@ export class EventBasicInfo implements OnInit {
     }
 
     this.eventService.deleteEvent(eventId).subscribe({
-      next: (response: Event) => {
+      next: () => {
         this.router.navigate(['/events']);
       },
       error: (err) => {
