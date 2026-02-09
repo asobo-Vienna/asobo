@@ -47,5 +47,5 @@ jobs:
       - name: Upload JAR artifact
         uses: actions/upload-artifact@v4
         with:
-          name: backend-jar
+          name: asobo-build
           path: backend/target/*.jar
