@@ -43,6 +43,10 @@ jobs:
       - name: Build package
         run: mvn -B -DskipTests package
         working-directory: ./backend
+        env:
+          DB_URL: ${{ secrets.DB_URL }}
+          DB_USERNAME: ${{ secrets.DB_USERNAME }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
 
       - name: Copy JAR to root
         run: cp backend/target/*.jar ./  
