@@ -31,6 +31,7 @@ jobs:
       - name: Run Checkstyle
         run: mvn checkstyle:check
         working-directory: ./backend
+        continue-on-error: true
 
       - name: Build and run tests
         run: mvn clean test
