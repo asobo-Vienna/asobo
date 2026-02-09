@@ -75,7 +75,7 @@ public class SecurityConfig {
         http.formLogin(AbstractHttpConfigurer::disable);
 
         http.authorizeHttpRequests(registry -> registry
-                .requestMatchers("/", "/index.html", "/assets/**", "/images/**",
+                .requestMatchers("/", "/index.html", "/assets/**", "/images/**", "/media/**",
                         "**.js", "**.css", "**.png", "**.jpg", "**.svg", "**.ico").permitAll()
                 .requestMatchers("/api/roles/**").hasAnyRole("ADMIN", "SUPERADMIN")
                 .requestMatchers("/api/auth/**").permitAll()
