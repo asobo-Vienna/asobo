@@ -54,8 +54,7 @@ public class SecurityConfig {
         http.cors(cors -> cors.configurationSource(request -> {
             CorsConfiguration config = new CorsConfiguration();
             config.setAllowedOrigins(List.of(
-                    "http://localhost:4200", // frontend
-                    "http://localhost:8080"
+                    "http://localhost:4200" // frontend
             ));
             config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
             config.setAllowedHeaders(List.of("Authorization", "Content-Type", "Accept"));
@@ -76,7 +75,8 @@ public class SecurityConfig {
         http.formLogin(AbstractHttpConfigurer::disable);
 
         http.authorizeHttpRequests(registry -> registry
-                .requestMatchers("/", "/index.html", "/assets/**", "**.js", "**.css", "**.png", "**.jpg", "**.svg", "**.ico").permitAll()
+                .requestMatchers("/", "/index.html", "/assets/**", "/images/**",
+                        "**.js", "**.css", "**.png", "**.jpg", "**.svg", "**.ico").permitAll()
                 .requestMatchers("/api/roles/**").hasAnyRole("ADMIN", "SUPERADMIN")
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers(HttpMethod.GET,"/api/events/**").permitAll()
