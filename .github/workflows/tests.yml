@@ -47,11 +47,11 @@ jobs:
         continue-on-error: true
 
       - name: Build and run tests
-        run: mvn clean test
+        run: mvn clean test -X
         working-directory: ./backend
 
       - name: Build package
-        run: mvn -B -DskipTests package
+        run: mvn -B -DskipTests -X package
         working-directory: backend
 
       - name: Upload JAR artifact
