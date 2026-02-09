@@ -264,7 +264,7 @@
                         </goals>
 
                         <configuration>
-                            <outputDirectory>${project.build.outputDirectory}/static/uploads</outputDirectory>
+                            <outputDirectory>${project.build.outputDirectory}/../uploads</outputDirectory>
                             <resources>
                                 <resource>
                                     <directory>../uploads</directory>

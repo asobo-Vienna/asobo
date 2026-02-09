@@ -44,8 +44,8 @@ jobs:
         run: mvn -B -DskipTests package
         working-directory: ./backend
       
-      - name: Upload JAR artifact
+      - name: Upload JAR artifact to root
         uses: actions/upload-artifact@v4
         with:
           name: asobo-build
-          path: backend/target/*.jar
+          path: ../*.jar
