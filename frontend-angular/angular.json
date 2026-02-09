@@ -28,6 +28,11 @@
                 "glob": "**/*",
                 "input": "public",
                 "output": "/"
+              },
+              {
+                "glob": "**/*",
+                "input": "node_modules/primeicons",
+                "output": "/primeicons"
               }
             ],
             "styles": [
