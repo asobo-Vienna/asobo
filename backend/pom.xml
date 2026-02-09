@@ -192,7 +192,7 @@
                             <goal>npm</goal>
                         </goals>
                         <configuration>
-                            <arguments>run build --configuration development</arguments>
+                            <arguments>run build</arguments>
                         </configuration>
                     </execution>
                 </executions>
