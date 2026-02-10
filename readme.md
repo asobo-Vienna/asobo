@@ -84,6 +84,8 @@ asobo/
 
 1. **Start the Database:**
 
+⚠️ **Attention:** Make sure Docker Desktop is running before executing any Docker commands, such as `docker-compose up -d`.
+
 From the root directory of the project, run:
 ```bash
 docker-compose up -d
@@ -183,6 +185,9 @@ The easiest way to run the application is using the provided scripts from the pr
 ```bash
 run.bat
 ```
+
+⚠️ **Attention:** Make sure Docker Desktop is running before running any of the scripts.
+
 
 These scripts will:
 1. Ensure the PostgreSQL database is running
