@@ -2,6 +2,7 @@ package at.msm.asobo.entities;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+
 import java.util.UUID;
 
 @Entity
@@ -47,7 +48,7 @@ public class Medium {
     }
 
     public void setEvent(Event event) {
-        this.event = event;
+        this.event =     event;
     }
 
     public User getCreator() {
