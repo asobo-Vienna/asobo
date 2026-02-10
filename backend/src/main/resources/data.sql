@@ -179,8 +179,8 @@ VALUES ('94c6fbff-cb33-4f59-8fef-d298ec9e46d2'::uuid, '7da69d8e-55c7-4a96-ac6d-c
        ('94c6fbff-cb33-4f59-8fef-d298ec9e46d2'::uuid, 'cb0d70b4-8ac6-4045-8a77-55be2583f2a8'::uuid),
        ('aaed8676-8b38-4c7a-b8b1-66dd683a1a96'::uuid, 'cb0d70b4-8ac6-4045-8a77-55be2583f2a8'::uuid),
        ('aaed8676-8b38-4c7a-b8b1-66dd683a1a96'::uuid, '7da69d8e-55c7-4a96-ac6d-cb207e4e8a21'::uuid),
-       ('58e7618c-0573-43d7-8aa2-3efbd0acdee6'::uuid, 'cff3d733-7df9-4443-bf59-b86c9875bdec'::uuid);
-
+       ('58e7618c-0573-43d7-8aa2-3efbd0acdee6'::uuid, 'cff3d733-7df9-4443-bf59-b86c9875bdec'::uuid)
+ON CONFLICT (administered_events_id, event_admins_id) DO NOTHING;
 
 INSERT INTO event_participants (attended_events_id, participants_id)
 VALUES ('045fbc61-736a-4be1-baa3-070748e07f17'::uuid, '7da69d8e-55c7-4a96-ac6d-cb207e4e8a21'::uuid),
@@ -199,8 +199,8 @@ VALUES ('045fbc61-736a-4be1-baa3-070748e07f17'::uuid, '7da69d8e-55c7-4a96-ac6d-c
        ('042081b2-1b0c-4759-bed6-8f54fe056130'::uuid, 'e2540d46-4540-4223-b07c-78421260c91e'::uuid),
        ('aaed8676-8b38-4c7a-b8b1-66dd683a1a96'::uuid, '0219213a-e9ce-451b-9a60-d51fa22af669'::uuid),
        ('aaed8676-8b38-4c7a-b8b1-66dd683a1a96'::uuid, 'e2540d46-4540-4223-b07c-78421260c91e'::uuid),
-       ('aaed8676-8b38-4c7a-b8b1-66dd683a1a96'::uuid, '7da69d8e-55c7-4a96-ac6d-cb207e4e8a21'::uuid);
-
+       ('aaed8676-8b38-4c7a-b8b1-66dd683a1a96'::uuid, '7da69d8e-55c7-4a96-ac6d-cb207e4e8a21'::uuid)
+ON CONFLICT (attended_events_id, participants_id) DO NOTHING;
 
 INSERT INTO medium (event_id, id, mediumuri, creator_id)
 VALUES ('045fbc61-736a-4be1-baa3-070748e07f17'::uuid, '88385e56-0677-4d2b-b80a-2b35069415ae'::uuid,
@@ -324,5 +324,6 @@ VALUES ('a4235f35-d4b9-4d31-b4f1-91b8a6436d98'::uuid, 2),
        ('de89fe03-aaa9-4615-9f2f-a380aa31cba2'::uuid, 2),
        ('3fb77b1c-8670-40a2-929b-2b021f6e3e61'::uuid, 2),
        ('3fb77b1c-8670-40a2-929b-2b021f6e3e61'::uuid, 1),
-       ('7767118c-19bd-4c28-8129-c0abda74b46c'::uuid, 2);
+       ('7767118c-19bd-4c28-8129-c0abda74b46c'::uuid, 2)
+ON CONFLICT (user_id, role_id) DO NOTHING;
 
