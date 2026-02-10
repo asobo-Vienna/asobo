@@ -30,6 +30,7 @@ export class Gallery {
   @Output() mediaDeleted = new EventEmitter<MediaItem>();
 
   protected readonly UrlUtilService = UrlUtilService;
+  protected readonly MediaUtilService = MediaUtilService;
 
   event = input<Event | null>(null);
   currentUser = input<User | null>(null);
@@ -54,6 +55,4 @@ export class Gallery {
     this.mediaAdded.emit(file);
     input.value = '';
   }
-
-  protected readonly MediaUtilService = MediaUtilService;
 }

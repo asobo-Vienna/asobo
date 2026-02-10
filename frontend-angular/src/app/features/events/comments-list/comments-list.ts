@@ -7,7 +7,6 @@ import {UrlUtilService} from '../../../shared/utils/url/url-util-service';
 import {environment} from '../../../../environments/environment';
 import {RouterLink} from '@angular/router';
 import {Textarea} from 'primeng/textarea';
-import {AuthService} from '../../auth/services/auth-service';
 import {AccessControlService} from '../../../shared/services/access-control-service';
 import {User} from '../../auth/models/user';
 import {Event} from '../models/event';
@@ -25,7 +24,6 @@ import {Event} from '../models/event';
   styleUrl: './comments-list.scss'
 })
 export class CommentsList {
-  authService = inject(AuthService);
   accessControlService = inject(AccessControlService);
 
   comments = input<List<Comment>>(new List());

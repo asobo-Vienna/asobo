@@ -1,4 +1,4 @@
-@if (authService.hasAdminAccess()) {
+@if (accessControlService.hasAdminAccess()) {
   <h1 class="text-primary component">Admin Section</h1>
 
   <p-tabs [(value)]="selectedTab" class="admin-page">

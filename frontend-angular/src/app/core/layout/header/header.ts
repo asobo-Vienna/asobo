@@ -2,8 +2,7 @@ import { Component, inject } from '@angular/core';
 import {RouterLink, Router} from '@angular/router';
 import {AuthService} from '../../../features/auth/services/auth-service';
 import {environment} from '../../../../environments/environment';
-import {UrlUtilService} from '../../../shared/utils/url/url-util-service';
-import {UserProfileService} from '../../../features/users/services/user-profile-service';
+import {AccessControlService} from '../../../shared/services/access-control-service';
 
 @Component({
   selector: 'app-header',
@@ -16,6 +15,7 @@ import {UserProfileService} from '../../../features/users/services/user-profile-
 export class Header {
   private router = inject(Router);
   authService = inject(AuthService);
+  accessControlService = inject(AccessControlService);
 
   goHome() {
     console.log('Logo clicked');

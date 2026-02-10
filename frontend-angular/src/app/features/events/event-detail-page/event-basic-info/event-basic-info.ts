@@ -18,7 +18,6 @@ import {Event} from '../../models/event';
 import {User} from '../../../auth/models/user';
 import {EventCoreInfo} from '../../models/event-core-info';
 import {EventService} from '../../services/event-service';
-import {AuthService} from '../../../auth/services/auth-service';
 import {AccessControlService} from '../../../../shared/services/access-control-service';
 import {Router} from '@angular/router';
 
@@ -39,7 +38,6 @@ export class EventBasicInfo implements OnInit {
   private formBuilder = inject(FormBuilder);
   private eventService = inject(EventService);
   protected accessControlService = inject(AccessControlService);
-  protected authService = inject(AuthService);
   private router = inject(Router);
 
   protected readonly environment = environment;
@@ -50,7 +48,7 @@ export class EventBasicInfo implements OnInit {
   currentUser = input<User | null>(null);
 
   isAdminOrEventAdmin = computed(() => {
-    return this.authService.hasAdminAccess() ||
+    return this.accessControlService.hasAdminAccess() ||
       this.accessControlService.isCurrentUserEventAdmin(this.event(), this.currentUser());
   });
 
