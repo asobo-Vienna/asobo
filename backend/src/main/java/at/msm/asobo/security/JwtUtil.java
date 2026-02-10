@@ -14,10 +14,10 @@ import org.springframework.stereotype.Component;
 public class JwtUtil {
 
     @Value("${jwt.secret}")
-    private String SECRET;
+    private String secret;
 
     private SecretKey getSigningKey() {
-        return Keys.hmacShaKeyFor(SECRET.getBytes(StandardCharsets.UTF_8));
+        return Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
     }
 
     public String generateToken(UserPrincipal userPrincipal, long expirationTime) {

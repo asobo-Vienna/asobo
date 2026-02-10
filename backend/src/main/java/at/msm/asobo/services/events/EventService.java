@@ -95,11 +95,11 @@ public class EventService {
         List<Event> events;
 
         if (isPrivate == null) {
-            events = eventRepository.findByParticipants_Id(participantId);
+            events = eventRepository.findByParticipantsId(participantId);
         } else if (isPrivate) {
-            events = eventRepository.findByParticipants_IdAndIsPrivateEventTrue(participantId);
+            events = eventRepository.findByParticipantsIdAndIsPrivateEventTrue(participantId);
         } else {
-            events = eventRepository.findByParticipants_IdAndIsPrivateEventFalse(participantId);
+            events = eventRepository.findByParticipantsIdAndIsPrivateEventFalse(participantId);
         }
         return this.eventDTOEventMapper.mapEventsToEventSummaryDTOs(events);
     }
@@ -109,14 +109,14 @@ public class EventService {
         Page<Event> events;
 
         if (isPrivate == null) {
-            events = eventRepository.findByParticipants_Id(participantId, pageable);
+            events = eventRepository.findByParticipantsId(participantId, pageable);
         } else if (isPrivate) {
             events =
-                    eventRepository.findByParticipants_IdAndIsPrivateEventTrue(
+                    eventRepository.findByParticipantsIdAndIsPrivateEventTrue(
                             participantId, pageable);
         } else {
             events =
-                    eventRepository.findByParticipants_IdAndIsPrivateEventFalse(
+                    eventRepository.findByParticipantsIdAndIsPrivateEventFalse(
                             participantId, pageable);
         }
         return this.eventDTOEventMapper.mapEventsToEventSummaryDTOs(events);

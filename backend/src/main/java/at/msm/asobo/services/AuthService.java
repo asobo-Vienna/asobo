@@ -25,10 +25,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class AuthService {
     @Value("${jwt.expiration-ms}")
-    private long EXPIRATION_MS;
+    private long expirationMs;
 
     @Value("${jwt.remember-me-expiration-ms}")
-    private long REMEMBER_ME_EXPIRATION_MS;
+    private long rememberMeExpirationMs;
 
     private final UserService userService;
     private final PasswordService passwordService;
@@ -74,7 +74,7 @@ public class AuthService {
                         savedUser.getPassword(),
                         List.of(new SimpleGrantedAuthority("ROLE_USER")));
 
-        String token = this.jwtUtil.generateToken(userPrincipal, EXPIRATION_MS);
+        String token = this.jwtUtil.generateToken(userPrincipal, expirationMs);
 
         return new LoginResponseDTO(
                 token, this.userDTOUserMapper.mapUserToUserPublicDTO(savedUser));
@@ -94,9 +94,9 @@ public class AuthService {
 
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
 
-        long expirationTime = EXPIRATION_MS;
+        long expirationTime = expirationMs;
         if (userLoginDTO.isRememberMe()) {
-            expirationTime = REMEMBER_ME_EXPIRATION_MS; // 30 days;
+            expirationTime = rememberMeExpirationMs; // 30 days;
         }
 
         String token = this.jwtUtil.generateToken(userPrincipal, expirationTime);

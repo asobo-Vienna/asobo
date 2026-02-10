@@ -1,6 +1,5 @@
 package at.msm.asobo.services;
 
-import at.msm.asobo.config.FileStorageProperties;
 import at.msm.asobo.dto.auth.LoginResponseDTO;
 import at.msm.asobo.dto.user.*;
 import at.msm.asobo.entities.User;
@@ -10,7 +9,6 @@ import at.msm.asobo.repositories.UserRepository;
 import at.msm.asobo.security.JwtUtil;
 import at.msm.asobo.security.UserPrincipal;
 import at.msm.asobo.services.files.FileStorageService;
-import at.msm.asobo.services.files.FileValidationService;
 import at.msm.asobo.utils.PatchUtils;
 import java.util.Set;
 import java.util.UUID;
@@ -21,13 +19,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserService {
     @Value("${jwt.expiration-ms}")
-    private long EXPIRATION_MS;
+    private long expirationMs;
 
     private final UserRepository userRepository;
     private final UserDTOUserMapper userDTOUserMapper;
     private final FileStorageService fileStorageService;
-    private final FileValidationService fileValidationService;
-    private final FileStorageProperties fileStorageProperties;
     private final PasswordService passwordService;
     private final JwtUtil jwtUtil;
     private final AccessControlService accessControlService;
@@ -36,16 +32,12 @@ public class UserService {
             UserRepository userRepository,
             UserDTOUserMapper userDTOUserMapper,
             FileStorageService fileStorageService,
-            FileValidationService fileValidationService,
-            FileStorageProperties fileStorageProperties,
             PasswordService passwordService,
             JwtUtil jwtUtil,
             AccessControlService accessControlService) {
         this.userRepository = userRepository;
         this.userDTOUserMapper = userDTOUserMapper;
         this.fileStorageService = fileStorageService;
-        this.fileValidationService = fileValidationService;
-        this.fileStorageProperties = fileStorageProperties;
         this.passwordService = passwordService;
         this.jwtUtil = jwtUtil;
         this.accessControlService = accessControlService;
@@ -122,7 +114,7 @@ public class UserService {
                                                             "ROLE_" + role.getName()))
                                     .toList());
 
-            String newToken = jwtUtil.generateToken(userPrincipal, EXPIRATION_MS);
+            String newToken = jwtUtil.generateToken(userPrincipal, expirationMs);
             UserPublicDTO userPublicDTO =
                     this.userDTOUserMapper.mapUserToUserPublicDTO(updatedUser);
 

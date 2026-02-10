@@ -38,16 +38,16 @@ public interface EventRepository extends JpaRepository<Event, UUID> {
 
     List<Event> findEventsByTitle(String title);
 
-    List<Event> findByParticipants_Id(UUID userId);
+    List<Event> findByParticipantsId(UUID userId);
 
-    Page<Event> findByParticipants_Id(UUID userId, Pageable pageable);
+    Page<Event> findByParticipantsId(UUID userId, Pageable pageable);
 
-    List<Event> findByParticipants_IdAndIsPrivateEventTrue(UUID userId);
+    List<Event> findByParticipantsIdAndIsPrivateEventTrue(UUID userId);
 
-    Page<Event> findByParticipants_IdAndIsPrivateEventTrue(UUID userId, Pageable pageable);
+    Page<Event> findByParticipantsIdAndIsPrivateEventTrue(UUID userId, Pageable pageable);
 
     // find public events attend by a certain user; underscore in method name is needed by JPA
-    List<Event> findByParticipants_IdAndIsPrivateEventFalse(UUID userId);
+    List<Event> findByParticipantsIdAndIsPrivateEventFalse(UUID userId);
 
-    Page<Event> findByParticipants_IdAndIsPrivateEventFalse(UUID userId, Pageable pageable);
+    Page<Event> findByParticipantsIdAndIsPrivateEventFalse(UUID userId, Pageable pageable);
 }
