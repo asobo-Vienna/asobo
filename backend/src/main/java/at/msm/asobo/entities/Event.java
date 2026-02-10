@@ -31,6 +31,7 @@ public class Event {
     private String title;
 
     @NotBlank(message = "Description is mandatory")
+    @Column(length = 2000)
     private String description;
 
     @NotNull(message = "Date must be specified")
