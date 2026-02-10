@@ -1,4 +1,4 @@
-name: Maven Tests
+name: Build Pipeline
 on:
   push:
     branches:
@@ -46,10 +46,7 @@ jobs:
         env:
           DB_URL: ${{ secrets.DB_URL }}
           DB_USERNAME: ${{ secrets.DB_USERNAME }}
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-
-      - name: Copy JAR to root
-        run: cp backend/target/*.jar ./  
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}  
       
       - name: Upload JAR artifact
         uses: actions/upload-artifact@v4
