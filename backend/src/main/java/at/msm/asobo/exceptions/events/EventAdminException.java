@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(HttpStatus.CONFLICT)
 public class EventAdminException extends RuntimeException {
-    public EventAdminException(String message) {
-        super(message);
-    }
+  public EventAdminException(String message) {
+    super(message);
+  }
 }

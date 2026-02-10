@@ -2,26 +2,26 @@ package at.msm.asobo.mappers.helpers;
 
 import at.msm.asobo.entities.User;
 import at.msm.asobo.services.UserService;
+import java.util.UUID;
 import org.mapstruct.Named;
 import org.springframework.stereotype.Component;
-import java.util.UUID;
 
 @Component
 public class UserMapperHelper {
 
-    private final UserService userService;
+  private final UserService userService;
 
-    public UserMapperHelper(UserService userService) {
-        this.userService = userService;
-    }
+  public UserMapperHelper(UserService userService) {
+    this.userService = userService;
+  }
 
-    @Named("uuidToUser")
-    public User fromId(UUID id) {
-        return userService.getUserById(id);
-    }
+  @Named("uuidToUser")
+  public User fromId(UUID id) {
+    return userService.getUserById(id);
+  }
 
-    @Named("userToUuid")
-    public UUID toId(User user) {
-        return user.getId();
-    }
+  @Named("userToUuid")
+  public UUID toId(User user) {
+    return user.getId();
+  }
 }

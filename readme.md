@@ -47,11 +47,15 @@ asobo/
 │   ├── src/
 │   └── package.json
 │
-└── backend/           # Spring Boot application
-    ├── src/
-    │   ├── main/
-    │   │   ├── java/at/msm/asobo/
-    └── pom.xml
+├── backend/                   # Spring Boot application
+│   ├── src/
+│   │   ├── main/
+│   │   │   ├── java/at/msm/asobo/
+│   └── pom.xml
+│
+├── run.sh                     # Linux/Mac startup script
+├── run.bat                    # Windows startup script
+└── docker-compose.yml         # Database configuration
 ```
 
 ## Installation
@@ -79,6 +83,8 @@ asobo/
 ### Database Configuration (Docker Compose)
 
 1. **Start the Database:**
+
+⚠️ **Attention:** Make sure Docker Desktop is running before executing any Docker commands, such as `docker-compose up -d`.
 
 From the root directory of the project, run:
 ```bash
@@ -165,6 +171,44 @@ export const environment = {
 ```
 
 ## Running the Application
+
+### Option 1: Using Run Scripts (Recommended)
+
+⚠️ **Attention:** Before running the project, download the latest `.jar` built from the `master` branch.  
+Go to **GitHub → Actions**, open the most recent workflow run with a green checkmark, and download the `asobo-build` artifact.  
+Place the `.jar` file in the project root directory.
+
+⚠️ **Attention:** Make sure Docker Desktop is running before running any of the scripts.
+
+The easiest way to run the application is using the provided scripts from the project root directory:
+
+**On Linux/Mac:**
+```bash
+./run.sh
+```
+
+**On Windows:**
+```bash
+run.bat
+```
+
+These scripts will:
+1. Ensure the PostgreSQL database is running
+2. Start the Spring Boot backend
+3. Launch the Angular frontend
+
+
+### Example User Credentials:
+
+When the application is started using the provided run scripts, an example user is available for local testing.
+
+**Login:**
+- **Username:** `batman`
+- **Password:** `batman`
+
+These credentials are intended **only** for local development. They are created on startup and must not be used in production.
+
+### Option 2: Manual Execution
 
 ### Start Backend Server
 ```bash

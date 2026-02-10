@@ -4,65 +4,62 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import java.io.IOException;
+import java.util.UUID;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.UUID;
-
 @Component
 public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
-    private final JwtUtil jwtUtil;
-    private final CustomUserDetailsService customUserDetailsService;
+  private final JwtUtil jwtUtil;
+  private final CustomUserDetailsService customUserDetailsService;
 
-    public TokenAuthenticationFilter(JwtUtil jwtUtil, CustomUserDetailsService customUserDetailsService) {
-        this.jwtUtil = jwtUtil;
-        this.customUserDetailsService = customUserDetailsService;
+  public TokenAuthenticationFilter(
+      JwtUtil jwtUtil, CustomUserDetailsService customUserDetailsService) {
+    this.jwtUtil = jwtUtil;
+    this.customUserDetailsService = customUserDetailsService;
+  }
+
+  @Override
+  protected void doFilterInternal(
+      HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+      throws ServletException, IOException {
+    String requestURI = request.getRequestURI();
+    System.out.println(">>> TokenAuthenticationFilter: " + request.getMethod() + " " + requestURI);
+    System.out.println(">>> TokenAuthenticationFilter: URI = " + requestURI);
+
+    // Skip all /api/auth/** endpoints
+    if (requestURI.startsWith("/api/auth/")) {
+      System.out.println(">>> Skipping JWT check for: " + requestURI);
+      filterChain.doFilter(request, response);
+      return;
     }
 
-    @Override
-    protected void doFilterInternal(
-            HttpServletRequest request,
-            HttpServletResponse response,
-            FilterChain filterChain
-    ) throws ServletException, IOException {
-        String requestURI = request.getRequestURI();
-        System.out.println(">>> TokenAuthenticationFilter: " + request.getMethod() + " " + requestURI);
-        System.out.println(">>> TokenAuthenticationFilter: URI = " + requestURI);
+    String authHeader = request.getHeader("Authorization");
 
-        // Skip all /api/auth/** endpoints
-        if (requestURI.startsWith("/api/auth/")) {
-            System.out.println(">>> Skipping JWT check for: " + requestURI);
-            filterChain.doFilter(request, response);
-            return;
-        }
+    if (authHeader != null && authHeader.startsWith("Bearer ")) {
+      // get substring after "Bearer "
+      String token = authHeader.substring(7);
 
-        String authHeader = request.getHeader("Authorization");
+      if (jwtUtil.validateToken(token)) {
+        // extract info from token
+        UUID userId = UUID.fromString(jwtUtil.getUserIdFromToken(token));
 
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            // get substring after "Bearer "
-            String token = authHeader.substring(7);
+        UserPrincipal userPrincipal =
+            (UserPrincipal) this.customUserDetailsService.loadUserById(userId);
 
-            if (jwtUtil.validateToken(token)) {
-                // extract info from token
-                UUID userId = UUID.fromString(jwtUtil.getUserIdFromToken(token));
+        UserPrincipalAuthenticationToken authentication =
+            new UserPrincipalAuthenticationToken(userPrincipal);
 
-                UserPrincipal userPrincipal = (UserPrincipal) this.customUserDetailsService.loadUserById(userId);
+        authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
-                UserPrincipalAuthenticationToken authentication =
-                        new UserPrincipalAuthenticationToken(userPrincipal);
-
-                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-            }
-        }
-
-        filterChain.doFilter(request, response);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+      }
     }
+
+    filterChain.doFilter(request, response);
+  }
 }

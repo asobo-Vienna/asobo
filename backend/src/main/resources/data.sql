@@ -179,8 +179,8 @@ VALUES ('94c6fbff-cb33-4f59-8fef-d298ec9e46d2'::uuid, '7da69d8e-55c7-4a96-ac6d-c
        ('94c6fbff-cb33-4f59-8fef-d298ec9e46d2'::uuid, 'cb0d70b4-8ac6-4045-8a77-55be2583f2a8'::uuid),
        ('aaed8676-8b38-4c7a-b8b1-66dd683a1a96'::uuid, 'cb0d70b4-8ac6-4045-8a77-55be2583f2a8'::uuid),
        ('aaed8676-8b38-4c7a-b8b1-66dd683a1a96'::uuid, '7da69d8e-55c7-4a96-ac6d-cb207e4e8a21'::uuid),
-       ('58e7618c-0573-43d7-8aa2-3efbd0acdee6'::uuid, 'cff3d733-7df9-4443-bf59-b86c9875bdec'::uuid);
-
+       ('58e7618c-0573-43d7-8aa2-3efbd0acdee6'::uuid, 'cff3d733-7df9-4443-bf59-b86c9875bdec'::uuid)
+ON CONFLICT (administered_events_id, event_admins_id) DO NOTHING;
 
 INSERT INTO event_participants (attended_events_id, participants_id)
 VALUES ('045fbc61-736a-4be1-baa3-070748e07f17'::uuid, '7da69d8e-55c7-4a96-ac6d-cb207e4e8a21'::uuid),
@@ -199,8 +199,8 @@ VALUES ('045fbc61-736a-4be1-baa3-070748e07f17'::uuid, '7da69d8e-55c7-4a96-ac6d-c
        ('042081b2-1b0c-4759-bed6-8f54fe056130'::uuid, 'e2540d46-4540-4223-b07c-78421260c91e'::uuid),
        ('aaed8676-8b38-4c7a-b8b1-66dd683a1a96'::uuid, '0219213a-e9ce-451b-9a60-d51fa22af669'::uuid),
        ('aaed8676-8b38-4c7a-b8b1-66dd683a1a96'::uuid, 'e2540d46-4540-4223-b07c-78421260c91e'::uuid),
-       ('aaed8676-8b38-4c7a-b8b1-66dd683a1a96'::uuid, '7da69d8e-55c7-4a96-ac6d-cb207e4e8a21'::uuid);
-
+       ('aaed8676-8b38-4c7a-b8b1-66dd683a1a96'::uuid, '7da69d8e-55c7-4a96-ac6d-cb207e4e8a21'::uuid)
+ON CONFLICT (attended_events_id, participants_id) DO NOTHING;
 
 INSERT INTO medium (event_id, id, mediumuri, creator_id)
 VALUES ('045fbc61-736a-4be1-baa3-070748e07f17'::uuid, '88385e56-0677-4d2b-b80a-2b35069415ae'::uuid,
@@ -239,64 +239,52 @@ VALUES (0, 'SUPERADMIN'),
 ON CONFLICT (id) DO NOTHING;
 
 
-INSERT INTO user_comment (creation_date, modification_date, author_id, event_id, id, "text", pictureuri)
+INSERT INTO user_comment (creation_date, modification_date, author_id, event_id, id, "text")
 VALUES ('2025-07-11 19:39:34.391567', '2025-12-05 18:10:16.065745', '7da69d8e-55c7-4a96-ac6d-cb207e4e8a21'::uuid,
-        'aaed8676-8b38-4c7a-b8b1-66dd683a1a96'::uuid, '34e14c80-41db-4de1-8e3f-fa7243bd0ff9'::uuid, 'aaaaahhhhhhh!!!',
-        '/uploads/profile-pictures/4f4c9853-29e5-4d05-95c7-d85efc034fe8_harley.jpg'),
+        'aaed8676-8b38-4c7a-b8b1-66dd683a1a96'::uuid, '34e14c80-41db-4de1-8e3f-fa7243bd0ff9'::uuid, 'aaaaahhhhhhh!!!'),
        ('2025-09-14 19:18:15.024199', '2025-12-05 18:10:31.05611', '7767118c-19bd-4c28-8129-c0abda74b46c'::uuid,
-        'aaed8676-8b38-4c7a-b8b1-66dd683a1a96'::uuid, '631ec747-5460-4657-b57b-84435b8ab4b3'::uuid, 'hi',
-        '/uploads/profile-pictures/67314290-8700-4f0f-94f4-0da7ed05dbf4_gg.jpg'),
+        'aaed8676-8b38-4c7a-b8b1-66dd683a1a96'::uuid, '631ec747-5460-4657-b57b-84435b8ab4b3'::uuid, 'hi'),
        ('2025-12-05 19:25:17.528035', NULL, 'cb0d70b4-8ac6-4045-8a77-55be2583f2a8'::uuid,
-        '045fbc61-736a-4be1-baa3-070748e07f17'::uuid, '1dbea455-baed-43f5-a225-69cffe1a3f50'::uuid,
-        'Batman loves cooking!', NULL),
+        '045fbc61-736a-4be1-baa3-070748e07f17'::uuid, '1dbea455-baed-43f5-a225-69cffe1a3f50'::uuid, 'Batman loves cooking!'),
        ('2025-10-11 09:41:05.80277', NULL, '7767118c-19bd-4c28-8129-c0abda74b46c'::uuid,
-        'de32052d-645f-41d1-b43c-70621565ff7a'::uuid, '562a619b-e23b-45fe-8e82-e79aa448fcba'::uuid, 'I like trams!',
-        '/uploads/profile-pictures/67314290-8700-4f0f-94f4-0da7ed05dbf4_gg.jpg'),
+        'de32052d-645f-41d1-b43c-70621565ff7a'::uuid, '562a619b-e23b-45fe-8e82-e79aa448fcba'::uuid, 'I like trams!'),
        ('2025-10-11 09:58:42.903773', NULL, 'cb0d70b4-8ac6-4045-8a77-55be2583f2a8'::uuid,
         '40a7f446-78e6-4383-b1cb-84d8f121011f'::uuid, 'ab048699-df02-45d2-b2e6-4ca74e4fc862'::uuid,
-        'Yo! I just bought a new skateboard. I''m gonna join you guys',
-        '/uploads/profile-pictures/6eaaa0c2-0e78-4171-a069-5e5fda5794d8_batman.jpg'),
+        'Yo! I just bought a new skateboard. I''m gonna join you guys'),
        ('2025-12-12 10:14:09.13668', NULL, '7da69d8e-55c7-4a96-ac6d-cb207e4e8a21'::uuid,
-        'aaed8676-8b38-4c7a-b8b1-66dd683a1a96'::uuid, '29b54b7b-4d4c-4ca7-8e40-eb145409914f'::uuid, 'hello', NULL),
+        'aaed8676-8b38-4c7a-b8b1-66dd683a1a96'::uuid, '29b54b7b-4d4c-4ca7-8e40-eb145409914f'::uuid, 'hello'),
        ('2026-01-09 13:50:24.498985', NULL, 'de89fe03-aaa9-4615-9f2f-a380aa31cba2'::uuid,
         'aaed8676-8b38-4c7a-b8b1-66dd683a1a96'::uuid, '6b1ec5dc-16fc-4110-839a-9d72b44d275d'::uuid,
-        'Hello, this is Austin', NULL),
+        'Hello, this is Austin'),
        ('2025-10-24 11:16:56.987394', NULL, '7da69d8e-55c7-4a96-ac6d-cb207e4e8a21'::uuid,
         'aaed8676-8b38-4c7a-b8b1-66dd683a1a96'::uuid, 'e4592c20-6ef7-4f67-a360-9c7835c12699'::uuid,
-        '<a href="https://google.com">Google</a>',
-        '/uploads/profile-pictures/4f4c9853-29e5-4d05-95c7-d85efc034fe8_harley.jpg'),
+        '<a href="https://google.com">Google</a>'),
        ('2025-10-24 15:01:53.821373', NULL, '0219213a-e9ce-451b-9a60-d51fa22af669'::uuid,
         'de32052d-645f-41d1-b43c-70621565ff7a'::uuid, '4126fc42-3567-49e6-9509-ef077c87a1a6'::uuid,
-        '4 touchdowns in 1 game!', '/uploads/profile-pictures/ee8e0968-095d-4899-895c-d008cd994b85_al-bundy.jpg'),
+        '4 touchdowns in 1 game!'),
        ('2026-01-18 13:04:20.355271', NULL, 'cff3d733-7df9-4443-bf59-b86c9875bdec'::uuid,
         '58e7618c-0573-43d7-8aa2-3efbd0acdee6'::uuid, '5c42661b-c383-4cb0-a6a6-7b173a0f1edd'::uuid,
-        'Wohoo! We''re so looking forward to that evening <3', NULL),
+        'Wohoo! We''re so looking forward to that evening <3'),
        ('2025-07-20 16:48:43.222211', NULL, '7767118c-19bd-4c28-8129-c0abda74b46c'::uuid,
         'ccc5d4bc-8d66-4d1a-87e7-a7b18b6c8773'::uuid, '193a835b-ce74-4af6-8bda-4302b99a6f4c'::uuid,
-        'Well that was a fun night!', '/uploads/profile-pictures/67314290-8700-4f0f-94f4-0da7ed05dbf4_gg.jpg'),
+        'Well that was a fun night!'),
        ('2025-10-26 14:04:06.762288', NULL, 'e2540d46-4540-4223-b07c-78421260c91e'::uuid,
         'aaed8676-8b38-4c7a-b8b1-66dd683a1a96'::uuid, '640c8d94-1fa6-4adb-acbf-d6e5bcab9728'::uuid,
-        'SELECT * FROM users WHERE 1=1;',
-        '/uploads/profile-pictures/08305516-c382-4120-a01d-54c8208a461e_skeletor.jpg'),
+        'SELECT * FROM users WHERE 1=1;'),
        ('2025-10-31 15:32:43.492789', NULL, '0219213a-e9ce-451b-9a60-d51fa22af669'::uuid,
-        'aaed8676-8b38-4c7a-b8b1-66dd683a1a96'::uuid, 'f8adae5c-5580-4b84-9f7b-eb6a00cc11fa'::uuid, 'Yes it works!',
-        '/uploads/profile-pictures/ee8e0968-095d-4899-895c-d008cd994b85_al-bundy.jpg'),
+        'aaed8676-8b38-4c7a-b8b1-66dd683a1a96'::uuid, 'f8adae5c-5580-4b84-9f7b-eb6a00cc11fa'::uuid, 'Yes it works!'),
        ('2025-10-31 20:45:31.696369', NULL, 'e2540d46-4540-4223-b07c-78421260c91e'::uuid,
         'aaed8676-8b38-4c7a-b8b1-66dd683a1a96'::uuid, '86f92040-c28a-4b64-b584-0224197f6236'::uuid,
-        'SKELECT * FROM skelector;', '/uploads/profile-pictures/08305516-c382-4120-a01d-54c8208a461e_skeletor.jpg'),
+        'SKELECT * FROM skelector;'),
        ('2025-11-17 09:40:14.545612', NULL, '7da69d8e-55c7-4a96-ac6d-cb207e4e8a21'::uuid,
-        '40a7f446-78e6-4383-b1cb-84d8f121011f'::uuid, 'e08455de-a76a-496e-88e1-5506326fa6ca'::uuid, 'Bats Shmats!',
-        '/uploads/profile-pictures/4f4c9853-29e5-4d05-95c7-d85efc034fe8_harley.jpg'),
+        '40a7f446-78e6-4383-b1cb-84d8f121011f'::uuid, 'e08455de-a76a-496e-88e1-5506326fa6ca'::uuid, 'Bats Shmats!'),
        ('2025-11-21 11:02:17.051976', NULL, 'e2540d46-4540-4223-b07c-78421260c91e'::uuid,
-        'aaed8676-8b38-4c7a-b8b1-66dd683a1a96'::uuid, 'd1fb6b70-6f4d-4471-8ddb-2c5fd955d5cf'::uuid, 'test',
-        '/uploads/profile-pictures/138e74d0-71b1-430a-92da-0943ae388170_skeletor2.jpg'),
+        'aaed8676-8b38-4c7a-b8b1-66dd683a1a96'::uuid, 'd1fb6b70-6f4d-4471-8ddb-2c5fd955d5cf'::uuid, 'test'),
        ('2025-11-21 13:06:52.252766', NULL, '7da69d8e-55c7-4a96-ac6d-cb207e4e8a21'::uuid,
-        '129b9ac0-451a-4092-ab16-67ff6f60b32f'::uuid, '70e4e478-f2d5-461a-bc26-6c3c909c05ca'::uuid,
-        'Sounds great, I''m in!', '/uploads/profile-pictures/4f4c9853-29e5-4d05-95c7-d85efc034fe8_harley.jpg'),
+        '129b9ac0-451a-4092-ab16-67ff6f60b32f'::uuid, '70e4e478-f2d5-461a-bc26-6c3c909c05ca'::uuid, 'Sounds great, I''m in!'),
        ('2025-10-11 13:23:21.187355', '2025-11-28 18:39:30.633556', 'cb0d70b4-8ac6-4045-8a77-55be2583f2a8'::uuid,
         'aaed8676-8b38-4c7a-b8b1-66dd683a1a96'::uuid, '772b857f-3af8-4c2d-9ca6-984d73eae1f8'::uuid,
-        'Batman likes to watch Batman movies because Batman knows Batman delivers the best Batman performances. Alright?',
-        '/uploads/profile-pictures/6eaaa0c2-0e78-4171-a069-5e5fda5794d8_batman.jpg')
+        'Batman likes to watch Batman movies because Batman knows Batman delivers the best Batman performances. Alright?')
 ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO user_roles (user_id, role_id)
@@ -336,5 +324,6 @@ VALUES ('a4235f35-d4b9-4d31-b4f1-91b8a6436d98'::uuid, 2),
        ('de89fe03-aaa9-4615-9f2f-a380aa31cba2'::uuid, 2),
        ('3fb77b1c-8670-40a2-929b-2b021f6e3e61'::uuid, 2),
        ('3fb77b1c-8670-40a2-929b-2b021f6e3e61'::uuid, 1),
-       ('7767118c-19bd-4c28-8129-c0abda74b46c'::uuid, 2);
+       ('7767118c-19bd-4c28-8129-c0abda74b46c'::uuid, 2)
+ON CONFLICT (user_id, role_id) DO NOTHING;
 

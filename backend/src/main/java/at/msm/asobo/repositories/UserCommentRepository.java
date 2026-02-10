@@ -3,28 +3,28 @@ package at.msm.asobo.repositories;
 import at.msm.asobo.entities.Event;
 import at.msm.asobo.entities.User;
 import at.msm.asobo.entities.UserComment;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 
 @Repository
 public interface UserCommentRepository extends JpaRepository<UserComment, UUID> {
-    List<UserComment> findUserCommentsByCreationDate(LocalDateTime creationDate);
+  List<UserComment> findUserCommentsByCreationDate(LocalDateTime creationDate);
 
-    List<UserComment> findUserCommentsByAuthor(User author);
+  List<UserComment> findUserCommentsByAuthor(User author);
 
-    List<UserComment> findUserCommentsByEvent(Event event);
+  List<UserComment> findUserCommentsByEvent(Event event);
 
-    List<UserComment> findUserCommentsByEventIdOrderByCreationDate(UUID eventId);
+  List<UserComment> findUserCommentsByEventIdOrderByCreationDate(UUID eventId);
 
-    Optional<UserComment> findUserCommentByEventIdAndId(UUID eventId, UUID commentId);
+  Optional<UserComment> findUserCommentByEventIdAndId(UUID eventId, UUID commentId);
 
-    @Query("SELECT c FROM UserComment c JOIN FETCH c.author JOIN FETCH c.event")
-    Page<UserComment> findAllPageable(Pageable pageable);
+  @Query("SELECT c FROM UserComment c JOIN FETCH c.author JOIN FETCH c.event")
+  Page<UserComment> findAllPageable(Pageable pageable);
 }

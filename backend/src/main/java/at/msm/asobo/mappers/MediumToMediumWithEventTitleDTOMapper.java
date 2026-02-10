@@ -7,7 +7,7 @@ import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface MediumToMediumWithEventTitleDTOMapper {
-    @Mapping(source = "event.id", target = "eventId")
-    @Mapping(source = "event.title", target = "eventTitle")
-    MediumWithEventTitleDTO toDTO(Medium medium);
+  @Mapping(source = "event.id", target = "eventId")
+  @Mapping(source = "event.title", target = "eventTitle")
+  MediumWithEventTitleDTO toDTO(Medium medium);
 }
