@@ -347,7 +347,7 @@
                             <execution>
                                 <phase>validate</phase>
                                 <goals>
-                                    <goal>apply</goal>
+                                    <goal>check</goal>
                                 </goals>
                             </execution>
                         </executions>
