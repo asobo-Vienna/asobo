@@ -1,0 +1,18 @@
+<module name="Checker">
+  <module name="TreeWalker">
+
+    <!-- Disable Javadoc enforcement -->
+    <module name="JavadocMethod">
+      <property name="severity" value="ignore"/>
+    </module>
+
+    <module name="JavadocType">
+      <property name="severity" value="ignore"/>
+    </module>
+
+    <module name="JavadocVariable">
+      <property name="severity" value="ignore"/>
+    </module>
+
+  </module>
+</module>

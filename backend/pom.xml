@@ -125,7 +125,7 @@
         <dependency>
             <groupId>com.puppycrawl.tools</groupId>
             <artifactId>checkstyle</artifactId>
-            <version>12.1.2</version>
+            <version>13.2.0</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.slf4j</groupId>
@@ -154,6 +154,16 @@
                             <version>1.6.3</version>
                         </path>
                     </annotationProcessorPaths>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>3.6.0</version>
+                <configuration>
+                    <configLocation>checkstyle.xml</configLocation>
+                    <failOnViolation>false</failOnViolation>
                 </configuration>
             </plugin>
 
@@ -300,7 +310,6 @@
             </build>
         </profile>
 
-        <!-- CI: Only check style -->
         <profile>
             <id>ci</id>
             <build>
