@@ -1,11 +1,10 @@
 import {Component, EventEmitter, inject, input, Input, Output, ViewEncapsulation} from '@angular/core';
 import {MediaItem} from '../models/media-item';
-import {List} from "../../../core/data_structures/lists/list";
+import {List} from "../../../core/data-structures/lists/list";
 import {UrlUtilService} from '../../../shared/utils/url/url-util-service';
 import {Carousel} from 'primeng/carousel';
 import {PrimeTemplate} from 'primeng/api';
 import {MediaUtilService} from '../../../shared/utils/media/media-util-service';
-import {AuthService} from '../../auth/services/auth-service';
 import {AccessControlService} from '../../../shared/services/access-control-service';
 import {Event} from '../models/event';
 import {User} from '../../auth/models/user';
@@ -22,7 +21,6 @@ import {User} from '../../auth/models/user';
 })
 
 export class Gallery {
-  protected authService = inject(AuthService);
   protected accessControlService = inject(AccessControlService);
 
   @Input() mediaItems: List<MediaItem> = new List([]);

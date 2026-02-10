@@ -19,7 +19,7 @@ import {UserValidationService} from '../../services/user-validation-service';
 import {NgClass} from '@angular/common';
 import {Select} from 'primeng/select';
 import {Textarea} from 'primeng/textarea';
-import {List} from '../../../../core/data_structures/lists/list';
+import {List} from '../../../../core/data-structures/lists/list';
 import { Event } from '../../../events/models/event';
 
 @Component({

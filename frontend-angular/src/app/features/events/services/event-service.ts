@@ -5,7 +5,7 @@ import {map, Observable} from 'rxjs';
 import {Event} from '../models/event'
 import {PageResponse} from '../../../shared/entities/page-response';
 import {EventSummary} from '../models/event-summary';
-import {List} from '../../../core/data_structures/lists/list';
+import {List} from '../../../core/data-structures/lists/list';
 import {User} from '../../auth/models/user';
 
 @Injectable({
@@ -44,8 +44,8 @@ export class EventService {
   }
 
   public getEventById(id: string): Observable<Event> {
-    return this.http.get<Event>(`${environment.eventsEndpoint}/${id}`).pipe(
-      map(event => this.convertEventAdminsToList(event))
+    return this.http.get<Event>(`${environment.eventsEndpoint}/${id}`)
+      .pipe(map(event => this.convertEventAdminsToList(event))
     );
   }
 
@@ -58,8 +58,8 @@ export class EventService {
   }
 
   public updateEvent(eventId: string, eventData: Partial<Event>): Observable<Event> {
-    return this.http.patch<Event>(`${environment.eventsEndpoint}/${eventId}`, eventData).pipe(
-      map(event => this.convertEventAdminsToList(event))
+    return this.http.patch<Event>(`${environment.eventsEndpoint}/${eventId}`, eventData)
+      .pipe(map(event => this.convertEventAdminsToList(event))
     );
   }
 
@@ -70,7 +70,7 @@ export class EventService {
   public convertEventAdminsToList(event: Event): Event {
     return {
       ...event,
-      eventAdmins: new List(event.eventAdmins as unknown as User[])
+      eventAdmins: new List<User>(event.eventAdmins as unknown as User[])
     };
   }
 }

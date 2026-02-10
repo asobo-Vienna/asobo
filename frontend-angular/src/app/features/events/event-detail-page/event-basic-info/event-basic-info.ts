@@ -3,12 +3,10 @@ import {CdkTextareaAutosize} from "@angular/cdk/text-field";
 import {DatePicker} from "primeng/datepicker";
 import {DatePipe} from "@angular/common";
 import {
-  AbstractControl,
   FormBuilder,
   FormGroup,
   FormsModule,
   ReactiveFormsModule,
-  ValidationErrors,
   Validators
 } from "@angular/forms";
 import {InputText} from "primeng/inputtext";
@@ -64,7 +62,7 @@ export class EventBasicInfo implements OnInit {
       title: ['', [Validators.required, Validators.minLength(environment.minEventTitleLength), Validators.maxLength(environment.maxEventTitleLength)]],
       description: ['', [Validators.required, Validators.minLength(environment.minEventDescriptionLength), Validators.maxLength(environment.maxEventDescriptionLength)]],
       location: ['', [Validators.required]],
-      date: ['', [Validators.required, this.validateDate]],
+      date: ['', [Validators.required, DateUtils.validateDate]],
       isPrivate: [false, [Validators.required]],
     });
   }
@@ -129,15 +127,6 @@ export class EventBasicInfo implements OnInit {
     });
 
     this.isEditing.set(false);
-  }
-
-  public validateDate(control: AbstractControl): ValidationErrors | null {
-    if (!control.value) return null;
-    const selected = new Date(control.value);
-    if (selected < new Date()) {
-      return { pastDate: true };
-    }
-    return null;
   }
 
   public onDelete() {

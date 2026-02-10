@@ -2,7 +2,7 @@ import {Component, inject, input, output, signal} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {Comment} from '../models/comment';
 import {DatePipe} from '@angular/common';
-import {List} from '../../../core/data_structures/lists/list';
+import {List} from '../../../core/data-structures/lists/list';
 import {UrlUtilService} from '../../../shared/utils/url/url-util-service';
 import {environment} from '../../../../environments/environment';
 import {RouterLink} from '@angular/router';

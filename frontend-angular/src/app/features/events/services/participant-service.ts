@@ -4,7 +4,7 @@ import {Participant} from '../models/participant';
 import {environment} from '../../../../environments/environment';
 import {inject, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {List} from '../../../core/data_structures/lists/list';
+import {List} from '../../../core/data-structures/lists/list';
 
 
 @Injectable({

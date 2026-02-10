@@ -18,7 +18,6 @@ export class AccessControlService {
     }
 
     // console.log('event admin? = ',event.eventAdmins.contains(currentUser, LambdaFunctions.compareById));
-
     return event.eventAdmins.contains(currentUser, LambdaFunctions.compareById);
   }
 

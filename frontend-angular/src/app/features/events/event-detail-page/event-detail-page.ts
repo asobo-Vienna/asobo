@@ -12,7 +12,7 @@ import {Observable} from 'rxjs';
 import {Gallery} from '../gallery/gallery';
 import {MediaService} from '../services/media-service';
 import {MediaItem} from '../models/media-item';
-import {List} from '../../../core/data_structures/lists/list';
+import {List} from '../../../core/data-structures/lists/list';
 import {UrlUtilService} from '../../../shared/utils/url/url-util-service';
 import {AuthService} from '../../auth/services/auth-service';
 import {User} from '../../auth/models/user';
