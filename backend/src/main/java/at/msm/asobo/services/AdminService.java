@@ -12,11 +12,10 @@ import at.msm.asobo.mappers.*;
 import at.msm.asobo.repositories.MediumRepository;
 import at.msm.asobo.repositories.UserCommentRepository;
 import at.msm.asobo.repositories.UserRepository;
+import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class AdminService {
@@ -25,24 +24,27 @@ public class AdminService {
     private final MediumRepository mediumRepository;
     private final UserDTOUserMapper userDTOUserMapper;
     private final UserCommentDTOUserCommentMapper userCommentDTOUserCommentMapper;
-    private final UserCommentToUserCommentWithEventTitleDTOMapper userCommentToUserCommentWithEventTitleDTOMapper;
+    private final UserCommentToUserCommentWithEventTitleDTOMapper
+            userCommentToUserCommentWithEventTitleDTOMapper;
     private final MediumToMediumWithEventTitleDTOMapper mediumToMediumWithEventTitleDTOMapper;
 
-    public AdminService(UserRepository userRepository,
-                        UserCommentRepository userCommentRepository,
-                        MediumRepository mediumRepository,
-                        UserDTOUserMapper userDTOUserMapper,
-                        UserCommentDTOUserCommentMapper userCommentDTOUserCommentMapper,
-                        UserCommentToUserCommentWithEventTitleDTOMapper userCommentToUserCommentWithEventTitleDTOMapper,
-                        MediumToMediumWithEventTitleDTOMapper mediumToMediumWithEventTitleDTOMapper
-    ) {
+    public AdminService(
+            UserRepository userRepository,
+            UserCommentRepository userCommentRepository,
+            MediumRepository mediumRepository,
+            UserDTOUserMapper userDTOUserMapper,
+            UserCommentDTOUserCommentMapper userCommentDTOUserCommentMapper,
+            UserCommentToUserCommentWithEventTitleDTOMapper
+                    userCommentToUserCommentWithEventTitleDTOMapper,
+            MediumToMediumWithEventTitleDTOMapper mediumToMediumWithEventTitleDTOMapper) {
         this.userRepository = userRepository;
         this.userCommentRepository = userCommentRepository;
         this.mediumRepository = mediumRepository;
         this.userDTOUserMapper = userDTOUserMapper;
         this.userCommentDTOUserCommentMapper = userCommentDTOUserCommentMapper;
-        this.userCommentToUserCommentWithEventTitleDTOMapper = userCommentToUserCommentWithEventTitleDTOMapper;
-        this.mediumToMediumWithEventTitleDTOMapper =  mediumToMediumWithEventTitleDTOMapper;
+        this.userCommentToUserCommentWithEventTitleDTOMapper =
+                userCommentToUserCommentWithEventTitleDTOMapper;
+        this.mediumToMediumWithEventTitleDTOMapper = mediumToMediumWithEventTitleDTOMapper;
     }
 
     public Page<UserAdminSummaryDTO> getAllUsersPaginated(Pageable pageable) {
@@ -64,7 +66,8 @@ public class AdminService {
         Page<UserComment> userCommentsWithEventTitles =
                 this.userCommentRepository.findAllPageable(pageable);
 
-        return userCommentsWithEventTitles.map(this.userCommentToUserCommentWithEventTitleDTOMapper::toDTO);
+        return userCommentsWithEventTitles.map(
+                this.userCommentToUserCommentWithEventTitleDTOMapper::toDTO);
     }
 
     public Page<MediumWithEventTitleDTO> getAllMediaWithEventTitle(Pageable pageable) {

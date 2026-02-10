@@ -26,4 +26,3 @@ public class PasswordService {
         this.passwordValidator.validate(password);
     }
 }
-

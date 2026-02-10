@@ -6,14 +6,14 @@ import org.mapstruct.Named;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
-
 @Component
 public class PictureMapperHelper {
 
     private final FileStorageService fileStorageService;
     private final FileStorageProperties fileStorageProperties;
 
-    public PictureMapperHelper(FileStorageProperties fileStorageProperties, FileStorageService fileStorageService) {
+    public PictureMapperHelper(
+            FileStorageProperties fileStorageProperties, FileStorageService fileStorageService) {
         this.fileStorageService = fileStorageService;
         this.fileStorageProperties = fileStorageProperties;
     }
@@ -23,7 +23,8 @@ public class PictureMapperHelper {
         if (picture == null || picture.isEmpty()) {
             return null;
         }
-        return fileStorageService.store(picture, this.fileStorageProperties.getProfilePictureSubfolder());
+        return fileStorageService.store(
+                picture, this.fileStorageProperties.getProfilePictureSubfolder());
     }
 
     @Named("mapEventPicture")
@@ -31,7 +32,8 @@ public class PictureMapperHelper {
         if (picture == null || picture.isEmpty()) {
             return null;
         }
-        return fileStorageService.store(picture, this.fileStorageProperties.getEventCoverPictureSubfolder());
+        return fileStorageService.store(
+                picture, this.fileStorageProperties.getEventCoverPictureSubfolder());
     }
 
     @Named("mapGalleryPicture")
@@ -39,7 +41,8 @@ public class PictureMapperHelper {
         if (picture == null || picture.isEmpty()) {
             return null;
         }
-        return fileStorageService.store(picture, this.fileStorageProperties.getEventGalleriesSubfolder());
+        return fileStorageService.store(
+                picture, this.fileStorageProperties.getEventGalleriesSubfolder());
     }
 
     /*@Named("stringToUri")

@@ -1,5 +1,12 @@
 package at.msm.asobo.controllers;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+
 import at.msm.asobo.config.FileStorageProperties;
 import at.msm.asobo.config.SecurityConfig;
 import at.msm.asobo.dto.medium.MediumCreationDTO;
@@ -12,6 +19,8 @@ import at.msm.asobo.security.UserPrincipal;
 import at.msm.asobo.services.MediumService;
 import at.msm.asobo.utils.MockAuthenticationFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.List;
+import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -28,38 +37,22 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.List;
-import java.util.UUID;
-import static org.mockito.ArgumentMatchers.any;
-
-import static org.mockito.Mockito.*;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-
 @WebMvcTest(MediumController.class)
 @EnableMethodSecurity
 @Import(SecurityConfig.class)
 class MediumControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
+    @Autowired private MockMvc mockMvc;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+    @Autowired private ObjectMapper objectMapper;
 
-    @MockitoBean
-    private MediumService mediumService;
+    @MockitoBean private MediumService mediumService;
 
-    @MockitoBean
-    private FileStorageProperties fileStorageProperties;
+    @MockitoBean private FileStorageProperties fileStorageProperties;
 
-    @MockitoBean
-    private JwtUtil jwtUtil;
+    @MockitoBean private JwtUtil jwtUtil;
 
-    @MockitoBean
-    private CustomUserDetailsService customUserDetailsService;
+    @MockitoBean private CustomUserDetailsService customUserDetailsService;
 
     private UUID userId;
     private UUID eventID;
@@ -94,17 +87,14 @@ class MediumControllerTest {
 
     private MockMultipartFile createMockMultipartFile() {
         return new MockMultipartFile(
-                "mediumFile",
-                "test.jpg",
-                MediaType.IMAGE_JPEG_VALUE,
-                "test content".getBytes());
+                "mediumFile", "test.jpg", MediaType.IMAGE_JPEG_VALUE, "test content".getBytes());
     }
 
     @Test
     @WithMockUser(username = "loggedInUser")
     void getAllMediaByEventId_ReturnsListOfMedia() throws Exception {
         List<MediumDTO> mediaList = List.of(mediumDTO1, mediumDTO2);
-        String expectedJson =  objectMapper.writeValueAsString(mediaList);
+        String expectedJson = objectMapper.writeValueAsString(mediaList);
 
         when(mediumService.getAllMediaByEventId(eventID)).thenReturn(mediaList);
 
@@ -119,10 +109,9 @@ class MediumControllerTest {
     @Test
     @WithMockUser(username = "loggedInUser")
     void getMediumById_ReturnsMedium() throws Exception {
-        when(mediumService.getMediumDTOByIdAndEventId(mediumID, eventID))
-                .thenReturn(mediumDTO1);
+        when(mediumService.getMediumDTOByIdAndEventId(mediumID, eventID)).thenReturn(mediumDTO1);
 
-        String expectedJson =  objectMapper.writeValueAsString(mediumDTO1);
+        String expectedJson = objectMapper.writeValueAsString(mediumDTO1);
 
         mockMvc.perform(get(SINGLE_MEDIUM_URL, eventID, mediumID))
                 .andExpect(status().isOk())
@@ -135,19 +124,28 @@ class MediumControllerTest {
     @ParameterizedTest
     @ValueSource(strings = {"ROLE_USER", "ROLE_ADMIN", "ROLE_SUPERADMIN"})
     void addMediumToEventById_WithValidData_ReturnsMedium(String role) throws Exception {
-        when(mediumService.addMediumToEventById(any(UUID.class), any(MediumCreationDTO.class), any(UserPrincipal.class)))
+        when(mediumService.addMediumToEventById(
+                        any(UUID.class), any(MediumCreationDTO.class), any(UserPrincipal.class)))
                 .thenReturn(mediumDTO1);
 
         MockMultipartFile file = createMockMultipartFile();
 
-        mockMvc.perform(multipart(ALL_MEDIA_URL, eventID)
-                        .file(file)
-                        .with(authentication(MockAuthenticationFactory
-                                .mockAuth(userId, "testuser", "testuser@test.com", role)))
-                        .with(csrf()))
+        mockMvc.perform(
+                        multipart(ALL_MEDIA_URL, eventID)
+                                .file(file)
+                                .with(
+                                        authentication(
+                                                MockAuthenticationFactory.mockAuth(
+                                                        userId,
+                                                        "testuser",
+                                                        "testuser@test.com",
+                                                        role)))
+                                .with(csrf()))
                 .andExpect(status().isOk());
 
-        verify(mediumService).addMediumToEventById(any(UUID.class), any(MediumCreationDTO.class), any(UserPrincipal.class));
+        verify(mediumService)
+                .addMediumToEventById(
+                        any(UUID.class), any(MediumCreationDTO.class), any(UserPrincipal.class));
     }
 
     @Test
@@ -155,12 +153,12 @@ class MediumControllerTest {
 
         MockMultipartFile file = createMockMultipartFile();
 
-        mockMvc.perform(multipart(ALL_MEDIA_URL, eventID)
-                        .file(file)
-                .with(csrf()))
+        mockMvc.perform(multipart(ALL_MEDIA_URL, eventID).file(file).with(csrf()))
                 .andExpect(status().isUnauthorized());
 
-        verify(mediumService, never()).addMediumToEventById(eq(eventID), any(MediumCreationDTO.class), any(UserPrincipal.class));
+        verify(mediumService, never())
+                .addMediumToEventById(
+                        eq(eventID), any(MediumCreationDTO.class), any(UserPrincipal.class));
     }
 
     @ParameterizedTest
@@ -169,10 +167,16 @@ class MediumControllerTest {
         when(mediumService.deleteMediumById(eq(mediumID), eq(eventID), any(UserPrincipal.class)))
                 .thenReturn(mediumDTO1);
 
-        mockMvc.perform(delete(SINGLE_MEDIUM_URL, eventID, mediumID)
-                        .with(authentication(MockAuthenticationFactory.mockAuth(
-                                userId, "testuser", "testuser@test.com", role)))
-                        .with(csrf()))
+        mockMvc.perform(
+                        delete(SINGLE_MEDIUM_URL, eventID, mediumID)
+                                .with(
+                                        authentication(
+                                                MockAuthenticationFactory.mockAuth(
+                                                        userId,
+                                                        "testuser",
+                                                        "testuser@test.com",
+                                                        role)))
+                                .with(csrf()))
                 .andExpect(status().isOk());
 
         verify(mediumService).deleteMediumById(eq(mediumID), eq(eventID), any(UserPrincipal.class));
@@ -181,14 +185,23 @@ class MediumControllerTest {
     @Test
     void deleteMediumById_WithoutAdminRole_ReturnsForbidden() throws Exception {
         when(mediumService.deleteMediumById(eq(mediumID), eq(eventID), any(UserPrincipal.class)))
-                .thenThrow(new UserNotAuthorizedException("This user is not authorized to perform this action."));
+                .thenThrow(
+                        new UserNotAuthorizedException(
+                                "This user is not authorized to perform this action."));
 
-        mockMvc.perform(delete(SINGLE_MEDIUM_URL, mediumID, eventID)
-                        .with(authentication(MockAuthenticationFactory.mockAuth(
-                                userId, "testuser", "testuser@test.com", "USER")))
-                        .with(csrf()))
+        mockMvc.perform(
+                        delete(SINGLE_MEDIUM_URL, mediumID, eventID)
+                                .with(
+                                        authentication(
+                                                MockAuthenticationFactory.mockAuth(
+                                                        userId,
+                                                        "testuser",
+                                                        "testuser@test.com",
+                                                        "USER")))
+                                .with(csrf()))
                 .andExpect(status().isForbidden());
 
-        verify(mediumService, never()).deleteMediumById(eq(mediumID), eq(eventID), any(UserPrincipal.class));
+        verify(mediumService, never())
+                .deleteMediumById(eq(mediumID), eq(eventID), any(UserPrincipal.class));
     }
 }

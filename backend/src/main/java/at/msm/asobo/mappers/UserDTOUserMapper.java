@@ -3,29 +3,37 @@ package at.msm.asobo.mappers;
 import at.msm.asobo.dto.auth.UserRegisterDTO;
 import at.msm.asobo.dto.user.*;
 import at.msm.asobo.entities.User;
-import at.msm.asobo.mappers.helpers.UserMapperHelper;
 import at.msm.asobo.mappers.helpers.PictureMapperHelper;
+import at.msm.asobo.mappers.helpers.UserMapperHelper;
+import java.util.List;
+import java.util.Set;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.springframework.data.domain.Page;
-import java.util.List;
-import java.util.Set;
 
-@Mapper(componentModel = "spring", uses = {UserMapperHelper.class, PictureMapperHelper.class})
+@Mapper(
+        componentModel = "spring",
+        uses = {UserMapperHelper.class, PictureMapperHelper.class})
 public interface UserDTOUserMapper {
 
     UserDTO mapUserToUserDTO(User user);
+
     User mapUserDTOToUser(UserDTO userDTO);
 
     List<UserDTO> mapUsersToUserDTOs(List<User> users);
+
     List<User> mapUserDTOsToUsers(List<UserDTO> userDTOs);
 
     UserPublicDTO mapUserToUserPublicDTO(User user);
+
     User mapUserPublicDTOToUser(UserPublicDTO userPublicDTO);
 
     Set<UserPublicDTO> mapUsersToUserPublicDTOs(Set<User> users);
+
     Set<User> mapUserPublicDTOsToUsers(Set<UserPublicDTO> userDTOs);
+
     List<UserPublicDTO> mapUsersToUserPublicDTOsAsList(List<User> users);
+
     List<UserFullDTO> mapUsersToUserFullDTOsAsList(List<User> users);
 
     UserRegisterDTO mapUserToUserRegisterDTO(User user);
@@ -33,6 +41,7 @@ public interface UserDTOUserMapper {
     User mapUserRegisterDTOToUser(UserRegisterDTO userDTO);
 
     List<UserRegisterDTO> mapUsersToUserRegisterDTOs(List<User> users);
+
     List<User> mapUserRegisterDTOsToUsers(List<UserRegisterDTO> userDTOs);
 
     UserFullDTO mapUserToUserFullDTO(User user);
@@ -45,9 +54,17 @@ public interface UserDTOUserMapper {
     @Mapping(target = "roles", ignore = true)
     List<User> mapUserFullDTOsToUsers(List<UserFullDTO> userFullDTOs);
 
-    @Mapping(target = "createdEventsCount", expression = "java(user.getCreatedEvents() != null ? user.getCreatedEvents().size() : 0)")
-    @Mapping(target = "attendedEventsCount", expression = "java(user.getAttendedEvents() != null ? user.getAttendedEvents().size() : 0)")
-    @Mapping(target = "commentsCount", expression = "java(user.getComments() != null ? user.getComments().size() : 0)")
+    @Mapping(
+            target = "createdEventsCount",
+            expression =
+                    "java(user.getCreatedEvents() != null ? user.getCreatedEvents().size() : 0)")
+    @Mapping(
+            target = "attendedEventsCount",
+            expression =
+                    "java(user.getAttendedEvents() != null ? user.getAttendedEvents().size() : 0)")
+    @Mapping(
+            target = "commentsCount",
+            expression = "java(user.getComments() != null ? user.getComments().size() : 0)")
     UserAdminSummaryDTO mapUserToUserAdminSummaryDTO(User user);
 
     @Mapping(target = "createdEvents", ignore = true)
@@ -61,7 +78,8 @@ public interface UserDTOUserMapper {
         return users.map(this::mapUserToUserAdminSummaryDTO);
     }
 
-    default Page<User> mapUserAdminSummaryDTOsToUsers(Page<UserAdminSummaryDTO> userAdminSummaryDTOs) {
+    default Page<User> mapUserAdminSummaryDTOsToUsers(
+            Page<UserAdminSummaryDTO> userAdminSummaryDTOs) {
         return userAdminSummaryDTOs.map(this::mapUserAdminSummaryDTOToUser);
     }
 }

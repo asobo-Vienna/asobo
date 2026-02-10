@@ -2,7 +2,6 @@ package at.msm.asobo.dto.user;
 
 import at.msm.asobo.dto.comment.UserCommentDTO;
 import at.msm.asobo.dto.event.EventDTO;
-
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
@@ -27,8 +26,7 @@ public class UserFullDTO {
     private String salutation;
     private String aboutMe;
 
-    public UserFullDTO() {
-    }
+    public UserFullDTO() {}
 
     public UUID getId() {
         return this.id;
@@ -54,7 +52,9 @@ public class UserFullDTO {
         this.attendedEvents = attendedEvents;
     }
 
-    public void setAdministeredEvents(List<EventDTO> administeredEvents) { this.administeredEvents = administeredEvents; }
+    public void setAdministeredEvents(List<EventDTO> administeredEvents) {
+        this.administeredEvents = administeredEvents;
+    }
 
     public void setComments(List<UserCommentDTO> comments) {
         this.comments = comments;
@@ -96,7 +96,9 @@ public class UserFullDTO {
         return this.attendedEvents;
     }
 
-    public List<EventDTO> getAdministeredEvents() { return this.administeredEvents; }
+    public List<EventDTO> getAdministeredEvents() {
+        return this.administeredEvents;
+    }
 
     public List<UserCommentDTO> getComments() {
         return this.comments;

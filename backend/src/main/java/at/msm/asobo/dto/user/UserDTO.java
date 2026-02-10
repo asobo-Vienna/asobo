@@ -103,8 +103,7 @@ public class UserDTO {
         this.salutation = salutation;
     }
 
-    public UserDTO() {
-    }
+    public UserDTO() {}
 
     public UUID getId() {
         return this.id;

@@ -31,7 +31,9 @@ public class ErrorResponse {
         return this.message;
     }
 
-    public int getStatusCode() { return this.statusCode; }
+    public int getStatusCode() {
+        return this.statusCode;
+    }
 
     public List<String> getViolations() {
         return this.violations;

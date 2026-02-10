@@ -24,7 +24,7 @@ public class UserUpdateDTO {
 
     private String password;
 
-    @Size(min=1, message = "About me must contain at least 1 character")
+    @Size(min = 1, message = "About me must contain at least 1 character")
     private String aboutMe;
 
     private boolean isActive;

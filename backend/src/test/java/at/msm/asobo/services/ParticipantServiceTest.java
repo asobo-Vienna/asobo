@@ -1,5 +1,8 @@
 package at.msm.asobo.services;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
 import at.msm.asobo.builders.EventTestBuilder;
 import at.msm.asobo.builders.UserTestBuilder;
 import at.msm.asobo.dto.user.UserPublicDTO;
@@ -12,6 +15,9 @@ import at.msm.asobo.repositories.EventRepository;
 import at.msm.asobo.security.UserPrincipal;
 import at.msm.asobo.services.events.EventService;
 import at.msm.asobo.services.events.ParticipantService;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,30 +25,18 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
-
 @ExtendWith(MockitoExtension.class)
 class ParticipantServiceTest {
 
-    @Mock
-    private UserService userService;
+    @Mock private UserService userService;
 
-    @Mock
-    private EventRepository eventRepository;
+    @Mock private EventRepository eventRepository;
 
-    @Mock
-    private EventService eventService;
+    @Mock private EventService eventService;
 
-    @Mock
-    private UserDTOUserMapper userDTOUserMapper;
+    @Mock private UserDTOUserMapper userDTOUserMapper;
 
-    @InjectMocks
-    private ParticipantService participantService;
+    @InjectMocks private ParticipantService participantService;
 
     private Event event;
     private User participant1;
@@ -53,40 +47,40 @@ class ParticipantServiceTest {
 
     @BeforeEach
     void setUp() {
-        participant1 = new UserTestBuilder()
-                .withId(UUID.randomUUID())
-                .withUsernameAndEmail("testuser1")
-                .withFirstName("Test")
-                .withSurname("User1")
-                .buildUserEntity();
+        participant1 =
+                new UserTestBuilder()
+                        .withId(UUID.randomUUID())
+                        .withUsernameAndEmail("testuser1")
+                        .withFirstName("Test")
+                        .withSurname("User1")
+                        .buildUserEntity();
 
-        participant2 = new UserTestBuilder()
-                .withId(UUID.randomUUID())
-                .withUsernameAndEmail("testuser2")
-                .withFirstName("Test")
-                .withSurname("User2")
-                .buildUserEntity();
+        participant2 =
+                new UserTestBuilder()
+                        .withId(UUID.randomUUID())
+                        .withUsernameAndEmail("testuser2")
+                        .withFirstName("Test")
+                        .withSurname("User2")
+                        .buildUserEntity();
 
-        participant3 = new UserTestBuilder()
-                .withId(UUID.randomUUID())
-                .withUsernameAndEmail("testuser3")
-                .withFirstName("Test")
-                .withSurname("User3")
-                .buildUserEntity();
+        participant3 =
+                new UserTestBuilder()
+                        .withId(UUID.randomUUID())
+                        .withUsernameAndEmail("testuser3")
+                        .withFirstName("Test")
+                        .withSurname("User3")
+                        .buildUserEntity();
 
-        event = new EventTestBuilder()
-                .withId(UUID.randomUUID())
-                .withParticipants(new HashSet<>())
-                .buildEventEntity();
+        event =
+                new EventTestBuilder()
+                        .withId(UUID.randomUUID())
+                        .withParticipants(new HashSet<>())
+                        .buildEventEntity();
 
-        userPrincipal = new UserTestBuilder()
-                .fromUser(participant1)
-                .buildUserPrincipal();
+        userPrincipal = new UserTestBuilder().fromUser(participant1).buildUserPrincipal();
 
         participantDTOs = new HashSet<>();
-        UserPublicDTO dto = new UserTestBuilder()
-                .fromUser(participant1)
-                .buildUserPublicDTO();
+        UserPublicDTO dto = new UserTestBuilder().fromUser(participant1).buildUserPublicDTO();
         participantDTOs.add(dto);
     }
 
@@ -99,7 +93,8 @@ class ParticipantServiceTest {
         when(userDTOUserMapper.mapUsersToUserPublicDTOs(event.getParticipants()))
                 .thenReturn(participantDTOs);
 
-        Set<UserPublicDTO> result = participantService.getAllParticipantsAsDTOsByEventId(event.getId());
+        Set<UserPublicDTO> result =
+                participantService.getAllParticipantsAsDTOsByEventId(event.getId());
 
         assertNotNull(result);
         assertEquals(participantDTOs, result);
@@ -113,7 +108,8 @@ class ParticipantServiceTest {
         when(eventService.getEventById(event.getId())).thenReturn(event);
         when(userDTOUserMapper.mapUsersToUserPublicDTOs(any())).thenReturn(participantDTOs);
 
-        Set<UserPublicDTO> result = participantService.toggleParticipantInEvent(event.getId(), userPrincipal);
+        Set<UserPublicDTO> result =
+                participantService.toggleParticipantInEvent(event.getId(), userPrincipal);
 
         assertTrue(event.getParticipants().contains(participant1));
         assertEquals(1, event.getParticipants().size());
@@ -126,13 +122,15 @@ class ParticipantServiceTest {
 
     @Test
     void toggleParticipantInEvent_userAlreadyParticipating_removesUser() {
-        event.getParticipants().add(participant1); // make sure participant1 is already participating
+        event.getParticipants()
+                .add(participant1); // make sure participant1 is already participating
 
         when(userService.getUserById(participant1.getId())).thenReturn(participant1);
         when(eventService.getEventById(event.getId())).thenReturn(event);
         when(userDTOUserMapper.mapUsersToUserPublicDTOs(any())).thenReturn(new HashSet<>());
 
-        Set<UserPublicDTO> result = participantService.toggleParticipantInEvent(event.getId(), userPrincipal);
+        Set<UserPublicDTO> result =
+                participantService.toggleParticipantInEvent(event.getId(), userPrincipal);
 
         assertFalse(event.getParticipants().contains(participant1));
         assertEquals(0, event.getParticipants().size());
@@ -168,9 +166,11 @@ class ParticipantServiceTest {
         when(eventService.getEventById(event.getId()))
                 .thenThrow(new EventNotFoundException(event.getId()));
 
-        assertThrows(EventNotFoundException.class, () -> {
-            participantService.toggleParticipantInEvent(event.getId(), userPrincipal);
-        });
+        assertThrows(
+                EventNotFoundException.class,
+                () -> {
+                    participantService.toggleParticipantInEvent(event.getId(), userPrincipal);
+                });
 
         verify(userService).getUserById(participant1.getId());
         verify(eventService).getEventById(event.getId());
@@ -182,9 +182,11 @@ class ParticipantServiceTest {
         when(userService.getUserById(participant1.getId()))
                 .thenThrow(new UserNotFoundException(participant1.getId()));
 
-        assertThrows(UserNotFoundException.class, () -> {
-            participantService.toggleParticipantInEvent(event.getId(), userPrincipal);
-        });
+        assertThrows(
+                UserNotFoundException.class,
+                () -> {
+                    participantService.toggleParticipantInEvent(event.getId(), userPrincipal);
+                });
 
         verify(userService).getUserById(participant1.getId());
         verify(eventService, never()).getEventById(any());
@@ -193,9 +195,11 @@ class ParticipantServiceTest {
 
     @Test
     void toggleParticipantInEvent_nullUserPrincipal_throwsException() {
-        assertThrows(NullPointerException.class, () -> {
-            participantService.toggleParticipantInEvent(event.getId(), null);
-        });
+        assertThrows(
+                NullPointerException.class,
+                () -> {
+                    participantService.toggleParticipantInEvent(event.getId(), null);
+                });
 
         verify(userService, never()).getUserById(any());
         verify(eventRepository, never()).save(any());
@@ -203,9 +207,11 @@ class ParticipantServiceTest {
 
     @Test
     void toggleParticipantInEvent_nullEventId_throwsException() {
-        assertThrows(NullPointerException.class, () -> {
-            participantService.toggleParticipantInEvent(null, userPrincipal);
-        });
+        assertThrows(
+                NullPointerException.class,
+                () -> {
+                    participantService.toggleParticipantInEvent(null, userPrincipal);
+                });
 
         verify(eventRepository, never()).save(any());
     }
@@ -214,12 +220,13 @@ class ParticipantServiceTest {
     void toggleParticipantInEvent_repositorySaveFails_throwsException() {
         when(userService.getUserById(participant1.getId())).thenReturn(participant1);
         when(eventService.getEventById(event.getId())).thenReturn(event);
-        when(eventRepository.save(event))
-                .thenThrow(new RuntimeException("Database error"));
+        when(eventRepository.save(event)).thenThrow(new RuntimeException("Database error"));
 
-        assertThrows(RuntimeException.class, () -> {
-            participantService.toggleParticipantInEvent(event.getId(), userPrincipal);
-        });
+        assertThrows(
+                RuntimeException.class,
+                () -> {
+                    participantService.toggleParticipantInEvent(event.getId(), userPrincipal);
+                });
 
         verify(userService).getUserById(participant1.getId());
         verify(eventService).getEventById(event.getId());
@@ -233,9 +240,11 @@ class ParticipantServiceTest {
         when(userService.getUserById(participant1.getId())).thenReturn(participant1);
         when(eventService.getEventById(event.getId())).thenReturn(event);
 
-        assertThrows(NullPointerException.class, () -> {
-            participantService.toggleParticipantInEvent(event.getId(), userPrincipal);
-        });
+        assertThrows(
+                NullPointerException.class,
+                () -> {
+                    participantService.toggleParticipantInEvent(event.getId(), userPrincipal);
+                });
 
         verify(userService).getUserById(participant1.getId());
         verify(eventService).getEventById(event.getId());
@@ -268,9 +277,11 @@ class ParticipantServiceTest {
         when(eventService.getEventById(event.getId()))
                 .thenThrow(new EventNotFoundException(event.getId()));
 
-        assertThrows(EventNotFoundException.class, () -> {
-            participantService.getAllParticipantsAsDTOsByEventId(event.getId());
-        });
+        assertThrows(
+                EventNotFoundException.class,
+                () -> {
+                    participantService.getAllParticipantsAsDTOsByEventId(event.getId());
+                });
 
         verify(eventService).getEventById(event.getId());
         verify(userDTOUserMapper, never()).mapUsersToUserPublicDTOs(any());
@@ -282,7 +293,8 @@ class ParticipantServiceTest {
         when(userDTOUserMapper.mapUsersToUserPublicDTOs(event.getParticipants()))
                 .thenReturn(new HashSet<>());
 
-        Set<UserPublicDTO> result = participantService.getAllParticipantsAsDTOsByEventId(event.getId());
+        Set<UserPublicDTO> result =
+                participantService.getAllParticipantsAsDTOsByEventId(event.getId());
 
         assertNotNull(result);
         assertTrue(result.isEmpty());

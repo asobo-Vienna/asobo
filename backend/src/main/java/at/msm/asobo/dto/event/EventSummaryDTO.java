@@ -22,8 +22,7 @@ public class EventSummaryDTO {
     private int mediaCount;
     private int eventAdminCount;
 
-    public EventSummaryDTO() {
-    }
+    public EventSummaryDTO() {}
 
     public UUID getId() {
         return this.id;

@@ -1,5 +1,8 @@
 package at.msm.asobo.services;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
 import at.msm.asobo.builders.UserTestBuilder;
 import at.msm.asobo.dto.auth.LoginResponseDTO;
 import at.msm.asobo.dto.user.UserDTO;
@@ -12,6 +15,9 @@ import at.msm.asobo.repositories.UserRepository;
 import at.msm.asobo.security.JwtUtil;
 import at.msm.asobo.security.UserPrincipal;
 import at.msm.asobo.services.files.FileStorageService;
+import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,33 +25,20 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
-
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
 
-    @Mock
-    private UserRepository userRepository;
+    @Mock private UserRepository userRepository;
 
-    @Mock
-    AccessControlService accessControlService;
+    @Mock AccessControlService accessControlService;
 
-    @Mock
-    private FileStorageService fileStorageService;
+    @Mock private FileStorageService fileStorageService;
 
-    @Mock
-    private UserDTOUserMapper userDTOUserMapper;
+    @Mock private UserDTOUserMapper userDTOUserMapper;
 
-    @Mock
-    JwtUtil jwtUtil;
+    @Mock JwtUtil jwtUtil;
 
-    @InjectMocks
-    private UserService userService;
+    @InjectMocks private UserService userService;
 
     private User userJohn;
     private User userJane;
@@ -54,27 +47,26 @@ class UserServiceTest {
     private UserPrincipal principalJohn;
     private UserPrincipal principalJane;
 
-    @BeforeEach void setup() {
-        userJohn = new UserTestBuilder()
-                .withId(UUID.randomUUID())
-                .withUsernameAndEmail("john")
-                .buildUserEntity();
+    @BeforeEach
+    void setup() {
+        userJohn =
+                new UserTestBuilder()
+                        .withId(UUID.randomUUID())
+                        .withUsernameAndEmail("john")
+                        .buildUserEntity();
 
-        userJane = new UserTestBuilder()
-                .withId(UUID.randomUUID())
-                .withUsernameAndEmail("jane")
-                .buildUserEntity();
+        userJane =
+                new UserTestBuilder()
+                        .withId(UUID.randomUUID())
+                        .withUsernameAndEmail("jane")
+                        .buildUserEntity();
 
         userPublicDTO = new UserPublicDTO();
         userDTO = new UserDTO();
 
-        principalJohn = new UserTestBuilder()
-                .fromUser(userJohn)
-                .buildUserPrincipal();
+        principalJohn = new UserTestBuilder().fromUser(userJohn).buildUserPrincipal();
 
-        principalJane = new UserTestBuilder()
-                .fromUser(userJane)
-                .buildUserPrincipal();
+        principalJane = new UserTestBuilder().fromUser(userJane).buildUserPrincipal();
     }
 
     @Test
@@ -159,7 +151,8 @@ class UserServiceTest {
     void getUserDTOById_throwsExceptionWhenUserNotFound() {
         when(userRepository.findById(userJohn.getId())).thenReturn(Optional.empty());
 
-        assertThrows(UserNotFoundException.class, () -> userService.getUserDTOById(userJohn.getId()));
+        assertThrows(
+                UserNotFoundException.class, () -> userService.getUserDTOById(userJohn.getId()));
 
         verify(userRepository).findById(userJohn.getId());
         verify(userDTOUserMapper, never()).mapUserToUserPublicDTO(any());
@@ -224,20 +217,16 @@ class UserServiceTest {
     @Test
     void updateUserById_usernameNotChanged_doesNotGenerateToken() {
 
-        when(userRepository.findById(userJane.getId()))
-                .thenReturn(Optional.of(userJane));
+        when(userRepository.findById(userJane.getId())).thenReturn(Optional.of(userJane));
 
-        when(userRepository.save(userJane))
-                .thenReturn(userJane);
+        when(userRepository.save(userJane)).thenReturn(userJane);
 
-        when(userDTOUserMapper.mapUserToUserPublicDTO(userJane))
-                .thenReturn(userPublicDTO);
+        when(userDTOUserMapper.mapUserToUserPublicDTO(userJane)).thenReturn(userPublicDTO);
 
         UserUpdateDTO dto = new UserUpdateDTO();
         dto.setUsername(userJane.getUsername());
 
-        LoginResponseDTO result =
-                userService.updateUserById(userJane.getId(), principalJane, dto);
+        LoginResponseDTO result = userService.updateUserById(userJane.getId(), principalJane, dto);
 
         assertNotNull(result);
         assertNotNull(result.getUserDTO());
@@ -252,23 +241,18 @@ class UserServiceTest {
 
     @Test
     void updateUserById_usernameChanged_generatesToken() {
-        when(userRepository.findById(userJohn.getId()))
-                .thenReturn(Optional.of(userJohn));
+        when(userRepository.findById(userJohn.getId())).thenReturn(Optional.of(userJohn));
 
-        when(userRepository.save(userJohn))
-                .thenReturn(userJohn);
+        when(userRepository.save(userJohn)).thenReturn(userJohn);
 
-        when(jwtUtil.generateToken(any(UserPrincipal.class), anyLong()))
-                .thenReturn("token");
+        when(jwtUtil.generateToken(any(UserPrincipal.class), anyLong())).thenReturn("token");
 
-        when(userDTOUserMapper.mapUserToUserPublicDTO(userJohn))
-                .thenReturn(userPublicDTO);
+        when(userDTOUserMapper.mapUserToUserPublicDTO(userJohn)).thenReturn(userPublicDTO);
 
         UserUpdateDTO dto = new UserUpdateDTO();
         dto.setUsername("newUsername");
 
-        LoginResponseDTO result =
-                userService.updateUserById(userJohn.getId(), principalJohn, dto);
+        LoginResponseDTO result = userService.updateUserById(userJohn.getId(), principalJohn, dto);
 
         assertNotNull(result);
         assertEquals("token", result.getToken());
@@ -282,14 +266,11 @@ class UserServiceTest {
 
     @Test
     void deleteUserById_withValidCredentials_deletesUser() {
-        when(userRepository.findById(userJohn.getId()))
-                .thenReturn(Optional.of(userJohn));
+        when(userRepository.findById(userJohn.getId())).thenReturn(Optional.of(userJohn));
 
-        when(userDTOUserMapper.mapUserToUserPublicDTO(userJohn))
-                .thenReturn(userPublicDTO);
+        when(userDTOUserMapper.mapUserToUserPublicDTO(userJohn)).thenReturn(userPublicDTO);
 
-        UserPublicDTO result =
-                userService.deleteUserById(userJohn.getId(), principalJohn);
+        UserPublicDTO result = userService.deleteUserById(userJohn.getId(), principalJohn);
 
         assertNotNull(result);
         assertEquals(userPublicDTO, result);
@@ -303,7 +284,7 @@ class UserServiceTest {
     @Test
     void isUserNameAlreadyTaken_returnsFalseForNewUsername() {
         String username = "NewUsername";
-        
+
         when(userRepository.existsByUsername(username)).thenReturn(false);
 
         boolean result = userService.isUsernameAlreadyTaken(username);

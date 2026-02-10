@@ -12,10 +12,9 @@ import at.msm.asobo.repositories.EventRepository;
 import at.msm.asobo.security.UserPrincipal;
 import at.msm.asobo.services.AccessControlService;
 import at.msm.asobo.services.UserService;
-import org.springframework.stereotype.Service;
-
 import java.util.Set;
 import java.util.UUID;
+import org.springframework.stereotype.Service;
 
 @Service
 public class EventAdminService {
@@ -26,11 +25,12 @@ public class EventAdminService {
     private final UserDTOUserMapper userDTOUserMapper;
     private final EventDTOEventMapper eventDTOEventMapper;
 
-    public EventAdminService(EventRepository eventRepository,
-                             UserService userService,
-                             AccessControlService accessControlService,
-                             UserDTOUserMapper userDTOUserMapper,
-                             EventDTOEventMapper eventDTOEventMapper) {
+    public EventAdminService(
+            EventRepository eventRepository,
+            UserService userService,
+            AccessControlService accessControlService,
+            UserDTOUserMapper userDTOUserMapper,
+            EventDTOEventMapper eventDTOEventMapper) {
         this.eventRepository = eventRepository;
         this.userService = userService;
         this.accessControlService = accessControlService;
@@ -43,13 +43,15 @@ public class EventAdminService {
         return this.userDTOUserMapper.mapUsersToUserPublicDTOs(event.getEventAdmins());
     }
 
-    public EventDTO addAdminsToEvent(UUID eventId, Set<UUID> userIds, UserPrincipal loggedInUserPrincipal) {
+    public EventDTO addAdminsToEvent(
+            UUID eventId, Set<UUID> userIds, UserPrincipal loggedInUserPrincipal) {
         Event event = this.getEventById(eventId);
         User loggedInUser = this.userService.getUserById(loggedInUserPrincipal.getUserId());
         Set<User> usersToAdd = this.userService.getUsersByIds(userIds);
 
         if (!this.canManageEvent(event, loggedInUser)) {
-            throw new UserNotAuthorizedException("You are not authorized to add event admins to this event");
+            throw new UserNotAuthorizedException(
+                    "You are not authorized to add event admins to this event");
         }
 
         event.getEventAdmins().addAll(usersToAdd);
@@ -58,13 +60,15 @@ public class EventAdminService {
         return this.eventDTOEventMapper.mapEventToEventDTO(savedEvent);
     }
 
-    public EventDTO removeAdminsFromEvent(UUID eventId, Set<UUID> userIds, UserPrincipal loggedInUserPrincipal) {
+    public EventDTO removeAdminsFromEvent(
+            UUID eventId, Set<UUID> userIds, UserPrincipal loggedInUserPrincipal) {
         Event event = this.getEventById(eventId);
         User loggedInUser = this.userService.getUserById(loggedInUserPrincipal.getUserId());
         Set<User> usersToRemove = this.userService.getUsersByIds(userIds);
 
         if (!this.canManageEvent(event, loggedInUser)) {
-            throw new UserNotAuthorizedException("You are not authorized to remove event admins from this event");
+            throw new UserNotAuthorizedException(
+                    "You are not authorized to remove event admins from this event");
         }
 
         event.getEventAdmins().removeAll(usersToRemove);
@@ -74,7 +78,8 @@ public class EventAdminService {
     }
 
     public boolean canManageEvent(Event event, User loggedInUser) {
-        return this.accessControlService.hasAdminRole(loggedInUser) || this.isUserAdminOfEvent(event, loggedInUser);
+        return this.accessControlService.hasAdminRole(loggedInUser)
+                || this.isUserAdminOfEvent(event, loggedInUser);
     }
 
     private boolean isUserAdminOfEvent(Event event, User user) {
@@ -91,7 +96,6 @@ public class EventAdminService {
     }
 
     private Event getEventById(UUID id) {
-        return this.eventRepository.findById(id)
-                .orElseThrow(() -> new EventNotFoundException(id));
+        return this.eventRepository.findById(id).orElseThrow(() -> new EventNotFoundException(id));
     }
 }

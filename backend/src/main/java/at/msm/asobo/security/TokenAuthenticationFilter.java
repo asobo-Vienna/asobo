@@ -4,15 +4,12 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import java.io.IOException;
+import java.util.UUID;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-
-import java.io.IOException;
-import java.util.List;
-import java.util.UUID;
 
 @Component
 public class TokenAuthenticationFilter extends OncePerRequestFilter {
@@ -20,19 +17,19 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
     private final JwtUtil jwtUtil;
     private final CustomUserDetailsService customUserDetailsService;
 
-    public TokenAuthenticationFilter(JwtUtil jwtUtil, CustomUserDetailsService customUserDetailsService) {
+    public TokenAuthenticationFilter(
+            JwtUtil jwtUtil, CustomUserDetailsService customUserDetailsService) {
         this.jwtUtil = jwtUtil;
         this.customUserDetailsService = customUserDetailsService;
     }
 
     @Override
     protected void doFilterInternal(
-            HttpServletRequest request,
-            HttpServletResponse response,
-            FilterChain filterChain
-    ) throws ServletException, IOException {
+            HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
         String requestURI = request.getRequestURI();
-        System.out.println(">>> TokenAuthenticationFilter: " + request.getMethod() + " " + requestURI);
+        System.out.println(
+                ">>> TokenAuthenticationFilter: " + request.getMethod() + " " + requestURI);
         System.out.println(">>> TokenAuthenticationFilter: URI = " + requestURI);
 
         // Skip all /api/auth/** endpoints
@@ -52,12 +49,14 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
                 // extract info from token
                 UUID userId = UUID.fromString(jwtUtil.getUserIdFromToken(token));
 
-                UserPrincipal userPrincipal = (UserPrincipal) this.customUserDetailsService.loadUserById(userId);
+                UserPrincipal userPrincipal =
+                        (UserPrincipal) this.customUserDetailsService.loadUserById(userId);
 
                 UserPrincipalAuthenticationToken authentication =
                         new UserPrincipalAuthenticationToken(userPrincipal);
 
-                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                authentication.setDetails(
+                        new WebAuthenticationDetailsSource().buildDetails(request));
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }

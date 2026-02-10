@@ -1,5 +1,15 @@
 package at.msm.asobo.controllers;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.authentication;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import at.msm.asobo.config.FileStorageProperties;
 import at.msm.asobo.config.SecurityConfig;
 import at.msm.asobo.dto.user.UserPublicDTO;
@@ -10,6 +20,8 @@ import at.msm.asobo.security.UserPrincipal;
 import at.msm.asobo.services.events.ParticipantService;
 import at.msm.asobo.utils.MockAuthenticationFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Set;
+import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -25,42 +37,22 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.Set;
-import java.util.UUID;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-
-import static org.mockito.Mockito.*;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.authentication;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 @WebMvcTest(ParticipantController.class)
 @EnableMethodSecurity
 @Import(SecurityConfig.class)
 class ParticipantControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
+    @Autowired private MockMvc mockMvc;
 
-    @Autowired
-    ObjectMapper objectMapper;
+    @Autowired ObjectMapper objectMapper;
 
-    @MockitoBean
-    ParticipantService participantService;
+    @MockitoBean ParticipantService participantService;
 
-    @MockitoBean
-    private FileStorageProperties fileStorageProperties;
+    @MockitoBean private FileStorageProperties fileStorageProperties;
 
-    @MockitoBean
-    private JwtUtil jwtUtil;
+    @MockitoBean private JwtUtil jwtUtil;
 
-    @MockitoBean
-    private CustomUserDetailsService customUserDetailsService;
+    @MockitoBean private CustomUserDetailsService customUserDetailsService;
 
     private UserPublicDTO userPublicDTO1;
     private UserPublicDTO userPublicDTO2;
@@ -79,7 +71,7 @@ class ParticipantControllerTest {
     @BeforeEach
     void setUp() {
         userId = UUID.randomUUID();
-        eventId =  UUID.randomUUID();
+        eventId = UUID.randomUUID();
         userPublicDTO1 = new UserPublicDTO();
         userPublicDTO1.setId(UUID.randomUUID());
         userPublicDTO2 = new UserPublicDTO();
@@ -95,28 +87,33 @@ class ParticipantControllerTest {
         when(participantService.toggleParticipantInEvent(eq(eventId), any(UserPrincipal.class)))
                 .thenReturn(participantDTOList);
 
-        mockMvc.perform(post(ALL_PARTICIPANTS_URL, eventId)
-                        .with(authentication(MockAuthenticationFactory
-                                .mockAuth(userId, "testuser", "testuser@test.com", role)))
-                        .with(csrf())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(userPublicDTO1)))
+        mockMvc.perform(
+                        post(ALL_PARTICIPANTS_URL, eventId)
+                                .with(
+                                        authentication(
+                                                MockAuthenticationFactory.mockAuth(
+                                                        userId,
+                                                        "testuser",
+                                                        "testuser@test.com",
+                                                        role)))
+                                .with(csrf())
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(userPublicDTO1)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().json(expectedJson));
 
-        verify(participantService)
-                .toggleParticipantInEvent(eq(eventId), any(UserPrincipal.class));
+        verify(participantService).toggleParticipantInEvent(eq(eventId), any(UserPrincipal.class));
     }
-
 
     @Test
     @WithMockUser(roles = "X")
     void toggleParticipantInEvent_withUnauthorizedRole_returns403() throws Exception {
-        mockMvc.perform(post(ALL_PARTICIPANTS_URL, eventId)
-                        .with(csrf())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(userPublicDTO1)))
+        mockMvc.perform(
+                        post(ALL_PARTICIPANTS_URL, eventId)
+                                .with(csrf())
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(userPublicDTO1)))
                 .andExpect(status().isForbidden());
 
         verifyNoInteractions(participantService);
@@ -125,10 +122,11 @@ class ParticipantControllerTest {
     @Test
     void toggleParticipantInEvent_unauthenticated_returns401() throws Exception {
 
-        mockMvc.perform(post(ALL_PARTICIPANTS_URL, eventId)
-                        .with(csrf())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(userPublicDTO1)))
+        mockMvc.perform(
+                        post(ALL_PARTICIPANTS_URL, eventId)
+                                .with(csrf())
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(userPublicDTO1)))
                 .andExpect(status().isUnauthorized());
 
         verifyNoInteractions(participantService);
@@ -136,11 +134,17 @@ class ParticipantControllerTest {
 
     @Test
     void toggleParticipantInEvent_withoutCsrf_returns403() throws Exception {
-        mockMvc.perform(post(ALL_PARTICIPANTS_URL, eventId)
-                        .with(authentication(MockAuthenticationFactory
-                                .mockAuth(userId, "testuser", "testuser@test.com", "USER")))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(userPublicDTO1)))
+        mockMvc.perform(
+                        post(ALL_PARTICIPANTS_URL, eventId)
+                                .with(
+                                        authentication(
+                                                MockAuthenticationFactory.mockAuth(
+                                                        userId,
+                                                        "testuser",
+                                                        "testuser@test.com",
+                                                        "USER")))
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(userPublicDTO1)))
                 .andExpect(status().isForbidden());
 
         verifyNoInteractions(participantService);
@@ -165,8 +169,7 @@ class ParticipantControllerTest {
 
     @Test
     void getParticipantsByEventId_unauthenticated_returns401() throws Exception {
-        mockMvc.perform(get(ALL_PARTICIPANTS_URL, eventId))
-                .andExpect(status().isForbidden());
+        mockMvc.perform(get(ALL_PARTICIPANTS_URL, eventId)).andExpect(status().isForbidden());
 
         verifyNoInteractions(participantService);
     }
@@ -174,10 +177,8 @@ class ParticipantControllerTest {
     @Test
     @WithMockUser(roles = "X")
     void getParticipantsByEventId_withUnauthorizedRole_returns403() throws Exception {
-        mockMvc.perform(get(ALL_PARTICIPANTS_URL, eventId))
-                .andExpect(status().isForbidden());
+        mockMvc.perform(get(ALL_PARTICIPANTS_URL, eventId)).andExpect(status().isForbidden());
 
         verifyNoInteractions(participantService);
     }
-
 }

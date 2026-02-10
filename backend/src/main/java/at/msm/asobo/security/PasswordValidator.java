@@ -1,11 +1,10 @@
 package at.msm.asobo.security;
 
 import at.msm.asobo.exceptions.InvalidPasswordFormatException;
-import org.springframework.stereotype.Component;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
+import org.springframework.stereotype.Component;
 
 @Component
 public class PasswordValidator {
@@ -15,7 +14,8 @@ public class PasswordValidator {
     private static final Pattern UPPERCASE_PATTERN = Pattern.compile(".*[A-Z].*");
     private static final Pattern LOWERCASE_PATTERN = Pattern.compile(".*[a-z].*");
     private static final Pattern DIGIT_PATTERN = Pattern.compile(".*\\d.*");
-    private static final Pattern SPECIAL_CHAR_PATTERN = Pattern.compile(".*[!@#$%^&*(),.?:;{}|<>].*");
+    private static final Pattern SPECIAL_CHAR_PATTERN =
+            Pattern.compile(".*[!@#$%^&*(),.?:;{}|<>].*");
 
     public void validate(String password) {
         List<String> violations = new ArrayList<>();
@@ -46,9 +46,7 @@ public class PasswordValidator {
 
         if (!violations.isEmpty()) {
             throw new InvalidPasswordFormatException(
-                    "Password does not meet requirements!",
-                    violations
-            );
+                    "Password does not meet requirements!", violations);
         }
     }
 }

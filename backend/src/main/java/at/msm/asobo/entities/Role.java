@@ -1,7 +1,6 @@
 package at.msm.asobo.entities;
 
 import jakarta.persistence.*;
-
 import java.util.HashSet;
 import java.util.Set;
 

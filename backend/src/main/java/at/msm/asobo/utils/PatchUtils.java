@@ -1,12 +1,11 @@
 package at.msm.asobo.utils;
 
-import org.springframework.beans.BeanWrapper;
-import org.springframework.beans.BeanWrapperImpl;
-
 import java.beans.PropertyDescriptor;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+import org.springframework.beans.BeanWrapper;
+import org.springframework.beans.BeanWrapperImpl;
 
 public class PatchUtils {
     public static <T> void copyNonNullProperties(T source, T target, String... ignoreProperties) {

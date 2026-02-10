@@ -1,20 +1,19 @@
 package at.msm.asobo.services.files;
 
+import static java.nio.file.Files.*;
+
 import at.msm.asobo.config.FileStorageProperties;
 import at.msm.asobo.entities.User;
 import at.msm.asobo.exceptions.files.FileDeletionException;
 import at.msm.asobo.exceptions.files.InvalidFilenameException;
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.util.UUID;
-import static java.nio.file.Files.*;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class FileStorageService {
@@ -25,8 +24,10 @@ public class FileStorageService {
 
     private final String baseStoragePath;
 
-    public FileStorageService(FileStorageProperties fileStorageProperties,
-                              FileValidationService fileValidationService) throws IOException {
+    public FileStorageService(
+            FileStorageProperties fileStorageProperties,
+            FileValidationService fileValidationService)
+            throws IOException {
         this.fileStorageProperties = fileStorageProperties;
         this.fileValidationService = fileValidationService;
         this.baseStoragePath = fileStorageProperties.getBasePath();
@@ -59,7 +60,8 @@ public class FileStorageService {
         try (InputStream in = file.getInputStream()) {
             Files.copy(in, targetFile, StandardCopyOption.REPLACE_EXISTING);
 
-            String encodedFilename = URLEncoder.encode(filename, StandardCharsets.UTF_8).replace("+", "%20");
+            String encodedFilename =
+                    URLEncoder.encode(filename, StandardCharsets.UTF_8).replace("+", "%20");
 
             return "/uploads/" + subFolderName + "/" + encodedFilename;
         } catch (IOException e) {
@@ -94,7 +96,8 @@ public class FileStorageService {
             this.delete(user.getPictureURI());
         }
 
-        String pictureURI = this.store(picture, this.fileStorageProperties.getProfilePictureSubfolder());
+        String pictureURI =
+                this.store(picture, this.fileStorageProperties.getProfilePictureSubfolder());
         user.setPictureURI(pictureURI);
     }
 }

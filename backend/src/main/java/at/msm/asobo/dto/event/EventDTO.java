@@ -1,7 +1,7 @@
 package at.msm.asobo.dto.event;
 
-import at.msm.asobo.dto.medium.MediumDTO;
 import at.msm.asobo.dto.comment.UserCommentDTO;
+import at.msm.asobo.dto.medium.MediumDTO;
 import at.msm.asobo.dto.user.UserPublicDTO;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -24,7 +24,8 @@ public class EventDTO {
 
     private LocalDateTime modificationDate;
 
-    // TODO refactor to a new DTO EventCreator (after refactoring mappers to factories) private EventCreatorDTO creator;
+    // TODO refactor to a new DTO EventCreator (after refactoring mappers to factories) private
+    // EventCreatorDTO creator;
     private UserPublicDTO creator;
 
     private Set<UserPublicDTO> eventAdmins;

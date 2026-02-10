@@ -1,7 +1,6 @@
 package at.msm.asobo.dto.medium;
 
 import at.msm.asobo.dto.user.UserPublicDTO;
-
 import java.util.UUID;
 
 public class MediumDTO {
@@ -10,8 +9,7 @@ public class MediumDTO {
     private String mediumURI;
     private UserPublicDTO creator;
 
-    public MediumDTO() {
-    }
+    public MediumDTO() {}
 
     public void setId(UUID id) {
         this.id = id;
@@ -45,5 +43,3 @@ public class MediumDTO {
         this.creator = creator;
     }
 }
-
-

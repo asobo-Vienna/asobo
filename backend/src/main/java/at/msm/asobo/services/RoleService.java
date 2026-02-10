@@ -5,12 +5,11 @@ import at.msm.asobo.dto.user.UserRolesDTO;
 import at.msm.asobo.entities.Role;
 import at.msm.asobo.entities.User;
 import at.msm.asobo.exceptions.RoleNotFoundException;
-import at.msm.asobo.repositories.RoleRepository;
 import at.msm.asobo.mappers.RoleMapper;
-import org.springframework.stereotype.Service;
-
+import at.msm.asobo.repositories.RoleRepository;
 import java.util.*;
 import java.util.stream.Collectors;
+import org.springframework.stereotype.Service;
 
 @Service
 public class RoleService {
@@ -22,7 +21,8 @@ public class RoleService {
     private final RoleMapper roleMapper;
     private final UserService userService;
 
-    public RoleService(RoleRepository roleRepository, RoleMapper roleMapper, UserService userService) {
+    public RoleService(
+            RoleRepository roleRepository, RoleMapper roleMapper, UserService userService) {
         this.roleRepository = roleRepository;
         this.roleMapper = roleMapper;
         this.userService = userService;
@@ -36,7 +36,8 @@ public class RoleService {
 
     // TODO: add unit test
     public Role getRoleByName(String roleName) {
-        return this.roleRepository.findByName(roleName)
+        return this.roleRepository
+                .findByName(roleName)
                 .orElseThrow(() -> new RoleNotFoundException("Role not found: " + roleName));
     }
 
@@ -51,11 +52,19 @@ public class RoleService {
 
         User user = this.userService.getUserById(userId);
 
-        Set<Role> roleEntities = roles.stream()
-                .map(roleDTO -> this.roleRepository.findByName(roleDTO.getName())
-                        .orElseThrow(() ->
-                                new RoleNotFoundException("Role not found: " + roleDTO.getName())))
-                .collect(Collectors.toSet());
+        Set<Role> roleEntities =
+                roles.stream()
+                        .map(
+                                roleDTO ->
+                                        this.roleRepository
+                                                .findByName(roleDTO.getName())
+                                                .orElseThrow(
+                                                        () ->
+                                                                new RoleNotFoundException(
+                                                                        "Role not found: "
+                                                                                + roleDTO
+                                                                                        .getName())))
+                        .collect(Collectors.toSet());
 
         validateRoleHierarchy(roleEntities);
 
@@ -70,16 +79,14 @@ public class RoleService {
     }
 
     private void validateRoleHierarchy(Set<Role> roles) {
-        Set<String> roleNames = roles.stream()
-                .map(Role::getName)
-                .collect(Collectors.toSet());
+        Set<String> roleNames = roles.stream().map(Role::getName).collect(Collectors.toSet());
 
         if (!roleNames.contains(ROLE_USER)) {
             throw new IllegalArgumentException("Every user requires the role USER");
         }
 
-        if (roleNames.contains(ROLE_SUPERADMIN) &&
-                (!roleNames.contains(ROLE_ADMIN) || !roleNames.contains(ROLE_USER))) {
+        if (roleNames.contains(ROLE_SUPERADMIN)
+                && (!roleNames.contains(ROLE_ADMIN) || !roleNames.contains(ROLE_USER))) {
             throw new IllegalArgumentException("SUPERADMIN requires ADMIN and USER roles");
         }
 
@@ -88,4 +95,3 @@ public class RoleService {
         }
     }
 }
-

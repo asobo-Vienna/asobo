@@ -6,13 +6,12 @@ import at.msm.asobo.dto.user.UserUpdateDTO;
 import at.msm.asobo.security.UserPrincipal;
 import at.msm.asobo.services.UserService;
 import jakarta.validation.Valid;
+import java.util.UUID;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import java.util.UUID;
-
 
 @RestController
 @RequestMapping("/api/users")
@@ -28,14 +27,12 @@ public class UserController {
     // we need "/id/ before the actual id, because otherwise
     // /{id} and /{username} lead to ambiguity
     @GetMapping(value = "/id/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public UserPublicDTO getUserById(
-            @PathVariable UUID id) {
+    public UserPublicDTO getUserById(@PathVariable UUID id) {
         return this.userService.getUserDTOById(id);
     }
 
     @GetMapping("/{username}")
-    public UserPublicDTO getUserByUsername(
-            @PathVariable String username) {
+    public UserPublicDTO getUserByUsername(@PathVariable String username) {
 
         return this.userService.getUserByUsername(username);
     }
@@ -62,8 +59,8 @@ public class UserController {
     }
 
     @DeleteMapping("/{userId}")
-    public UserPublicDTO deleteUser(@PathVariable UUID userId,
-                                    @AuthenticationPrincipal UserPrincipal loggedInUser) {
+    public UserPublicDTO deleteUser(
+            @PathVariable UUID userId, @AuthenticationPrincipal UserPrincipal loggedInUser) {
         return this.userService.deleteUserById(userId, loggedInUser);
     }
 }

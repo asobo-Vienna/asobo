@@ -27,8 +27,7 @@ public class UserPublicDTO {
 
     private String salutation;
 
-    public UserPublicDTO() {
-    }
+    public UserPublicDTO() {}
 
     public void setId(UUID id) {
         this.id = id;

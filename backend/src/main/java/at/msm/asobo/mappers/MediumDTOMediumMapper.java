@@ -3,10 +3,9 @@ package at.msm.asobo.mappers;
 import at.msm.asobo.dto.medium.MediumCreationDTO;
 import at.msm.asobo.dto.medium.MediumDTO;
 import at.msm.asobo.entities.Medium;
+import java.util.List;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import java.util.List;
-
 
 @Mapper(componentModel = "spring")
 public interface MediumDTOMediumMapper {
@@ -18,6 +17,7 @@ public interface MediumDTOMediumMapper {
     Medium mapMediumDTOToMedium(MediumDTO mediumDTO);
 
     List<MediumDTO> mapMediaToMediaDTOList(List<Medium> media);
+
     List<Medium> mapMediumDTOsToMediumList(List<MediumDTO> mediaDTOList);
 
     @Mapping(target = "mediumFile", ignore = true)
@@ -29,6 +29,8 @@ public interface MediumDTOMediumMapper {
     @Mapping(source = "eventId", target = "event.id")
     Medium mapMediumCreationDTOToMedium(MediumCreationDTO mediumCreationDTO);
 
-    List<MediumCreationDTO> mapMediaToMediaCreationDTOList(List<MediumCreationDTO> mediaCreationDTO);
+    List<MediumCreationDTO> mapMediaToMediaCreationDTOList(
+            List<MediumCreationDTO> mediaCreationDTO);
+
     List<Medium> mapMediaCreationDTOToMediaList(List<MediumCreationDTO> mediaCreationDTO);
 }

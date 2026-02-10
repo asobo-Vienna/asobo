@@ -17,16 +17,14 @@ import at.msm.asobo.services.files.FileStorageService;
 import at.msm.asobo.services.files.FileValidationService;
 import at.msm.asobo.utils.PatchUtils;
 import jakarta.transaction.Transactional;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @Transactional
@@ -106,15 +104,20 @@ public class EventService {
         return this.eventDTOEventMapper.mapEventsToEventSummaryDTOs(events);
     }
 
-    public Page<EventSummaryDTO> getEventsByParticipantIdPaginated(UUID participantId, Boolean isPrivate, Pageable pageable) {
+    public Page<EventSummaryDTO> getEventsByParticipantIdPaginated(
+            UUID participantId, Boolean isPrivate, Pageable pageable) {
         Page<Event> events;
 
         if (isPrivate == null) {
             events = eventRepository.findByParticipants_Id(participantId, pageable);
         } else if (isPrivate) {
-            events = eventRepository.findByParticipants_IdAndIsPrivateEventTrue(participantId, pageable);
+            events =
+                    eventRepository.findByParticipants_IdAndIsPrivateEventTrue(
+                            participantId, pageable);
         } else {
-            events = eventRepository.findByParticipants_IdAndIsPrivateEventFalse(participantId, pageable);
+            events =
+                    eventRepository.findByParticipants_IdAndIsPrivateEventFalse(
+                            participantId, pageable);
         }
         return this.eventDTOEventMapper.mapEventsToEventSummaryDTOs(events);
     }
@@ -130,7 +133,8 @@ public class EventService {
     }
 
     public EventDTO addNewEvent(EventCreationDTO eventCreationDTO) {
-        if (eventCreationDTO.getEventAdmins() == null || eventCreationDTO.getEventAdmins().isEmpty()) {
+        if (eventCreationDTO.getEventAdmins() == null
+                || eventCreationDTO.getEventAdmins().isEmpty()) {
             eventCreationDTO.setEventAdmins(Set.of(eventCreationDTO.getCreator()));
         }
 
@@ -141,8 +145,8 @@ public class EventService {
     }
 
     public Event getEventById(UUID id) {
-        Event event = this.eventRepository.findById(id)
-                .orElseThrow(() -> new EventNotFoundException(id));
+        Event event =
+                this.eventRepository.findById(id).orElseThrow(() -> new EventNotFoundException(id));
         return event;
     }
 
@@ -173,7 +177,8 @@ public class EventService {
         return this.eventDTOEventMapper.mapEventToEventDTO(eventToDelete);
     }
 
-    public EventDTO updateEventById(UUID eventId, UserPrincipal userPrincipal, EventUpdateDTO eventUpdateDTO) {
+    public EventDTO updateEventById(
+            UUID eventId, UserPrincipal userPrincipal, EventUpdateDTO eventUpdateDTO) {
         Event existingEvent = this.getEventById(eventId);
         User loggedInUser = this.userService.getUserById(userPrincipal.getUserId());
 
@@ -188,8 +193,8 @@ public class EventService {
 
         if (eventUpdateDTO.getParticipants() != null) {
             existingEvent.setParticipants(
-                    this.userDTOUserMapper.mapUserPublicDTOsToUsers(eventUpdateDTO.getParticipants())
-            );
+                    this.userDTOUserMapper.mapUserPublicDTOsToUsers(
+                            eventUpdateDTO.getParticipants()));
         }
 
         existingEvent.setModificationDate(LocalDateTime.now());
@@ -209,7 +214,9 @@ public class EventService {
             this.fileStorageService.delete(event.getPictureURI());
         }
 
-        String pictureURI = this.fileStorageService.store(picture, this.fileStorageProperties.getEventCoverPictureSubfolder());
+        String pictureURI =
+                this.fileStorageService.store(
+                        picture, this.fileStorageProperties.getEventCoverPictureSubfolder());
         event.setPictureURI(pictureURI);
     }
 }

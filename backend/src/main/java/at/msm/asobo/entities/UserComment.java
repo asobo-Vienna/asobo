@@ -3,12 +3,10 @@ package at.msm.asobo.entities;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import org.hibernate.annotations.CreationTimestamp;
-import org.springframework.data.annotation.LastModifiedDate;
-
 import java.time.LocalDateTime;
 import java.util.UUID;
-
+import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.data.annotation.LastModifiedDate;
 
 @Entity
 public class UserComment {
@@ -29,16 +27,13 @@ public class UserComment {
     @JoinColumn(name = "event_id")
     private Event event;
 
-    @CreationTimestamp
-    private LocalDateTime creationDate;
+    @CreationTimestamp private LocalDateTime creationDate;
 
-    @LastModifiedDate
-    private LocalDateTime modificationDate;
+    @LastModifiedDate private LocalDateTime modificationDate;
 
     // private File file;
 
-    public UserComment(){
-    }
+    public UserComment() {}
 
     public String getText() {
         return this.text;

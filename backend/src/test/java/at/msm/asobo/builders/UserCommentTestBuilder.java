@@ -5,14 +5,14 @@ import at.msm.asobo.entities.Event;
 import at.msm.asobo.entities.User;
 import at.msm.asobo.entities.UserComment;
 import at.msm.asobo.mappers.UserCommentDTOUserCommentMapper;
-
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.UUID;
 
 public class UserCommentTestBuilder {
-    private static final UUID FIXED_COMMENT_ID = UUID.fromString("00000000-0000-0000-0000-000000000001");
-    private static final LocalDateTime FIXED_DATE =  LocalDateTime.of(2026, 1, 1, 12, 0);
+    private static final UUID FIXED_COMMENT_ID =
+            UUID.fromString("00000000-0000-0000-0000-000000000001");
+    private static final LocalDateTime FIXED_DATE = LocalDateTime.of(2026, 1, 1, 12, 0);
 
     private UUID id;
     private String text;

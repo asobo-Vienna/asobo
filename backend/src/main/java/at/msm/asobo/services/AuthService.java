@@ -11,6 +11,8 @@ import at.msm.asobo.exceptions.registration.UsernameAlreadyExistsException;
 import at.msm.asobo.mappers.UserDTOUserMapper;
 import at.msm.asobo.security.JwtUtil;
 import at.msm.asobo.security.UserPrincipal;
+import java.util.List;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -20,13 +22,11 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Set;
-
 @Service
 public class AuthService {
     @Value("${jwt.expiration-ms}")
     private long EXPIRATION_MS;
+
     @Value("${jwt.remember-me-expiration-ms}")
     private long REMEMBER_ME_EXPIRATION_MS;
 
@@ -37,7 +37,13 @@ public class AuthService {
     private final JwtUtil jwtUtil;
     private final AuthenticationManager authenticationManager;
 
-    public AuthService(UserService userService, PasswordService passwordService, RoleService roleService, UserDTOUserMapper userDTOUserMapper, JwtUtil jwtUtil, AuthenticationManager authenticationManager) {
+    public AuthService(
+            UserService userService,
+            PasswordService passwordService,
+            RoleService roleService,
+            UserDTOUserMapper userDTOUserMapper,
+            JwtUtil jwtUtil,
+            AuthenticationManager authenticationManager) {
         this.userService = userService;
         this.passwordService = passwordService;
         this.roleService = roleService;
@@ -61,24 +67,23 @@ public class AuthService {
 
         User savedUser = this.userService.saveUser(newUser);
 
-        UserPrincipal userPrincipal = new UserPrincipal(
-                savedUser.getId(),
-                savedUser.getUsername(),
-                savedUser.getPassword(),
-                List.of(new SimpleGrantedAuthority("ROLE_USER"))
-        );
+        UserPrincipal userPrincipal =
+                new UserPrincipal(
+                        savedUser.getId(),
+                        savedUser.getUsername(),
+                        savedUser.getPassword(),
+                        List.of(new SimpleGrantedAuthority("ROLE_USER")));
 
         String token = this.jwtUtil.generateToken(userPrincipal, EXPIRATION_MS);
 
-        return new LoginResponseDTO(token, this.userDTOUserMapper.mapUserToUserPublicDTO(savedUser));
+        return new LoginResponseDTO(
+                token, this.userDTOUserMapper.mapUserToUserPublicDTO(savedUser));
     }
 
     public LoginResponseDTO loginUser(UserLoginDTO userLoginDTO) {
         UsernamePasswordAuthenticationToken authToken =
                 new UsernamePasswordAuthenticationToken(
-                        userLoginDTO.getIdentifier(),
-                        userLoginDTO.getPassword()
-                );
+                        userLoginDTO.getIdentifier(), userLoginDTO.getPassword());
 
         Authentication authentication;
         try {

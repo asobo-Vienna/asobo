@@ -3,13 +3,12 @@ package at.msm.asobo.entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import org.hibernate.annotations.CreationTimestamp;
-
 import java.time.LocalDateTime;
 import java.util.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
-@Table(name="users")
+@Table(name = "users")
 public class User {
 
     @Id
@@ -61,8 +60,7 @@ public class User {
 
     private String location;
 
-    @CreationTimestamp
-    private LocalDateTime registerDate;
+    @CreationTimestamp private LocalDateTime registerDate;
 
     private boolean isActive = true;
 
@@ -73,8 +71,7 @@ public class User {
     @JoinTable(
             name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id")
-    )
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles;
 
     public User() {

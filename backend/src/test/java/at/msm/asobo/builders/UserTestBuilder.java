@@ -1,12 +1,11 @@
 package at.msm.asobo.builders;
 
 import at.msm.asobo.dto.auth.LoginResponseDTO;
-import at.msm.asobo.dto.user.UserPublicDTO;
 import at.msm.asobo.dto.auth.UserRegisterDTO;
+import at.msm.asobo.dto.user.UserPublicDTO;
 import at.msm.asobo.dto.user.UserUpdateDTO;
 import at.msm.asobo.entities.User;
 import at.msm.asobo.security.UserPrincipal;
-
 import java.util.List;
 import java.util.UUID;
 
@@ -176,11 +175,6 @@ public class UserTestBuilder {
     }
 
     public UserPrincipal buildUserPrincipal() {
-        return new UserPrincipal(
-                this.id,
-                this.username,
-                this.password,
-                List.of()
-        );
+        return new UserPrincipal(this.id, this.username, this.password, List.of());
     }
 }

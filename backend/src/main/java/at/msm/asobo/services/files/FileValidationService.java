@@ -22,7 +22,8 @@ public class FileValidationService {
     private void validateFileSize(MultipartFile file) {
         long maxBytes = multipartProperties.getMaxFileSize().toBytes();
         if (file.getSize() > maxBytes) {
-            throw new InvalidFileUploadException("File size must be less than " + multipartProperties.getMaxFileSize());
+            throw new InvalidFileUploadException(
+                    "File size must be less than " + multipartProperties.getMaxFileSize());
         }
     }
 

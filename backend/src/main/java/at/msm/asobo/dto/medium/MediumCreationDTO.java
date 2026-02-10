@@ -1,8 +1,8 @@
 package at.msm.asobo.dto.medium;
 
 import jakarta.validation.constraints.NotNull;
-import org.springframework.web.multipart.MultipartFile;
 import java.util.UUID;
+import org.springframework.web.multipart.MultipartFile;
 
 public class MediumCreationDTO {
 
@@ -11,8 +11,7 @@ public class MediumCreationDTO {
     @NotNull(message = "URI is mandatory for creating a new medium")
     private MultipartFile mediumFile;
 
-    public MediumCreationDTO() {
-    }
+    public MediumCreationDTO() {}
 
     public UUID getEventId() {
         return eventId;

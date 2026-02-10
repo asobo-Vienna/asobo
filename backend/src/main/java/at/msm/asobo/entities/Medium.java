@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import java.util.UUID;
 
-
 @Entity
 public class Medium {
 
@@ -25,8 +24,7 @@ public class Medium {
     @JoinColumn(name = "event_id")
     private Event event;
 
-    public Medium() {
-    }
+    public Medium() {}
 
     public String getMediumURI() {
         return this.mediumURI;

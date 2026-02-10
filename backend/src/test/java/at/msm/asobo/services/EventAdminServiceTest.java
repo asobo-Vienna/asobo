@@ -1,5 +1,8 @@
 package at.msm.asobo.services;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
 import at.msm.asobo.builders.EventTestBuilder;
 import at.msm.asobo.builders.UserTestBuilder;
 import at.msm.asobo.dto.event.EventDTO;
@@ -13,6 +16,10 @@ import at.msm.asobo.mappers.UserDTOUserMapper;
 import at.msm.asobo.repositories.EventRepository;
 import at.msm.asobo.security.UserPrincipal;
 import at.msm.asobo.services.events.EventAdminService;
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,34 +27,20 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
-
 @ExtendWith(MockitoExtension.class)
 class EventAdminServiceTest {
 
-    @Mock
-    private EventRepository eventRepository;
+    @Mock private EventRepository eventRepository;
 
-    @Mock
-    private UserService userService;
+    @Mock private UserService userService;
 
-    @Mock
-    private AccessControlService accessControlService;
+    @Mock private AccessControlService accessControlService;
 
-    @Mock
-    private UserDTOUserMapper userDTOUserMapper;
+    @Mock private UserDTOUserMapper userDTOUserMapper;
 
-    @Mock
-    private EventDTOEventMapper eventDTOEventMapper;
+    @Mock private EventDTOEventMapper eventDTOEventMapper;
 
-    @InjectMocks
-    private EventAdminService eventAdminService;
+    @InjectMocks private EventAdminService eventAdminService;
 
     private User userJohn;
     private User userJane;
@@ -61,52 +54,49 @@ class EventAdminServiceTest {
 
     @BeforeEach
     void setUp() {
-        userJohn = new UserTestBuilder()
-                .withId(UUID.randomUUID())
-                .withUsernameAndEmail("john")
-                .buildUserEntity();
+        userJohn =
+                new UserTestBuilder()
+                        .withId(UUID.randomUUID())
+                        .withUsernameAndEmail("john")
+                        .buildUserEntity();
 
-        userJane = new UserTestBuilder()
-                .withId(UUID.randomUUID())
-                .withUsernameAndEmail("jane")
-                .buildUserEntity();
+        userJane =
+                new UserTestBuilder()
+                        .withId(UUID.randomUUID())
+                        .withUsernameAndEmail("jane")
+                        .buildUserEntity();
 
-        creator = new UserTestBuilder()
-                .withId(UUID.randomUUID())
-                .withUsernameAndEmail("creator")
-                .withPassword("password")
-                .buildUserEntity();
+        creator =
+                new UserTestBuilder()
+                        .withId(UUID.randomUUID())
+                        .withUsernameAndEmail("creator")
+                        .withPassword("password")
+                        .buildUserEntity();
 
-        admin = new UserTestBuilder()
-                .withId(UUID.randomUUID())
-                .withUsernameAndEmail("admin")
-                .withPassword("password")
-                .buildUserEntity();
+        admin =
+                new UserTestBuilder()
+                        .withId(UUID.randomUUID())
+                        .withUsernameAndEmail("admin")
+                        .withPassword("password")
+                        .buildUserEntity();
 
-        event = new EventTestBuilder()
-                .withId(UUID.randomUUID())
-                .withCreator(creator)
-                .withEventAdmins(new HashSet<>())
-                .buildEventEntity();
+        event =
+                new EventTestBuilder()
+                        .withId(UUID.randomUUID())
+                        .withCreator(creator)
+                        .withEventAdmins(new HashSet<>())
+                        .buildEventEntity();
 
-        userPrincipal = new UserTestBuilder()
-                .fromUser(userJohn)
-                .buildUserPrincipal();
+        userPrincipal = new UserTestBuilder().fromUser(userJohn).buildUserPrincipal();
 
-        creatorPrincipal = new UserTestBuilder()
-                .fromUser(creator)
-                .buildUserPrincipal();
+        creatorPrincipal = new UserTestBuilder().fromUser(creator).buildUserPrincipal();
 
         eventAdminDTOs = new HashSet<>();
-        UserPublicDTO userJohnDto = new UserTestBuilder()
-                .fromUser(userJohn)
-                .buildUserPublicDTO();
+        UserPublicDTO userJohnDto = new UserTestBuilder().fromUser(userJohn).buildUserPublicDTO();
 
         eventAdminDTOs.add(userJohnDto);
 
-        eventDTO = new EventTestBuilder()
-                .fromEvent(event)
-                .buildEventDTO();
+        eventDTO = new EventTestBuilder().fromEvent(event).buildEventDTO();
     }
 
     @Test
@@ -115,8 +105,7 @@ class EventAdminServiceTest {
         eventAdmins.add(admin);
 
         when(eventRepository.findById(event.getId())).thenReturn(Optional.of(event));
-        when(userDTOUserMapper.mapUsersToUserPublicDTOs(eventAdmins))
-                .thenReturn(eventAdminDTOs);
+        when(userDTOUserMapper.mapUsersToUserPublicDTOs(eventAdmins)).thenReturn(eventAdminDTOs);
 
         Set<UserPublicDTO> result = eventAdminService.getAllEventAdminsByEventId(event.getId());
 
@@ -130,9 +119,11 @@ class EventAdminServiceTest {
     void getAllEventAdminsByEventId_eventNotFound_throwsException() {
         when(eventRepository.findById(event.getId())).thenReturn(Optional.empty());
 
-        assertThrows(EventNotFoundException.class, () -> {
-            eventAdminService.getAllEventAdminsByEventId(event.getId());
-        });
+        assertThrows(
+                EventNotFoundException.class,
+                () -> {
+                    eventAdminService.getAllEventAdminsByEventId(event.getId());
+                });
 
         verify(eventRepository).findById(event.getId());
         verify(userDTOUserMapper, never()).mapUsersToUserPublicDTOs(any());
@@ -165,7 +156,8 @@ class EventAdminServiceTest {
         when(eventRepository.save(event)).thenReturn(event);
         when(eventDTOEventMapper.mapEventToEventDTO(event)).thenReturn(eventDTO);
 
-        EventDTO result = eventAdminService.addAdminsToEvent(event.getId(), userIdsToAdd, creatorPrincipal);
+        EventDTO result =
+                eventAdminService.addAdminsToEvent(event.getId(), userIdsToAdd, creatorPrincipal);
 
         assertTrue(event.getEventAdmins().contains(userJohn));
         assertNotNull(result);
@@ -188,11 +180,10 @@ class EventAdminServiceTest {
         when(eventRepository.save(event)).thenReturn(event);
         when(eventDTOEventMapper.mapEventToEventDTO(event)).thenReturn(eventDTO);
 
-        UserPrincipal adminPrincipal = new UserTestBuilder()
-                .fromUser(admin)
-                .buildUserPrincipal();
+        UserPrincipal adminPrincipal = new UserTestBuilder().fromUser(admin).buildUserPrincipal();
 
-        EventDTO result = eventAdminService.addAdminsToEvent(event.getId(), userIdsToAdd, adminPrincipal);
+        EventDTO result =
+                eventAdminService.addAdminsToEvent(event.getId(), userIdsToAdd, adminPrincipal);
 
         assertNotNull(result);
         assertEquals(eventDTO, result);
@@ -221,7 +212,8 @@ class EventAdminServiceTest {
         when(eventRepository.save(event)).thenReturn(event);
         when(eventDTOEventMapper.mapEventToEventDTO(event)).thenReturn(eventDTO);
 
-        EventDTO result = eventAdminService.addAdminsToEvent(event.getId(), userIdsToAdd, userPrincipal);
+        EventDTO result =
+                eventAdminService.addAdminsToEvent(event.getId(), userIdsToAdd, userPrincipal);
 
         assertNotNull(result);
         assertEquals(eventDTO, result);
@@ -247,9 +239,11 @@ class EventAdminServiceTest {
         when(userService.getUsersByIds(userIdsToAdd)).thenReturn(usersToAdd);
         when(accessControlService.hasAdminRole(userJohn)).thenReturn(false);
 
-        assertThrows(UserNotAuthorizedException.class, () -> {
-            eventAdminService.addAdminsToEvent(event.getId(), userIdsToAdd, userPrincipal);
-        });
+        assertThrows(
+                UserNotAuthorizedException.class,
+                () -> {
+                    eventAdminService.addAdminsToEvent(event.getId(), userIdsToAdd, userPrincipal);
+                });
 
         verify(eventRepository).findById(event.getId());
         verify(userService).getUserById(userJohn.getId());
@@ -264,9 +258,11 @@ class EventAdminServiceTest {
         Set<UUID> userIdsToAdd = Set.of(userJohn.getId());
         when(eventRepository.findById(event.getId())).thenReturn(Optional.empty());
 
-        assertThrows(EventNotFoundException.class, () -> {
-            eventAdminService.addAdminsToEvent(event.getId(), userIdsToAdd, userPrincipal);
-        });
+        assertThrows(
+                EventNotFoundException.class,
+                () -> {
+                    eventAdminService.addAdminsToEvent(event.getId(), userIdsToAdd, userPrincipal);
+                });
 
         verify(eventRepository).findById(event.getId());
         verify(eventRepository, never()).save(any());
@@ -286,7 +282,9 @@ class EventAdminServiceTest {
         when(eventRepository.save(event)).thenReturn(event);
         when(eventDTOEventMapper.mapEventToEventDTO(event)).thenReturn(eventDTO);
 
-        EventDTO result = eventAdminService.removeAdminsFromEvent(event.getId(), userIdsToRemove, creatorPrincipal);
+        EventDTO result =
+                eventAdminService.removeAdminsFromEvent(
+                        event.getId(), userIdsToRemove, creatorPrincipal);
 
         assertNotNull(result);
         assertEquals(eventDTO, result);
@@ -311,9 +309,12 @@ class EventAdminServiceTest {
         when(userService.getUsersByIds(userIdsToRemove)).thenReturn(usersToRemove);
         when(accessControlService.hasAdminRole(userJohn)).thenReturn(false);
 
-        assertThrows(UserNotAuthorizedException.class, () -> {
-            eventAdminService.removeAdminsFromEvent(event.getId(), userIdsToRemove, userPrincipal);
-        });
+        assertThrows(
+                UserNotAuthorizedException.class,
+                () -> {
+                    eventAdminService.removeAdminsFromEvent(
+                            event.getId(), userIdsToRemove, userPrincipal);
+                });
 
         verify(eventRepository).findById(event.getId());
         verify(userService).getUserById(userJohn.getId());

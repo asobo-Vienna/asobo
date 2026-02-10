@@ -12,13 +12,11 @@ import at.msm.asobo.security.UserPrincipal;
 import at.msm.asobo.services.files.FileStorageService;
 import at.msm.asobo.services.files.FileValidationService;
 import at.msm.asobo.utils.PatchUtils;
+import java.util.Set;
+import java.util.UUID;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
-
-import java.util.Set;
-import java.util.UUID;
-
 
 @Service
 public class UserService {
@@ -34,15 +32,15 @@ public class UserService {
     private final JwtUtil jwtUtil;
     private final AccessControlService accessControlService;
 
-    public UserService(UserRepository userRepository,
-                       UserDTOUserMapper userDTOUserMapper,
-                       FileStorageService fileStorageService,
-                       FileValidationService fileValidationService,
-                       FileStorageProperties fileStorageProperties,
-                       PasswordService passwordService,
-                       JwtUtil jwtUtil,
-                       AccessControlService accessControlService
-    ) {
+    public UserService(
+            UserRepository userRepository,
+            UserDTOUserMapper userDTOUserMapper,
+            FileStorageService fileStorageService,
+            FileValidationService fileValidationService,
+            FileStorageProperties fileStorageProperties,
+            PasswordService passwordService,
+            JwtUtil jwtUtil,
+            AccessControlService accessControlService) {
         this.userRepository = userRepository;
         this.userDTOUserMapper = userDTOUserMapper;
         this.fileStorageService = fileStorageService;
@@ -62,12 +60,16 @@ public class UserService {
     }
 
     public UserPublicDTO getUserDTOById(UUID id) {
-        User user = this.userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
+        User user =
+                this.userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
         return this.userDTOUserMapper.mapUserToUserPublicDTO(user);
     }
 
     public UserPublicDTO getUserByUsername(String username) {
-        User user = this.userRepository.findByUsername(username).orElseThrow(() -> new UserNotFoundException("User not found"));
+        User user =
+                this.userRepository
+                        .findByUsername(username)
+                        .orElseThrow(() -> new UserNotFoundException("User not found"));
         return this.userDTOUserMapper.mapUserToUserPublicDTO(user);
     }
 
@@ -82,44 +84,53 @@ public class UserService {
         return this.userRepository.save(user);
     }
 
-    public LoginResponseDTO updateUserById(UUID targetUserId, UserPrincipal loggedInPrincipal, UserUpdateDTO userUpdateDTO) {
+    public LoginResponseDTO updateUserById(
+            UUID targetUserId, UserPrincipal loggedInPrincipal, UserUpdateDTO userUpdateDTO) {
         User loggedInUser = this.getUserById(loggedInPrincipal.getUserId());
         User targetUser = this.getUserById(targetUserId);
 
         this.accessControlService.assertCanUpdateOrDeleteUser(targetUserId, loggedInUser);
 
-        boolean usernameChanged = userUpdateDTO.getUsername() != null
-                && !userUpdateDTO.getUsername().equals(targetUser.getUsername());
+        boolean usernameChanged =
+                userUpdateDTO.getUsername() != null
+                        && !userUpdateDTO.getUsername().equals(targetUser.getUsername());
 
-        PatchUtils.copyNonNullProperties(userUpdateDTO, targetUser, "profilePicture", "password", "isActive");
+        PatchUtils.copyNonNullProperties(
+                userUpdateDTO, targetUser, "profilePicture", "password", "isActive");
 
-        if(userUpdateDTO.getPassword() != null) {
+        if (userUpdateDTO.getPassword() != null) {
             this.passwordService.validatePasswordFormat(userUpdateDTO.getPassword());
             String hashedPassword = this.passwordService.hashPassword(userUpdateDTO.getPassword());
             targetUser.setPassword(hashedPassword);
         }
 
-        this.fileStorageService.handleProfilePictureUpdate(userUpdateDTO.getProfilePicture(), targetUser);
+        this.fileStorageService.handleProfilePictureUpdate(
+                userUpdateDTO.getProfilePicture(), targetUser);
 
         User updatedUser = this.userRepository.save(targetUser);
 
         if (usernameChanged) {
-            UserPrincipal userPrincipal = new UserPrincipal(
-                    updatedUser.getId(),
-                    updatedUser.getUsername(),
-                    updatedUser.getPassword(),
-                    updatedUser.getRoles().stream()
-                            .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getName()))
-                            .toList()
-            );
+            UserPrincipal userPrincipal =
+                    new UserPrincipal(
+                            updatedUser.getId(),
+                            updatedUser.getUsername(),
+                            updatedUser.getPassword(),
+                            updatedUser.getRoles().stream()
+                                    .map(
+                                            role ->
+                                                    new SimpleGrantedAuthority(
+                                                            "ROLE_" + role.getName()))
+                                    .toList());
 
             String newToken = jwtUtil.generateToken(userPrincipal, EXPIRATION_MS);
-            UserPublicDTO userPublicDTO = this.userDTOUserMapper.mapUserToUserPublicDTO(updatedUser);
+            UserPublicDTO userPublicDTO =
+                    this.userDTOUserMapper.mapUserToUserPublicDTO(updatedUser);
 
             return new LoginResponseDTO(newToken, userPublicDTO);
         }
 
-        return new LoginResponseDTO(null, this.userDTOUserMapper.mapUserToUserPublicDTO(updatedUser));
+        return new LoginResponseDTO(
+                null, this.userDTOUserMapper.mapUserToUserPublicDTO(updatedUser));
     }
 
     public UserPublicDTO deleteUserById(UUID userToDeleteId, UserPrincipal userPrincipal) {
@@ -144,5 +155,4 @@ public class UserService {
     public boolean isEmailAlreadyTaken(String email) {
         return this.userRepository.existsByEmail(email);
     }
-
 }

@@ -1,5 +1,14 @@
 package at.msm.asobo.controllers;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import at.msm.asobo.config.FileStorageProperties;
 import at.msm.asobo.config.SecurityConfig;
 import at.msm.asobo.dto.event.EventCreationDTO;
@@ -11,11 +20,14 @@ import at.msm.asobo.security.CustomUserDetailsService;
 import at.msm.asobo.security.JwtUtil;
 import at.msm.asobo.security.RestAuthenticationEntryPoint;
 import at.msm.asobo.security.UserPrincipal;
+import at.msm.asobo.services.AccessControlService;
 import at.msm.asobo.services.events.EventAdminService;
 import at.msm.asobo.services.events.EventService;
-import at.msm.asobo.services.AccessControlService;
 import at.msm.asobo.utils.MockAuthenticationFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -35,47 +47,26 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.UUID;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 @WebMvcTest(EventController.class)
 @EnableMethodSecurity
 @Import(SecurityConfig.class)
 class EventControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
+    @Autowired private MockMvc mockMvc;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+    @Autowired private ObjectMapper objectMapper;
 
-    @MockitoBean
-    private EventService eventService;
+    @MockitoBean private EventService eventService;
 
-    @MockitoBean
-    private EventAdminService eventAdminService;
+    @MockitoBean private EventAdminService eventAdminService;
 
-    @MockitoBean
-    private FileStorageProperties fileStorageProperties;
+    @MockitoBean private FileStorageProperties fileStorageProperties;
 
-    @MockitoBean
-    private JwtUtil jwtUtil;
+    @MockitoBean private JwtUtil jwtUtil;
 
-    @MockitoBean
-    private CustomUserDetailsService customUserDetailsService;
+    @MockitoBean private CustomUserDetailsService customUserDetailsService;
 
-    @MockitoBean
-    private AccessControlService accessControlService;
+    @MockitoBean private AccessControlService accessControlService;
 
     private final String EVENTS_URL = "/api/events";
     private final String EVENTS_PAGINATED_URL = "/api/events/paginated";
@@ -122,7 +113,7 @@ class EventControllerTest {
     @Test
     void getAllEvents_WithoutParameters_ReturnsAllEvents() throws Exception {
         List<EventSummaryDTO> events = List.of(eventSummary1, eventSummary2);
-        String expectedJson =  objectMapper.writeValueAsString(events);
+        String expectedJson = objectMapper.writeValueAsString(events);
 
         when(eventService.getAllEvents()).thenReturn(events);
 
@@ -137,12 +128,11 @@ class EventControllerTest {
     @Test
     void getAllEvents_WithUserIdParameter_ReturnsUserEvents() throws Exception {
         List<EventSummaryDTO> events = List.of(eventSummary1);
-        String expectedJson =  objectMapper.writeValueAsString(events);
+        String expectedJson = objectMapper.writeValueAsString(events);
 
         when(eventService.getEventsByParticipantId(userId, null)).thenReturn(events);
 
-        mockMvc.perform(get(EVENTS_URL)
-                        .param("userId", userId.toString()))
+        mockMvc.perform(get(EVENTS_URL).param("userId", userId.toString()))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().string(expectedJson));
@@ -153,12 +143,11 @@ class EventControllerTest {
     @Test
     void getAllEvents_WithIsPrivateTrue_ReturnsPrivateEvents() throws Exception {
         List<EventSummaryDTO> events = List.of(eventSummary2);
-        String expectedJson =  objectMapper.writeValueAsString(events);
+        String expectedJson = objectMapper.writeValueAsString(events);
 
         when(eventService.getAllPrivateEvents()).thenReturn(events);
 
-        mockMvc.perform(get(EVENTS_URL)
-                        .param("isPrivate", "true"))
+        mockMvc.perform(get(EVENTS_URL).param("isPrivate", "true"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().string(expectedJson));
@@ -169,12 +158,11 @@ class EventControllerTest {
     @Test
     void getAllEvents_WithIsPrivateFalse_ReturnsPublicEvents() throws Exception {
         List<EventSummaryDTO> events = List.of(eventSummary1);
-        String expectedJson =  objectMapper.writeValueAsString(events);
+        String expectedJson = objectMapper.writeValueAsString(events);
 
         when(eventService.getAllPublicEvents()).thenReturn(events);
 
-        mockMvc.perform(get(EVENTS_URL)
-                        .param("isPrivate", "false"))
+        mockMvc.perform(get(EVENTS_URL).param("isPrivate", "false"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().string(expectedJson));
@@ -185,14 +173,13 @@ class EventControllerTest {
     @Test
     void getAllEventsPaginated_WithoutParameters_ReturnsAllEventsPaginated() throws Exception {
         Pageable pageable = PageRequest.of(0, 10);
-        Page<EventSummaryDTO> eventsPage = new PageImpl<>(List.of(eventSummary2, eventSummary1), pageable, 2);
-        String expectedJson =  objectMapper.writeValueAsString(eventsPage);
+        Page<EventSummaryDTO> eventsPage =
+                new PageImpl<>(List.of(eventSummary2, eventSummary1), pageable, 2);
+        String expectedJson = objectMapper.writeValueAsString(eventsPage);
 
         when(eventService.getAllEventsPaginated(any(Pageable.class))).thenReturn(eventsPage);
 
-        mockMvc.perform(get(EVENTS_PAGINATED_URL)
-                        .param("page", "0")
-                        .param("size", "10"))
+        mockMvc.perform(get(EVENTS_PAGINATED_URL).param("page", "0").param("size", "10"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().string(expectedJson));
@@ -206,12 +193,14 @@ class EventControllerTest {
         Page<EventSummaryDTO> eventsPage = new PageImpl<>(List.of(eventSummary1), pageable, 1);
         String expectedJson = objectMapper.writeValueAsString(eventsPage);
 
-        when(eventService.getEventsByParticipantIdPaginated(userId, null, pageable)).thenReturn(eventsPage);
+        when(eventService.getEventsByParticipantIdPaginated(userId, null, pageable))
+                .thenReturn(eventsPage);
 
-        mockMvc.perform(get(EVENTS_PAGINATED_URL)
-                        .param("userId", userId.toString())
-                        .param("page", "0")
-                        .param("size", "10"))
+        mockMvc.perform(
+                        get(EVENTS_PAGINATED_URL)
+                                .param("userId", userId.toString())
+                                .param("page", "0")
+                                .param("size", "10"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().string(expectedJson));
@@ -222,12 +211,11 @@ class EventControllerTest {
     @Test
     void getEventsByLocation_WithValidLocation_ReturnsEvents() throws Exception {
         List<EventSummaryDTO> events = List.of(eventSummary1);
-        String expectedJson =  objectMapper.writeValueAsString(events);
+        String expectedJson = objectMapper.writeValueAsString(events);
 
         when(eventService.getEventsByLocation("LA")).thenReturn(events);
 
-        mockMvc.perform(get(EVENTS_URL)
-                        .param("location", "LA"))
+        mockMvc.perform(get(EVENTS_URL).param("location", "LA"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().string(expectedJson));
@@ -238,12 +226,11 @@ class EventControllerTest {
     @Test
     void getEventsByLocation_WithBlankLocation_ReturnsAllEvents() throws Exception {
         List<EventSummaryDTO> events = List.of(eventSummary1, eventSummary2);
-        String expectedJson =  objectMapper.writeValueAsString(events);
+        String expectedJson = objectMapper.writeValueAsString(events);
 
         when(eventService.getAllEvents()).thenReturn(events);
 
-        mockMvc.perform(get(EVENTS_URL)
-                        .param("location", ""))
+        mockMvc.perform(get(EVENTS_URL).param("location", ""))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().string(expectedJson));
@@ -255,12 +242,11 @@ class EventControllerTest {
     void getEventsByDate_WithValidDate_ReturnsEvents() throws Exception {
         String validDate = "2024-12-25T14:30:00";
         List<EventSummaryDTO> events = List.of(eventSummary2, eventSummary1);
-        String expectedJson =  objectMapper.writeValueAsString(events);
+        String expectedJson = objectMapper.writeValueAsString(events);
 
         when(eventService.getEventsByDate(any(LocalDateTime.class))).thenReturn(events);
 
-        mockMvc.perform(get(EVENTS_URL)
-                        .param("date", validDate))
+        mockMvc.perform(get(EVENTS_URL).param("date", validDate))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().string(expectedJson));
@@ -270,14 +256,13 @@ class EventControllerTest {
 
     @Test
     void getEventsByDate_WithInvalidDate_ReturnsBadRequest() throws Exception {
-        mockMvc.perform(get(EVENTS_URL)
-                        .param("date", "invalid-date"))
+        mockMvc.perform(get(EVENTS_URL).param("date", "invalid-date"))
                 .andExpect(status().isBadRequest());
     }
 
     @Test
     void getEventById_WithValidId_ReturnsEvent() throws Exception {
-        String expectedJson =  objectMapper.writeValueAsString(eventDTO);
+        String expectedJson = objectMapper.writeValueAsString(eventDTO);
 
         when(eventService.getEventDTOById(eventId)).thenReturn(eventDTO);
 
@@ -293,8 +278,7 @@ class EventControllerTest {
     void getEventsById_WithInvalidId_ReturnsBadRequest() throws Exception {
         String invalidEventId = "invalid-id";
 
-        mockMvc.perform(get(SINGLE_EVENT_URL, invalidEventId))
-                .andExpect(status().isBadRequest());
+        mockMvc.perform(get(SINGLE_EVENT_URL, invalidEventId)).andExpect(status().isBadRequest());
     }
 
     @ParameterizedTest
@@ -304,11 +288,12 @@ class EventControllerTest {
 
         when(eventService.addNewEvent(any(EventCreationDTO.class))).thenReturn(eventDTO);
 
-        mockMvc.perform(multipart(EVENTS_URL)
-                        .with(user("authenticateduser").roles(role))
-                        .with(csrf())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(eventCreationDTO)))
+        mockMvc.perform(
+                        multipart(EVENTS_URL)
+                                .with(user("authenticateduser").roles(role))
+                                .with(csrf())
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(eventCreationDTO)))
                 .andExpect(status().isCreated())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().string(expectedJson));
@@ -318,17 +303,17 @@ class EventControllerTest {
 
     @Test
     void createEvent_WithoutAuthentication_ReturnsUnauthorized() throws Exception {
-        mockMvc.perform(post(EVENTS_URL))
-                .andExpect(status().isUnauthorized());
+        mockMvc.perform(post(EVENTS_URL)).andExpect(status().isUnauthorized());
     }
 
     @Test
     @WithMockUser(roles = "X")
     void createEvent_WithInsufficientRole_ReturnsForbidden() throws Exception {
-        mockMvc.perform(post(EVENTS_URL)
-                        .with(csrf())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(eventCreationDTO)))
+        mockMvc.perform(
+                        post(EVENTS_URL)
+                                .with(csrf())
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(eventCreationDTO)))
                 .andExpect(status().isForbidden());
     }
 
@@ -341,19 +326,28 @@ class EventControllerTest {
         String inputJson = objectMapper.writeValueAsString(eventUpdateDTO);
         String expectedJson = objectMapper.writeValueAsString(eventDTO);
 
-        when(eventService.updateEventById(eq(eventId), any(UserPrincipal.class), any(EventUpdateDTO.class))).thenReturn(eventDTO);
+        when(eventService.updateEventById(
+                        eq(eventId), any(UserPrincipal.class), any(EventUpdateDTO.class)))
+                .thenReturn(eventDTO);
 
-        mockMvc.perform(patch(SINGLE_EVENT_URL, eventId)
-                        .with(authentication(MockAuthenticationFactory
-                                .mockAuth(userId, "testuser", "testuser@test.com", role)))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(inputJson)
-                        .with(csrf()))
+        mockMvc.perform(
+                        patch(SINGLE_EVENT_URL, eventId)
+                                .with(
+                                        authentication(
+                                                MockAuthenticationFactory.mockAuth(
+                                                        userId,
+                                                        "testuser",
+                                                        "testuser@test.com",
+                                                        role)))
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(inputJson)
+                                .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().string(expectedJson));
 
-        verify(eventService).updateEventById(eq(eventId), any(UserPrincipal.class), any(EventUpdateDTO.class));
+        verify(eventService)
+                .updateEventById(eq(eventId), any(UserPrincipal.class), any(EventUpdateDTO.class));
     }
 
     @Test
@@ -362,15 +356,24 @@ class EventControllerTest {
 
         String inputJson = objectMapper.writeValueAsString(eventUpdateDTO);
 
-        when(eventService.updateEventById(eq(eventId), any(UserPrincipal.class), any(EventUpdateDTO.class)))
-                .thenThrow(new UserNotAuthorizedException("You are not authorized to update this event"));
+        when(eventService.updateEventById(
+                        eq(eventId), any(UserPrincipal.class), any(EventUpdateDTO.class)))
+                .thenThrow(
+                        new UserNotAuthorizedException(
+                                "You are not authorized to update this event"));
 
-        mockMvc.perform(patch(SINGLE_EVENT_URL, eventId)
-                        .with(authentication(MockAuthenticationFactory
-                                .mockAuth(userId, "testuser", "testuser@test.com", "ROLE_USER")))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(inputJson)
-                        .with(csrf()))
+        mockMvc.perform(
+                        patch(SINGLE_EVENT_URL, eventId)
+                                .with(
+                                        authentication(
+                                                MockAuthenticationFactory.mockAuth(
+                                                        userId,
+                                                        "testuser",
+                                                        "testuser@test.com",
+                                                        "ROLE_USER")))
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(inputJson)
+                                .with(csrf()))
                 .andExpect(status().isForbidden());
 
         verify(eventService).updateEventById(eq(eventId), any(UserPrincipal.class), any());
@@ -379,11 +382,18 @@ class EventControllerTest {
     @ParameterizedTest
     @ValueSource(strings = {"ROLE_ADMIN", "ROLE_SUPERADMIN"})
     void deleteEventById_WithAdminRole_DeletesEvent(String role) throws Exception {
-        when(eventService.deleteEventById(any(UUID.class), any(UserPrincipal.class))).thenReturn(eventDTO);
+        when(eventService.deleteEventById(any(UUID.class), any(UserPrincipal.class)))
+                .thenReturn(eventDTO);
 
-        mockMvc.perform(delete(SINGLE_EVENT_URL, eventId)
-                .with(authentication(MockAuthenticationFactory
-                        .mockAuth(userId, "testuser", "testuser@test.com", role))))
+        mockMvc.perform(
+                        delete(SINGLE_EVENT_URL, eventId)
+                                .with(
+                                        authentication(
+                                                MockAuthenticationFactory.mockAuth(
+                                                        userId,
+                                                        "testuser",
+                                                        "testuser@test.com",
+                                                        role))))
                 .andExpect(status().isOk());
 
         verify(eventService).deleteEventById(any(UUID.class), any(UserPrincipal.class));
@@ -392,11 +402,18 @@ class EventControllerTest {
     @Test
     @WithMockUser(roles = "USER")
     void deleteEventById_withCreatorUser_DeletesEvent() throws Exception {
-        when(eventService.deleteEventById(any(UUID.class), any(UserPrincipal.class))).thenReturn(eventDTO);
+        when(eventService.deleteEventById(any(UUID.class), any(UserPrincipal.class)))
+                .thenReturn(eventDTO);
 
-        mockMvc.perform(delete(SINGLE_EVENT_URL, eventId)
-                        .with(authentication(MockAuthenticationFactory
-                                .mockAuth(userId, "testuser", "testuser@test.com", "ROLE_USER"))))
+        mockMvc.perform(
+                        delete(SINGLE_EVENT_URL, eventId)
+                                .with(
+                                        authentication(
+                                                MockAuthenticationFactory.mockAuth(
+                                                        userId,
+                                                        "testuser",
+                                                        "testuser@test.com",
+                                                        "ROLE_USER"))))
                 .andExpect(status().isOk());
 
         verify(eventService).deleteEventById(any(UUID.class), any(UserPrincipal.class));
@@ -406,11 +423,19 @@ class EventControllerTest {
     @WithMockUser(roles = "USER")
     void deleteEventById_withoutCreatorUser_ReturnsForbidden() throws Exception {
         when(eventService.deleteEventById(eq(eventId), any(UserPrincipal.class)))
-                .thenThrow(new UserNotAuthorizedException("You are not authorized to delete this event"));
+                .thenThrow(
+                        new UserNotAuthorizedException(
+                                "You are not authorized to delete this event"));
 
-        mockMvc.perform(delete(SINGLE_EVENT_URL, eventId)
-                        .with(authentication(MockAuthenticationFactory
-                                .mockAuth(userId, "testuser", "testuser@test.com", "ROLE_USER"))))
+        mockMvc.perform(
+                        delete(SINGLE_EVENT_URL, eventId)
+                                .with(
+                                        authentication(
+                                                MockAuthenticationFactory.mockAuth(
+                                                        userId,
+                                                        "testuser",
+                                                        "testuser@test.com",
+                                                        "ROLE_USER"))))
                 .andExpect(status().isForbidden());
 
         verify(eventService).deleteEventById(eq(eventId), any(UserPrincipal.class));
@@ -418,7 +443,6 @@ class EventControllerTest {
 
     @Test
     void deleteEventById_WithoutAuthentication_ReturnsUnauthorized() throws Exception {
-        mockMvc.perform(delete(SINGLE_EVENT_URL, eventId))
-                .andExpect(status().isUnauthorized());
+        mockMvc.perform(delete(SINGLE_EVENT_URL, eventId)).andExpect(status().isUnauthorized());
     }
 }

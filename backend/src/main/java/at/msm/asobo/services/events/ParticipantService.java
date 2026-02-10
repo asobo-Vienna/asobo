@@ -7,9 +7,9 @@ import at.msm.asobo.mappers.UserDTOUserMapper;
 import at.msm.asobo.repositories.EventRepository;
 import at.msm.asobo.security.UserPrincipal;
 import at.msm.asobo.services.UserService;
-import org.springframework.stereotype.Service;
 import java.util.Set;
 import java.util.UUID;
+import org.springframework.stereotype.Service;
 
 @Service
 public class ParticipantService {
@@ -19,9 +19,11 @@ public class ParticipantService {
     private final EventService eventService;
     private final UserDTOUserMapper userDTOUserMapper;
 
-    public ParticipantService(UserService userService, EventRepository eventRepository,
-                              EventService eventService,
-                              UserDTOUserMapper userDTOUserMapper) {
+    public ParticipantService(
+            UserService userService,
+            EventRepository eventRepository,
+            EventService eventService,
+            UserDTOUserMapper userDTOUserMapper) {
         this.userService = userService;
         this.eventRepository = eventRepository;
         this.eventService = eventService;

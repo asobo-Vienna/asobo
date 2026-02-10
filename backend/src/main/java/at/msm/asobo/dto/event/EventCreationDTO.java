@@ -1,15 +1,12 @@
 package at.msm.asobo.dto.event;
 
-import at.msm.asobo.dto.medium.MediumDTO;
 import at.msm.asobo.dto.comment.UserCommentDTO;
-import at.msm.asobo.dto.user.EventCreatorDTO;
+import at.msm.asobo.dto.medium.MediumDTO;
 import at.msm.asobo.dto.user.UserDTO;
 import at.msm.asobo.dto.user.UserPublicDTO;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import org.springframework.web.multipart.MultipartFile;
-
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;

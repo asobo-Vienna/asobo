@@ -1,10 +1,10 @@
 package at.msm.asobo.dto.event;
 
 import at.msm.asobo.dto.user.UserPublicDTO;
-import org.springframework.web.multipart.MultipartFile;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
+import org.springframework.web.multipart.MultipartFile;
 
 public class EventUpdateDTO {
 

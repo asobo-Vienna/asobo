@@ -25,8 +25,8 @@ public class UserRegisterDTO {
     @NotBlank(message = "Password is mandatory for user registration")
     private String password;
 
-    //@NotBlank(message = "Password confirmation is required")
-    //private String passwordConf;
+    // @NotBlank(message = "Password confirmation is required")
+    // private String passwordConf;
 
     private String location;
 

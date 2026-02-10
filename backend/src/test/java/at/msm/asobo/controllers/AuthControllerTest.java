@@ -1,12 +1,19 @@
 package at.msm.asobo.controllers;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+
 import at.msm.asobo.builders.UserTestBuilder;
 import at.msm.asobo.config.FileStorageProperties;
 import at.msm.asobo.config.SecurityConfig;
 import at.msm.asobo.dto.auth.LoginResponseDTO;
 import at.msm.asobo.dto.auth.UserLoginDTO;
-import at.msm.asobo.dto.user.UserPublicDTO;
 import at.msm.asobo.dto.auth.UserRegisterDTO;
+import at.msm.asobo.dto.user.UserPublicDTO;
 import at.msm.asobo.mappers.LoginResponseDTOToUserPublicDTOMapper;
 import at.msm.asobo.mappers.UserDTOToUserPublicDTOMapper;
 import at.msm.asobo.security.CustomUserDetailsService;
@@ -20,6 +27,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
+import java.io.IOException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,51 +38,32 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.io.IOException;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-
 @WebMvcTest(AuthController.class)
 @Import(SecurityConfig.class)
 public class AuthControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
+    @Autowired private MockMvc mockMvc;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+    @Autowired private ObjectMapper objectMapper;
 
-    @MockitoBean
-    private UserService userService;
+    @MockitoBean private UserService userService;
 
-    @MockitoBean
-    private AuthService authService;
+    @MockitoBean private AuthService authService;
 
-    @MockitoBean
-    private UserDTOToUserPublicDTOMapper userDTOToUserPublicDTOMapper;
+    @MockitoBean private UserDTOToUserPublicDTOMapper userDTOToUserPublicDTOMapper;
 
     @MockitoBean
     private LoginResponseDTOToUserPublicDTOMapper loginResponseDTOToUserPublicDTOMapper;
 
-    @MockitoBean
-    private JwtUtil jwtUtil;
+    @MockitoBean private JwtUtil jwtUtil;
 
-    @MockitoBean
-    private TokenAuthenticationFilter tokenAuthenticationFilter;
+    @MockitoBean private TokenAuthenticationFilter tokenAuthenticationFilter;
 
-    @MockitoBean
-    private CustomUserDetailsService customUserDetailsService;
+    @MockitoBean private CustomUserDetailsService customUserDetailsService;
 
-    @MockitoBean
-    private RestAuthenticationEntryPoint restAuthenticationEntryPoint;
+    @MockitoBean private RestAuthenticationEntryPoint restAuthenticationEntryPoint;
 
-    @MockitoBean
-    private FileStorageProperties fileStorageProperties;
+    @MockitoBean private FileStorageProperties fileStorageProperties;
 
     @MockitoBean
     private org.springframework.security.authentication.AuthenticationManager authenticationManager;
@@ -86,42 +75,47 @@ public class AuthControllerTest {
 
     @BeforeEach
     void setUp() throws ServletException, IOException {
-        doAnswer(invocation -> {
-            FilterChain chain = invocation.getArgument(2);
-            chain.doFilter(invocation.getArgument(0), invocation.getArgument(1));
-            return null;
-        }).when(tokenAuthenticationFilter).doFilter(
-                any(ServletRequest.class),
-                any(ServletResponse.class),
-                any(FilterChain.class)
-        );
+        doAnswer(
+                        invocation -> {
+                            FilterChain chain = invocation.getArgument(2);
+                            chain.doFilter(invocation.getArgument(0), invocation.getArgument(1));
+                            return null;
+                        })
+                .when(tokenAuthenticationFilter)
+                .doFilter(
+                        any(ServletRequest.class),
+                        any(ServletResponse.class),
+                        any(FilterChain.class));
     }
 
     @Test
     void registerUser_returnsExpectedResult() throws Exception {
-        UserRegisterDTO registerDTO = new UserTestBuilder()
-                .withoutId()
-                .withUsernameAndEmail("testuser")
-                .withEmail("testuser@example.com")
-                .withFirstName("Test")
-                .withSurname("User")
-                .withPassword("password123")
-                .withSalutation("Mr.")
-                .buildUserRegisterDTO();
+        UserRegisterDTO registerDTO =
+                new UserTestBuilder()
+                        .withoutId()
+                        .withUsernameAndEmail("testuser")
+                        .withEmail("testuser@example.com")
+                        .withFirstName("Test")
+                        .withSurname("User")
+                        .withPassword("password123")
+                        .withSalutation("Mr.")
+                        .buildUserRegisterDTO();
 
-        UserPublicDTO expectedUser = new UserTestBuilder()
-                .withUsernameAndEmail("testuser")
-                .withEmail("test@example.com")
-                .buildUserPublicDTO();
+        UserPublicDTO expectedUser =
+                new UserTestBuilder()
+                        .withUsernameAndEmail("testuser")
+                        .withEmail("test@example.com")
+                        .buildUserPublicDTO();
 
         LoginResponseDTO mockResponse = new LoginResponseDTO("any-token", expectedUser);
 
         when(authService.registerUser(any(UserRegisterDTO.class))).thenReturn(mockResponse);
 
-        mockMvc.perform(post(REGISTER_URL)
-                        .with(csrf())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(registerDTO)))
+        mockMvc.perform(
+                        post(REGISTER_URL)
+                                .with(csrf())
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(registerDTO)))
                 .andExpect(status().isCreated())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.token").isString())
@@ -135,9 +129,10 @@ public class AuthControllerTest {
     void registerUserMissingRequiredFields_returns400() throws Exception {
         UserRegisterDTO invalidDTO = new UserRegisterDTO();
 
-        mockMvc.perform(post(REGISTER_URL)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(invalidDTO)))
+        mockMvc.perform(
+                        post(REGISTER_URL)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(invalidDTO)))
                 .andExpect(status().isBadRequest());
 
         verify(authService, never()).registerUser(invalidDTO);
@@ -147,17 +142,17 @@ public class AuthControllerTest {
     void login_success() throws Exception {
         UserLoginDTO loginDTO = new UserLoginDTO("testuser", "password123");
 
-        UserPublicDTO expectedUser = new UserTestBuilder()
-                .withUsernameAndEmail("testuser")
-                .buildUserPublicDTO();
+        UserPublicDTO expectedUser =
+                new UserTestBuilder().withUsernameAndEmail("testuser").buildUserPublicDTO();
 
         LoginResponseDTO mockResponse = new LoginResponseDTO("token-456", expectedUser);
         when(authService.loginUser(any(UserLoginDTO.class))).thenReturn(mockResponse);
 
-        mockMvc.perform(post(LOGIN_URL)
-                        .with(csrf())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(loginDTO)))
+        mockMvc.perform(
+                        post(LOGIN_URL)
+                                .with(csrf())
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(loginDTO)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.token").value("token-456"));
 
@@ -171,9 +166,10 @@ public class AuthControllerTest {
         when(authService.loginUser(any(UserLoginDTO.class)))
                 .thenThrow(new BadCredentialsException("Bad credentials"));
 
-        mockMvc.perform(post("/api/auth/login")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(loginDTO)))
+        mockMvc.perform(
+                        post("/api/auth/login")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(loginDTO)))
                 .andExpect(status().isUnauthorized());
 
         verify(authService).loginUser(any(UserLoginDTO.class));
@@ -184,8 +180,7 @@ public class AuthControllerTest {
         String username = "available";
         when(userService.isUsernameAlreadyTaken(username)).thenReturn(false);
 
-        mockMvc.perform(get(CHECK_USERNAME_URL)
-                .param("username", username))
+        mockMvc.perform(get(CHECK_USERNAME_URL).param("username", username))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.available").value(true));
 
@@ -197,8 +192,7 @@ public class AuthControllerTest {
         String username = "taken";
         when(userService.isUsernameAlreadyTaken(username)).thenReturn(true);
 
-        mockMvc.perform(get(CHECK_USERNAME_URL)
-                        .param("username", username))
+        mockMvc.perform(get(CHECK_USERNAME_URL).param("username", username))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.available").value(false));
 
@@ -210,8 +204,7 @@ public class AuthControllerTest {
         String email = "new@example.com";
         when(userService.isEmailAlreadyTaken(email)).thenReturn(false);
 
-        mockMvc.perform(get(CHECK_EMAIL_URL)
-                .param("email", email))
+        mockMvc.perform(get(CHECK_EMAIL_URL).param("email", email))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.available").value(true));
 
@@ -223,8 +216,7 @@ public class AuthControllerTest {
         String email = "taken@example.com";
         when(userService.isEmailAlreadyTaken(email)).thenReturn(true);
 
-        mockMvc.perform(get(CHECK_EMAIL_URL)
-                .param("email", email))
+        mockMvc.perform(get(CHECK_EMAIL_URL).param("email", email))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.available").value(false));
 

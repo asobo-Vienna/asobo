@@ -4,10 +4,9 @@ import at.msm.asobo.dto.user.RoleDTO;
 import at.msm.asobo.dto.user.UserRolesDTO;
 import at.msm.asobo.services.RoleService;
 import jakarta.validation.Valid;
+import java.util.List;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/roles")
@@ -30,4 +29,3 @@ public class RoleController {
         return this.roleService.assignRoles(userRolesDTO.getUserId(), userRolesDTO.getRoles());
     }
 }
-

@@ -2,9 +2,9 @@ package at.msm.asobo.mappers.helpers;
 
 import at.msm.asobo.entities.User;
 import at.msm.asobo.services.UserService;
+import java.util.UUID;
 import org.mapstruct.Named;
 import org.springframework.stereotype.Component;
-import java.util.UUID;
 
 @Component
 public class UserMapperHelper {

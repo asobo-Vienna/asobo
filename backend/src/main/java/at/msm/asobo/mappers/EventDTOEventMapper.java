@@ -5,12 +5,12 @@ import at.msm.asobo.dto.event.EventDTO;
 import at.msm.asobo.dto.event.EventSummaryDTO;
 import at.msm.asobo.dto.event.EventUpdateDTO;
 import at.msm.asobo.entities.Event;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.stereotype.Component;
 
 @Component
 public class EventDTOEventMapper {
@@ -52,12 +52,15 @@ public class EventDTOEventMapper {
 
         // Map participants
         if (event.getParticipants() != null) {
-            dto.setParticipants(userDTOUserMapper.mapUsersToUserPublicDTOs(event.getParticipants()));
+            dto.setParticipants(
+                    userDTOUserMapper.mapUsersToUserPublicDTOs(event.getParticipants()));
         }
 
         // Map comments
         if (event.getComments() != null) {
-            dto.setComments(userCommentDTOUserCommentMapper.mapUserCommentsToUserCommentDTOs(event.getComments()));
+            dto.setComments(
+                    userCommentDTOUserCommentMapper.mapUserCommentsToUserCommentDTOs(
+                            event.getComments()));
         }
 
         // Map media
@@ -130,52 +133,55 @@ public class EventDTOEventMapper {
         dto.setLocation(event.getLocation());
         dto.setDate(event.getDate());
         dto.setPrivate(event.isPrivateEvent());
-        // Note: modification date & creation date are set in the database, EventUpdateDTO only has the values that can be updated by the user
+        // Note: modification date & creation date are set in the database, EventUpdateDTO only has
+        // the values that can be updated by the user
 
         // Map participants
         if (event.getParticipants() != null) {
-            dto.setParticipants(userDTOUserMapper.mapUsersToUserPublicDTOs(event.getParticipants()));
+            dto.setParticipants(
+                    userDTOUserMapper.mapUsersToUserPublicDTOs(event.getParticipants()));
         }
 
         return dto;
     }
 
-    // ? Maybe we don't need this at all because updateDTO only has the fields that will be updated and we never map directly ?
+    // ? Maybe we don't need this at all because updateDTO only has the fields that will be updated
+    // and we never map directly ?
     // EventUpdateDTO → Event
-//    public Event mapEventUpdateDTOToEvent(EventUpdateDTO dto) {
-//        if (dto == null) {
-//            return null;
-//        }
-//
-//        Event event = new Event();
-//        event.setId(dto.getId());
-//        event.setTitle(dto.getTitle());
-//        event.setDescription(dto.getDescription());
-//        event.setLocation(dto.getLocation());
-//        event.setDate(dto.getDate());
-//        event.setIsPrivate(dto.isPrivate());
-//        // Note: pictureURI and relationships handled in service layer
-//
-//        return event;
-//    }
+    //    public Event mapEventUpdateDTOToEvent(EventUpdateDTO dto) {
+    //        if (dto == null) {
+    //            return null;
+    //        }
+    //
+    //        Event event = new Event();
+    //        event.setId(dto.getId());
+    //        event.setTitle(dto.getTitle());
+    //        event.setDescription(dto.getDescription());
+    //        event.setLocation(dto.getLocation());
+    //        event.setDate(dto.getDate());
+    //        event.setIsPrivate(dto.isPrivate());
+    //        // Note: pictureURI and relationships handled in service layer
+    //
+    //        return event;
+    //    }
 
     // ? maybe we don't need that ? Event → EventCreationDTO
-//    public EventCreationDTO mapEventToEventCreationDTO(Event event) {
-//        if (event == null) {
-//            return null;
-//        }
-//
-//        EventCreationDTO dto = new EventCreationDTO();
-//        dto.setId(event.getId());
-//        dto.setTitle(event.getTitle());
-//        dto.setDescription(event.getDescription());
-//        dto.setLocation(event.getLocation());
-//        dto.setDate(event.getDate());
-//        dto.setIsPrivate(event.isPrivate());
-//        // eventPicture (MultipartFile) is ignored as specified
-//
-//        return dto;
-//    }
+    //    public EventCreationDTO mapEventToEventCreationDTO(Event event) {
+    //        if (event == null) {
+    //            return null;
+    //        }
+    //
+    //        EventCreationDTO dto = new EventCreationDTO();
+    //        dto.setId(event.getId());
+    //        dto.setTitle(event.getTitle());
+    //        dto.setDescription(event.getDescription());
+    //        dto.setLocation(event.getLocation());
+    //        dto.setDate(event.getDate());
+    //        dto.setIsPrivate(event.isPrivate());
+    //        // eventPicture (MultipartFile) is ignored as specified
+    //
+    //        return dto;
+    //    }
 
     // EventCreationDTO → Event
     public Event mapEventCreationDTOToEvent(EventCreationDTO dto) {
@@ -201,18 +207,14 @@ public class EventDTOEventMapper {
         if (events == null) {
             return new ArrayList<>();
         }
-        return events.stream()
-                .map(this::mapEventToEventDTO)
-                .collect(Collectors.toList());
+        return events.stream().map(this::mapEventToEventDTO).collect(Collectors.toList());
     }
 
     public List<EventSummaryDTO> mapEventsToEventSummaryDTOs(List<Event> events) {
         if (events == null) {
             return new ArrayList<>();
         }
-        return events.stream()
-                .map(this::toEventSummaryDTO)
-                .collect(Collectors.toList());
+        return events.stream().map(this::toEventSummaryDTO).collect(Collectors.toList());
     }
 
     public Page<EventSummaryDTO> mapEventsToEventSummaryDTOs(Page<Event> events) {
@@ -220,53 +222,42 @@ public class EventDTOEventMapper {
             return Page.empty();
         }
 
-        List<EventSummaryDTO> dtoList = events.stream()
-                .map(this::toEventSummaryDTO)
-                .toList();
+        List<EventSummaryDTO> dtoList = events.stream().map(this::toEventSummaryDTO).toList();
 
-        return new PageImpl<>(
-                dtoList,
-                events.getPageable(),
-                events.getTotalElements()
-        );
+        return new PageImpl<>(dtoList, events.getPageable(), events.getTotalElements());
     }
-
 
     public List<Event> mapEventDTOsToEvents(List<EventDTO> eventDTOs) {
         if (eventDTOs == null) {
             return new ArrayList<>();
         }
-        return eventDTOs.stream()
-                .map(this::mapEventDTOToEvent)
-                .collect(Collectors.toList());
+        return eventDTOs.stream().map(this::mapEventDTOToEvent).collect(Collectors.toList());
     }
 
     public List<EventUpdateDTO> mapEventsToEventUpdateDTOs(List<Event> events) {
         if (events == null) {
             return new ArrayList<>();
         }
-        return events.stream()
-                .map(this::mapEventToEventUpdateDTO)
-                .collect(Collectors.toList());
+        return events.stream().map(this::mapEventToEventUpdateDTO).collect(Collectors.toList());
     }
 
-//    public List<Event> mapEventUpdateDTOsToEvents(List<EventUpdateDTO> eventUpdateDTOs) {
-//        if (eventUpdateDTOs == null) {
-//            return new ArrayList<>();
-//        }
-//        return eventUpdateDTOs.stream()
-//                .map(this::mapEventUpdateDTOToEvent)
-//                .collect(Collectors.toList());
-//    }
+    //    public List<Event> mapEventUpdateDTOsToEvents(List<EventUpdateDTO> eventUpdateDTOs) {
+    //        if (eventUpdateDTOs == null) {
+    //            return new ArrayList<>();
+    //        }
+    //        return eventUpdateDTOs.stream()
+    //                .map(this::mapEventUpdateDTOToEvent)
+    //                .collect(Collectors.toList());
+    //    }
 
-//    public List<EventCreationDTO> mapEventsToEventCreationDTOs(List<Event> events) {
-//        if (events == null) {
-//            return new ArrayList<>();
-//        }
-//        return events.stream()
-//                .map(this::mapEventToEventCreationDTO)
-//                .collect(Collectors.toList());
-//    }
+    //    public List<EventCreationDTO> mapEventsToEventCreationDTOs(List<Event> events) {
+    //        if (events == null) {
+    //            return new ArrayList<>();
+    //        }
+    //        return events.stream()
+    //                .map(this::mapEventToEventCreationDTO)
+    //                .collect(Collectors.toList());
+    //    }
 
     public List<Event> mapEventCreationDTOsToEvents(List<EventCreationDTO> eventCreationDTOs) {
         if (eventCreationDTOs == null) {

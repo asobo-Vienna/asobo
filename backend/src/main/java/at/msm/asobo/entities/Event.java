@@ -3,11 +3,10 @@ package at.msm.asobo.entities;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import org.hibernate.annotations.CreationTimestamp;
-import org.springframework.data.annotation.LastModifiedDate;
 import java.time.LocalDateTime;
 import java.util.*;
-
+import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.data.annotation.LastModifiedDate;
 
 @Entity
 public class Event {
@@ -21,11 +20,9 @@ public class Event {
     @JoinColumn(name = "creator_id")
     private User creator;
 
-    @ManyToMany
-    private Set<User> eventAdmins;
+    @ManyToMany private Set<User> eventAdmins;
 
-    @ManyToMany
-    private Set<User> participants;
+    @ManyToMany private Set<User> participants;
 
     @NotBlank(message = "Title is mandatory")
     private String title;
@@ -43,11 +40,9 @@ public class Event {
     @Column(length = 4096)
     private String pictureURI;
 
-    @CreationTimestamp
-    private LocalDateTime creationDate;
+    @CreationTimestamp private LocalDateTime creationDate;
 
-    @LastModifiedDate
-    private LocalDateTime modificationDate;
+    @LastModifiedDate private LocalDateTime modificationDate;
 
     @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UserComment> comments;

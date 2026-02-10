@@ -4,9 +4,9 @@ import at.msm.asobo.dto.comment.UserCommentDTO;
 import at.msm.asobo.entities.Event;
 import at.msm.asobo.entities.User;
 import at.msm.asobo.entities.UserComment;
-import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.stereotype.Component;
 
 @Component
 public class UserCommentDTOUserCommentMapper {
@@ -34,7 +34,8 @@ public class UserCommentDTOUserCommentMapper {
         return dto;
     }
 
-    public UserComment mapUserCommentDTOToUserComment(UserCommentDTO dto, User author, Event event) {
+    public UserComment mapUserCommentDTOToUserComment(
+            UserCommentDTO dto, User author, Event event) {
         if (dto == null) {
             return null;
         }

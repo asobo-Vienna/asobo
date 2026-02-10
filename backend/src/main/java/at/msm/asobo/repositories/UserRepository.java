@@ -1,12 +1,11 @@
 package at.msm.asobo.repositories;
 
 import at.msm.asobo.entities.User;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
-
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, UUID> {
@@ -22,5 +21,6 @@ public interface UserRepository extends JpaRepository<User, UUID> {
     Set<User> findAllByIdIn(Set<UUID> ids);
 
     boolean existsByUsername(String username);
+
     boolean existsByEmail(String email);
 }

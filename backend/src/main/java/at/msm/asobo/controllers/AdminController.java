@@ -5,13 +5,11 @@ import at.msm.asobo.dto.medium.MediumWithEventTitleDTO;
 import at.msm.asobo.dto.user.UserAdminSummaryDTO;
 import at.msm.asobo.dto.user.UserFullDTO;
 import at.msm.asobo.services.AdminService;
+import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-
 
 @RestController
 @RequestMapping("/api/admin")
@@ -22,7 +20,6 @@ public class AdminController {
     public AdminController(AdminService adminService) {
         this.adminService = adminService;
     }
-
 
     @GetMapping("/users/paginated")
     public Page<UserAdminSummaryDTO> getAllUsersPaginated(Pageable pageable) {
@@ -48,13 +45,12 @@ public class AdminController {
         return this.adminService.getAllMediaWithEventTitle(pageable);
     }
 
-
-     /*@GetMapping
+    /*@GetMapping
     public List<UserAdminDTO> getAllUsers() {
         //return this.userService.getAllUsers();
     }*/
 
-    //@GetMapping("/{id}")
+    // @GetMapping("/{id}")
     /*public UserAdminDTO getUserById(@PathVariable UUID id) {
         User foundUser = this.userService.getUserById(id);
         return new UserAdminDTO(foundUser);
@@ -74,9 +70,10 @@ public class AdminController {
     }*/
 
     // TODO create UserAdminService that returns UserAdminDTOs
-//    @PutMapping("/{id}")
-//    public UserAdminDTO updateUser(@PathVariable UUID id, @RequestBody @Valid UserUpdateDTO userUpdateDTO) {
-//        User updatedUser = this.userService.updateUserById(id, userUpdateDTO);
-//        return new UserAdminDTO(updatedUser);
-//    }
+    //    @PutMapping("/{id}")
+    //    public UserAdminDTO updateUser(@PathVariable UUID id, @RequestBody @Valid UserUpdateDTO
+    // userUpdateDTO) {
+    //        User updatedUser = this.userService.updateUserById(id, userUpdateDTO);
+    //        return new UserAdminDTO(updatedUser);
+    //    }
 }

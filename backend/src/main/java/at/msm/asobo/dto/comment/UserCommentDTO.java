@@ -13,10 +13,10 @@ public class UserCommentDTO {
     private String pictureURI;
     private LocalDateTime creationDate;
     private LocalDateTime modificationDate;
+
     // private File file;
 
-    public UserCommentDTO() {
-    }
+    public UserCommentDTO() {}
 
     public UUID getId() {
         return this.id;

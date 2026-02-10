@@ -31,4 +31,3 @@ public class LoginResponseDTO {
         this.userDTO = userDTO;
     }
 }
-

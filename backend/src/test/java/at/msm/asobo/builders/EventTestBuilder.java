@@ -6,14 +6,15 @@ import at.msm.asobo.entities.Medium;
 import at.msm.asobo.entities.User;
 import at.msm.asobo.entities.UserComment;
 import at.msm.asobo.mappers.*;
-
 import java.time.LocalDateTime;
 import java.util.*;
 
 public class EventTestBuilder {
-    private static final UUID FIXED_EVENT_ID = UUID.fromString("00000000-0000-0000-0000-000000000001");
-    private static final LocalDateTime FIXED_TIME =  LocalDateTime.of(2026, 1, 1, 12, 0);
-    private static final String DEFAULT_PICTURE_URI = "http://localhost:8080/uploads/event-cover-pictures/event-cover-default.svg";
+    private static final UUID FIXED_EVENT_ID =
+            UUID.fromString("00000000-0000-0000-0000-000000000001");
+    private static final LocalDateTime FIXED_TIME = LocalDateTime.of(2026, 1, 1, 12, 0);
+    private static final String DEFAULT_PICTURE_URI =
+            "http://localhost:8080/uploads/event-cover-pictures/event-cover-default.svg";
 
     private UUID id;
     private User creator;
@@ -176,12 +177,15 @@ public class EventTestBuilder {
         eventDTO.setDescription(this.description);
         eventDTO.setTitle(this.title);
         eventDTO.setEventAdmins(this.userDTOUserMapper.mapUsersToUserPublicDTOs(this.eventAdmins));
-        eventDTO.setParticipants(this.userDTOUserMapper.mapUsersToUserPublicDTOs(this.participants));
+        eventDTO.setParticipants(
+                this.userDTOUserMapper.mapUsersToUserPublicDTOs(this.participants));
         eventDTO.setLocation(this.location);
         eventDTO.setPictureURI(this.pictureURI);
         eventDTO.setCreationDate(this.creationDate);
         eventDTO.setModificationDate(this.modificationDate);
-        eventDTO.setComments(this.userCommentDTOUserCommentMapper.mapUserCommentsToUserCommentDTOs(this.comments));
+        eventDTO.setComments(
+                this.userCommentDTOUserCommentMapper.mapUserCommentsToUserCommentDTOs(
+                        this.comments));
         eventDTO.setMedia(this.mediumDTOMediumMapper.mapMediaToMediaDTOList(this.media));
         eventDTO.setIsPrivate(this.isPrivateEvent);
 

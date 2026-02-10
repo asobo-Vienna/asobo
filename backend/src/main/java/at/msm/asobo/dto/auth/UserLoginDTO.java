@@ -32,7 +32,9 @@ public class UserLoginDTO {
         return this.password;
     }
 
-    public boolean isRememberMe() { return this.rememberMe; }
+    public boolean isRememberMe() {
+        return this.rememberMe;
+    }
 
     public void setIdentifier(String identifier) {
         this.identifier = identifier;
