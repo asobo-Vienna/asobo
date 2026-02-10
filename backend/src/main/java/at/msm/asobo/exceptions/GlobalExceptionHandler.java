@@ -27,183 +27,165 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<String> handleValidationExceptions(MethodArgumentNotValidException ex) {
-        String errorMsg =
-                ex.getBindingResult().getAllErrors().stream()
-                        .map(ObjectError::getDefaultMessage)
-                        .collect(Collectors.joining(", "));
-        return ResponseEntity.badRequest().body(errorMsg);
+  @ExceptionHandler(MethodArgumentNotValidException.class)
+  public ResponseEntity<String> handleValidationExceptions(MethodArgumentNotValidException ex) {
+    String errorMsg =
+        ex.getBindingResult().getAllErrors().stream()
+            .map(ObjectError::getDefaultMessage)
+            .collect(Collectors.joining(", "));
+    return ResponseEntity.badRequest().body(errorMsg);
+  }
+
+  @ExceptionHandler(EmailAlreadyExistsException.class)
+  public ResponseEntity<ErrorResponse> handleEmailExists(EmailAlreadyExistsException ex) {
+    ErrorResponse error =
+        new ErrorResponse("EMAIL_EXISTS", ex.getMessage(), HttpStatus.CONFLICT.value());
+    return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+  }
+
+  @ExceptionHandler(UsernameAlreadyExistsException.class)
+  public ResponseEntity<ErrorResponse> handleUsernameExists(UsernameAlreadyExistsException ex) {
+    ErrorResponse error =
+        new ErrorResponse("USERNAME_EXISTS", ex.getMessage(), HttpStatus.CONFLICT.value());
+    return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+  }
+
+  @ExceptionHandler(DataIntegrityViolationException.class)
+  public ResponseEntity<ErrorResponse> handleDataIntegrityViolation(
+      DataIntegrityViolationException ex) {
+    String message = ex.getMessage();
+
+    if (message != null && message.contains("users_username_key")) {
+      ErrorResponse error =
+          new ErrorResponse(
+              "USERNAME_EXISTS", "This username is already taken", HttpStatus.CONFLICT.value());
+      return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
     }
 
-    @ExceptionHandler(EmailAlreadyExistsException.class)
-    public ResponseEntity<ErrorResponse> handleEmailExists(EmailAlreadyExistsException ex) {
-        ErrorResponse error =
-                new ErrorResponse("EMAIL_EXISTS", ex.getMessage(), HttpStatus.CONFLICT.value());
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+    if (message != null && message.contains("users_email_key")) {
+      ErrorResponse error =
+          new ErrorResponse(
+              "EMAIL_EXISTS", "This email is already registered", HttpStatus.CONFLICT.value());
+      return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
     }
 
-    @ExceptionHandler(UsernameAlreadyExistsException.class)
-    public ResponseEntity<ErrorResponse> handleUsernameExists(UsernameAlreadyExistsException ex) {
-        ErrorResponse error =
-                new ErrorResponse("USERNAME_EXISTS", ex.getMessage(), HttpStatus.CONFLICT.value());
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
-    }
+    ErrorResponse error =
+        new ErrorResponse(
+            "DATABASE_ERROR", "A database constraint was violated", HttpStatus.CONFLICT.value());
+    return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+  }
 
-    @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity<ErrorResponse> handleDataIntegrityViolation(
-            DataIntegrityViolationException ex) {
-        String message = ex.getMessage();
+  @ExceptionHandler(AccessDeniedException.class)
+  public ResponseEntity<ErrorResponse> handleAccessDenied(AccessDeniedException ex) {
+    ErrorResponse error =
+        new ErrorResponse("FORBIDDEN", ex.getMessage(), HttpStatus.FORBIDDEN.value());
+    return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
+  }
 
-        if (message != null && message.contains("users_username_key")) {
-            ErrorResponse error =
-                    new ErrorResponse(
-                            "USERNAME_EXISTS",
-                            "This username is already taken",
-                            HttpStatus.CONFLICT.value());
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
-        }
+  @ExceptionHandler(BadCredentialsException.class)
+  public ResponseEntity<ErrorResponse> handleBadCredentialsException(BadCredentialsException ex) {
+    ErrorResponse error =
+        new ErrorResponse("BAD CREDENTIALS", ex.getMessage(), HttpStatus.UNAUTHORIZED.value());
+    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
+  }
 
-        if (message != null && message.contains("users_email_key")) {
-            ErrorResponse error =
-                    new ErrorResponse(
-                            "EMAIL_EXISTS",
-                            "This email is already registered",
-                            HttpStatus.CONFLICT.value());
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
-        }
+  @ExceptionHandler(UserNotFoundException.class)
+  public ResponseEntity<ErrorResponse> handleUserNotFound(UserNotFoundException ex) {
+    ErrorResponse error =
+        new ErrorResponse("USER_NOT_FOUND", ex.getMessage(), HttpStatus.NOT_FOUND.value());
+    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+  }
 
-        ErrorResponse error =
-                new ErrorResponse(
-                        "DATABASE_ERROR",
-                        "A database constraint was violated",
-                        HttpStatus.CONFLICT.value());
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
-    }
+  @ExceptionHandler(RoleNotFoundException.class)
+  public ResponseEntity<ErrorResponse> handleRoleNotFound(RoleNotFoundException ex) {
+    ErrorResponse error =
+        new ErrorResponse("ROLE_NOT_FOUND", ex.getMessage(), HttpStatus.NOT_FOUND.value());
+    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+  }
 
-    @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity<ErrorResponse> handleAccessDenied(AccessDeniedException ex) {
-        ErrorResponse error =
-                new ErrorResponse("FORBIDDEN", ex.getMessage(), HttpStatus.FORBIDDEN.value());
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
-    }
+  @ExceptionHandler(UserCommentNotFoundException.class)
+  public ResponseEntity<ErrorResponse> handleUserCommentNotFound(UserCommentNotFoundException ex) {
+    ErrorResponse error =
+        new ErrorResponse("USERCOMMENT_NOT_FOUND", ex.getMessage(), HttpStatus.NOT_FOUND.value());
+    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+  }
 
-    @ExceptionHandler(BadCredentialsException.class)
-    public ResponseEntity<ErrorResponse> handleBadCredentialsException(BadCredentialsException ex) {
-        ErrorResponse error =
-                new ErrorResponse(
-                        "BAD CREDENTIALS", ex.getMessage(), HttpStatus.UNAUTHORIZED.value());
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
-    }
+  @ExceptionHandler(IllegalArgumentException.class)
+  public ResponseEntity<ErrorResponse> handleIllegalArgument(IllegalArgumentException ex) {
+    ErrorResponse error =
+        new ErrorResponse("INVALID_ARGUMENT", ex.getMessage(), HttpStatus.BAD_REQUEST.value());
+    return ResponseEntity.badRequest().body(error);
+  }
 
-    @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleUserNotFound(UserNotFoundException ex) {
-        ErrorResponse error =
-                new ErrorResponse("USER_NOT_FOUND", ex.getMessage(), HttpStatus.NOT_FOUND.value());
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
-    }
+  @ExceptionHandler(InvalidPasswordFormatException.class)
+  public ResponseEntity<ErrorResponse> handleInvalidPassword(InvalidPasswordFormatException ex) {
 
-    @ExceptionHandler(RoleNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleRoleNotFound(RoleNotFoundException ex) {
-        ErrorResponse error =
-                new ErrorResponse("ROLE_NOT_FOUND", ex.getMessage(), HttpStatus.NOT_FOUND.value());
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
-    }
+    ErrorResponse error =
+        new ErrorResponse(
+            "INVALID_PASSWORD_FORMAT",
+            ex.getMessage(),
+            ex.getViolations(),
+            HttpStatus.BAD_REQUEST.value());
 
-    @ExceptionHandler(UserCommentNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleUserCommentNotFound(
-            UserCommentNotFoundException ex) {
-        ErrorResponse error =
-                new ErrorResponse(
-                        "USERCOMMENT_NOT_FOUND", ex.getMessage(), HttpStatus.NOT_FOUND.value());
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
-    }
+    return ResponseEntity.badRequest().body(error);
+  }
 
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<ErrorResponse> handleIllegalArgument(IllegalArgumentException ex) {
-        ErrorResponse error =
-                new ErrorResponse(
-                        "INVALID_ARGUMENT", ex.getMessage(), HttpStatus.BAD_REQUEST.value());
-        return ResponseEntity.badRequest().body(error);
-    }
+  @ExceptionHandler(InvalidFileUploadException.class)
+  public ResponseEntity<ErrorResponse> handleInvalidFileUpload(InvalidFileUploadException ex) {
+    ErrorResponse error =
+        new ErrorResponse("INVALID_FILE_UPLOAD", ex.getMessage(), HttpStatus.BAD_REQUEST.value());
+    return ResponseEntity.badRequest().body(error);
+  }
 
-    @ExceptionHandler(InvalidPasswordFormatException.class)
-    public ResponseEntity<ErrorResponse> handleInvalidPassword(InvalidPasswordFormatException ex) {
+  @ExceptionHandler(UserNotAuthorizedException.class)
+  public ResponseEntity<ErrorResponse> handleUserNotAuthorized(UserNotAuthorizedException ex) {
+    ErrorResponse error =
+        new ErrorResponse("NOT_AUTHORIZED", ex.getMessage(), HttpStatus.FORBIDDEN.value());
+    return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
+  }
 
-        ErrorResponse error =
-                new ErrorResponse(
-                        "INVALID_PASSWORD_FORMAT",
-                        ex.getMessage(),
-                        ex.getViolations(),
-                        HttpStatus.BAD_REQUEST.value());
+  @ExceptionHandler(UserNotAuthenticatedException.class)
+  public ResponseEntity<ErrorResponse> handleUserNotAuthenticated(
+      UserNotAuthenticatedException ex) {
+    ErrorResponse error =
+        new ErrorResponse("NOT_AUTHENTICATED", ex.getMessage(), HttpStatus.UNAUTHORIZED.value());
+    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
+  }
 
-        return ResponseEntity.badRequest().body(error);
-    }
+  @ExceptionHandler(EventNotFoundException.class)
+  public ResponseEntity<ErrorResponse> handleEventNotFound(EventNotFoundException ex) {
+    ErrorResponse error =
+        new ErrorResponse("EVENT_NOT_FOUND", ex.getMessage(), HttpStatus.NOT_FOUND.value());
+    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+  }
 
-    @ExceptionHandler(InvalidFileUploadException.class)
-    public ResponseEntity<ErrorResponse> handleInvalidFileUpload(InvalidFileUploadException ex) {
-        ErrorResponse error =
-                new ErrorResponse(
-                        "INVALID_FILE_UPLOAD", ex.getMessage(), HttpStatus.BAD_REQUEST.value());
-        return ResponseEntity.badRequest().body(error);
-    }
+  @ExceptionHandler(FileDeletionException.class)
+  public ResponseEntity<ErrorResponse> handleFileDeletion(FileDeletionException ex) {
+    ErrorResponse error =
+        new ErrorResponse("FILE_DELETION_FAILED", ex.getMessage(), HttpStatus.BAD_REQUEST.value());
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+  }
 
-    @ExceptionHandler(UserNotAuthorizedException.class)
-    public ResponseEntity<ErrorResponse> handleUserNotAuthorized(UserNotAuthorizedException ex) {
-        ErrorResponse error =
-                new ErrorResponse("NOT_AUTHORIZED", ex.getMessage(), HttpStatus.FORBIDDEN.value());
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
-    }
+  @ExceptionHandler(InvalidFileNameException.class)
+  public ResponseEntity<ErrorResponse> handleInvalidFilename(InvalidFileNameException ex) {
+    ErrorResponse error =
+        new ErrorResponse("INVALID_FILENAME", ex.getMessage(), HttpStatus.BAD_REQUEST.value());
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+  }
 
-    @ExceptionHandler(UserNotAuthenticatedException.class)
-    public ResponseEntity<ErrorResponse> handleUserNotAuthenticated(
-            UserNotAuthenticatedException ex) {
-        ErrorResponse error =
-                new ErrorResponse(
-                        "NOT_AUTHENTICATED", ex.getMessage(), HttpStatus.UNAUTHORIZED.value());
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
-    }
+  @ExceptionHandler(ConstraintViolationException.class)
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  public ResponseEntity<ErrorResponse> handleConstraintViolation(ConstraintViolationException ex) {
 
-    @ExceptionHandler(EventNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleEventNotFound(EventNotFoundException ex) {
-        ErrorResponse error =
-                new ErrorResponse("EVENT_NOT_FOUND", ex.getMessage(), HttpStatus.NOT_FOUND.value());
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
-    }
+    List<String> violations =
+        ex.getConstraintViolations().stream()
+            .map(v -> v.getPropertyPath().toString() + ": " + v.getMessage())
+            .toList();
 
-    @ExceptionHandler(FileDeletionException.class)
-    public ResponseEntity<ErrorResponse> handleFileDeletion(FileDeletionException ex) {
-        ErrorResponse error =
-                new ErrorResponse(
-                        "FILE_DELETION_FAILED", ex.getMessage(), HttpStatus.BAD_REQUEST.value());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
-    }
+    ErrorResponse error =
+        new ErrorResponse(
+            "INVALID_EVENT_INFO", "Validation failed", violations, HttpStatus.BAD_REQUEST.value());
 
-    @ExceptionHandler(InvalidFileNameException.class)
-    public ResponseEntity<ErrorResponse> handleInvalidFilename(InvalidFileNameException ex) {
-        ErrorResponse error =
-                new ErrorResponse(
-                        "INVALID_FILENAME", ex.getMessage(), HttpStatus.BAD_REQUEST.value());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
-    }
-
-    @ExceptionHandler(ConstraintViolationException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<ErrorResponse> handleConstraintViolation(
-            ConstraintViolationException ex) {
-
-        List<String> violations =
-                ex.getConstraintViolations().stream()
-                        .map(v -> v.getPropertyPath().toString() + ": " + v.getMessage())
-                        .toList();
-
-        ErrorResponse error =
-                new ErrorResponse(
-                        "INVALID_EVENT_INFO",
-                        "Validation failed",
-                        violations,
-                        HttpStatus.BAD_REQUEST.value());
-
-        return ResponseEntity.badRequest().body(error);
-    }
+    return ResponseEntity.badRequest().body(error);
+  }
 }

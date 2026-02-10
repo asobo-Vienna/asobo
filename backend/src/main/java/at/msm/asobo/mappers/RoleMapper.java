@@ -8,11 +8,11 @@ import org.mapstruct.Mapper;
 @Mapper(componentModel = "spring")
 public interface RoleMapper {
 
-    RoleDTO mapRoleToRoleDTO(Role role);
+  RoleDTO mapRoleToRoleDTO(Role role);
 
-    Set<RoleDTO> mapRolesToRoleDTOs(Set<Role> roles);
+  Set<RoleDTO> mapRolesToRoleDTOs(Set<Role> roles);
 
-    Role mapRoleDTOToRole(RoleDTO roleDTO);
+  Role mapRoleDTOToRole(RoleDTO roleDTO);
 
-    Set<Role> mapRoleDTOsToRoles(Set<RoleDTO> roleDTOs);
+  Set<Role> mapRoleDTOsToRoles(Set<RoleDTO> roleDTOs);
 }

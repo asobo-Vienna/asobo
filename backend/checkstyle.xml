@@ -4,6 +4,10 @@
         "https://checkstyle.org/dtds/configuration_1_3.dtd">
 
 <module name="Checker">
+  <module name="SuppressionFilter">
+    <property name="file" value="suppressions.xml"/>
+  </module>
+
   <module name="TreeWalker">
 
     <!-- Disable Javadoc enforcement -->
@@ -24,7 +28,15 @@
                 value="ASSIGN, PLUS, MINUS, DIV, STAR, MOD"/>
     </module>
 
-    <module name="Indentation"/>
+    <module name="Indentation">
+      <property name="basicOffset" value="2"/>
+      <property name="caseIndent" value="2"/>
+      <property name="throwsIndent" value="2"/>
+      <property name="lineWrappingIndentation" value="2"/>
+      <property name="tabWidth" value="2"/>
+      <property name="braceAdjustment" value="0"/>
+    </module>
+
     <module name="LeftCurly"/>
     <module name="RightCurly"/>
 

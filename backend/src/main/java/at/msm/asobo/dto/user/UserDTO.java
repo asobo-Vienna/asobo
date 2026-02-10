@@ -5,135 +5,135 @@ import java.util.UUID;
 
 public class UserDTO {
 
-    private UUID id;
+  private UUID id;
 
-    private String username;
+  private String username;
 
-    private String firstName;
+  private String firstName;
 
-    private String surname;
+  private String surname;
 
-    private String email;
+  private String email;
 
-    private String password;
+  private String password;
 
-    private String oldPassword;
+  private String oldPassword;
 
-    private String aboutMe;
+  private String aboutMe;
 
-    private LocalDateTime registerDate;
+  private LocalDateTime registerDate;
 
-    private boolean isActive;
+  private boolean isActive;
 
-    private String pictureURI;
+  private String pictureURI;
 
-    private String location;
+  private String location;
 
-    private String salutation;
+  private String salutation;
 
-    public void setId(UUID id) {
-        this.id = id;
-    }
+  public void setId(UUID id) {
+    this.id = id;
+  }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
+  public void setUsername(String username) {
+    this.username = username;
+  }
 
-    public String getFirstName() {
-        return firstName;
-    }
+  public String getFirstName() {
+    return firstName;
+  }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
+  public void setFirstName(String firstName) {
+    this.firstName = firstName;
+  }
 
-    public String getSurname() {
-        return surname;
-    }
+  public String getSurname() {
+    return surname;
+  }
 
-    public void setSurname(String surname) {
-        this.surname = surname;
-    }
+  public void setSurname(String surname) {
+    this.surname = surname;
+  }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+  public void setEmail(String email) {
+    this.email = email;
+  }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+  public void setPassword(String password) {
+    this.password = password;
+  }
 
-    public String getOldPassword() {
-        return oldPassword;
-    }
+  public String getOldPassword() {
+    return oldPassword;
+  }
 
-    public void setOldPassword(String oldPassword) {
-        this.oldPassword = oldPassword;
-    }
+  public void setOldPassword(String oldPassword) {
+    this.oldPassword = oldPassword;
+  }
 
-    public String getAboutMe() {
-        return this.aboutMe;
-    }
+  public String getAboutMe() {
+    return this.aboutMe;
+  }
 
-    public void setAboutMe(String aboutMe) {
-        this.aboutMe = aboutMe;
-    }
+  public void setAboutMe(String aboutMe) {
+    this.aboutMe = aboutMe;
+  }
 
-    public String getPictureURI() {
-        return pictureURI;
-    }
+  public String getPictureURI() {
+    return pictureURI;
+  }
 
-    public void setPictureURI(String pictureURI) {
-        this.pictureURI = pictureURI;
-    }
+  public void setPictureURI(String pictureURI) {
+    this.pictureURI = pictureURI;
+  }
 
-    public void setRegisterDate(LocalDateTime registerDate) {
-        this.registerDate = registerDate;
-    }
+  public void setRegisterDate(LocalDateTime registerDate) {
+    this.registerDate = registerDate;
+  }
 
-    public void setIsActive(boolean isActive) {
-        this.isActive = isActive;
-    }
+  public void setIsActive(boolean isActive) {
+    this.isActive = isActive;
+  }
 
-    public void setLocation(String location) {
-        this.location = location;
-    }
+  public void setLocation(String location) {
+    this.location = location;
+  }
 
-    public void setSalutation(String salutation) {
-        this.salutation = salutation;
-    }
+  public void setSalutation(String salutation) {
+    this.salutation = salutation;
+  }
 
-    public UserDTO() {}
+  public UserDTO() {}
 
-    public UUID getId() {
-        return this.id;
-    }
+  public UUID getId() {
+    return this.id;
+  }
 
-    public LocalDateTime getRegisterDate() {
-        return this.registerDate;
-    }
+  public LocalDateTime getRegisterDate() {
+    return this.registerDate;
+  }
 
-    public boolean getIsActive() {
-        return this.isActive;
-    }
+  public boolean getIsActive() {
+    return this.isActive;
+  }
 
-    public String getEmail() {
-        return this.email;
-    }
+  public String getEmail() {
+    return this.email;
+  }
 
-    public String getUsername() {
-        return this.username;
-    }
+  public String getUsername() {
+    return this.username;
+  }
 
-    public String getLocation() {
-        return this.location;
-    }
+  public String getLocation() {
+    return this.location;
+  }
 
-    public String getSalutation() {
-        return this.salutation;
-    }
+  public String getSalutation() {
+    return this.salutation;
+  }
 
-    public String getPassword() {
-        return this.password;
-    }
+  public String getPassword() {
+    return this.password;
+  }
 }

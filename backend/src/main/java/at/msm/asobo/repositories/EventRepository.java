@@ -13,41 +13,41 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface EventRepository extends JpaRepository<Event, UUID> {
-    @Query("SELECT e FROM Event e")
-    Page<Event> findAllEvents(Pageable pageable);
+  @Query("SELECT e FROM Event e")
+  Page<Event> findAllEvents(Pageable pageable);
 
-    @Query("SELECT e FROM Event e WHERE e.id = :id")
-    Optional<Event> findById(UUID id);
+  @Query("SELECT e FROM Event e WHERE e.id = :id")
+  Optional<Event> findById(UUID id);
 
-    List<Event> findByIsPrivateEventTrue();
+  List<Event> findByIsPrivateEventTrue();
 
-    Page<Event> findByIsPrivateEventTrue(Pageable pageable);
+  Page<Event> findByIsPrivateEventTrue(Pageable pageable);
 
-    List<Event> findByIsPrivateEventFalse();
+  List<Event> findByIsPrivateEventFalse();
 
-    Page<Event> findByIsPrivateEventFalse(Pageable pageable);
+  Page<Event> findByIsPrivateEventFalse(Pageable pageable);
 
-    // @Query("SELECT e.title FROM Event e WHERE e.id = :id")
-    // String findEventTitleById(UUID id);
+  // @Query("SELECT e.title FROM Event e WHERE e.id = :id")
+  // String findEventTitleById(UUID id);
 
-    List<Event> findEventsByDate(LocalDateTime date);
+  List<Event> findEventsByDate(LocalDateTime date);
 
-    List<Event> findEventsByDateBetween(LocalDateTime start, LocalDateTime end);
+  List<Event> findEventsByDateBetween(LocalDateTime start, LocalDateTime end);
 
-    List<Event> findEventsByLocation(String location);
+  List<Event> findEventsByLocation(String location);
 
-    List<Event> findEventsByTitle(String title);
+  List<Event> findEventsByTitle(String title);
 
-    List<Event> findByParticipantsId(UUID userId);
+  List<Event> findByParticipantsId(UUID userId);
 
-    Page<Event> findByParticipantsId(UUID userId, Pageable pageable);
+  Page<Event> findByParticipantsId(UUID userId, Pageable pageable);
 
-    List<Event> findByParticipantsIdAndIsPrivateEventTrue(UUID userId);
+  List<Event> findByParticipantsIdAndIsPrivateEventTrue(UUID userId);
 
-    Page<Event> findByParticipantsIdAndIsPrivateEventTrue(UUID userId, Pageable pageable);
+  Page<Event> findByParticipantsIdAndIsPrivateEventTrue(UUID userId, Pageable pageable);
 
-    // find public events attend by a certain user; underscore in method name is needed by JPA
-    List<Event> findByParticipantsIdAndIsPrivateEventFalse(UUID userId);
+  // find public events attend by a certain user; underscore in method name is needed by JPA
+  List<Event> findByParticipantsIdAndIsPrivateEventFalse(UUID userId);
 
-    Page<Event> findByParticipantsIdAndIsPrivateEventFalse(UUID userId, Pageable pageable);
+  Page<Event> findByParticipantsIdAndIsPrivateEventFalse(UUID userId, Pageable pageable);
 }

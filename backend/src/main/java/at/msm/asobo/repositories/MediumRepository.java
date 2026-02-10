@@ -13,12 +13,12 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface MediumRepository extends JpaRepository<Medium, UUID> {
 
-    List<Medium> findAll();
+  List<Medium> findAll();
 
-    List<Medium> findMediaByEventId(UUID eventId);
+  List<Medium> findMediaByEventId(UUID eventId);
 
-    Optional<Medium> findMediumByIdAndEventId(UUID mediumId, UUID eventId);
+  Optional<Medium> findMediumByIdAndEventId(UUID mediumId, UUID eventId);
 
-    @Query("SELECT m FROM Medium m JOIN FETCH m.event")
-    Page<Medium> findAllPageable(Pageable pageable);
+  @Query("SELECT m FROM Medium m JOIN FETCH m.event")
+  Page<Medium> findAllPageable(Pageable pageable);
 }

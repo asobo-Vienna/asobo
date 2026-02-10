@@ -9,49 +9,49 @@ import org.springframework.web.multipart.MultipartFile;
 @Component
 public class PictureMapperHelper {
 
-    private final FileStorageService fileStorageService;
-    private final FileStorageProperties fileStorageProperties;
+  private final FileStorageService fileStorageService;
+  private final FileStorageProperties fileStorageProperties;
 
-    public PictureMapperHelper(
-            FileStorageProperties fileStorageProperties, FileStorageService fileStorageService) {
-        this.fileStorageService = fileStorageService;
-        this.fileStorageProperties = fileStorageProperties;
+  public PictureMapperHelper(
+      FileStorageProperties fileStorageProperties, FileStorageService fileStorageService) {
+    this.fileStorageService = fileStorageService;
+    this.fileStorageProperties = fileStorageProperties;
+  }
+
+  @Named("mapUserPicture")
+  public String mapUserPicture(MultipartFile picture) {
+    if (picture == null || picture.isEmpty()) {
+      return null;
     }
+    return fileStorageService.store(
+        picture, this.fileStorageProperties.getProfilePictureSubfolder());
+  }
 
-    @Named("mapUserPicture")
-    public String mapUserPicture(MultipartFile picture) {
-        if (picture == null || picture.isEmpty()) {
-            return null;
-        }
-        return fileStorageService.store(
-                picture, this.fileStorageProperties.getProfilePictureSubfolder());
+  @Named("mapEventPicture")
+  public String mapEventPicture(MultipartFile picture) {
+    if (picture == null || picture.isEmpty()) {
+      return null;
     }
+    return fileStorageService.store(
+        picture, this.fileStorageProperties.getEventCoverPictureSubfolder());
+  }
 
-    @Named("mapEventPicture")
-    public String mapEventPicture(MultipartFile picture) {
-        if (picture == null || picture.isEmpty()) {
-            return null;
-        }
-        return fileStorageService.store(
-                picture, this.fileStorageProperties.getEventCoverPictureSubfolder());
+  @Named("mapGalleryPicture")
+  public String mapGalleryPicture(MultipartFile picture) {
+    if (picture == null || picture.isEmpty()) {
+      return null;
     }
+    return fileStorageService.store(
+        picture, this.fileStorageProperties.getEventGalleriesSubfolder());
+  }
 
-    @Named("mapGalleryPicture")
-    public String mapGalleryPicture(MultipartFile picture) {
-        if (picture == null || picture.isEmpty()) {
-            return null;
-        }
-        return fileStorageService.store(
-                picture, this.fileStorageProperties.getEventGalleriesSubfolder());
-    }
+  /*@Named("stringToUri")
+  public URI stringToUri(String value) {
+      return value == null ? null : URI.create(value);
+  }
 
-    /*@Named("stringToUri")
-    public URI stringToUri(String value) {
-        return value == null ? null : URI.create(value);
-    }
-
-    @Named("uriToString")
-    public String uriToString(URI uri) {
-        return uri == null ? null : uri.toString();
-    }*/
+  @Named("uriToString")
+  public String uriToString(URI uri) {
+      return uri == null ? null : uri.toString();
+  }*/
 }

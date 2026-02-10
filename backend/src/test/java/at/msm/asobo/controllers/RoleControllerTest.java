@@ -35,274 +35,281 @@ import org.springframework.test.web.servlet.MockMvc;
 @EnableMethodSecurity
 class RoleControllerTest {
 
-    @Autowired private MockMvc mockMvc;
+  @Autowired private MockMvc mockMvc;
 
-    @Autowired ObjectMapper objectMapper;
+  @Autowired ObjectMapper objectMapper;
 
-    @MockitoBean private RoleService roleService;
+  @MockitoBean private RoleService roleService;
 
-    @MockitoBean private UserService userService;
+  @MockitoBean private UserService userService;
 
-    @MockitoBean private FileStorageProperties fileStorageProperties;
+  @MockitoBean private FileStorageProperties fileStorageProperties;
 
-    @MockitoBean private JwtUtil jwtUtil;
+  @MockitoBean private JwtUtil jwtUtil;
 
-    @MockitoBean private CustomUserDetailsService customUserDetailsService;
+  @MockitoBean private CustomUserDetailsService customUserDetailsService;
 
-    private UUID userId;
-    private RoleDTO testRole1;
-    private RoleDTO testRole2;
-    private User testUser;
-    private List<RoleDTO> allRoles;
-    private final String ROLES_URL = "/api/roles";
-    private final String ASSIGN_URL = "/api/roles/assign";
+  private UUID userId;
+  private RoleDTO testRole1;
+  private RoleDTO testRole2;
+  private User testUser;
+  private List<RoleDTO> allRoles;
+  private final String ROLES_URL = "/api/roles";
+  private final String ASSIGN_URL = "/api/roles/assign";
 
-    @BeforeEach
-    void setUp() {
-        userId = UUID.randomUUID();
+  @BeforeEach
+  void setUp() {
+    userId = UUID.randomUUID();
 
-        testRole1 = new RoleDTO();
-        testRole1.setId(1L);
-        testRole1.setName("TESTROLE");
+    testRole1 = new RoleDTO();
+    testRole1.setId(1L);
+    testRole1.setName("TESTROLE");
 
-        testRole2 = new RoleDTO();
-        testRole2.setId(2L);
-        testRole2.setName("TESTROLE_XY");
+    testRole2 = new RoleDTO();
+    testRole2.setId(2L);
+    testRole2.setName("TESTROLE_XY");
 
-        testUser = new User();
-        testUser.setId(userId);
-        testUser.setUsername("testuser");
-        testUser.setRoles(new HashSet<>());
+    testUser = new User();
+    testUser.setId(userId);
+    testUser.setUsername("testuser");
+    testUser.setRoles(new HashSet<>());
 
-        allRoles = List.of(testRole1, testRole2);
-    }
+    allRoles = List.of(testRole1, testRole2);
+  }
 
-    @ParameterizedTest
-    @ValueSource(strings = {"ADMIN", "SUPERADMIN"})
-    void getAllRoles_withAuthorizedRole_returns200(String role) throws Exception {
+  @ParameterizedTest
+  @ValueSource(strings = {"ADMIN", "SUPERADMIN"})
+  void getAllRoles_withAuthorizedRole_returns200(String role) throws Exception {
 
-        when(roleService.getAllRoles()).thenReturn(allRoles);
+    when(roleService.getAllRoles()).thenReturn(allRoles);
 
-        String expectedJson = objectMapper.writeValueAsString(allRoles);
+    String expectedJson = objectMapper.writeValueAsString(allRoles);
 
-        mockMvc.perform(get(ROLES_URL).with(user("testuser").roles(role)))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(content().json(expectedJson));
+    mockMvc
+        .perform(get(ROLES_URL).with(user("testuser").roles(role)))
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(content().json(expectedJson));
 
-        verify(roleService).getAllRoles();
-    }
+    verify(roleService).getAllRoles();
+  }
 
-    @Test
-    @WithMockUser(roles = "USER")
-    void getAllRoles_withUnauthorizedRole_returns403() throws Exception {
-        mockMvc.perform(get(ROLES_URL)).andExpect(status().isForbidden());
+  @Test
+  @WithMockUser(roles = "USER")
+  void getAllRoles_withUnauthorizedRole_returns403() throws Exception {
+    mockMvc.perform(get(ROLES_URL)).andExpect(status().isForbidden());
 
-        verifyNoInteractions(roleService);
-    }
+    verifyNoInteractions(roleService);
+  }
 
-    @Test
-    void getAllRoles_unauthenticated_returns401() throws Exception {
-        mockMvc.perform(get(ROLES_URL)).andExpect(status().isUnauthorized());
+  @Test
+  void getAllRoles_unauthenticated_returns401() throws Exception {
+    mockMvc.perform(get(ROLES_URL)).andExpect(status().isUnauthorized());
 
-        verifyNoInteractions(roleService);
-    }
+    verifyNoInteractions(roleService);
+  }
 
-    @ParameterizedTest
-    @ValueSource(strings = {"ADMIN", "SUPERADMIN"})
-    void assignRole_withAuthorizedRole_returns200(String role) throws Exception {
-        Set<RoleDTO> roles = Set.of(testRole1);
-        UserRolesDTO request = new UserRolesDTO(userId, roles);
-        UserRolesDTO expectedResponse = new UserRolesDTO(userId, roles);
-        String jsonRequest = objectMapper.writeValueAsString(request);
+  @ParameterizedTest
+  @ValueSource(strings = {"ADMIN", "SUPERADMIN"})
+  void assignRole_withAuthorizedRole_returns200(String role) throws Exception {
+    Set<RoleDTO> roles = Set.of(testRole1);
+    UserRolesDTO request = new UserRolesDTO(userId, roles);
+    UserRolesDTO expectedResponse = new UserRolesDTO(userId, roles);
+    String jsonRequest = objectMapper.writeValueAsString(request);
 
-        when(roleService.assignRoles(userId, roles)).thenReturn(expectedResponse);
+    when(roleService.assignRoles(userId, roles)).thenReturn(expectedResponse);
 
-        mockMvc.perform(
-                        patch(ASSIGN_URL)
-                                .with(user("testuser").roles(role))
-                                .with(csrf())
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(jsonRequest))
-                .andExpect(status().isOk());
-    }
+    mockMvc
+        .perform(
+            patch(ASSIGN_URL)
+                .with(user("testuser").roles(role))
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(jsonRequest))
+        .andExpect(status().isOk());
+  }
 
-    @Test
-    @WithMockUser(roles = "USER")
-    void assignRole_withUnauthorizedRole_returns403() throws Exception {
-        Set<RoleDTO> roles = Set.of(testRole1, testRole2);
-        UserRolesDTO request = new UserRolesDTO(userId, roles);
-        String jsonRequest = objectMapper.writeValueAsString(request);
-        mockMvc.perform(
-                        patch(ASSIGN_URL)
-                                .with(csrf())
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(jsonRequest))
-                .andExpect(status().isForbidden());
+  @Test
+  @WithMockUser(roles = "USER")
+  void assignRole_withUnauthorizedRole_returns403() throws Exception {
+    Set<RoleDTO> roles = Set.of(testRole1, testRole2);
+    UserRolesDTO request = new UserRolesDTO(userId, roles);
+    String jsonRequest = objectMapper.writeValueAsString(request);
+    mockMvc
+        .perform(
+            patch(ASSIGN_URL)
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(jsonRequest))
+        .andExpect(status().isForbidden());
 
-        verifyNoInteractions(roleService);
-    }
+    verifyNoInteractions(roleService);
+  }
 
-    @Test
-    void assignRole_unauthenticated_returns401() throws Exception {
-        Set<RoleDTO> roles = Set.of(testRole1);
-        UserRolesDTO request = new UserRolesDTO(userId, roles);
-        String jsonRequest = objectMapper.writeValueAsString(request);
+  @Test
+  void assignRole_unauthenticated_returns401() throws Exception {
+    Set<RoleDTO> roles = Set.of(testRole1);
+    UserRolesDTO request = new UserRolesDTO(userId, roles);
+    String jsonRequest = objectMapper.writeValueAsString(request);
 
-        mockMvc.perform(
-                        patch(ASSIGN_URL)
-                                .with(csrf())
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(jsonRequest))
-                .andExpect(status().isUnauthorized());
+    mockMvc
+        .perform(
+            patch(ASSIGN_URL)
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(jsonRequest))
+        .andExpect(status().isUnauthorized());
 
-        verifyNoInteractions(roleService);
-    }
+    verifyNoInteractions(roleService);
+  }
 
-    @Test
-    @WithMockUser(roles = "ADMIN")
-    void assignRole_withoutCsrf_returns403() throws Exception {
-        Set<RoleDTO> roles = Set.of(testRole1);
-        UserRolesDTO request = new UserRolesDTO(userId, roles);
-        String jsonRequest = objectMapper.writeValueAsString(request);
+  @Test
+  @WithMockUser(roles = "ADMIN")
+  void assignRole_withoutCsrf_returns403() throws Exception {
+    Set<RoleDTO> roles = Set.of(testRole1);
+    UserRolesDTO request = new UserRolesDTO(userId, roles);
+    String jsonRequest = objectMapper.writeValueAsString(request);
 
-        mockMvc.perform(
-                        patch(ASSIGN_URL)
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(jsonRequest))
-                .andExpect(status().isForbidden());
+    mockMvc
+        .perform(patch(ASSIGN_URL).contentType(MediaType.APPLICATION_JSON).content(jsonRequest))
+        .andExpect(status().isForbidden());
 
-        verifyNoInteractions(roleService);
-    }
+    verifyNoInteractions(roleService);
+  }
 
-    @ParameterizedTest
-    @ValueSource(strings = {"ADMIN", "SUPERADMIN"})
-    void assignRole_withUserNotFound_returns404(String role) throws Exception {
-        Set<RoleDTO> roles = Set.of(testRole1);
-        UserRolesDTO request = new UserRolesDTO(userId, roles);
-        String jsonRequest = objectMapper.writeValueAsString(request);
+  @ParameterizedTest
+  @ValueSource(strings = {"ADMIN", "SUPERADMIN"})
+  void assignRole_withUserNotFound_returns404(String role) throws Exception {
+    Set<RoleDTO> roles = Set.of(testRole1);
+    UserRolesDTO request = new UserRolesDTO(userId, roles);
+    String jsonRequest = objectMapper.writeValueAsString(request);
 
-        when(roleService.assignRoles(userId, roles)).thenThrow(new UserNotFoundException(userId));
+    when(roleService.assignRoles(userId, roles)).thenThrow(new UserNotFoundException(userId));
 
-        mockMvc.perform(
-                        patch(ASSIGN_URL)
-                                .with(user("testuser").roles(role))
-                                .with(csrf())
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(jsonRequest))
-                .andExpect(status().isNotFound());
+    mockMvc
+        .perform(
+            patch(ASSIGN_URL)
+                .with(user("testuser").roles(role))
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(jsonRequest))
+        .andExpect(status().isNotFound());
 
-        verify(roleService).assignRoles(userId, roles);
-    }
+    verify(roleService).assignRoles(userId, roles);
+  }
 
-    @ParameterizedTest
-    @ValueSource(strings = {"ADMIN", "SUPERADMIN"})
-    void assignRole_withRoleNotFound_returns404(String role) throws Exception {
+  @ParameterizedTest
+  @ValueSource(strings = {"ADMIN", "SUPERADMIN"})
+  void assignRole_withRoleNotFound_returns404(String role) throws Exception {
 
-        Set<RoleDTO> roles = Set.of(testRole1);
-        UserRolesDTO request = new UserRolesDTO(userId, roles);
-        String jsonRequest = objectMapper.writeValueAsString(request);
+    Set<RoleDTO> roles = Set.of(testRole1);
+    UserRolesDTO request = new UserRolesDTO(userId, roles);
+    String jsonRequest = objectMapper.writeValueAsString(request);
 
-        when(roleService.assignRoles(userId, roles))
-                .thenThrow(new RoleNotFoundException("Role not found: " + testRole1.getName()));
+    when(roleService.assignRoles(userId, roles))
+        .thenThrow(new RoleNotFoundException("Role not found: " + testRole1.getName()));
 
-        mockMvc.perform(
-                        patch(ASSIGN_URL)
-                                .with(user("testuser").roles(role))
-                                .with(csrf())
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(jsonRequest))
-                .andExpect(status().isNotFound());
+    mockMvc
+        .perform(
+            patch(ASSIGN_URL)
+                .with(user("testuser").roles(role))
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(jsonRequest))
+        .andExpect(status().isNotFound());
 
-        verify(roleService).assignRoles(userId, roles);
-    }
+    verify(roleService).assignRoles(userId, roles);
+  }
 
-    @ParameterizedTest
-    @ValueSource(strings = {"ADMIN", "SUPERADMIN"})
-    void assignRole_withMissingUserId_returns400(String role) throws Exception {
-        Set<RoleDTO> roles = Set.of(testRole1);
-        UserRolesDTO requestWithoutId = new UserRolesDTO();
-        requestWithoutId.setRoles(roles);
+  @ParameterizedTest
+  @ValueSource(strings = {"ADMIN", "SUPERADMIN"})
+  void assignRole_withMissingUserId_returns400(String role) throws Exception {
+    Set<RoleDTO> roles = Set.of(testRole1);
+    UserRolesDTO requestWithoutId = new UserRolesDTO();
+    requestWithoutId.setRoles(roles);
 
-        String jsonRequest = objectMapper.writeValueAsString(requestWithoutId);
+    String jsonRequest = objectMapper.writeValueAsString(requestWithoutId);
 
-        when(roleService.assignRoles(null, roles))
-                .thenThrow(new IllegalArgumentException("User ID cannot be null"));
+    when(roleService.assignRoles(null, roles))
+        .thenThrow(new IllegalArgumentException("User ID cannot be null"));
 
-        mockMvc.perform(
-                        patch(ASSIGN_URL)
-                                .with(user("testuser").roles(role))
-                                .with(csrf())
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(jsonRequest))
-                .andExpect(status().isBadRequest());
+    mockMvc
+        .perform(
+            patch(ASSIGN_URL)
+                .with(user("testuser").roles(role))
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(jsonRequest))
+        .andExpect(status().isBadRequest());
 
-        verify(roleService).assignRoles(null, roles);
-    }
+    verify(roleService).assignRoles(null, roles);
+  }
 
-    @ParameterizedTest
-    @ValueSource(strings = {"ADMIN", "SUPERADMIN"})
-    void assignRole_withEmptyRoles_returns400(String role) throws Exception {
-        UserRolesDTO requestWithoutRoles = new UserRolesDTO(userId, Collections.emptySet());
-        String jsonRequest = objectMapper.writeValueAsString(requestWithoutRoles);
+  @ParameterizedTest
+  @ValueSource(strings = {"ADMIN", "SUPERADMIN"})
+  void assignRole_withEmptyRoles_returns400(String role) throws Exception {
+    UserRolesDTO requestWithoutRoles = new UserRolesDTO(userId, Collections.emptySet());
+    String jsonRequest = objectMapper.writeValueAsString(requestWithoutRoles);
 
-        when(roleService.assignRoles(userId, Collections.emptySet()))
-                .thenThrow(new IllegalArgumentException("At least one role is required"));
+    when(roleService.assignRoles(userId, Collections.emptySet()))
+        .thenThrow(new IllegalArgumentException("At least one role is required"));
 
-        mockMvc.perform(
-                        patch(ASSIGN_URL)
-                                .with(user("testuser").roles(role))
-                                .with(csrf())
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(jsonRequest))
-                .andExpect(status().isBadRequest());
+    mockMvc
+        .perform(
+            patch(ASSIGN_URL)
+                .with(user("testuser").roles(role))
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(jsonRequest))
+        .andExpect(status().isBadRequest());
 
-        verify(roleService).assignRoles(userId, Collections.emptySet());
-    }
+    verify(roleService).assignRoles(userId, Collections.emptySet());
+  }
 
-    @ParameterizedTest
-    @ValueSource(strings = {"ADMIN", "SUPERADMIN"})
-    void assignRole_withMissingUserRole_returns400(String role) throws Exception {
-        Set<RoleDTO> rolesWithoutUser = Set.of(testRole1); // Only ADMIN, no USER
-        UserRolesDTO request = new UserRolesDTO(userId, rolesWithoutUser);
-        String jsonRequest = objectMapper.writeValueAsString(request);
+  @ParameterizedTest
+  @ValueSource(strings = {"ADMIN", "SUPERADMIN"})
+  void assignRole_withMissingUserRole_returns400(String role) throws Exception {
+    Set<RoleDTO> rolesWithoutUser = Set.of(testRole1); // Only ADMIN, no USER
+    UserRolesDTO request = new UserRolesDTO(userId, rolesWithoutUser);
+    String jsonRequest = objectMapper.writeValueAsString(request);
 
-        when(roleService.assignRoles(userId, rolesWithoutUser))
-                .thenThrow(new IllegalArgumentException("Every user requires the role USER"));
+    when(roleService.assignRoles(userId, rolesWithoutUser))
+        .thenThrow(new IllegalArgumentException("Every user requires the role USER"));
 
-        mockMvc.perform(
-                        patch(ASSIGN_URL)
-                                .with(user("testuser").roles(role))
-                                .with(csrf())
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(jsonRequest))
-                .andExpect(status().isBadRequest());
+    mockMvc
+        .perform(
+            patch(ASSIGN_URL)
+                .with(user("testuser").roles(role))
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(jsonRequest))
+        .andExpect(status().isBadRequest());
 
-        verify(roleService).assignRoles(userId, rolesWithoutUser);
-    }
+    verify(roleService).assignRoles(userId, rolesWithoutUser);
+  }
 
-    @ParameterizedTest
-    @ValueSource(strings = {"ADMIN", "SUPERADMIN"})
-    void assignRole_withInvalidSuperAdminHierarchy_returns400(String role) throws Exception {
-        RoleDTO superAdminRole = new RoleDTO();
-        superAdminRole.setName("SUPERADMIN");
+  @ParameterizedTest
+  @ValueSource(strings = {"ADMIN", "SUPERADMIN"})
+  void assignRole_withInvalidSuperAdminHierarchy_returns400(String role) throws Exception {
+    RoleDTO superAdminRole = new RoleDTO();
+    superAdminRole.setName("SUPERADMIN");
 
-        Set<RoleDTO> invalidRoles = Set.of(superAdminRole); // SUPERADMIN without ADMIN/USER
-        UserRolesDTO request = new UserRolesDTO(userId, invalidRoles);
-        String jsonRequest = objectMapper.writeValueAsString(request);
+    Set<RoleDTO> invalidRoles = Set.of(superAdminRole); // SUPERADMIN without ADMIN/USER
+    UserRolesDTO request = new UserRolesDTO(userId, invalidRoles);
+    String jsonRequest = objectMapper.writeValueAsString(request);
 
-        when(roleService.assignRoles(userId, invalidRoles))
-                .thenThrow(
-                        new IllegalArgumentException("SUPERADMIN requires ADMIN and USER roles"));
+    when(roleService.assignRoles(userId, invalidRoles))
+        .thenThrow(new IllegalArgumentException("SUPERADMIN requires ADMIN and USER roles"));
 
-        mockMvc.perform(
-                        patch(ASSIGN_URL)
-                                .with(user("testuser").roles(role))
-                                .with(csrf())
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(jsonRequest))
-                .andExpect(status().isBadRequest());
+    mockMvc
+        .perform(
+            patch(ASSIGN_URL)
+                .with(user("testuser").roles(role))
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(jsonRequest))
+        .andExpect(status().isBadRequest());
 
-        verify(roleService).assignRoles(userId, invalidRoles);
-    }
+    verify(roleService).assignRoles(userId, invalidRoles);
+  }
 }

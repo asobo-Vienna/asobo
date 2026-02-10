@@ -7,7 +7,7 @@ import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
 public interface UserDTOToUserPublicDTOMapper {
-    UserPublicDTO mapUserDTOToUserPublicDTO(UserDTO userDTO);
+  UserPublicDTO mapUserDTOToUserPublicDTO(UserDTO userDTO);
 
-    List<UserPublicDTO> mapUserDTOsToUserPublicDTOs(List<UserDTO> userDTOs);
+  List<UserPublicDTO> mapUserDTOsToUserPublicDTOs(List<UserDTO> userDTOs);
 }

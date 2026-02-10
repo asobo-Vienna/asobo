@@ -15,37 +15,37 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/events/{eventId}/media")
 public class MediumController {
 
-    private final MediumService mediumService;
+  private final MediumService mediumService;
 
-    public MediumController(MediumService mediumService) {
-        this.mediumService = mediumService;
-    }
+  public MediumController(MediumService mediumService) {
+    this.mediumService = mediumService;
+  }
 
-    @GetMapping()
-    public List<MediumDTO> getAllMediaByEventId(@PathVariable UUID eventId) {
-        return mediumService.getAllMediaByEventId(eventId);
-    }
+  @GetMapping()
+  public List<MediumDTO> getAllMediaByEventId(@PathVariable UUID eventId) {
+    return mediumService.getAllMediaByEventId(eventId);
+  }
 
-    @GetMapping("/{mediumId}")
-    public MediumDTO getMediumById(@PathVariable UUID mediumId, @PathVariable UUID eventId) {
-        return this.mediumService.getMediumDTOByIdAndEventId(mediumId, eventId);
-    }
+  @GetMapping("/{mediumId}")
+  public MediumDTO getMediumById(@PathVariable UUID mediumId, @PathVariable UUID eventId) {
+    return this.mediumService.getMediumDTOByIdAndEventId(mediumId, eventId);
+  }
 
-    @PostMapping
-    @PreAuthorize("hasAnyRole('ADMIN', 'SUPERADMIN', 'USER')")
-    public MediumDTO addMediumToEventById(
-            @PathVariable UUID eventId,
-            @ModelAttribute @Valid MediumCreationDTO medium,
-            @AuthenticationPrincipal UserPrincipal loggedInUser) {
-        return this.mediumService.addMediumToEventById(eventId, medium, loggedInUser);
-    }
+  @PostMapping
+  @PreAuthorize("hasAnyRole('ADMIN', 'SUPERADMIN', 'USER')")
+  public MediumDTO addMediumToEventById(
+      @PathVariable UUID eventId,
+      @ModelAttribute @Valid MediumCreationDTO medium,
+      @AuthenticationPrincipal UserPrincipal loggedInUser) {
+    return this.mediumService.addMediumToEventById(eventId, medium, loggedInUser);
+  }
 
-    @DeleteMapping("/{mediumID}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'SUPERADMIN', 'USER')")
-    public MediumDTO deleteMediumById(
-            @PathVariable UUID mediumID,
-            @PathVariable UUID eventId,
-            @AuthenticationPrincipal UserPrincipal loggedInUser) {
-        return this.mediumService.deleteMediumById(mediumID, eventId, loggedInUser);
-    }
+  @DeleteMapping("/{mediumID}")
+  @PreAuthorize("hasAnyRole('ADMIN', 'SUPERADMIN', 'USER')")
+  public MediumDTO deleteMediumById(
+      @PathVariable UUID mediumID,
+      @PathVariable UUID eventId,
+      @AuthenticationPrincipal UserPrincipal loggedInUser) {
+    return this.mediumService.deleteMediumById(mediumID, eventId, loggedInUser);
+  }
 }

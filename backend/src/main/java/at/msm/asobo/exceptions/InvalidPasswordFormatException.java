@@ -7,20 +7,20 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(HttpStatus.BAD_REQUEST)
 public class InvalidPasswordFormatException extends RuntimeException {
-    private final List<String> violations;
+  private final List<String> violations;
 
-    public InvalidPasswordFormatException(String message) {
-        super(message);
-        this.violations = new ArrayList<>();
-        this.violations.add(message);
-    }
+  public InvalidPasswordFormatException(String message) {
+    super(message);
+    this.violations = new ArrayList<>();
+    this.violations.add(message);
+  }
 
-    public InvalidPasswordFormatException(String message, List<String> violations) {
-        super(message);
-        this.violations = violations;
-    }
+  public InvalidPasswordFormatException(String message, List<String> violations) {
+    super(message);
+    this.violations = violations;
+  }
 
-    public List<String> getViolations() {
-        return violations;
-    }
+  public List<String> getViolations() {
+    return violations;
+  }
 }

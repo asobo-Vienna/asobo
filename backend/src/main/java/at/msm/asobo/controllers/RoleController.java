@@ -13,19 +13,19 @@ import org.springframework.web.bind.annotation.*;
 @PreAuthorize("hasAnyRole('ADMIN', 'SUPERADMIN')")
 public class RoleController {
 
-    private final RoleService roleService;
+  private final RoleService roleService;
 
-    public RoleController(RoleService roleService) {
-        this.roleService = roleService;
-    }
+  public RoleController(RoleService roleService) {
+    this.roleService = roleService;
+  }
 
-    @GetMapping
-    public List<RoleDTO> getAllRoles() {
-        return this.roleService.getAllRoles();
-    }
+  @GetMapping
+  public List<RoleDTO> getAllRoles() {
+    return this.roleService.getAllRoles();
+  }
 
-    @PatchMapping("/assign")
-    public UserRolesDTO assignRoles(@Valid @RequestBody UserRolesDTO userRolesDTO) {
-        return this.roleService.assignRoles(userRolesDTO.getUserId(), userRolesDTO.getRoles());
-    }
+  @PatchMapping("/assign")
+  public UserRolesDTO assignRoles(@Valid @RequestBody UserRolesDTO userRolesDTO) {
+    return this.roleService.assignRoles(userRolesDTO.getUserId(), userRolesDTO.getRoles());
+  }
 }

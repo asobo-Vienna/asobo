@@ -35,111 +35,113 @@ import org.springframework.test.web.servlet.MockMvc;
 @EnableMethodSecurity
 class AdminControllerTest {
 
-    @Autowired private MockMvc mockMvc;
+  @Autowired private MockMvc mockMvc;
 
-    @Autowired private ObjectMapper objectMapper;
+  @Autowired private ObjectMapper objectMapper;
 
-    @MockitoBean private AdminService adminService;
+  @MockitoBean private AdminService adminService;
 
-    @MockitoBean private FileStorageProperties fileStorageProperties;
+  @MockitoBean private FileStorageProperties fileStorageProperties;
 
-    @MockitoBean private JwtUtil jwtUtil;
+  @MockitoBean private JwtUtil jwtUtil;
 
-    @MockitoBean private CustomUserDetailsService customUserDetailsService;
+  @MockitoBean private CustomUserDetailsService customUserDetailsService;
 
-    private static final String USERS_URL = "/api/admin/users";
-    private static final String USERS_PAGINATED_URL = "/api/admin/users/paginated";
-    private static final String COMMENTS_URL = "/api/admin/comments";
-    private static final String MEDIA_URL = "/api/admin/media";
+  private static final String USERS_URL = "/api/admin/users";
+  private static final String USERS_PAGINATED_URL = "/api/admin/users/paginated";
+  private static final String COMMENTS_URL = "/api/admin/comments";
+  private static final String MEDIA_URL = "/api/admin/media";
 
-    @ParameterizedTest
-    @ValueSource(strings = {USERS_URL, COMMENTS_URL, MEDIA_URL})
-    void getAllUsers_Paginated_WithoutAuthentication_ReturnsForbidden(String url) throws Exception {
-        mockMvc.perform(get(url)).andExpect(status().isUnauthorized());
-    }
+  @ParameterizedTest
+  @ValueSource(strings = {USERS_URL, COMMENTS_URL, MEDIA_URL})
+  void getAllUsers_Paginated_WithoutAuthentication_ReturnsForbidden(String url) throws Exception {
+    mockMvc.perform(get(url)).andExpect(status().isUnauthorized());
+  }
 
-    @ParameterizedTest
-    @ValueSource(strings = {USERS_URL, COMMENTS_URL, MEDIA_URL})
-    @WithMockUser(roles = "USER")
-    void getAllUsers_Paginated_WithUserRole_ReturnsForbidden(String url) throws Exception {
-        mockMvc.perform(get(url)).andExpect(status().isForbidden());
-    }
+  @ParameterizedTest
+  @ValueSource(strings = {USERS_URL, COMMENTS_URL, MEDIA_URL})
+  @WithMockUser(roles = "USER")
+  void getAllUsers_Paginated_WithUserRole_ReturnsForbidden(String url) throws Exception {
+    mockMvc.perform(get(url)).andExpect(status().isForbidden());
+  }
 
-    @ParameterizedTest
-    @ValueSource(strings = {"ADMIN", "SUPERADMIN"})
-    void getAllUsers_WithAdminRole_ReturnsPageOfUsersPaginated(String role) throws Exception {
-        Pageable pageable = PageRequest.of(0, 10);
-        UserAdminSummaryDTO user1 = new UserAdminSummaryDTO();
-        user1.setId(UUID.randomUUID());
+  @ParameterizedTest
+  @ValueSource(strings = {"ADMIN", "SUPERADMIN"})
+  void getAllUsers_WithAdminRole_ReturnsPageOfUsersPaginated(String role) throws Exception {
+    Pageable pageable = PageRequest.of(0, 10);
+    UserAdminSummaryDTO user1 = new UserAdminSummaryDTO();
+    user1.setId(UUID.randomUUID());
 
-        UserAdminSummaryDTO user2 = new UserAdminSummaryDTO();
-        user2.setId(UUID.randomUUID());
+    UserAdminSummaryDTO user2 = new UserAdminSummaryDTO();
+    user2.setId(UUID.randomUUID());
 
-        Page<UserAdminSummaryDTO> userPage = new PageImpl<>(List.of(user1, user2), pageable, 2);
-        String expectedJson = objectMapper.writeValueAsString(userPage);
+    Page<UserAdminSummaryDTO> userPage = new PageImpl<>(List.of(user1, user2), pageable, 2);
+    String expectedJson = objectMapper.writeValueAsString(userPage);
 
-        when(adminService.getAllUsersPaginated(any(Pageable.class))).thenReturn(userPage);
+    when(adminService.getAllUsersPaginated(any(Pageable.class))).thenReturn(userPage);
 
-        mockMvc.perform(
-                        get(USERS_PAGINATED_URL)
-                                .with(user("testadmin").roles(role))
-                                .param("page", "0")
-                                .param("size", "10"))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(content().string(expectedJson));
+    mockMvc
+        .perform(
+            get(USERS_PAGINATED_URL)
+                .with(user("testadmin").roles(role))
+                .param("page", "0")
+                .param("size", "10"))
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(content().string(expectedJson));
 
-        verify(adminService).getAllUsersPaginated(any(Pageable.class));
-    }
+    verify(adminService).getAllUsersPaginated(any(Pageable.class));
+  }
 
-    @ParameterizedTest
-    @ValueSource(strings = {"ADMIN", "SUPERADMIN"})
-    void getAllComments_WithAdminRole_ReturnsPageOfComments(String role) throws Exception {
-        Pageable pageable = PageRequest.of(0, 10);
-        UserCommentWithEventTitleDTO comment1 = new UserCommentWithEventTitleDTO();
-        UserCommentWithEventTitleDTO comment2 = new UserCommentWithEventTitleDTO();
+  @ParameterizedTest
+  @ValueSource(strings = {"ADMIN", "SUPERADMIN"})
+  void getAllComments_WithAdminRole_ReturnsPageOfComments(String role) throws Exception {
+    Pageable pageable = PageRequest.of(0, 10);
+    UserCommentWithEventTitleDTO comment1 = new UserCommentWithEventTitleDTO();
+    UserCommentWithEventTitleDTO comment2 = new UserCommentWithEventTitleDTO();
 
-        Page<UserCommentWithEventTitleDTO> commentPage =
-                new PageImpl<>(List.of(comment1, comment2), pageable, 2);
-        String expectedJson = objectMapper.writeValueAsString(commentPage);
+    Page<UserCommentWithEventTitleDTO> commentPage =
+        new PageImpl<>(List.of(comment1, comment2), pageable, 2);
+    String expectedJson = objectMapper.writeValueAsString(commentPage);
 
-        when(adminService.getAllUserCommentsWithEventTitle(any(Pageable.class)))
-                .thenReturn(commentPage);
+    when(adminService.getAllUserCommentsWithEventTitle(any(Pageable.class)))
+        .thenReturn(commentPage);
 
-        mockMvc.perform(
-                        get(COMMENTS_URL)
-                                .with(user("testadmin").roles(role))
-                                .param("page", "0")
-                                .param("size", "10"))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(content().string(expectedJson));
+    mockMvc
+        .perform(
+            get(COMMENTS_URL)
+                .with(user("testadmin").roles(role))
+                .param("page", "0")
+                .param("size", "10"))
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(content().string(expectedJson));
 
-        verify(adminService).getAllUserCommentsWithEventTitle(any(Pageable.class));
-    }
+    verify(adminService).getAllUserCommentsWithEventTitle(any(Pageable.class));
+  }
 
-    @ParameterizedTest
-    @ValueSource(strings = {"ADMIN", "SUPERADMIN"})
-    void getAllMedia_WithAdminRole_ReturnsPageOfMedia(String role) throws Exception {
-        Pageable pageable = PageRequest.of(0, 10);
-        MediumWithEventTitleDTO media1 = new MediumWithEventTitleDTO();
-        MediumWithEventTitleDTO media2 = new MediumWithEventTitleDTO();
+  @ParameterizedTest
+  @ValueSource(strings = {"ADMIN", "SUPERADMIN"})
+  void getAllMedia_WithAdminRole_ReturnsPageOfMedia(String role) throws Exception {
+    Pageable pageable = PageRequest.of(0, 10);
+    MediumWithEventTitleDTO media1 = new MediumWithEventTitleDTO();
+    MediumWithEventTitleDTO media2 = new MediumWithEventTitleDTO();
 
-        Page<MediumWithEventTitleDTO> mediaPage =
-                new PageImpl<>(List.of(media1, media2), pageable, 2);
-        String expectedJson = objectMapper.writeValueAsString(mediaPage);
+    Page<MediumWithEventTitleDTO> mediaPage = new PageImpl<>(List.of(media1, media2), pageable, 2);
+    String expectedJson = objectMapper.writeValueAsString(mediaPage);
 
-        when(adminService.getAllMediaWithEventTitle(any(Pageable.class))).thenReturn(mediaPage);
+    when(adminService.getAllMediaWithEventTitle(any(Pageable.class))).thenReturn(mediaPage);
 
-        mockMvc.perform(
-                        get(MEDIA_URL)
-                                .with(user("testadmin").roles(role))
-                                .param("page", "0")
-                                .param("size", "10"))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(content().string(expectedJson));
+    mockMvc
+        .perform(
+            get(MEDIA_URL)
+                .with(user("testadmin").roles(role))
+                .param("page", "0")
+                .param("size", "10"))
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(content().string(expectedJson));
 
-        verify(adminService).getAllMediaWithEventTitle(any(Pageable.class));
-    }
+    verify(adminService).getAllMediaWithEventTitle(any(Pageable.class));
+  }
 }

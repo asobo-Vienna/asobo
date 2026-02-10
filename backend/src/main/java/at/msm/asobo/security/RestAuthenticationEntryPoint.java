@@ -13,23 +13,23 @@ import org.springframework.stereotype.Component;
 @Component
 public class RestAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
-    private final ObjectMapper objectMapper = new ObjectMapper();
+  private final ObjectMapper objectMapper = new ObjectMapper();
 
-    @Override
-    public void commence(
-            HttpServletRequest request,
-            HttpServletResponse response,
-            AuthenticationException authException)
-            throws IOException {
-        response.setContentType("application/json");
-        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+  @Override
+  public void commence(
+      HttpServletRequest request,
+      HttpServletResponse response,
+      AuthenticationException authException)
+      throws IOException {
+    response.setContentType("application/json");
+    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 
-        ErrorResponse error =
-                new ErrorResponse(
-                        "UNAUTHORIZED",
-                        "Invalid credentials or authentication required",
-                        HttpStatus.UNAUTHORIZED.value());
+    ErrorResponse error =
+        new ErrorResponse(
+            "UNAUTHORIZED",
+            "Invalid credentials or authentication required",
+            HttpStatus.UNAUTHORIZED.value());
 
-        response.getWriter().write(objectMapper.writeValueAsString(error));
-    }
+    response.getWriter().write(objectMapper.writeValueAsString(error));
+  }
 }

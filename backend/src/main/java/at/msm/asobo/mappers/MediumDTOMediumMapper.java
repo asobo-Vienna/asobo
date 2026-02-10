@@ -10,27 +10,26 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface MediumDTOMediumMapper {
 
-    @Mapping(source = "event.id", target = "eventId")
-    MediumDTO mapMediumToMediumDTO(Medium medium);
+  @Mapping(source = "event.id", target = "eventId")
+  MediumDTO mapMediumToMediumDTO(Medium medium);
 
-    @Mapping(source = "eventId", target = "event.id")
-    Medium mapMediumDTOToMedium(MediumDTO mediumDTO);
+  @Mapping(source = "eventId", target = "event.id")
+  Medium mapMediumDTOToMedium(MediumDTO mediumDTO);
 
-    List<MediumDTO> mapMediaToMediaDTOList(List<Medium> media);
+  List<MediumDTO> mapMediaToMediaDTOList(List<Medium> media);
 
-    List<Medium> mapMediumDTOsToMediumList(List<MediumDTO> mediaDTOList);
+  List<Medium> mapMediumDTOsToMediumList(List<MediumDTO> mediaDTOList);
 
-    @Mapping(target = "mediumFile", ignore = true)
-    @Mapping(source = "event.id", target = "eventId")
-    MediumCreationDTO mapMediumToMediumCreationDTO(Medium medium);
+  @Mapping(target = "mediumFile", ignore = true)
+  @Mapping(source = "event.id", target = "eventId")
+  MediumCreationDTO mapMediumToMediumCreationDTO(Medium medium);
 
-    @Mapping(target = "mediumURI", ignore = true)
-    @Mapping(target = "id", ignore = true)
-    @Mapping(source = "eventId", target = "event.id")
-    Medium mapMediumCreationDTOToMedium(MediumCreationDTO mediumCreationDTO);
+  @Mapping(target = "mediumURI", ignore = true)
+  @Mapping(target = "id", ignore = true)
+  @Mapping(source = "eventId", target = "event.id")
+  Medium mapMediumCreationDTOToMedium(MediumCreationDTO mediumCreationDTO);
 
-    List<MediumCreationDTO> mapMediaToMediaCreationDTOList(
-            List<MediumCreationDTO> mediaCreationDTO);
+  List<MediumCreationDTO> mapMediaToMediaCreationDTOList(List<MediumCreationDTO> mediaCreationDTO);
 
-    List<Medium> mapMediaCreationDTOToMediaList(List<MediumCreationDTO> mediaCreationDTO);
+  List<Medium> mapMediaCreationDTOToMediaList(List<MediumCreationDTO> mediaCreationDTO);
 }

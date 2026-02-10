@@ -13,52 +13,46 @@ import org.springframework.stereotype.Component;
 @Component
 public class JwtUtil {
 
-    @Value("${jwt.secret}")
-    private String secret;
+  @Value("${jwt.secret}")
+  private String secret;
 
-    private SecretKey getSigningKey() {
-        return Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
-    }
+  private SecretKey getSigningKey() {
+    return Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
+  }
 
-    public String generateToken(UserPrincipal userPrincipal, long expirationTime) {
-        return Jwts.builder()
-                .subject(userPrincipal.getUsername())
-                .claim("userId", userPrincipal.getUserId())
-                .claim(
-                        "roles",
-                        userPrincipal.getAuthorities().stream()
-                                .map(
-                                        GrantedAuthority
-                                                ::getAuthority) // "ROLE_USER", "ROLE_ADMIN" etc.
-                                .toList())
-                .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + expirationTime))
-                .signWith(getSigningKey())
-                .compact();
-    }
+  public String generateToken(UserPrincipal userPrincipal, long expirationTime) {
+    return Jwts.builder()
+        .subject(userPrincipal.getUsername())
+        .claim("userId", userPrincipal.getUserId())
+        .claim(
+            "roles",
+            userPrincipal.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority) // "ROLE_USER", "ROLE_ADMIN" etc.
+                .toList())
+        .issuedAt(new Date())
+        .expiration(new Date(System.currentTimeMillis() + expirationTime))
+        .signWith(getSigningKey())
+        .compact();
+  }
 
-    public String getUsernameFromToken(String token) {
-        return this.parseClaims(token).getSubject();
-    }
+  public String getUsernameFromToken(String token) {
+    return this.parseClaims(token).getSubject();
+  }
 
-    public String getUserIdFromToken(String token) {
-        return this.parseClaims(token).get("userId", String.class);
-    }
+  public String getUserIdFromToken(String token) {
+    return this.parseClaims(token).get("userId", String.class);
+  }
 
-    private Claims parseClaims(String token) {
-        return Jwts.parser()
-                .verifyWith(getSigningKey())
-                .build()
-                .parseSignedClaims(token)
-                .getPayload();
-    }
+  private Claims parseClaims(String token) {
+    return Jwts.parser().verifyWith(getSigningKey()).build().parseSignedClaims(token).getPayload();
+  }
 
-    public boolean validateToken(String token) {
-        try {
-            Jwts.parser().verifyWith(getSigningKey()).build().parseSignedClaims(token);
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
+  public boolean validateToken(String token) {
+    try {
+      Jwts.parser().verifyWith(getSigningKey()).build().parseSignedClaims(token);
+      return true;
+    } catch (Exception e) {
+      return false;
     }
+  }
 }

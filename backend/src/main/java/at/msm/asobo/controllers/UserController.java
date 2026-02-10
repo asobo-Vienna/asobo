@@ -18,49 +18,49 @@ import org.springframework.web.multipart.MultipartFile;
 @PreAuthorize("hasAnyRole('ADMIN', 'SUPERADMIN', 'USER')")
 public class UserController {
 
-    private final UserService userService;
+  private final UserService userService;
 
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
+  public UserController(UserService userService) {
+    this.userService = userService;
+  }
 
-    // we need "/id/ before the actual id, because otherwise
-    // /{id} and /{username} lead to ambiguity
-    @GetMapping(value = "/id/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public UserPublicDTO getUserById(@PathVariable UUID id) {
-        return this.userService.getUserDTOById(id);
-    }
+  // we need "/id/ before the actual id, because otherwise
+  // /{id} and /{username} lead to ambiguity
+  @GetMapping(value = "/id/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+  public UserPublicDTO getUserById(@PathVariable UUID id) {
+    return this.userService.getUserDTOById(id);
+  }
 
-    @GetMapping("/{username}")
-    public UserPublicDTO getUserByUsername(@PathVariable String username) {
+  @GetMapping("/{username}")
+  public UserPublicDTO getUserByUsername(@PathVariable String username) {
 
-        return this.userService.getUserByUsername(username);
-    }
+    return this.userService.getUserByUsername(username);
+  }
 
-    @PatchMapping("/{id}")
-    public LoginResponseDTO updateUser(
-            @PathVariable UUID id,
-            @RequestBody @Valid UserUpdateDTO userUpdateDTO,
-            @AuthenticationPrincipal UserPrincipal loggedInUser) {
+  @PatchMapping("/{id}")
+  public LoginResponseDTO updateUser(
+      @PathVariable UUID id,
+      @RequestBody @Valid UserUpdateDTO userUpdateDTO,
+      @AuthenticationPrincipal UserPrincipal loggedInUser) {
 
-        return this.userService.updateUserById(id, loggedInUser, userUpdateDTO);
-    }
+    return this.userService.updateUserById(id, loggedInUser, userUpdateDTO);
+  }
 
-    @PatchMapping("/{id}/profile-picture")
-    public LoginResponseDTO updateProfilePicture(
-            @PathVariable UUID id,
-            @RequestParam("profilePicture") MultipartFile profilePicture,
-            @AuthenticationPrincipal UserPrincipal loggedInUser) {
+  @PatchMapping("/{id}/profile-picture")
+  public LoginResponseDTO updateProfilePicture(
+      @PathVariable UUID id,
+      @RequestParam("profilePicture") MultipartFile profilePicture,
+      @AuthenticationPrincipal UserPrincipal loggedInUser) {
 
-        UserUpdateDTO userUpdateDTO = new UserUpdateDTO();
-        userUpdateDTO.setProfilePicture(profilePicture);
+    UserUpdateDTO userUpdateDTO = new UserUpdateDTO();
+    userUpdateDTO.setProfilePicture(profilePicture);
 
-        return this.userService.updateUserById(id, loggedInUser, userUpdateDTO);
-    }
+    return this.userService.updateUserById(id, loggedInUser, userUpdateDTO);
+  }
 
-    @DeleteMapping("/{userId}")
-    public UserPublicDTO deleteUser(
-            @PathVariable UUID userId, @AuthenticationPrincipal UserPrincipal loggedInUser) {
-        return this.userService.deleteUserById(userId, loggedInUser);
-    }
+  @DeleteMapping("/{userId}")
+  public UserPublicDTO deleteUser(
+      @PathVariable UUID userId, @AuthenticationPrincipal UserPrincipal loggedInUser) {
+    return this.userService.deleteUserById(userId, loggedInUser);
+  }
 }

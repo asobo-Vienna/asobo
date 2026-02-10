@@ -1,17 +1,17 @@
 package at.msm.asobo.dto.auth;
 
 public class AvailabilityDTO {
-    private boolean available;
+  private boolean available;
 
-    public AvailabilityDTO(boolean available) {
-        this.available = available;
-    }
+  public AvailabilityDTO(boolean available) {
+    this.available = available;
+  }
 
-    public boolean isAvailable() {
-        return available;
-    }
+  public boolean isAvailable() {
+    return available;
+  }
 
-    public void setAvailable(boolean available) {
-        this.available = available;
-    }
+  public void setAvailable(boolean available) {
+    this.available = available;
+  }
 }

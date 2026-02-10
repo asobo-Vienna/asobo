@@ -10,12 +10,12 @@ import org.springframework.security.core.authority.AuthorityUtils;
 
 public final class MockAuthenticationFactory {
 
-    public static Authentication mockAuth(
-            UUID userId, String username, String email, String... roles) {
-        List<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList(roles);
+  public static Authentication mockAuth(
+      UUID userId, String username, String email, String... roles) {
+    List<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList(roles);
 
-        UserPrincipal principal = new UserPrincipal(userId, username, email, authorities);
+    UserPrincipal principal = new UserPrincipal(userId, username, email, authorities);
 
-        return new UsernamePasswordAuthenticationToken(principal, null, authorities);
-    }
+    return new UsernamePasswordAuthenticationToken(principal, null, authorities);
+  }
 }

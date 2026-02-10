@@ -5,29 +5,29 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 public interface EventSummaryProjection {
-    UUID getId();
+  UUID getId();
 
-    String getTitle();
+  String getTitle();
 
-    String getDescription();
+  String getDescription();
 
-    String getPictureURI();
+  String getPictureURI();
 
-    String getLocation();
+  String getLocation();
 
-    LocalDateTime getDate();
+  LocalDateTime getDate();
 
-    LocalDateTime getCreationDate();
+  LocalDateTime getCreationDate();
 
-    LocalDateTime getModificationDate();
+  LocalDateTime getModificationDate();
 
-    User getCreator();
+  User getCreator();
 
-    boolean getIsPrivate();
+  boolean getIsPrivate();
 
-    int getParticipantCount();
+  int getParticipantCount();
 
-    int getCommentCount();
+  int getCommentCount();
 
-    int getMediaCount();
+  int getMediaCount();
 }

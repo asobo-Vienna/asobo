@@ -9,19 +9,19 @@ import org.springframework.stereotype.Component;
 @Component
 public class UserMapperHelper {
 
-    private final UserService userService;
+  private final UserService userService;
 
-    public UserMapperHelper(UserService userService) {
-        this.userService = userService;
-    }
+  public UserMapperHelper(UserService userService) {
+    this.userService = userService;
+  }
 
-    @Named("uuidToUser")
-    public User fromId(UUID id) {
-        return userService.getUserById(id);
-    }
+  @Named("uuidToUser")
+  public User fromId(UUID id) {
+    return userService.getUserById(id);
+  }
 
-    @Named("userToUuid")
-    public UUID toId(User user) {
-        return user.getId();
-    }
+  @Named("userToUuid")
+  public UUID toId(User user) {
+    return user.getId();
+  }
 }

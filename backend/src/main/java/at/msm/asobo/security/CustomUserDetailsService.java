@@ -14,51 +14,47 @@ import org.springframework.stereotype.Component;
 @Component
 public class CustomUserDetailsService implements UserDetailsService {
 
-    private final UserRepository userRepository;
+  private final UserRepository userRepository;
 
-    public CustomUserDetailsService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+  public CustomUserDetailsService(UserRepository userRepository) {
+    this.userRepository = userRepository;
+  }
 
-    @Override
-    public UserDetails loadUserByUsername(String identifier) throws UsernameNotFoundException {
-        User user =
-                this.userRepository
-                        .findByUsername(identifier)
-                        .orElseGet(
-                                () ->
-                                        userRepository
-                                                .findByEmail(identifier)
-                                                .orElseThrow(
-                                                        () ->
-                                                                new UserNotFoundException(
-                                                                        "User not found with identifier: "
-                                                                                + identifier)));
-
-        return new UserPrincipal(
-                user.getId(),
-                user.getUsername(),
-                user.getPassword(),
-                user.getRoles().stream()
-                        .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getName()))
-                        .collect(Collectors.toSet()));
-    }
-
-    public UserDetails loadUserById(UUID userId) throws UserNotFoundException {
-        User user =
-                this.userRepository
-                        .findUserById(userId)
+  @Override
+  public UserDetails loadUserByUsername(String identifier) throws UsernameNotFoundException {
+    User user =
+        this.userRepository
+            .findByUsername(identifier)
+            .orElseGet(
+                () ->
+                    userRepository
+                        .findByEmail(identifier)
                         .orElseThrow(
-                                () ->
-                                        new UserNotFoundException(
-                                                "User with id " + userId + " not found"));
+                            () ->
+                                new UserNotFoundException(
+                                    "User not found with identifier: " + identifier)));
 
-        return new UserPrincipal(
-                user.getId(),
-                user.getUsername(),
-                user.getPassword(),
-                user.getRoles().stream()
-                        .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getName()))
-                        .collect(Collectors.toSet()));
-    }
+    return new UserPrincipal(
+        user.getId(),
+        user.getUsername(),
+        user.getPassword(),
+        user.getRoles().stream()
+            .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getName()))
+            .collect(Collectors.toSet()));
+  }
+
+  public UserDetails loadUserById(UUID userId) throws UserNotFoundException {
+    User user =
+        this.userRepository
+            .findUserById(userId)
+            .orElseThrow(() -> new UserNotFoundException("User with id " + userId + " not found"));
+
+    return new UserPrincipal(
+        user.getId(),
+        user.getUsername(),
+        user.getPassword(),
+        user.getRoles().stream()
+            .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getName()))
+            .collect(Collectors.toSet()));
+  }
 }

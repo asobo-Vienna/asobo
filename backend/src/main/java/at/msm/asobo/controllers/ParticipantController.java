@@ -14,21 +14,21 @@ import org.springframework.web.bind.annotation.*;
 @PreAuthorize("hasAnyRole('ADMIN', 'SUPERADMIN', 'USER')")
 public class ParticipantController {
 
-    private final ParticipantService participantService;
+  private final ParticipantService participantService;
 
-    public ParticipantController(ParticipantService participantService) {
-        this.participantService = participantService;
-    }
+  public ParticipantController(ParticipantService participantService) {
+    this.participantService = participantService;
+  }
 
-    // returns updated participants list
-    @PostMapping()
-    public Set<UserPublicDTO> toggleParticipantInEvent(
-            @PathVariable UUID eventId, @AuthenticationPrincipal UserPrincipal loggedInUser) {
-        return this.participantService.toggleParticipantInEvent(eventId, loggedInUser);
-    }
+  // returns updated participants list
+  @PostMapping()
+  public Set<UserPublicDTO> toggleParticipantInEvent(
+      @PathVariable UUID eventId, @AuthenticationPrincipal UserPrincipal loggedInUser) {
+    return this.participantService.toggleParticipantInEvent(eventId, loggedInUser);
+  }
 
-    @GetMapping()
-    public Set<UserPublicDTO> getParticipantsByEventId(@PathVariable UUID eventId) {
-        return this.participantService.getAllParticipantsAsDTOsByEventId(eventId);
-    }
+  @GetMapping()
+  public Set<UserPublicDTO> getParticipantsByEventId(@PathVariable UUID eventId) {
+    return this.participantService.getAllParticipantsAsDTOsByEventId(eventId);
+  }
 }
