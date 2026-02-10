@@ -14,33 +14,33 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/auth")
 public class AuthController {
 
-    private final UserService userService;
-    private final AuthService authService;
+  private final UserService userService;
+  private final AuthService authService;
 
-    public AuthController(UserService userService, AuthService authService) {
-        this.userService = userService;
-        this.authService = authService;
-    }
+  public AuthController(UserService userService, AuthService authService) {
+    this.userService = userService;
+    this.authService = authService;
+  }
 
-    @PostMapping("/register")
-    @ResponseStatus(HttpStatus.CREATED)
-    public LoginResponseDTO register(@RequestBody @Valid UserRegisterDTO userRegisterDTO) {
-        return this.authService.registerUser(userRegisterDTO);
-    }
+  @PostMapping("/register")
+  @ResponseStatus(HttpStatus.CREATED)
+  public LoginResponseDTO register(@RequestBody @Valid UserRegisterDTO userRegisterDTO) {
+    return this.authService.registerUser(userRegisterDTO);
+  }
 
-    @PostMapping("/login")
-    public LoginResponseDTO login(@RequestBody @Valid UserLoginDTO userLoginDTO) {
-        System.out.println(">>> Login request: " + userLoginDTO.getIdentifier());
-        return this.authService.loginUser(userLoginDTO);
-    }
+  @PostMapping("/login")
+  public LoginResponseDTO login(@RequestBody @Valid UserLoginDTO userLoginDTO) {
+    System.out.println(">>> Login request: " + userLoginDTO.getIdentifier());
+    return this.authService.loginUser(userLoginDTO);
+  }
 
-    @GetMapping("/check-username")
-    public AvailabilityDTO checkUsernameAvailability(@RequestParam String username) {
-        return new AvailabilityDTO(!this.userService.isUsernameAlreadyTaken(username));
-    }
+  @GetMapping("/check-username")
+  public AvailabilityDTO checkUsernameAvailability(@RequestParam String username) {
+    return new AvailabilityDTO(!this.userService.isUsernameAlreadyTaken(username));
+  }
 
-    @GetMapping("/check-email")
-    public AvailabilityDTO checkEmailAvailability(@RequestParam String email) {
-        return new AvailabilityDTO(!this.userService.isEmailAlreadyTaken(email));
-    }
+  @GetMapping("/check-email")
+  public AvailabilityDTO checkEmailAvailability(@RequestParam String email) {
+    return new AvailabilityDTO(!this.userService.isEmailAlreadyTaken(email));
+  }
 }

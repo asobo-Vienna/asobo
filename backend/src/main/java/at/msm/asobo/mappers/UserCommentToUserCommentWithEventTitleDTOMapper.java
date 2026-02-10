@@ -7,10 +7,10 @@ import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface UserCommentToUserCommentWithEventTitleDTOMapper {
-    @Mapping(source = "author.username", target = "username")
-    @Mapping(source = "author.id", target = "authorId")
-    @Mapping(source = "author.pictureURI", target = "pictureURI")
-    @Mapping(source = "event.id", target = "eventId")
-    @Mapping(source = "event.title", target = "eventTitle")
-    UserCommentWithEventTitleDTO toDTO(UserComment userComment);
+  @Mapping(source = "author.username", target = "username")
+  @Mapping(source = "author.id", target = "authorId")
+  @Mapping(source = "author.pictureURI", target = "pictureURI")
+  @Mapping(source = "event.id", target = "eventId")
+  @Mapping(source = "event.title", target = "eventTitle")
+  UserCommentWithEventTitleDTO toDTO(UserComment userComment);
 }

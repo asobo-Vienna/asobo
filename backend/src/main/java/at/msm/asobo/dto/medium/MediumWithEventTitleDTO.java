@@ -1,15 +1,15 @@
 package at.msm.asobo.dto.medium;
 
 public class MediumWithEventTitleDTO extends MediumDTO {
-    private String eventTitle;
+  private String eventTitle;
 
-    public MediumWithEventTitleDTO() {}
+  public MediumWithEventTitleDTO() {}
 
-    public String getEventTitle() {
-        return this.eventTitle;
-    }
+  public String getEventTitle() {
+    return this.eventTitle;
+  }
 
-    public void setEventTitle(String eventTitle) {
-        this.eventTitle = eventTitle;
-    }
+  public void setEventTitle(String eventTitle) {
+    this.eventTitle = eventTitle;
+  }
 }
