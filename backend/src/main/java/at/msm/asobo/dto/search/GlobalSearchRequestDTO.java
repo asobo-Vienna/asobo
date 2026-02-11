@@ -2,18 +2,17 @@ package at.msm.asobo.dto.search;
 
 import java.time.LocalDateTime;
 
-public class GlobalSearchRequest {
+public class GlobalSearchRequestDTO {
     private String query;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
     private String location;
     private Boolean includePrivateEvents = false;
 
-    public GlobalSearchRequest() {
-    }
+    public GlobalSearchRequestDTO() {}
 
     public String getQuery() {
-        return query;
+        return this.query;
     }
 
     public void setQuery(String query) {
@@ -21,7 +20,7 @@ public class GlobalSearchRequest {
     }
 
     public LocalDateTime getStartDate() {
-        return startDate;
+        return this.startDate;
     }
 
     public void setStartDate(LocalDateTime startDate) {
@@ -29,7 +28,7 @@ public class GlobalSearchRequest {
     }
 
     public LocalDateTime getEndDate() {
-        return endDate;
+        return this.endDate;
     }
 
     public void setEndDate(LocalDateTime endDate) {
@@ -37,7 +36,7 @@ public class GlobalSearchRequest {
     }
 
     public String getLocation() {
-        return location;
+        return this.location;
     }
 
     public void setLocation(String location) {
@@ -45,7 +44,7 @@ public class GlobalSearchRequest {
     }
 
     public Boolean getIncludePrivateEvents() {
-        return includePrivateEvents;
+        return this.includePrivateEvents;
     }
 
     public void setIncludePrivateEvents(Boolean includePrivateEvents) {

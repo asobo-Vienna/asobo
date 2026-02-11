@@ -2,7 +2,7 @@ package at.msm.asobo.dto.search;
 
 import java.util.UUID;
 
-public class UserSearchResult {
+public class UserSearchResultDTO {
     private UUID id;
     private String username;
     private String firstName;
@@ -14,11 +14,11 @@ public class UserSearchResult {
     private int createdEventsCount;
     private String type = "USER";
 
-    public UserSearchResult() {
+    public UserSearchResultDTO() {
     }
 
     public UUID getId() {
-        return id;
+        return this.id;
     }
 
     public void setId(UUID id) {
@@ -26,7 +26,7 @@ public class UserSearchResult {
     }
 
     public String getUsername() {
-        return username;
+        return this.username;
     }
 
     public void setUsername(String username) {
@@ -34,7 +34,7 @@ public class UserSearchResult {
     }
 
     public String getFirstName() {
-        return firstName;
+        return this.firstName;
     }
 
     public void setFirstName(String firstName) {
@@ -42,7 +42,7 @@ public class UserSearchResult {
     }
 
     public String getSurname() {
-        return surname;
+        return this.surname;
     }
 
     public void setSurname(String surname) {
@@ -50,7 +50,7 @@ public class UserSearchResult {
     }
 
     public String getFullName() {
-        return fullName;
+        return this.fullName;
     }
 
     public void setFullName(String fullName) {
@@ -58,7 +58,7 @@ public class UserSearchResult {
     }
 
     public String getAboutMe() {
-        return aboutMe;
+        return this.aboutMe;
     }
 
     public void setAboutMe(String aboutMe) {
@@ -66,7 +66,7 @@ public class UserSearchResult {
     }
 
     public String getPictureURI() {
-        return pictureURI;
+        return this.pictureURI;
     }
 
     public void setPictureURI(String pictureURI) {
@@ -74,7 +74,7 @@ public class UserSearchResult {
     }
 
     public String getLocation() {
-        return location;
+        return this.location;
     }
 
     public void setLocation(String location) {
@@ -82,7 +82,7 @@ public class UserSearchResult {
     }
 
     public int getCreatedEventsCount() {
-        return createdEventsCount;
+        return this.createdEventsCount;
     }
 
     public void setCreatedEventsCount(int createdEventsCount) {
@@ -90,7 +90,7 @@ public class UserSearchResult {
     }
 
     public String getType() {
-        return type;
+        return this.type;
     }
 
     public void setType(String type) {

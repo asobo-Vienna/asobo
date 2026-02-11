@@ -1,19 +1,17 @@
 package at.msm.asobo.services;
 
-import at.msm.asobo.dto.search.EventSearchResult;
-import at.msm.asobo.dto.search.GlobalSearchRequest;
-import at.msm.asobo.dto.search.GlobalSearchResponse;
-import at.msm.asobo.dto.search.UserSearchResult;
+import at.msm.asobo.dto.search.EventSearchResultDTO;
+import at.msm.asobo.dto.search.GlobalSearchRequestDTO;
+import at.msm.asobo.dto.search.GlobalSearchResponseDTO;
+import at.msm.asobo.dto.search.UserSearchResultDTO;
 import at.msm.asobo.entities.Event;
 import at.msm.asobo.entities.User;
 import at.msm.asobo.repositories.EventRepository;
 import at.msm.asobo.repositories.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class GlobalSearchService {
@@ -28,8 +26,8 @@ public class GlobalSearchService {
     }
 
     @Transactional(readOnly = true)
-    public GlobalSearchResponse search(GlobalSearchRequest request) {
-        GlobalSearchResponse response = new GlobalSearchResponse();
+    public GlobalSearchResponseDTO search(GlobalSearchRequestDTO request) {
+        GlobalSearchResponseDTO response = new GlobalSearchResponseDTO();
 
         String query = request.getQuery();
 
@@ -68,14 +66,14 @@ public class GlobalSearchService {
         return response;
     }
 
-    private UserSearchResult mapToUserResult(User user) {
-        UserSearchResult result = new UserSearchResult();
+    private UserSearchResultDTO mapToUserResult(User user) {
+        UserSearchResultDTO result = new UserSearchResultDTO();
         result.setId(user.getId());
         result.setUsername(user.getUsername());
         result.setFirstName(user.getFirstName());
         result.setSurname(user.getSurname());
         result.setFullName(user.getFirstName() + " " + user.getSurname());
-        result.setAboutMe(truncate(user.getAboutMe(), 150));
+        result.setAboutMe(this.truncate(user.getAboutMe(), 150));
         result.setPictureURI(user.getPictureURI());
         result.setLocation(user.getLocation());
 
@@ -86,11 +84,11 @@ public class GlobalSearchService {
         return result;
     }
 
-    private EventSearchResult mapToEventResult(Event event) {
-        EventSearchResult result = new EventSearchResult();
+    private EventSearchResultDTO mapToEventResult(Event event) {
+        EventSearchResultDTO result = new EventSearchResultDTO();
         result.setId(event.getId());
         result.setTitle(event.getTitle());
-        result.setDescription(truncate(event.getDescription(), 200));
+        result.setDescription(this.truncate(event.getDescription(), 200));
         result.setDate(event.getDate());
         result.setLocation(event.getLocation());
         result.setPictureURI(event.getPictureURI());

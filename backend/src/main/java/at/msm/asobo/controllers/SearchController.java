@@ -1,16 +1,15 @@
 package at.msm.asobo.controllers;
 
-import at.msm.asobo.dto.search.GlobalSearchRequest;
-import at.msm.asobo.dto.search.GlobalSearchResponse;
+import at.msm.asobo.dto.search.GlobalSearchRequestDTO;
+import at.msm.asobo.dto.search.GlobalSearchResponseDTO;
 import at.msm.asobo.services.GlobalSearchService;
+import java.time.LocalDateTime;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/api/search")
@@ -22,7 +21,7 @@ public class SearchController {
     }
 
     @GetMapping
-    public GlobalSearchResponse globalSearch(
+    public GlobalSearchResponseDTO globalSearch(
             @RequestParam(required = false) String q,
             @RequestParam(required = false)
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
@@ -32,7 +31,7 @@ public class SearchController {
             @RequestParam(defaultValue = "false") Boolean includePrivate,
             Authentication authentication) {
 
-        GlobalSearchRequest request = new GlobalSearchRequest();
+        GlobalSearchRequestDTO request = new GlobalSearchRequestDTO();
         request.setQuery(q);
         request.setStartDate(startDate);
         request.setEndDate(endDate);

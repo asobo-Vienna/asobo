@@ -3,7 +3,7 @@ package at.msm.asobo.dto.search;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-public class EventSearchResult {
+public class EventSearchResultDTO {
     private UUID id;
     private String title;
     private String description;
@@ -15,11 +15,10 @@ public class EventSearchResult {
     private boolean isPrivateEvent;
     private String type = "EVENT";
 
-    public EventSearchResult() {
-    }
+    public EventSearchResultDTO() {}
 
     public UUID getId() {
-        return id;
+        return this.id;
     }
 
     public void setId(UUID id) {
@@ -27,7 +26,7 @@ public class EventSearchResult {
     }
 
     public String getTitle() {
-        return title;
+        return this.title;
     }
 
     public void setTitle(String title) {
@@ -35,7 +34,7 @@ public class EventSearchResult {
     }
 
     public String getDescription() {
-        return description;
+        return this.description;
     }
 
     public void setDescription(String description) {
@@ -43,7 +42,7 @@ public class EventSearchResult {
     }
 
     public LocalDateTime getDate() {
-        return date;
+        return this.date;
     }
 
     public void setDate(LocalDateTime date) {
@@ -51,7 +50,7 @@ public class EventSearchResult {
     }
 
     public String getLocation() {
-        return location;
+        return this.location;
     }
 
     public void setLocation(String location) {
@@ -59,7 +58,7 @@ public class EventSearchResult {
     }
 
     public String getPictureURI() {
-        return pictureURI;
+        return this.pictureURI;
     }
 
     public void setPictureURI(String pictureURI) {
@@ -67,7 +66,7 @@ public class EventSearchResult {
     }
 
     public String getCreatorName() {
-        return creatorName;
+        return this.creatorName;
     }
 
     public void setCreatorName(String creatorName) {
@@ -75,7 +74,7 @@ public class EventSearchResult {
     }
 
     public int getParticipantCount() {
-        return participantCount;
+        return this.participantCount;
     }
 
     public void setParticipantCount(int participantCount) {
@@ -83,15 +82,15 @@ public class EventSearchResult {
     }
 
     public boolean isPrivateEvent() {
-        return isPrivateEvent;
+        return this.isPrivateEvent;
     }
 
     public void setPrivateEvent(boolean privateEvent) {
-        isPrivateEvent = privateEvent;
+        this.isPrivateEvent = privateEvent;
     }
 
     public String getType() {
-        return type;
+        return this.type;
     }
 
     public void setType(String type) {
