@@ -5,30 +5,30 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class LoginResponseDTO {
 
-    private String token;
-    @JsonProperty("user")
-    private UserPublicDTO userDTO;
+  private String token;
 
-    public LoginResponseDTO(String token, UserPublicDTO userDTO) {
-        this.token = token;
-        this.userDTO = userDTO;
-    }
+  @JsonProperty("user")
+  private UserPublicDTO userDTO;
 
-    // Getters & setters
-    public String getToken() {
-        return token;
-    }
+  public LoginResponseDTO(String token, UserPublicDTO userDTO) {
+    this.token = token;
+    this.userDTO = userDTO;
+  }
 
-    public void setToken(String token) {
-        this.token = token;
-    }
+  public String getToken() {
+    return token;
+  }
 
-    public UserPublicDTO getUserDTO() {
-        return userDTO;
-    }
+  public void setToken(String token) {
+    this.token = token;
+  }
 
-    public void setUserDTO(UserPublicDTO user) {
-        this.userDTO = user;
-    }
+  public UserPublicDTO getUserDTO() {
+    return userDTO;
+  }
+
+  public void setUserDTO(UserPublicDTO userDTO) {
+    this.userDTO = userDTO;
+  }
 }
 

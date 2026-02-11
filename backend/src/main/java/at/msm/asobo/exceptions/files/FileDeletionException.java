@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(HttpStatus.BAD_REQUEST)
 public class FileDeletionException extends RuntimeException {
-    public FileDeletionException(String message) {
-        super(message);
-    }
+  public FileDeletionException(String message) {
+    super(message);
+  }
 }

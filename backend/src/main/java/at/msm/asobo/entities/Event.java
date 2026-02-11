@@ -1,13 +1,13 @@
 package at.msm.asobo.entities;
 
+import at.msm.asobo.interfaces.PictureEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import org.hibernate.annotations.CreationTimestamp;
-import org.springframework.data.annotation.LastModifiedDate;
 import java.time.LocalDateTime;
 import java.util.*;
-
+import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.data.annotation.LastModifiedDate;
 
 @Entity
 @Table(indexes = {
@@ -16,170 +16,181 @@ import java.util.*;
         @Index(name = "idx_event_date", columnList = "date"),
         @Index(name = "idx_event_private", columnList = "is_private")
 })
-public class Event {
+public class Event implements PictureEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.UUID)
+  private UUID id;
 
-    @NotNull(message = "User is mandatory for creating event")
-    @ManyToOne
-    @JoinColumn(name = "creator_id")
-    private User creator;
+  @NotNull(message = "User is mandatory for creating event")
+  @ManyToOne
+  @JoinColumn(name = "creator_id")
+  private User creator;
 
-    @ManyToMany
-    private Set<User> eventAdmins;
+  @ManyToMany private Set<User> eventAdmins;
 
-    @ManyToMany
-    private Set<User> participants;
+  @ManyToMany private Set<User> participants;
 
-    @NotBlank(message = "Title is mandatory")
-    private String title;
+  @NotBlank(message = "Title is mandatory")
+  private String title;
 
-    @NotBlank(message = "Description is mandatory")
-    @Column(length = 2000)
-    private String description;
+  @NotBlank(message = "Description is mandatory")
+  @Column(length = 2000)
+  private String description;
 
-    @NotNull(message = "Date must be specified")
-    private LocalDateTime date;
+  @NotNull(message = "Date must be specified")
+  private LocalDateTime date;
 
-    @NotBlank(message = "Location is mandatory")
-    private String location;
+  @NotBlank(message = "Location is mandatory")
+  private String location;
 
-    @Column(length = 4096)
-    private String pictureURI;
+  @Column(length = 4096)
+  private String pictureURI;
 
-    @CreationTimestamp
-    private LocalDateTime creationDate;
+  @CreationTimestamp private LocalDateTime creationDate;
 
-    @LastModifiedDate
-    private LocalDateTime modificationDate;
+  @LastModifiedDate private LocalDateTime modificationDate;
 
-    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<UserComment> comments;
+  @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<UserComment> comments;
 
-    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Medium> media;
+  @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<Medium> media;
 
-    @Column(name = "is_private", columnDefinition = "boolean default false")
-    private boolean isPrivateEvent;
+  @Column(name = "is_private", columnDefinition = "boolean default false")
+  private boolean isPrivateEvent;
 
-    public Event() {
-        this.eventAdmins = new HashSet<>();
-        this.participants = new HashSet<>();
-        this.comments = new ArrayList<>();
-        this.media = new ArrayList<>();
-    }
+  public Event() {
+    this.eventAdmins = new HashSet<>();
+    this.participants = new HashSet<>();
+    this.comments = new ArrayList<>();
+    this.media = new ArrayList<>();
+  }
 
-    public User getCreator() {
-        return this.creator;
-    }
+  public User getCreator() {
+    return this.creator;
+  }
 
-    public void setCreator(User creator) {
-        this.creator = creator;
-    }
+  public void setCreator(User creator) {
+    this.creator = creator;
+  }
 
-    public LocalDateTime getModificationDate() {
-        return this.modificationDate;
-    }
+  public LocalDateTime getModificationDate() {
+    return this.modificationDate;
+  }
 
-    public void setModificationDate(LocalDateTime modificationDate) {
-        this.modificationDate = modificationDate;
-    }
+  public void setModificationDate(LocalDateTime modificationDate) {
+    this.modificationDate = modificationDate;
+  }
 
-    public Set<User> getParticipants() {
-        return this.participants;
-    }
+  public Set<User> getParticipants() {
+    return this.participants;
+  }
 
-    public void setParticipants(Set<User> participants) {
-        this.participants = participants;
-    }
+  public void setParticipants(Set<User> participants) {
+    this.participants = participants;
+  }
 
-    public String getTitle() {
-        return this.title;
-    }
+  public String getTitle() {
+    return this.title;
+  }
 
-    public void setTitle(String name) {
-        this.title = name;
-    }
+  public void setTitle(String name) {
+    this.title = name;
+  }
 
-    public String getDescription() {
-        return this.description;
-    }
+  public String getDescription() {
+    return this.description;
+  }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+  public void setDescription(String description) {
+    this.description = description;
+  }
 
-    public LocalDateTime getDate() {
-        return this.date;
-    }
+  public LocalDateTime getDate() {
+    return this.date;
+  }
 
-    public void setDate(LocalDateTime date) {
-        this.date = date;
-    }
+  public void setDate(LocalDateTime date) {
+    this.date = date;
+  }
 
-    public String getLocation() {
-        return this.location;
-    }
+  public String getLocation() {
+    return this.location;
+  }
 
-    public void setLocation(String location) {
-        this.location = location;
-    }
+  public void setLocation(String location) {
+    this.location = location;
+  }
 
-    public String getPictureURI() {
-        return this.pictureURI;
-    }
+  @Override
+  public String getPictureURI() {
+    return this.pictureURI;
+  }
 
-    public void setPictureURI(String pictureURI) {
-        this.pictureURI = pictureURI;
-    }
+  @Override
+  public void setPictureURI(String pictureURI) {
+    this.pictureURI = pictureURI;
+  }
 
-    public LocalDateTime getCreationDate() {
-        return this.creationDate;
-    }
+  public LocalDateTime getCreationDate() {
+    return this.creationDate;
+  }
 
-    public void setCreationDate(LocalDateTime creationDate) {
-        this.creationDate = creationDate;
-    }
+  public void setCreationDate(LocalDateTime creationDate) {
+    this.creationDate = creationDate;
+  }
 
-    public List<UserComment> getComments() {
-        return this.comments;
-    }
+  public List<UserComment> getComments() {
+    return this.comments;
+  }
 
-    public void setComments(List<UserComment> comments) {
-        this.comments = comments;
-    }
+  public void setComments(List<UserComment> comments) {
+    this.comments = comments;
+  }
 
-    public List<Medium> getMedia() {
-        return this.media;
-    }
+  public List<Medium> getMedia() {
+    return this.media;
+  }
 
-    public void setMedia(List<Medium> media) {
-        this.media = media;
-    }
+  public void setMedia(List<Medium> media) {
+    this.media = media;
+  }
 
-    public UUID getId() {
-        return this.id;
-    }
+  public UUID getId() {
+    return this.id;
+  }
 
-    public void setId(UUID id) {
-        this.id = id;
-    }
+  public void setId(UUID id) {
+    this.id = id;
+  }
 
-    public boolean isPrivateEvent() {
-        return this.isPrivateEvent;
-    }
+  public boolean isPrivateEvent() {
+    return this.isPrivateEvent;
+  }
 
-    public void setPrivateEvent(boolean isPrivateEvent) {
-        this.isPrivateEvent = isPrivateEvent;
-    }
+  public void setPrivateEvent(boolean isPrivateEvent) {
+    this.isPrivateEvent = isPrivateEvent;
+  }
 
-    public Set<User> getEventAdmins() {
-        return this.eventAdmins;
-    }
+  public Set<User> getEventAdmins() {
+    return this.eventAdmins;
+  }
 
-    public void setEventAdmins(Set<User> eventAdmins) {
-        this.eventAdmins = eventAdmins;
-    }
+  public void setEventAdmins(Set<User> eventAdmins) {
+    this.eventAdmins = eventAdmins;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    Event event = (Event) o;
+    return Objects.equals(id, event.id);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hashCode(id);
+  }
 }

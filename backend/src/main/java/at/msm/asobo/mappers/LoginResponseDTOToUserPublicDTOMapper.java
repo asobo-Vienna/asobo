@@ -6,5 +6,5 @@ import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
 public interface LoginResponseDTOToUserPublicDTOMapper {
-    UserPublicDTO mapLoginResponseDTOToUserPublicDTO(LoginResponseDTO loginResponseDTO);
+  UserPublicDTO mapLoginResponseDTOToUserPublicDTO(LoginResponseDTO loginResponseDTO);
 }

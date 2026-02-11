@@ -5,80 +5,80 @@ import java.util.UUID;
 
 public class UserCommentDTO {
 
-    private UUID id;
-    private String username;
-    private String text;
-    private UUID authorId;
-    private UUID eventId;
-    private String pictureURI;
-    private LocalDateTime creationDate;
-    private LocalDateTime modificationDate;
-    // private File file;
+  private UUID id;
+  private String username;
+  private String text;
+  private UUID authorId;
+  private UUID eventId;
+  private String pictureURI;
+  private LocalDateTime creationDate;
+  private LocalDateTime modificationDate;
 
-    public UserCommentDTO() {
-    }
+  // private File file;
 
-    public UUID getId() {
-        return this.id;
-    }
+  public UserCommentDTO() {}
 
-    public String getText() {
-        return this.text;
-    }
+  public UUID getId() {
+    return this.id;
+  }
 
-    public void setId(UUID id) {
-        this.id = id;
-    }
+  public String getText() {
+    return this.text;
+  }
 
-    public void setText(String text) {
-        this.text = text;
-    }
+  public void setId(UUID id) {
+    this.id = id;
+  }
 
-    public UUID getEventId() {
-        return eventId;
-    }
+  public void setText(String text) {
+    this.text = text;
+  }
 
-    public void setEventId(UUID eventId) {
-        this.eventId = eventId;
-    }
+  public UUID getEventId() {
+    return eventId;
+  }
 
-    public void setCreationDate(LocalDateTime creationDate) {
-        this.creationDate = creationDate;
-    }
+  public void setEventId(UUID eventId) {
+    this.eventId = eventId;
+  }
 
-    public void setModificationDate(LocalDateTime modificationDate) {
-        this.modificationDate = modificationDate;
-    }
+  public void setCreationDate(LocalDateTime creationDate) {
+    this.creationDate = creationDate;
+  }
 
-    public UUID getAuthorId() {
-        return authorId;
-    }
+  public void setModificationDate(LocalDateTime modificationDate) {
+    this.modificationDate = modificationDate;
+  }
 
-    public void setAuthorId(UUID authorId) {
-        this.authorId = authorId;
-    }
+  public UUID getAuthorId() {
+    return authorId;
+  }
 
-    public LocalDateTime getCreationDate() {
-        return this.creationDate;
-    }
+  public void setAuthorId(UUID authorId) {
+    this.authorId = authorId;
+  }
 
-    public LocalDateTime getModificationDate() {
-        return this.modificationDate;
-    }
+  public LocalDateTime getCreationDate() {
+    return this.creationDate;
+  }
 
-    public String getPictureURI() {
-        return pictureURI;
-    }
+  public LocalDateTime getModificationDate() {
+    return this.modificationDate;
+  }
 
-    public void setPictureURI(String pictureURI) {
-        this.pictureURI = pictureURI;
-    }
+  public String getPictureURI() {
+    return pictureURI;
+  }
 
-    public String getUsername() {
-        return username;
-    }
+  public void setPictureURI(String pictureURI) {
+    this.pictureURI = pictureURI;
+  }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
+  public String getUsername() {
+    return username;
+  }
+
+  public void setUsername(String username) {
+    this.username = username;
+  }
 }
