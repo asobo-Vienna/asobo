@@ -6,128 +6,127 @@ import java.util.UUID;
 
 public class UserPublicDTO {
 
-    private UUID id;
+  private UUID id;
 
-    private String username;
+  private String username;
 
-    private String firstName;
+  private String firstName;
 
-    private String surname;
+  private String surname;
 
-    private String email;
+  private String email;
 
-    private String aboutMe;
+  private String aboutMe;
 
-    private LocalDateTime registerDate;
+  private LocalDateTime registerDate;
 
-    private boolean isActive;
+  private boolean isActive;
 
-    private String pictureURI;
+  private String pictureURI;
 
-    private String location;
+  private String location;
 
-    private String salutation;
+  private String salutation;
 
-    public UserPublicDTO() {
-    }
+  public UserPublicDTO() {}
 
-    public void setId(UUID id) {
-        this.id = id;
-    }
+  public void setId(UUID id) {
+    this.id = id;
+  }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
+  public void setUsername(String username) {
+    this.username = username;
+  }
 
-    public String getFirstName() {
-        return this.firstName;
-    }
+  public String getFirstName() {
+    return this.firstName;
+  }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
+  public void setFirstName(String firstName) {
+    this.firstName = firstName;
+  }
 
-    public String getSurname() {
-        return this.surname;
-    }
+  public String getSurname() {
+    return this.surname;
+  }
 
-    public void setSurname(String surname) {
-        this.surname = surname;
-    }
+  public void setSurname(String surname) {
+    this.surname = surname;
+  }
 
-    public String getAboutMe() {
-        return this.aboutMe;
-    }
+  public String getAboutMe() {
+    return this.aboutMe;
+  }
 
-    public void setAboutMe(String aboutMe) {
-        this.aboutMe = aboutMe;
-    }
+  public void setAboutMe(String aboutMe) {
+    this.aboutMe = aboutMe;
+  }
 
-    public boolean getIsActive() {
-        return this.isActive;
-    }
+  public boolean getIsActive() {
+    return this.isActive;
+  }
 
-    public void setIsActive(boolean isActive) {
-        this.isActive = isActive;
-    }
+  public void setIsActive(boolean isActive) {
+    this.isActive = isActive;
+  }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+  public void setEmail(String email) {
+    this.email = email;
+  }
 
-    public String getPictureURI() {
-        return this.pictureURI;
-    }
+  public String getPictureURI() {
+    return this.pictureURI;
+  }
 
-    public void setPictureURI(String pictureURI) {
-        this.pictureURI = pictureURI;
-    }
+  public void setPictureURI(String pictureURI) {
+    this.pictureURI = pictureURI;
+  }
 
-    public void setRegisterDate(LocalDateTime registerDate) {
-        this.registerDate = registerDate;
-    }
+  public void setRegisterDate(LocalDateTime registerDate) {
+    this.registerDate = registerDate;
+  }
 
-    public void setLocation(String location) {
-        this.location = location;
-    }
+  public void setLocation(String location) {
+    this.location = location;
+  }
 
-    public void setSalutation(String salutation) {
-        this.salutation = salutation;
-    }
+  public void setSalutation(String salutation) {
+    this.salutation = salutation;
+  }
 
-    public UUID getId() {
-        return this.id;
-    }
+  public UUID getId() {
+    return this.id;
+  }
 
-    public LocalDateTime getRegisterDate() {
-        return this.registerDate;
-    }
+  public LocalDateTime getRegisterDate() {
+    return this.registerDate;
+  }
 
-    public String getEmail() {
-        return this.email;
-    }
+  public String getEmail() {
+    return this.email;
+  }
 
-    public String getUsername() {
-        return this.username;
-    }
+  public String getUsername() {
+    return this.username;
+  }
 
-    public String getLocation() {
-        return this.location;
-    }
+  public String getLocation() {
+    return this.location;
+  }
 
-    public String getSalutation() {
-        return this.salutation;
-    }
+  public String getSalutation() {
+    return this.salutation;
+  }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof UserPublicDTO that)) return false;
-        return Objects.equals(id, that.id);
-    }
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (!(o instanceof UserPublicDTO that)) return false;
+    return Objects.equals(id, that.id);
+  }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
+  @Override
+  public int hashCode() {
+    return Objects.hash(id);
+  }
 }
