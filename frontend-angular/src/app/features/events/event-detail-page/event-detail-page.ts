@@ -1,4 +1,4 @@
-import {Component, inject, signal} from '@angular/core';
+import {Component, inject, OnInit, signal} from '@angular/core';
 import {EventService} from '../services/event-service';
 import {Event} from '../models/event';
 import {ActivatedRoute} from '@angular/router';
@@ -9,7 +9,7 @@ import {CommentsList} from '../comments-list/comments-list';
 import {CommentService} from '../services/comment-service';
 import {Comment} from '../models/comment';
 import {Participant} from '../models/participant';
-import {Observable} from 'rxjs';
+import {distinctUntilChanged, filter, map, Observable, switchMap} from 'rxjs';
 import {Gallery} from '../gallery/gallery';
 import {MediaService} from '../services/media-service';
 import {MediaItem} from '../models/media-item';
@@ -35,7 +35,7 @@ import {Tag} from 'primeng/tag';
   templateUrl: './event-detail-page.html',
   styleUrl: './event-detail-page.scss'
 })
-export class EventDetailPage {
+export class EventDetailPage implements OnInit {
   private route = inject(ActivatedRoute);
   private eventService = inject(EventService);
   private commentService = inject(CommentService);
@@ -61,13 +61,15 @@ export class EventDetailPage {
 
 
   ngOnInit(): void {
-    const eventId = this.route.snapshot.paramMap.get('id');
-    if (eventId) {
-      this.loadEvent(eventId).subscribe({
-        next: (event) => this.populateEvent(event),
-        error: (err) => console.error('Error fetching event:', err)
+      this.route.paramMap.pipe(
+        map(params => params.get('id')),
+        filter((id): id is string => id !== null),
+        distinctUntilChanged(),
+        switchMap(id => this.loadEvent(id))
+      ).subscribe({
+        next: event => this.populateEvent(event),
+        error: err => console.error('Error fetching event:', err)
       });
-    }
   }
 
   public loadEvent(eventId: string): Observable<Event> {
