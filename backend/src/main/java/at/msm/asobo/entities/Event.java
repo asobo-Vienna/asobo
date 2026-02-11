@@ -1,5 +1,6 @@
 package at.msm.asobo.entities;
 
+import at.msm.asobo.interfaces.PictureEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -9,7 +10,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.LastModifiedDate;
 
 @Entity
-public class Event {
+public class Event implements PictureEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
@@ -116,13 +117,15 @@ public class Event {
     this.location = location;
   }
 
-  public String getPictureURI() {
-    return this.pictureURI;
-  }
+    @Override
+    public String getPictureURI() {
+        return this.pictureURI;
+    }
 
-  public void setPictureURI(String pictureURI) {
-    this.pictureURI = pictureURI;
-  }
+    @Override
+    public void setPictureURI(String pictureURI) {
+        this.pictureURI = pictureURI;
+    }
 
   public LocalDateTime getCreationDate() {
     return this.creationDate;
@@ -168,7 +171,20 @@ public class Event {
     return this.eventAdmins;
   }
 
-  public void setEventAdmins(Set<User> eventAdmins) {
-    this.eventAdmins = eventAdmins;
-  }
+    public void setEventAdmins(Set<User> eventAdmins) {
+        this.eventAdmins = eventAdmins;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Event event = (Event) o;
+        return Objects.equals(id, event.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
+    }
 }

@@ -19,16 +19,18 @@ export class AuthService {
 
   private tokenCheckInterval: any;
   // Signal to track current user state
-  public currentUser = signal<User | null>(this.getUserFromStorage());
+  public currentUser = signal<User | null>(null);
   public isLoggedIn = computed(() => !!this.currentUser() && !!this.getToken() && !this.isTokenExpired());
 
   private http = inject(HttpClient);
   private router = inject(Router);
 
   constructor() {
+    this.currentUser.set(this.getUserFromStorage());
     // Start periodic token check
     this.startTokenValidityCheck();
   }
+
 
   login(credentials: { identifier: string; password: string }): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(environment.loginEndpoint, credentials)
