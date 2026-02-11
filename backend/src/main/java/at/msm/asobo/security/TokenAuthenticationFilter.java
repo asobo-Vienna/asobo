@@ -5,6 +5,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 import java.util.UUID;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -17,6 +18,10 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
   private final JwtUtil jwtUtil;
   private final CustomUserDetailsService customUserDetailsService;
 
+  // List of public endpoints that don't require authentication
+  private static final List<String> PUBLIC_ENDPOINTS =
+      List.of("/api/auth/", "/api/search", "/uploads/");
+
   public TokenAuthenticationFilter(
       JwtUtil jwtUtil, CustomUserDetailsService customUserDetailsService) {
     this.jwtUtil = jwtUtil;
@@ -27,12 +32,14 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
   protected void doFilterInternal(
       HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
       throws ServletException, IOException {
+
     String requestURI = request.getRequestURI();
     System.out.println(">>> TokenAuthenticationFilter: " + request.getMethod() + " " + requestURI);
-    System.out.println(">>> TokenAuthenticationFilter: URI = " + requestURI);
 
-    // Skip all /api/auth/** endpoints
-    if (requestURI.startsWith("/api/auth/")) {
+    // Check if this is a public endpoint
+    boolean isPublicEndpoint = PUBLIC_ENDPOINTS.stream().anyMatch(requestURI::startsWith);
+
+    if (isPublicEndpoint) {
       System.out.println(">>> Skipping JWT check for: " + requestURI);
       filterChain.doFilter(request, response);
       return;
@@ -41,11 +48,9 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
     String authHeader = request.getHeader("Authorization");
 
     if (authHeader != null && authHeader.startsWith("Bearer ")) {
-      // get substring after "Bearer "
       String token = authHeader.substring(7);
 
       if (jwtUtil.validateToken(token)) {
-        // extract info from token
         UUID userId = UUID.fromString(jwtUtil.getUserIdFromToken(token));
 
         UserPrincipal userPrincipal =
@@ -55,7 +60,6 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
             new UserPrincipalAuthenticationToken(userPrincipal);
 
         authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-
         SecurityContextHolder.getContext().setAuthentication(authentication);
       }
     }

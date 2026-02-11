@@ -1,6 +1,5 @@
 package at.msm.asobo.services.events;
 
-import at.msm.asobo.config.FileStorageProperties;
 import at.msm.asobo.dto.event.EventCreationDTO;
 import at.msm.asobo.dto.event.EventDTO;
 import at.msm.asobo.dto.event.EventSummaryDTO;
@@ -9,12 +8,12 @@ import at.msm.asobo.entities.Event;
 import at.msm.asobo.entities.User;
 import at.msm.asobo.exceptions.events.EventNotFoundException;
 import at.msm.asobo.exceptions.users.UserNotAuthorizedException;
-import at.msm.asobo.mappers.*;
+import at.msm.asobo.mappers.EventDTOEventMapper;
+import at.msm.asobo.mappers.UserDTOUserMapper;
 import at.msm.asobo.repositories.EventRepository;
 import at.msm.asobo.security.UserPrincipal;
 import at.msm.asobo.services.UserService;
 import at.msm.asobo.services.files.FileStorageService;
-import at.msm.asobo.services.files.FileValidationService;
 import at.msm.asobo.utils.PatchUtils;
 import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
@@ -24,7 +23,6 @@ import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @Transactional
@@ -32,9 +30,7 @@ public class EventService {
   private final EventRepository eventRepository;
   private final UserService userService;
   private final FileStorageService fileStorageService;
-  private final FileValidationService fileValidationService;
   private final EventAdminService eventAdminService;
-  private final FileStorageProperties fileStorageProperties;
   private final EventDTOEventMapper eventDTOEventMapper;
   private final UserDTOUserMapper userDTOUserMapper;
 
@@ -42,17 +38,13 @@ public class EventService {
       EventRepository eventRepository,
       UserService userService,
       FileStorageService fileStorageService,
-      FileValidationService fileValidationService,
       EventAdminService eventAdminService,
-      FileStorageProperties fileStorageProperties,
       EventDTOEventMapper eventDTOEventMapper,
       UserDTOUserMapper userDTOUserMapper) {
     this.eventRepository = eventRepository;
     this.userService = userService;
     this.fileStorageService = fileStorageService;
-    this.fileValidationService = fileValidationService;
     this.eventAdminService = eventAdminService;
-    this.fileStorageProperties = fileStorageProperties;
     this.eventDTOEventMapper = eventDTOEventMapper;
     this.userDTOUserMapper = userDTOUserMapper;
   }
@@ -60,10 +52,6 @@ public class EventService {
   public List<EventSummaryDTO> getAllEvents() {
     List<Event> allEvents = this.eventRepository.findAll();
     return this.eventDTOEventMapper.mapEventsToEventSummaryDTOs(allEvents);
-  }
-
-  public List<Event> getAllEventEntities() {
-    return this.eventRepository.findAll();
   }
 
   public Page<EventSummaryDTO> getAllEventsPaginated(Pageable pageable) {
@@ -115,15 +103,22 @@ public class EventService {
     } else {
       events = eventRepository.findByParticipantsIdAndIsPrivateEventFalse(participantId, pageable);
     }
-    return this.eventDTOEventMapper.mapEventsToEventSummaryDTOs(events);
+    return this.eventDTOEventMapper.mapEventPageToEventSummaryDTOs(events);
   }
 
   public List<EventSummaryDTO> getEventsByDate(LocalDateTime date) {
+    if (date == null) {
+      throw new IllegalArgumentException("Date must not be null");
+    }
     List<Event> events = this.eventRepository.findEventsByDate(date);
     return this.eventDTOEventMapper.mapEventsToEventSummaryDTOs(events);
   }
 
   public List<EventSummaryDTO> getEventsByLocation(String location) {
+    if (location == null || location.trim().isEmpty()) {
+      throw new IllegalArgumentException("Location must not be null or empty");
+    }
+
     List<Event> events = this.eventRepository.findEventsByLocation(location);
     return this.eventDTOEventMapper.mapEventsToEventSummaryDTOs(events);
   }
@@ -140,9 +135,7 @@ public class EventService {
   }
 
   public Event getEventById(UUID id) {
-    Event event =
-        this.eventRepository.findById(id).orElseThrow(() -> new EventNotFoundException(id));
-    return event;
+    return this.eventRepository.findById(id).orElseThrow(() -> new EventNotFoundException(id));
   }
 
   public EventDTO getEventDTOById(UUID id) {
@@ -151,6 +144,10 @@ public class EventService {
   }
 
   public List<EventDTO> getEventsByTitle(String title) {
+    if (title == null || title.trim().isEmpty()) {
+      throw new IllegalArgumentException("Title must not be null or empty");
+    }
+
     List<Event> events = this.eventRepository.findEventsByTitle(title);
     return this.eventDTOEventMapper.mapEventsToEventDTOs(events);
   }
@@ -184,7 +181,7 @@ public class EventService {
 
     PatchUtils.copyNonNullProperties(eventUpdateDTO, existingEvent, "picture", "participants");
 
-    this.handleEventPictureUpdate(eventUpdateDTO.getPicture(), existingEvent);
+    this.fileStorageService.handleEventPictureUpdate(eventUpdateDTO.getPicture(), existingEvent);
 
     if (eventUpdateDTO.getParticipants() != null) {
       existingEvent.setParticipants(
@@ -195,22 +192,5 @@ public class EventService {
 
     Event savedEvent = this.eventRepository.save(existingEvent);
     return this.eventDTOEventMapper.mapEventToEventDTO(savedEvent);
-  }
-
-  private void handleEventPictureUpdate(MultipartFile picture, Event event) {
-    if (picture == null || picture.isEmpty()) {
-      return;
-    }
-
-    this.fileValidationService.validateImage(picture);
-
-    if (event.getPictureURI() != null) {
-      this.fileStorageService.delete(event.getPictureURI());
-    }
-
-    String pictureURI =
-        this.fileStorageService.store(
-            picture, this.fileStorageProperties.getEventCoverPictureSubfolder());
-    event.setPictureURI(pictureURI);
   }
 }

@@ -22,8 +22,11 @@ public class EventUpdateDTO {
 
   private Set<UserPublicDTO> participants;
 
+  private Set<UserPublicDTO> eventAdmins;
+
   public EventUpdateDTO() {
     this.participants = new HashSet<>();
+    this.eventAdmins = new HashSet<>();
   }
 
   public void setTitle(String title) {
@@ -76,6 +79,14 @@ public class EventUpdateDTO {
 
   public void setParticipants(Set<UserPublicDTO> participants) {
     this.participants = participants;
+  }
+
+  public Set<UserPublicDTO> getEventAdmins() {
+    return this.eventAdmins;
+  }
+
+  public void setEventAdmins(Set<UserPublicDTO> eventAdmins) {
+    this.eventAdmins = eventAdmins;
   }
 
   public MultipartFile getPicture() {

@@ -1,6 +1,7 @@
 package at.msm.asobo.dto.user;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.UUID;
 
 public class UserPublicDTO {
@@ -115,5 +116,17 @@ public class UserPublicDTO {
 
   public String getSalutation() {
     return this.salutation;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (!(o instanceof UserPublicDTO that)) return false;
+    return Objects.equals(id, that.id);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(id);
   }
 }

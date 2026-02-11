@@ -1,5 +1,6 @@
 package at.msm.asobo.entities;
 
+import at.msm.asobo.interfaces.PictureEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -8,8 +9,16 @@ import java.util.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
-@Table(name = "users")
-public class User {
+@Table(
+    name = "users",
+    indexes = {
+      @Index(name = "idx_user_username", columnList = "username"),
+      @Index(name = "idx_user_first_name", columnList = "firstName"),
+      @Index(name = "idx_user_surname", columnList = "surname"),
+      @Index(name = "idx_user_email", columnList = "email"),
+      @Index(name = "idx_user_active", columnList = "isActive")
+    })
+public class User implements PictureEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
@@ -146,10 +155,12 @@ public class User {
     this.aboutMe = aboutMe;
   }
 
+  @Override
   public String getPictureURI() {
     return this.pictureURI;
   }
 
+  @Override
   public void setPictureURI(String pictureURI) {
     this.pictureURI = pictureURI;
   }

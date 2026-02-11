@@ -131,8 +131,8 @@ public class EventDTOEventMapper {
     dto.setLocation(event.getLocation());
     dto.setDate(event.getDate());
     dto.setPrivate(event.isPrivateEvent());
-    // Note: modification date & creation date are set in the database, EventUpdateDTO only has
-    // the values that can be updated by the user
+    // Note: modification date & creation date are set in the database, EventUpdateDTO only has the
+    // values that can be updated by the user
 
     // Map participants
     if (event.getParticipants() != null) {
@@ -214,7 +214,7 @@ public class EventDTOEventMapper {
     return events.stream().map(this::toEventSummaryDTO).collect(Collectors.toList());
   }
 
-  public Page<EventSummaryDTO> mapEventsToEventSummaryDTOs(Page<Event> events) {
+  public Page<EventSummaryDTO> mapEventPageToEventSummaryDTOs(Page<Event> events) {
     if (events == null) {
       return Page.empty();
     }

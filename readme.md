@@ -1,5 +1,6 @@
-# Asobo
+<img width="auto" height="95" alt="logo" src="https://github.com/user-attachments/assets/d22dc4a7-2246-4bf0-ae82-d06c1c3a6e27" />
 
+# Asobo
 A full-stack application for bringing people together built with Angular and Spring Boot.
 
 ## Table of Contents
@@ -174,9 +175,9 @@ export const environment = {
 
 ### Option 1: Using Run Scripts (Recommended)
 
-⚠️ **Attention:** Before running the project, download the latest `.jar` built from the `master` branch.  
-Go to **GitHub → Actions**, open the most recent workflow run with a green checkmark, and download the `asobo-build` artifact.  
-Place the `.jar` file in the project root directory.
+⚠️ **Attention:** Before running the project, you need the latest asobo-build artifact from the master branch.
+Go to GitHub → Actions, open the most recent successful workflow run, and download the asobo-build artifact.
+Extract the .zip file and run the script appropriate for your operating system.
 
 ⚠️ **Attention:** Make sure Docker Desktop is running before running any of the scripts.
 

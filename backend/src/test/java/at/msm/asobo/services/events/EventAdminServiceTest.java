@@ -1,4 +1,4 @@
-package at.msm.asobo.services;
+package at.msm.asobo.services.events;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -15,7 +15,8 @@ import at.msm.asobo.mappers.EventDTOEventMapper;
 import at.msm.asobo.mappers.UserDTOUserMapper;
 import at.msm.asobo.repositories.EventRepository;
 import at.msm.asobo.security.UserPrincipal;
-import at.msm.asobo.services.events.EventAdminService;
+import at.msm.asobo.services.AccessControlService;
+import at.msm.asobo.services.UserService;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;

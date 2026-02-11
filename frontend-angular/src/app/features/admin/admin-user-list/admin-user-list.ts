@@ -264,10 +264,6 @@ export class AdminUserList implements OnInit {
     this.clearCache();
   }
 
-  getUserRouterLink(username: string): string {
-    return `${environment.userProfileBaseUrl}${username}`;
-  }
-
   protected readonly UrlUtilService = UrlUtilService;
   protected readonly environment = environment;
 }

@@ -1,5 +1,6 @@
 package at.msm.asobo.entities;
 
+import at.msm.asobo.interfaces.PictureEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -9,7 +10,14 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.LastModifiedDate;
 
 @Entity
-public class Event {
+@Table(
+    indexes = {
+      @Index(name = "idx_event_title", columnList = "title"),
+      @Index(name = "idx_event_location", columnList = "location"),
+      @Index(name = "idx_event_date", columnList = "date"),
+      @Index(name = "idx_event_private", columnList = "is_private")
+    })
+public class Event implements PictureEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
@@ -116,10 +124,12 @@ public class Event {
     this.location = location;
   }
 
+  @Override
   public String getPictureURI() {
     return this.pictureURI;
   }
 
+  @Override
   public void setPictureURI(String pictureURI) {
     this.pictureURI = pictureURI;
   }
@@ -170,5 +180,18 @@ public class Event {
 
   public void setEventAdmins(Set<User> eventAdmins) {
     this.eventAdmins = eventAdmins;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    Event event = (Event) o;
+    return Objects.equals(id, event.id);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hashCode(id);
   }
 }

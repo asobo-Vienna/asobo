@@ -1,0 +1,133 @@
+@use '../../../../styles/variables' as *;
+
+.search-button {
+  color: $asobo-purple;
+  border-color: $asobo-purple;
+}
+
+.btn-search-img {
+  width: 25px;
+  height: 25px;
+}
+
+.search-bar {
+  justify-content: space-between !important;
+}
+
+.search-bar .search-div {
+  max-width: 50vw;
+  display: flex;
+}
+
+.search-bar .btn-search {
+  transform: translateX(-100%);
+  border: none;
+  padding-right: 8px;
+}
+
+.navbar .search-bar {
+  flex-grow: 1;
+  max-width: 450px;
+}
+
+.navbar .search-div {
+  width: 100%;
+}
+
+.navbar .form-control {
+  flex-grow: 1;
+}
+
+// PrimeNG AutoComplete overrides to match original search bar
+.search-div {
+  position: relative;
+
+  ::ng-deep .p-autocomplete {
+    width: 100%;
+    flex: 1;
+  }
+
+  ::ng-deep .p-autocomplete-option {
+    white-space: normal;
+  }
+
+  ::ng-deep .p-autocomplete .p-autocomplete-input {
+    width: 100%;
+    flex-grow: 1;
+  }
+
+  // Make sure the input inherits form-control styling
+  ::ng-deep .p-autocomplete-input.form-control {
+    // Your existing form-control styles will apply
+  }
+
+  // Style the dropdown panel
+  ::ng-deep .p-autocomplete-panel {
+    margin-top: 2px;
+    z-index: 1050; // Make sure it appears above navbar
+  }
+
+  // Optional: Ensure dropdown is full width
+  ::ng-deep .p-autocomplete-panel .p-autocomplete-items {
+    max-height: 400px;
+  }
+}
+
+.global-search-item-wrapper {
+  width: 100%;
+  padding: 8px 15px;
+}
+
+.global-search-item-container {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  max-width: 37vw;
+  align-items: center;
+}
+
+.search-result-name {
+  font-weight: bold;
+}
+
+.image-wrapper {
+  position: relative;
+  width: 50px;
+  height: 50px;
+  flex-shrink: 0;
+}
+
+.global-search-item-container .item-text-content {
+  line-height: 1.3;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.global-search-item-container .search-result-img {
+  animation: transform .2s;
+  aspect-ratio: 1/1;
+  object-fit: cover;
+  filter: drop-shadow(2px 2px 3px gray);
+  width: 100%;
+  height: 100%;
+  border-radius: 4px;
+  margin-left: 10px;
+}
+
+.icon-overlay {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translate(-100%, -50%);
+  font-size: 20px;
+  color: $asobo-purple;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  z-index: 1;
+  pointer-events: none;
+}
+
+::ng-deep .p-inputtext:enabled:focus {
+  border: 2px solid color-mix(in srgb, $asobo-purple 80%, transparent) !important;
+}

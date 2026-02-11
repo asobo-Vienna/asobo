@@ -1,4 +1,4 @@
-package at.msm.asobo.controllers;
+package at.msm.asobo.controllers.events;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -12,6 +12,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import at.msm.asobo.config.FileStorageProperties;
 import at.msm.asobo.config.SecurityConfig;
+import at.msm.asobo.controllers.ParticipantController;
 import at.msm.asobo.dto.user.UserPublicDTO;
 import at.msm.asobo.security.CustomUserDetailsService;
 import at.msm.asobo.security.JwtUtil;

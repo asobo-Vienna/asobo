@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -50,4 +51,34 @@ public interface EventRepository extends JpaRepository<Event, UUID> {
   List<Event> findByParticipantsIdAndIsPrivateEventFalse(UUID userId);
 
   Page<Event> findByParticipantsIdAndIsPrivateEventFalse(UUID userId, Pageable pageable);
+
+  @Query(
+      value =
+          """
+    SELECT DISTINCT e.*
+    FROM event e
+    WHERE
+      (:includePrivate = true OR e.is_private = false)
+
+      AND (
+        :query IS NULL
+        OR LOWER(e.title) LIKE LOWER(CONCAT('%', :query, '%'))
+        OR LOWER(e.description) LIKE LOWER(CONCAT('%', :query, '%'))
+        OR LOWER(e.location) LIKE LOWER(CONCAT('%', :query, '%'))
+      )
+
+      AND e.date >= COALESCE(:startDate, e.date)
+      AND e.date <= COALESCE(:endDate, e.date)
+
+      AND LOWER(e.location) LIKE LOWER(CONCAT('%', COALESCE(:location, ''), '%'))
+
+    ORDER BY e.date ASC
+    """,
+      nativeQuery = true)
+  List<Event> globalSearch(
+      @Param("query") String query,
+      @Param("startDate") LocalDateTime startDate,
+      @Param("endDate") LocalDateTime endDate,
+      @Param("location") String location,
+      @Param("includePrivate") boolean includePrivate);
 }

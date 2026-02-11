@@ -2,7 +2,7 @@ name: Build Pipeline
 on:
   push:
     branches:
-      - '**'
+      - 'master'
   pull_request:
 jobs:
   build:
@@ -30,11 +30,11 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
           cache: maven
-      
+
       - name: Run Checkstyle
         run: mvn checkstyle:check
         working-directory: ./backend
-        continue-on-error: true
+        continue-on-error: false
       
       - name: Build and run tests
         run: mvn clean test
@@ -47,9 +47,20 @@ jobs:
           DB_URL: ${{ secrets.DB_URL }}
           DB_USERNAME: ${{ secrets.DB_USERNAME }}
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}  
+
+      - name: Assemble deployment bundle
+        run: |
+          mkdir -p bundle
+          cp backend/target/*.jar bundle/
+          cp -r uploads bundle/
+          cp application-populate-database.properties bundle/
+          cp docker-compose.yml bundle/
+          cp run.sh bundle/
+          cp run.bat bundle/
+          cp readme.md bundle/
       
-      - name: Upload JAR artifact
+      - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
           name: asobo-build
-          path: backend/target/*.jar
+          path: bundle

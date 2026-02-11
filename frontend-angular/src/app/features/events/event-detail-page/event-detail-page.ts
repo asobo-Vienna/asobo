@@ -1,4 +1,4 @@
-import {Component, inject, signal} from '@angular/core';
+import {Component, inject, OnInit, signal} from '@angular/core';
 import {EventService} from '../services/event-service';
 import {Event} from '../models/event';
 import {ActivatedRoute} from '@angular/router';
@@ -8,7 +8,7 @@ import {CommentsList} from '../comments-list/comments-list';
 import {CommentService} from '../services/comment-service';
 import {Comment} from '../models/comment';
 import {Participant} from '../models/participant';
-import {Observable} from 'rxjs';
+import {distinctUntilChanged, filter, map, Observable, switchMap} from 'rxjs';
 import {Gallery} from '../gallery/gallery';
 import {MediaService} from '../services/media-service';
 import {MediaItem} from '../models/media-item';
@@ -42,7 +42,7 @@ import {EventBasicInfo} from './event-basic-info/event-basic-info';
   templateUrl: './event-detail-page.html',
   styleUrl: './event-detail-page.scss'
 })
-export class EventDetailPage {
+export class EventDetailPage implements OnInit {
   private route = inject(ActivatedRoute);
   private eventService = inject(EventService);
   private commentService = inject(CommentService);
@@ -63,13 +63,15 @@ export class EventDetailPage {
   protected readonly environment = environment;
 
   ngOnInit(): void {
-    const eventId = this.route.snapshot.paramMap.get('id');
-    if (eventId) {
-      this.loadEvent(eventId).subscribe({
-        next: (event) => this.populateEvent(event),
-        error: (err) => console.error('Error fetching event:', err)
+      this.route.paramMap.pipe(
+        map(params => params.get('id')),
+        filter((id): id is string => id !== null),
+        distinctUntilChanged(),
+        switchMap(id => this.loadEvent(id))
+      ).subscribe({
+        next: event => this.populateEvent(event),
+        error: err => console.error('Error fetching event:', err)
       });
-    }
   }
 
 
@@ -81,22 +83,25 @@ export class EventDetailPage {
   private populateEvent(event: Event): void {
     this.event.set(this.eventService.convertEventAdminsToList(event));
 
-    this.participantService.getAllByEventId(event.id).subscribe((participants: List<Participant>) => {
-      this.participants.set(participants);
-      if (this.currentUser) {
-        const participant = this.participantService.mapUserToParticipant(this.currentUser);
-        this.isUserAlreadyPartOfEvent.set(
-          participants.contains(participant, LambdaFunctions.compareById)
-        );
-      }
-    });
+    if (this.authService.isLoggedIn()) {
 
-    this.commentService.getAllByEventId(event.id).subscribe((comments: List<Comment>) => {
-      this.comments.set(comments);
-    });
-    this.mediaService.getAllByEventId(event.id).subscribe((mediaItems: List<MediaItem>) => {
-      this.mediaItems.set(mediaItems);
-    });
+      this.participantService.getAllByEventId(event.id).subscribe((participants: List<Participant>) => {
+        this.participants.set(participants);
+        if (this.currentUser) {
+          const participant = this.participantService.mapUserToParticipant(this.currentUser);
+          this.isUserAlreadyPartOfEvent.set(
+            participants.contains(participant, LambdaFunctions.compareById)
+          );
+        }
+      });
+
+      this.commentService.getAllByEventId(event.id).subscribe((comments: List<Comment>) => {
+        this.comments.set(comments);
+      });
+      this.mediaService.getAllByEventId(event.id).subscribe((mediaItems: List<MediaItem>) => {
+        this.mediaItems.set(mediaItems);
+      });
+    }
   }
 
 

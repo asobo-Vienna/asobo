@@ -2,7 +2,6 @@ package at.msm.asobo.dto.event;
 
 import at.msm.asobo.dto.comment.UserCommentDTO;
 import at.msm.asobo.dto.medium.MediumDTO;
-import at.msm.asobo.dto.user.UserDTO;
 import at.msm.asobo.dto.user.UserPublicDTO;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotBlank;
@@ -42,7 +41,7 @@ public class EventCreationDTO {
 
   private Set<UserPublicDTO> eventAdmins;
 
-  private List<UserDTO> participants;
+  private Set<UserPublicDTO> participants;
 
   private List<UserCommentDTO> comments;
 
@@ -82,7 +81,7 @@ public class EventCreationDTO {
     return this.creator;
   }
 
-  public List<UserDTO> getParticipants() {
+  public Set<UserPublicDTO> getParticipants() {
     return this.participants;
   }
 
@@ -134,7 +133,7 @@ public class EventCreationDTO {
     this.isPrivate = isPrivate;
   }
 
-  public void setParticipants(List<UserDTO> participants) {
+  public void setParticipants(Set<UserPublicDTO> participants) {
     this.participants = participants;
   }
 
