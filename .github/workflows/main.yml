@@ -31,14 +31,14 @@ jobs:
           distribution: 'temurin'
           cache: maven
       
+      - name: Build and run tests
+        run: mvn clean test
+        working-directory: ./backend
+
       - name: Run Checkstyle
         run: mvn checkstyle:check
         working-directory: ./backend
         continue-on-error: true
-      
-      - name: Build and run tests
-        run: mvn clean test
-        working-directory: ./backend
       
       - name: Build package
         run: mvn -B -DskipTests package
