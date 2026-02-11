@@ -23,7 +23,7 @@ export class UserProfilePage implements OnInit {
   events = signal<List<EventSummary>>(new List<EventSummary>());
   private userId: string = "";
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.route.paramMap.subscribe((params) => {
       this.profileUsername = params.get('username')!;
     });

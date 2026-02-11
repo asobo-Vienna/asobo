@@ -59,7 +59,6 @@ export class EventDetailPage implements OnInit {
   isUserAlreadyPartOfEvent = signal(false);
   protected readonly UrlUtilService = UrlUtilService;
 
-
   ngOnInit(): void {
       this.route.paramMap.pipe(
         map(params => params.get('id')),

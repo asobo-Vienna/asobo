@@ -80,8 +80,6 @@ export class EventList implements OnInit {
     return new List<EventSummary>(sorted);
   });
 
-
-
   ngOnInit(): void {
     // Only fetch if no input was provided
     if (!this.hasInputEvents()) {
