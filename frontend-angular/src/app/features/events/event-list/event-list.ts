@@ -1,10 +1,11 @@
 import {Component, computed, inject, input, OnInit, signal} from '@angular/core';
 import {EventCard} from '../event-card/event-card';
 import {EventService} from '../services/event-service';
-import {Event} from '../models/event'
 import {AuthService} from '../../auth/services/auth-service';
 import {List} from '../../../core/data_structures/lists/list';
 import {EventSummary} from '../models/event-summary';
+import {routes} from '../../../app.routes';
+import {Router} from '@angular/router';
 
 type SortField = 'date' | 'title' | 'location' | 'isPrivateEvent';
 
@@ -19,6 +20,7 @@ type SortField = 'date' | 'title' | 'location' | 'isPrivateEvent';
 export class EventList implements OnInit {
   private eventService = inject(EventService);
   authService = inject(AuthService);
+  router = inject(Router);
 
   inputEvents = input<List<EventSummary>>();
   private fetchedEvents = signal<List<EventSummary>>(new List<EventSummary>());
@@ -27,15 +29,62 @@ export class EventList implements OnInit {
   sortField = signal<SortField>('date');
   sortDirection = signal<'asc' | 'desc'>('desc');
 
+  hasInputEvents = computed(() => {
+    const input = this.inputEvents();
+    return !!input && input.size() > 0;
+  });
+
   // Computed: use input if provided, otherwise use fetched
   events = computed(() => {
-    const input = this.inputEvents();
-    return input && input.size() > 0 ? input : this.fetchedEvents();
+    const sourceList = this.hasInputEvents()
+      ? this.inputEvents()!
+      : this.fetchedEvents();
+
+    const sorted = [...sourceList.toArray()].sort((a, b) => {
+      const field = this.sortField();
+      const dir = this.sortDirection();
+
+      let result = 0;
+
+      switch (field) {
+        case 'date':
+          result = a.date.localeCompare(b.date);
+          break;
+
+        case 'title':
+          result = a.title.localeCompare(b.title);
+          break;
+
+        case 'location':
+          result = a.location.localeCompare(b.location);
+          break;
+
+        case 'isPrivateEvent':
+          // primary visibility sort order
+          result = dir === 'asc'
+            ? Number(a.isPrivate) - Number(b.isPrivate) // public first
+            : Number(b.isPrivate) - Number(a.isPrivate); // private first
+
+          // secondary: date within visibility group always descending
+          if (result === 0) {
+            result = b.date.localeCompare(a.date);
+          }
+
+          return result;
+      }
+
+      // Use sortDirection for all other fields
+      return dir === 'asc' ? result : -result;
+    });
+
+    return new List<EventSummary>(sorted);
   });
+
+
 
   ngOnInit(): void {
     // Only fetch if no input was provided
-    if (!this.inputEvents()) {
+    if (!this.hasInputEvents()) {
       this.fetchEvents();
     }
   }
@@ -48,19 +97,11 @@ export class EventList implements OnInit {
     };
 
     if (this.authService.isLoggedIn()) {
-      /*this.eventService.getAllEvents().subscribe({
-        next: (events) => this.fetchedEvents.set(new List<EventSummary>(events)),
-        error: (err) => console.error('Error fetching events:', err)
-      });*/
       this.eventService.getAllEventsPaginated(params).subscribe({
         next: (events) => this.fetchedEvents.set(new List<EventSummary>(events.content)),
         error: (err) => console.error('Error fetching events:', err)
       });
     } else {
-      /*this.eventService.getAllPublicEvents().subscribe({
-        next: (events) => this.fetchedEvents.set(new List<EventSummary>(events)),
-        error: (err) => console.error('Error fetching public events:', err)
-      });*/
       this.eventService.getAllPublicEventsPaginated(params).subscribe({
         next: (events) => this.fetchedEvents.set(new List<EventSummary>(events.content)),
         error: (err) => console.error('Error fetching public events:', err)
@@ -78,7 +119,7 @@ export class EventList implements OnInit {
     }
 
     // reload only if events come from backend
-    if (!this.inputEvents()) {
+    if (!this.hasInputEvents()) {
       this.fetchEvents();
     }
   }
@@ -87,4 +128,6 @@ export class EventList implements OnInit {
     if (field !== this.sortField()) return '';
     return this.sortDirection() === 'asc' ? '↑' : '↓';
   }
+
+  protected readonly routes = routes;
 }
