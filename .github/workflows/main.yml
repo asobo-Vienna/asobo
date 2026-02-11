@@ -59,11 +59,8 @@ jobs:
           cp run.bat bundle/
           cp readme.md bundle/
       
-      - name: Create zip archive
-        run: zip -r asobo-build.zip bundle
-      
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
           name: asobo-build
-          path: asobo-build.zip
+          path: bundle
