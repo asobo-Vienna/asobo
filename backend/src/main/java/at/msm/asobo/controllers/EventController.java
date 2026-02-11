@@ -15,6 +15,8 @@ import java.util.Set;
 import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -56,7 +58,7 @@ public class EventController {
   public Page<EventSummaryDTO> getAllEventsPaginated(
       @RequestParam(required = false) UUID userId,
       @RequestParam(required = false) Boolean isPrivate,
-      Pageable pageable) {
+      @PageableDefault(sort = "date", direction = Sort.Direction.DESC) Pageable pageable) {
     if (userId != null) {
       return this.eventService.getEventsByParticipantIdPaginated(userId, isPrivate, pageable);
     } else if (isPrivate == null) {

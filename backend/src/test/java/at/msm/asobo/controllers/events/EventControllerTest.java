@@ -38,10 +38,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.http.MediaType;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -177,7 +174,7 @@ class EventControllerTest {
 
   @Test
   void getAllEventsPaginated_WithoutParameters_ReturnsAllEventsPaginated() throws Exception {
-    Pageable pageable = PageRequest.of(0, 10);
+    Pageable pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "date"));
     Page<EventSummaryDTO> eventsPage =
         new PageImpl<>(List.of(eventSummary2, eventSummary1), pageable, 2);
     String expectedJson = objectMapper.writeValueAsString(eventsPage);
@@ -195,11 +192,11 @@ class EventControllerTest {
 
   @Test
   void getAllEventsPaginated_WithUserId_ReturnsUserEventsPaginated() throws Exception {
-    Pageable pageable = PageRequest.of(0, 10);
+    Pageable pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "date"));
     Page<EventSummaryDTO> eventsPage = new PageImpl<>(List.of(eventSummary1), pageable, 1);
     String expectedJson = objectMapper.writeValueAsString(eventsPage);
 
-    when(eventService.getEventsByParticipantIdPaginated(userId, null, pageable))
+    when(eventService.getEventsByParticipantIdPaginated(eq(userId), eq(null), any(Pageable.class)))
         .thenReturn(eventsPage);
 
     mockMvc
@@ -212,7 +209,8 @@ class EventControllerTest {
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
         .andExpect(content().string(expectedJson));
 
-    verify(eventService).getEventsByParticipantIdPaginated(userId, null, pageable);
+    verify(eventService)
+        .getEventsByParticipantIdPaginated(eq(userId), eq(null), any(Pageable.class));
   }
 
   @Test

@@ -1,3 +1,35 @@
+<div class="sort-controls mb-3 d-flex gap-2">
+  <button
+    class="btn btn-sm btn-outline-secondary"
+    (click)="onSort('date')"
+    [class.active]="sortField() === 'date'">
+    Date {{ getSortIcon('date') }}
+  </button>
+
+  <button
+    class="btn btn-sm btn-outline-secondary"
+    (click)="onSort('title')"
+    [class.active]="sortField() === 'title'">
+    Title {{ getSortIcon('title') }}
+  </button>
+
+  <button
+    class="btn btn-sm btn-outline-secondary"
+    (click)="onSort('location')"
+    [class.active]="sortField() === 'location'">
+    Location {{ getSortIcon('location') }}
+  </button>
+
+  @if (authService.isLoggedIn()) {
+    <button
+      class="btn btn-sm btn-outline-secondary"
+      (click)="onSort('isPrivateEvent')"
+      [class.active]="sortField() === 'isPrivateEvent'">
+      Visibility {{ getSortIcon('isPrivateEvent') }}
+    </button>
+  }
+</div>
+
 <ul id="event-list" class="list-unstyled">
   @for (event of events(); track event.id) {
     <li>
