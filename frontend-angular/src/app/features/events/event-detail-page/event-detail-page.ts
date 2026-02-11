@@ -86,22 +86,25 @@ export class EventDetailPage implements OnInit {
     this.description = event.description;
     this.isPrivate = event.isPrivate;
 
-    this.participantService.getAllByEventId(event.id).subscribe((participants: List<Participant>) => {
-      this.participants.set(participants);
-      if (this.currentUser) {
-        const participant = this.participantService.mapUserToParticipant(this.currentUser);
-        this.isUserAlreadyPartOfEvent.set(
-          participants.contains(participant, LambdaFunctions.compareById)
-        );
-      }
-    });
+    if (this.authService.isLoggedIn()) {
 
-    this.commentService.getAllByEventId(event.id).subscribe((comments: List<Comment>) => {
-      this.comments.set(comments);
-    });
-    this.mediaService.getAllByEventId(event.id).subscribe((mediaItems: List<MediaItem>) => {
-      this.mediaItems.set(mediaItems);
-    });
+      this.participantService.getAllByEventId(event.id).subscribe((participants: List<Participant>) => {
+        this.participants.set(participants);
+        if (this.currentUser) {
+          const participant = this.participantService.mapUserToParticipant(this.currentUser);
+          this.isUserAlreadyPartOfEvent.set(
+            participants.contains(participant, LambdaFunctions.compareById)
+          );
+        }
+      });
+
+      this.commentService.getAllByEventId(event.id).subscribe((comments: List<Comment>) => {
+        this.comments.set(comments);
+      });
+      this.mediaService.getAllByEventId(event.id).subscribe((mediaItems: List<MediaItem>) => {
+        this.mediaItems.set(mediaItems);
+      });
+    }
   }
 
 
