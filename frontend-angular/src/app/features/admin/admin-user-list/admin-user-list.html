@@ -29,7 +29,7 @@
     <ng-template pTemplate="body" let-user>
       <tr>
         <td>
-          <a [routerLink]="getUserRouterLink(user.username)">
+          <a [routerLink]="UrlUtilService.getUserRouterLink(user.username)">
             <img
               [src]="UrlUtilService.getMediaUrl(user.pictureURI || environment.userDummyProfilePicRelativeUrl)"
               [alt]="user.username + '\'s avatar'"

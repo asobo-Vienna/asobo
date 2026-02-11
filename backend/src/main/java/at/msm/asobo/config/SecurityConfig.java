@@ -95,6 +95,8 @@ public class SecurityConfig {
                 .permitAll()
                 .requestMatchers("/api/users/**")
                 .hasAnyRole("USER", "ADMIN", "SUPERADMIN")
+                .requestMatchers("/api/search")
+                .permitAll()
                 .requestMatchers("/api/admin/**")
                 .hasAnyRole("ADMIN", "SUPERADMIN")
                 .requestMatchers("/uploads/**")

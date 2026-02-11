@@ -29,4 +29,11 @@ export class UrlUtilService {
   static getMediaUrl(relativePath: string) {
     return `${environment.backendUrl}${relativePath}`;
   }
+
+  static getUserRouterLink(username: string | undefined): string {
+    if (!username) {
+      return "";
+    }
+    return `${environment.userProfileBaseUrl}${username}`;
+  }
 }
