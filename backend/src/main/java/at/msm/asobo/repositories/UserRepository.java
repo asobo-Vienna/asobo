@@ -27,8 +27,9 @@ public interface UserRepository extends JpaRepository<User, UUID> {
 
   boolean existsByEmail(String email);
 
-    @Query("""
-            SELECT u FROM User u 
+  @Query(
+      """
+            SELECT u FROM User u
             WHERE :query IS NOT NULL
               AND TRIM(:query) <> ''
               AND (
@@ -38,6 +39,5 @@ public interface UserRepository extends JpaRepository<User, UUID> {
                 LOWER(u.username) LIKE LOWER(CONCAT('%', :query, '%'))
               )
             """)
-    List<User> searchUsers(@Param("query") String query);
-
+  List<User> searchUsers(@Param("query") String query);
 }

@@ -10,12 +10,13 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.LastModifiedDate;
 
 @Entity
-@Table(indexes = {
-        @Index(name = "idx_event_title", columnList = "title"),
-        @Index(name = "idx_event_location", columnList = "location"),
-        @Index(name = "idx_event_date", columnList = "date"),
-        @Index(name = "idx_event_private", columnList = "is_private")
-})
+@Table(
+    indexes = {
+      @Index(name = "idx_event_title", columnList = "title"),
+      @Index(name = "idx_event_location", columnList = "location"),
+      @Index(name = "idx_event_date", columnList = "date"),
+      @Index(name = "idx_event_private", columnList = "is_private")
+    })
 public class Event implements PictureEntity {
 
   @Id

@@ -19,11 +19,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import at.msm.asobo.security.TokenAuthenticationFilter;
-import at.msm.asobo.security.CustomUserDetailsService;
 import org.springframework.web.cors.CorsConfiguration;
-
-import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -99,8 +95,9 @@ public class SecurityConfig {
                 .permitAll()
                 .requestMatchers("/api/users/**")
                 .hasAnyRole("USER", "ADMIN", "SUPERADMIN")
-                    .requestMatchers("/api/search").permitAll()
-                    .requestMatchers("/api/admin/**")
+                .requestMatchers("/api/search")
+                .permitAll()
+                .requestMatchers("/api/admin/**")
                 .hasAnyRole("ADMIN", "SUPERADMIN")
                 .requestMatchers("/uploads/**")
                 .permitAll()

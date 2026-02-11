@@ -14,33 +14,33 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/search")
 public class SearchController {
-    private final GlobalSearchService searchService;
+  private final GlobalSearchService searchService;
 
-    public SearchController(GlobalSearchService searchService) {
-        this.searchService = searchService;
-    }
+  public SearchController(GlobalSearchService searchService) {
+    this.searchService = searchService;
+  }
 
-    @GetMapping
-    public GlobalSearchResponseDTO globalSearch(
-            @RequestParam(required = false) String q,
-            @RequestParam(required = false)
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
-            @RequestParam(required = false)
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate,
-            @RequestParam(required = false) String location,
-            @RequestParam(defaultValue = "false") Boolean includePrivate,
-            Authentication authentication) {
+  @GetMapping
+  public GlobalSearchResponseDTO globalSearch(
+      @RequestParam(required = false) String q,
+      @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+          LocalDateTime startDate,
+      @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+          LocalDateTime endDate,
+      @RequestParam(required = false) String location,
+      @RequestParam(defaultValue = "false") Boolean includePrivate,
+      Authentication authentication) {
 
-        GlobalSearchRequestDTO request = new GlobalSearchRequestDTO();
-        request.setQuery(q);
-        request.setStartDate(startDate);
-        request.setEndDate(endDate);
-        request.setLocation(location);
+    GlobalSearchRequestDTO request = new GlobalSearchRequestDTO();
+    request.setQuery(q);
+    request.setStartDate(startDate);
+    request.setEndDate(endDate);
+    request.setLocation(location);
 
-        // Only authenticated users can search private events
-        boolean isAuthenticated = authentication != null && authentication.isAuthenticated();
-        request.setIncludePrivateEvents(includePrivate && isAuthenticated);
+    // Only authenticated users can search private events
+    boolean isAuthenticated = authentication != null && authentication.isAuthenticated();
+    request.setIncludePrivateEvents(includePrivate && isAuthenticated);
 
-        return searchService.search(request);
-    }
+    return searchService.search(request);
+  }
 }

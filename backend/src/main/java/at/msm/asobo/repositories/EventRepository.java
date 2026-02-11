@@ -1,16 +1,16 @@
 package at.msm.asobo.repositories;
 
 import at.msm.asobo.entities.Event;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 
 @Repository
 public interface EventRepository extends JpaRepository<Event, UUID> {
@@ -51,22 +51,20 @@ public interface EventRepository extends JpaRepository<Event, UUID> {
   List<Event> findByParticipantsIdAndIsPrivateEventFalse(UUID userId);
 
   Page<Event> findByParticipantsIdAndIsPrivateEventFalse(UUID userId, Pageable pageable);
-    // find public events attend by a certain user; underscore in method name is needed by JPA
-    List<Event> findByParticipants_IdAndIsPrivateEventFalse(UUID userId);
-    Page<Event> findByParticipants_IdAndIsPrivateEventFalse(UUID userId, Pageable pageable);
 
-    @Query(value = """
-    SELECT DISTINCT e.* 
+  @Query(
+      value =
+          """
+    SELECT DISTINCT e.*
     FROM event e
-    LEFT JOIN users c ON c.id = e.creator_id
-    WHERE 
+    WHERE
       (:includePrivate = true OR e.is_private = false)
 
       AND (
-        :query IS NULL 
-        OR LOWER(e.title) LIKE LOWER(CONCAT('%', :query, '%')) 
-        OR LOWER(e.description) LIKE LOWER(CONCAT('%', :query, '%')) 
-        OR LOWER(e.location) LIKE LOWER(CONCAT('%', :query, '%')) 
+        :query IS NULL
+        OR LOWER(e.title) LIKE LOWER(CONCAT('%', :query, '%'))
+        OR LOWER(e.description) LIKE LOWER(CONCAT('%', :query, '%'))
+        OR LOWER(e.location) LIKE LOWER(CONCAT('%', :query, '%'))
       )
 
       AND e.date >= COALESCE(:startDate, e.date)
@@ -76,13 +74,11 @@ public interface EventRepository extends JpaRepository<Event, UUID> {
 
     ORDER BY e.date ASC
     """,
-            nativeQuery = true)
-    List<Event> globalSearch(
-            @Param("query") String query,
-            @Param("startDate") LocalDateTime startDate,
-            @Param("endDate") LocalDateTime endDate,
-            @Param("location") String location,
-            @Param("includePrivate") boolean includePrivate
-    );
-
+      nativeQuery = true)
+  List<Event> globalSearch(
+      @Param("query") String query,
+      @Param("startDate") LocalDateTime startDate,
+      @Param("endDate") LocalDateTime endDate,
+      @Param("location") String location,
+      @Param("includePrivate") boolean includePrivate);
 }
