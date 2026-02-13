@@ -18,6 +18,7 @@ import {EventCoreInfo} from '../../models/event-core-info';
 import {EventService} from '../../services/event-service';
 import {AccessControlService} from '../../../../shared/services/access-control-service';
 import {Router} from '@angular/router';
+import {ToggleSwitch} from 'primeng/toggleswitch';
 
 @Component({
   selector: 'app-event-basic-info',
@@ -27,7 +28,8 @@ import {Router} from '@angular/router';
     DatePipe,
     FormsModule,
     InputText,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    ToggleSwitch
   ],
   templateUrl: './event-basic-info.html',
   styleUrl: './event-basic-info.scss',
@@ -55,6 +57,7 @@ export class EventBasicInfo implements OnInit {
 
   editEventForm: FormGroup;
   isEditing = signal(false);
+  isPrivateEvent: boolean = false;
 
 
   constructor() {

@@ -13,6 +13,10 @@ input {
   box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
 }
 
+form.editing textarea:enabled {
+  resize: none;
+}
+
 .event-title-textarea {
   border: none;
   box-shadow: none;
