@@ -3,7 +3,7 @@ import {HttpClient} from '@angular/common/http';
 import {environment} from '../../../../environments/environment';
 import {MediaItem} from '../models/media-item';
 import {map, Observable} from 'rxjs';
-import {List} from '../../../core/data_structures/lists/list';
+import {List} from '../../../core/data-structures/lists/list';
 
 @Injectable({
   providedIn: 'root'

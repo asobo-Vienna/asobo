@@ -1,6 +1,6 @@
 import {Component, Input} from '@angular/core';
 import {Participant} from '../models/participant';
-import {List} from '../../../core/data_structures/lists/list';
+import {List} from '../../../core/data-structures/lists/list';
 import {UrlUtilService} from '../../../shared/utils/url/url-util-service';
 import {environment} from "../../../../environments/environment";
 import {RouterLink} from '@angular/router';

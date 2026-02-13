@@ -3,7 +3,7 @@ import {EventCard} from '../event-card/event-card';
 import {EventService} from '../services/event-service';
 import {Event} from '../models/event'
 import {AuthService} from '../../auth/services/auth-service';
-import {List} from '../../../core/data_structures/lists/list';
+import {List} from '../../../core/data-structures/lists/list';
 import {EventSummary} from '../models/event-summary';
 
 @Component({

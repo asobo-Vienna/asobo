@@ -1,5 +1,5 @@
 import { Component, inject, signal } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from "@angular/forms";
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { DatePickerModule } from 'primeng/datepicker';
 import { PictureUpload } from '../../../../core/picture-upload/picture-upload';
 import { EventService } from '../../services/event-service';
@@ -39,7 +39,7 @@ export class CreateEventForm {
       title: ['', [Validators.required, Validators.minLength(environment.minEventTitleLength), Validators.maxLength(environment.maxEventTitleLength)]],
       description: ['', [Validators.required, Validators.minLength(environment.minEventDescriptionLength), Validators.maxLength(environment.maxEventDescriptionLength)]],
       location: ['', [Validators.required]],
-      date: [today, [Validators.required, this.validateDate]],
+      date: [today, [Validators.required, DateUtils.validateDate]],
       isPrivate: [false]
     });
   }
@@ -93,15 +93,6 @@ export class CreateEventForm {
 
   handleFileSelected(file: File) {
     this.selectedImage = file;
-  }
-
-  validateDate(control: AbstractControl): ValidationErrors | null {
-    if (!control.value) return null;
-    const selected = new Date(control.value);
-    if (selected < new Date()) {
-      return { pastDate: true };
-    }
-    return null;
   }
 
   get getFormControls() {
