@@ -14,7 +14,11 @@ export class EventService {
   private http = inject(HttpClient);
 
   public getAllEvents(): Observable<EventSummary[]> {
-    return this.http.get<EventSummary[]>(environment.eventsEndpoint);
+    const params = new HttpParams()
+      .set('location', 'Vienna')
+      .set('isPrivateEvent', 'true');
+
+    return this.http.get<EventSummary[]>(`${environment.eventsEndpoint}/filter`, { params });
   }
 
   public getAllEventsPaginated(page: number, size: number): Observable<PageResponse<EventSummary>> {

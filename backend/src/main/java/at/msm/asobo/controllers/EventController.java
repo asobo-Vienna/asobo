@@ -51,8 +51,8 @@ public class EventController {
         }
     }
 
-    @GetMapping("/events/filter")
-    public List<EventDTO> getFilteredEvents(EventFilterDTO filter) {
+    @GetMapping("/filter")
+    public List<EventSummaryDTO> getFilteredEvents(EventFilterDTO filter) {
         return eventService.getFilteredEvents(filter);
     }
 

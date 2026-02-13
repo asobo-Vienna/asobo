@@ -8,7 +8,7 @@ public class EventFilterDTO {
     private UUID creatorId;
     private LocalDateTime dateFrom;
     private LocalDateTime dateTo;
-    private boolean isPrivateEvent;
+    private Boolean isPrivateEvent;
 
     public String getLocation() {
         return this.location;
@@ -42,11 +42,11 @@ public class EventFilterDTO {
         this.creatorId = creatorId;
     }
 
-    public boolean getIsPrivateEvent() {
+    public Boolean getIsPrivateEvent() {
         return this.isPrivateEvent;
     }
 
-    public void setIsPrivateEvent(boolean isPrivateEvent) {
+    public void setIsPrivateEvent(Boolean isPrivateEvent) {
         this.isPrivateEvent = isPrivateEvent;
     }
 }

@@ -16,6 +16,7 @@ import at.msm.asobo.security.UserPrincipal;
 import at.msm.asobo.services.UserService;
 import at.msm.asobo.services.files.FileStorageService;
 import at.msm.asobo.utils.PatchUtils;
+import jakarta.persistence.criteria.Predicate;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -26,7 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
-import java.util.function.Predicate;
+
 
 @Service
 @Transactional
@@ -110,8 +111,8 @@ public class EventService {
         return this.eventDTOEventMapper.mapEventPageToEventSummaryDTOs(events);
     }
 
-    public List<Event> getFilteredEvents(EventFilterDTO filter) {
-        return eventRepository.findAll((root, query, cb) -> {
+    public List<EventSummaryDTO> getFilteredEvents(EventFilterDTO filter) {
+        List<Event> filteredEvents = eventRepository.findAll((root, query, cb) -> {
             List<Predicate> predicates = new ArrayList<>();
 
             if (filter.getLocation() != null && !filter.getLocation().isBlank()) {
@@ -123,9 +124,14 @@ public class EventService {
             if (filter.getDateTo() != null) {
                 predicates.add(cb.lessThanOrEqualTo(root.get("date"), filter.getDateTo()));
             }
+            if (filter.getIsPrivateEvent() != null) {
+                predicates.add(cb.equal(root.get("isPrivateEvent"), filter.getIsPrivateEvent()));
+            }
 
             return cb.and(predicates.toArray(new Predicate[0]));
         });
+
+        return this.eventDTOEventMapper.mapEventsToEventSummaryDTOs(filteredEvents);
     }
 
 
