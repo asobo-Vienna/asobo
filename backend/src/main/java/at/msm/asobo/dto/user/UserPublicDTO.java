@@ -28,6 +28,8 @@ public class UserPublicDTO {
 
   private String location;
 
+  private String country;
+
   private String salutation;
 
   public UserPublicDTO() {}
@@ -90,6 +92,14 @@ public class UserPublicDTO {
 
   public void setLocation(String location) {
     this.location = location;
+  }
+
+  public String getCountry() {
+    return this.country;
+  }
+
+  public void setCountry(String country) {
+    this.country = country;
   }
 
   public void setSalutation(String salutation) {

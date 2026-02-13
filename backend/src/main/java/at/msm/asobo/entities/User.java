@@ -1,5 +1,6 @@
 package at.msm.asobo.entities;
 
+import at.msm.asobo.annotations.ValidCountryCode;
 import at.msm.asobo.interfaces.PictureEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -75,6 +76,7 @@ public class User implements PictureEntity {
   @CreatedDate private Instant registerDate;
 
   @LastModifiedDate private Instant modificationDate;
+  @ValidCountryCode private String country;
 
   private boolean isActive = true;
 
@@ -102,6 +104,14 @@ public class User implements PictureEntity {
 
   public void setLocation(String location) {
     this.location = location;
+  }
+
+  public String getCountry() {
+    return this.country;
+  }
+
+  public void setCountry(String country) {
+    this.country = country;
   }
 
   public String getEmail() {

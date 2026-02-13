@@ -31,6 +31,8 @@ public class UserDTO {
 
   private String location;
 
+  private String country;
+
   private String salutation;
 
   public UserDTO() {}
@@ -137,6 +139,14 @@ public class UserDTO {
 
   public String getLocation() {
     return this.location;
+  }
+
+  public String getCountry() {
+    return this.country;
+  }
+
+  public void setCountry(String country) {
+    this.country = country;
   }
 
   public String getSalutation() {

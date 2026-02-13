@@ -15,6 +15,7 @@ public class UserAdminSummaryDTO {
   private boolean isActive;
   private String pictureURI;
   private String location;
+  private String country;
   private Set<RoleDTO> roles;
   private int createdEventsCount;
   private int attendedEventsCount;
@@ -100,6 +101,14 @@ public class UserAdminSummaryDTO {
 
   public void setLocation(String location) {
     this.location = location;
+  }
+
+  public String getCountry() {
+    return this.country;
+  }
+
+  public void setCountry(String country) {
+    this.country = country;
   }
 
   public Set<RoleDTO> getRoles() {
