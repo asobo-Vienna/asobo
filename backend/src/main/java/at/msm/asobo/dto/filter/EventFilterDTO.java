@@ -1,6 +1,7 @@
 package at.msm.asobo.dto.filter;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 import java.util.UUID;
 
 public class EventFilterDTO {
@@ -9,6 +10,8 @@ public class EventFilterDTO {
     private LocalDateTime dateFrom;
     private LocalDateTime dateTo;
     private Boolean isPrivateEvent;
+    private Set<UUID> eventAdminIds;
+    private Set<UUID> participantIds;
 
     public String getLocation() {
         return this.location;
@@ -48,5 +51,21 @@ public class EventFilterDTO {
 
     public void setIsPrivateEvent(Boolean isPrivateEvent) {
         this.isPrivateEvent = isPrivateEvent;
+    }
+
+    public Set<UUID> getEventAdminIds() {
+        return eventAdminIds;
+    }
+
+    public void setEventAdminIds(Set<UUID> eventAdminIds) {
+        this.eventAdminIds = eventAdminIds;
+    }
+
+    public Set<UUID> getParticipantIds() {
+        return participantIds;
+    }
+
+    public void setParticipantIds(Set<UUID> participantIds) {
+        this.participantIds = participantIds;
     }
 }

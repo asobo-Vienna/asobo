@@ -15,19 +15,16 @@ import at.msm.asobo.repositories.EventRepository;
 import at.msm.asobo.security.UserPrincipal;
 import at.msm.asobo.services.UserService;
 import at.msm.asobo.services.files.FileStorageService;
+import at.msm.asobo.specifications.EventSpecification;
 import at.msm.asobo.utils.PatchUtils;
-import jakarta.persistence.criteria.Predicate;
 import jakarta.transaction.Transactional;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
-
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 
 @Service
 @Transactional
@@ -52,6 +49,16 @@ public class EventService {
         this.eventAdminService = eventAdminService;
         this.eventDTOEventMapper = eventDTOEventMapper;
         this.userDTOUserMapper = userDTOUserMapper;
+    }
+
+    public List<EventSummaryDTO> getAllEvents(EventFilterDTO filterDTO) {
+        List<Event> filteredEvents = eventRepository.findAll(EventSpecification.withFilters(filterDTO));
+        return this.eventDTOEventMapper.mapEventsToEventSummaryDTOs(filteredEvents);
+    }
+
+    public Page<EventSummaryDTO> getAllEventsPaginated(EventFilterDTO filterDTO, Pageable pageable) {
+        Page<Event> filteredEvents = eventRepository.findAll(EventSpecification.withFilters(filterDTO), pageable);
+        return this.eventDTOEventMapper.mapEventPageToEventSummaryDTOs(filteredEvents);
     }
 
     public List<EventSummaryDTO> getAllEvents() {
@@ -110,30 +117,6 @@ public class EventService {
         }
         return this.eventDTOEventMapper.mapEventPageToEventSummaryDTOs(events);
     }
-
-    public List<EventSummaryDTO> getFilteredEvents(EventFilterDTO filter) {
-        List<Event> filteredEvents = eventRepository.findAll((root, query, cb) -> {
-            List<Predicate> predicates = new ArrayList<>();
-
-            if (filter.getLocation() != null && !filter.getLocation().isBlank()) {
-                predicates.add(cb.equal(root.get("location"), filter.getLocation()));
-            }
-            if (filter.getDateFrom() != null) {
-                predicates.add(cb.greaterThanOrEqualTo(root.get("date"), filter.getDateFrom()));
-            }
-            if (filter.getDateTo() != null) {
-                predicates.add(cb.lessThanOrEqualTo(root.get("date"), filter.getDateTo()));
-            }
-            if (filter.getIsPrivateEvent() != null) {
-                predicates.add(cb.equal(root.get("isPrivateEvent"), filter.getIsPrivateEvent()));
-            }
-
-            return cb.and(predicates.toArray(new Predicate[0]));
-        });
-
-        return this.eventDTOEventMapper.mapEventsToEventSummaryDTOs(filteredEvents);
-    }
-
 
     public List<EventSummaryDTO> getEventsByDate(LocalDateTime date) {
         if (date == null) {
