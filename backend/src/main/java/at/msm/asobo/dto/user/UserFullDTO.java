@@ -23,6 +23,7 @@ public class UserFullDTO {
   private String location;
   private Instant registerDate;
   private Instant modificationDate;
+  private String country;
   private boolean isActive;
   private String salutation;
   private String aboutMe;
@@ -115,6 +116,14 @@ public class UserFullDTO {
 
   public Instant getRegisterDate() {
     return this.registerDate;
+  }
+
+  public String getCountry() {
+    return this.country;
+  }
+
+  public void setCountry(String country) {
+    this.country = country;
   }
 
   public String getFirstName() {
