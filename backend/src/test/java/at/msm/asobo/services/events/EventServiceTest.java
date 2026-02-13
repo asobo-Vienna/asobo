@@ -23,6 +23,8 @@ import at.msm.asobo.repositories.EventRepository;
 import at.msm.asobo.security.UserPrincipal;
 import at.msm.asobo.services.UserService;
 import at.msm.asobo.services.files.FileStorageService;
+import java.time.Duration;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.*;
 import org.junit.jupiter.api.BeforeEach;
@@ -1279,7 +1281,8 @@ class EventServiceTest {
   @Test
   void updateEventById_setsModificationDate() {
     publicEvent1.setCreator(creator);
-    LocalDateTime beforeUpdate = LocalDateTime.now();
+    Instant beforeUpdate = Instant.now();
+    publicEvent1.setModificationDate(beforeUpdate.plus(Duration.ofHours(1)));
 
     EventUpdateDTO updateDTO =
         new EventTestBuilder().withTitle("New Title").withParticipants(null).buildEventUpdateDTO();

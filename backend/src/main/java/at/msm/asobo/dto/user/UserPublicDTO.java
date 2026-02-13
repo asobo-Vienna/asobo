@@ -1,6 +1,6 @@
 package at.msm.asobo.dto.user;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -18,7 +18,9 @@ public class UserPublicDTO {
 
   private String aboutMe;
 
-  private LocalDateTime registerDate;
+  private Instant registerDate;
+
+  private Instant modificationDate;
 
   private boolean isActive;
 
@@ -82,7 +84,7 @@ public class UserPublicDTO {
     this.pictureURI = pictureURI;
   }
 
-  public void setRegisterDate(LocalDateTime registerDate) {
+  public void setRegisterDate(Instant registerDate) {
     this.registerDate = registerDate;
   }
 
@@ -98,7 +100,7 @@ public class UserPublicDTO {
     return this.id;
   }
 
-  public LocalDateTime getRegisterDate() {
+  public Instant getRegisterDate() {
     return this.registerDate;
   }
 
@@ -116,6 +118,14 @@ public class UserPublicDTO {
 
   public String getSalutation() {
     return this.salutation;
+  }
+
+  public Instant getModificationDate() {
+    return this.modificationDate;
+  }
+
+  public void setModificationDate(Instant modificationDate) {
+    this.modificationDate = modificationDate;
   }
 
   @Override

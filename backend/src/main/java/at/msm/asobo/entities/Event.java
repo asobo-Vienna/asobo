@@ -4,12 +4,15 @@ import at.msm.asobo.interfaces.PictureEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.*;
-import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 @Table(
     indexes = {
       @Index(name = "idx_event_title", columnList = "title"),
@@ -48,9 +51,9 @@ public class Event implements PictureEntity {
   @Column(length = 4096)
   private String pictureURI;
 
-  @CreationTimestamp private LocalDateTime creationDate;
+  @CreatedDate private Instant creationDate;
 
-  @LastModifiedDate private LocalDateTime modificationDate;
+  @LastModifiedDate private Instant modificationDate;
 
   @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<UserComment> comments;
@@ -76,11 +79,11 @@ public class Event implements PictureEntity {
     this.creator = creator;
   }
 
-  public LocalDateTime getModificationDate() {
+  public Instant getModificationDate() {
     return this.modificationDate;
   }
 
-  public void setModificationDate(LocalDateTime modificationDate) {
+  public void setModificationDate(Instant modificationDate) {
     this.modificationDate = modificationDate;
   }
 
@@ -134,11 +137,11 @@ public class Event implements PictureEntity {
     this.pictureURI = pictureURI;
   }
 
-  public LocalDateTime getCreationDate() {
+  public Instant getCreationDate() {
     return this.creationDate;
   }
 
-  public void setCreationDate(LocalDateTime creationDate) {
+  public void setCreationDate(Instant creationDate) {
     this.creationDate = creationDate;
   }
 

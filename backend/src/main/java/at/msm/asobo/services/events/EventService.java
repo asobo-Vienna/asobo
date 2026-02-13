@@ -130,8 +130,8 @@ public class EventService {
 
     Event newEvent = this.eventDTOEventMapper.mapEventCreationDTOToEvent(eventCreationDTO);
 
-    Event savedEvent = this.eventRepository.save(newEvent);
-    return this.eventDTOEventMapper.mapEventToEventDTO(savedEvent);
+    this.eventRepository.save(newEvent);
+    return this.eventDTOEventMapper.mapEventToEventDTO(newEvent);
   }
 
   public Event getEventById(UUID id) {
@@ -188,9 +188,7 @@ public class EventService {
           this.userDTOUserMapper.mapUserPublicDTOsToUsers(eventUpdateDTO.getParticipants()));
     }
 
-    existingEvent.setModificationDate(LocalDateTime.now());
-
-    Event savedEvent = this.eventRepository.save(existingEvent);
-    return this.eventDTOEventMapper.mapEventToEventDTO(savedEvent);
+    this.eventRepository.save(existingEvent);
+    return this.eventDTOEventMapper.mapEventToEventDTO(existingEvent);
   }
 }

@@ -4,11 +4,14 @@ import at.msm.asobo.interfaces.PictureEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.*;
-import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 @Table(
     name = "users",
     indexes = {
@@ -69,7 +72,9 @@ public class User implements PictureEntity {
 
   private String location;
 
-  @CreationTimestamp private LocalDateTime registerDate;
+  @CreatedDate private Instant registerDate;
+
+  @LastModifiedDate private Instant modificationDate;
 
   private boolean isActive = true;
 
@@ -173,16 +178,24 @@ public class User implements PictureEntity {
     this.isActive = isActive;
   }
 
-  public LocalDateTime getRegisterDate() {
+  public Instant getRegisterDate() {
     return this.registerDate;
+  }
+
+  public void setRegisterDate(Instant registerDate) {
+    this.registerDate = registerDate;
+  }
+
+  public Instant getModificationDate() {
+    return this.modificationDate;
+  }
+
+  public void setModificationDate(Instant modificationDate) {
+    this.modificationDate = modificationDate;
   }
 
   public UUID getId() {
     return this.id;
-  }
-
-  public void setRegisterDate(LocalDateTime registerDate) {
-    this.registerDate = registerDate;
   }
 
   public void setId(UUID id) {

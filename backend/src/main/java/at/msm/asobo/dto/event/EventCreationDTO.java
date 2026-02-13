@@ -6,6 +6,7 @@ import at.msm.asobo.dto.user.UserPublicDTO;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
@@ -29,9 +30,9 @@ public class EventCreationDTO {
   @FutureOrPresent(message = "Date of event must be today or in the future")
   private LocalDateTime date;
 
-  private LocalDateTime creationDate;
+  private Instant creationDate;
 
-  private LocalDateTime modificationDate;
+  private Instant modificationDate;
 
   // add this again as soon as we have logged-in users
   // @NotNull(message = "Event creator is mandatory for event creation")
@@ -69,11 +70,11 @@ public class EventCreationDTO {
     return this.date;
   }
 
-  public LocalDateTime getCreationDate() {
+  public Instant getCreationDate() {
     return this.creationDate;
   }
 
-  public LocalDateTime getModificationDate() {
+  public Instant getModificationDate() {
     return this.modificationDate;
   }
 
@@ -113,11 +114,11 @@ public class EventCreationDTO {
     this.date = date;
   }
 
-  public void setCreationDate(LocalDateTime creationDate) {
+  public void setCreationDate(Instant creationDate) {
     this.creationDate = creationDate;
   }
 
-  public void setModificationDate(LocalDateTime modificationDate) {
+  public void setModificationDate(Instant modificationDate) {
     this.modificationDate = modificationDate;
   }
 
