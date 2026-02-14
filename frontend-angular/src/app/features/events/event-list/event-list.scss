@@ -27,3 +27,29 @@ $number-of-event-cards-per-row: 3;
 #event-list li:nth-child(3n) {
   margin-right: 0;
 }
+
+.sort-container {
+  text-align: center;
+
+  .sort-label {
+    font-weight: bold;
+    color: $asobo-purple;
+  }
+}
+
+.sort-controls {
+  button {
+    transition: all 0.2s;
+    background-color: $asobo-purple-transparent;
+    color: $asobo-purple;
+    border-color: $asobo-purple;
+
+    &.active {
+      transform: scale(1.05);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+      color: white;
+      background-color: $asobo-purple;
+      font-weight: 600;
+    }
+  }
+}

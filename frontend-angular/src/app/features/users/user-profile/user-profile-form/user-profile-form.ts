@@ -126,7 +126,7 @@ export class UserProfileForm implements OnInit {
     });
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     // Disable all form controls initially
     this.updateForm.disable();
     this.enableField('password');
