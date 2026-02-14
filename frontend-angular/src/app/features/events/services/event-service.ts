@@ -5,6 +5,7 @@ import {Observable} from 'rxjs';
 import {Event} from '../models/event'
 import {PageResponse} from '../../../shared/entities/page-response';
 import {EventSummary} from '../models/event-summary';
+import {EventFilters} from '../models/event-filters';
 
 @Injectable({
   providedIn: 'root'
@@ -40,8 +41,8 @@ export class EventService {
   }
 
 
-  getAllEventsPaginated(params: { page: number, size: number, sort?: string }): Observable<PageResponse<EventSummary>> {
-    const queryParams = new HttpParams()
+  getAllEventsPaginated(params: { page: number, size: number, sort?: string }, eventFilters: EventFilters): Observable<PageResponse<EventSummary>> {
+    const queryParams = this.filtersToHttpParams(eventFilters)
       .set('page', params.page.toString())
       .set('size', params.size.toString())
       .set('sort', params.sort ?? 'date,desc');

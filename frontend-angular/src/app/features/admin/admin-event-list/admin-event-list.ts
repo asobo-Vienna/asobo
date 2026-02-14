@@ -50,7 +50,7 @@ export class AdminEventList implements OnInit {
 
     this.loading.set(true);
 
-    this.eventService.getAllEventsPaginated({ page, size }).subscribe({
+    this.eventService.getAllEventsPaginated({ page, size }, {}).subscribe({
       next: (response) => {
         // Cache the page data
         this.pageCache.set(cacheKey, response.content);

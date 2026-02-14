@@ -100,7 +100,7 @@ export class EventList implements OnInit {
     };
 
     if (this.authService.isLoggedIn()) {
-      this.eventService.getAllEvents(params, this.eventFilters()).subscribe({
+      this.eventService.getAllEventsPaginated(params, this.eventFilters()).subscribe({
         next: (events) => this.fetchedEvents.set(new List<EventSummary>(events.content)),
         error: (err) => console.error('Error fetching events:', err)
       });
