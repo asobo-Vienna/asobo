@@ -1,6 +1,7 @@
 import {Component, computed, inject, input, OnInit, signal} from '@angular/core';
 import {EventCard} from '../event-card/event-card';
 import {EventService} from '../services/event-service';
+import {Event} from '../models/event'
 import {AuthService} from '../../auth/services/auth-service';
 import {List} from '../../../core/data_structures/lists/list';
 import {EventSummary} from '../models/event-summary';
@@ -8,6 +9,8 @@ import {routes} from '../../../app.routes';
 import {Router} from '@angular/router';
 
 type SortField = 'date' | 'title' | 'location' | 'isPrivateEvent';
+import {HttpParams} from '@angular/common/http';
+import {EventFilters} from '../models/event-filters';
 
 @Component({
   selector: 'app-event-list',
@@ -24,6 +27,7 @@ export class EventList implements OnInit {
 
   inputEvents = input<List<EventSummary>>();
   private fetchedEvents = signal<List<EventSummary>>(new List<EventSummary>());
+  eventFilters = signal<EventFilters>({});
 
   // default sort order: descending by date
   sortField = signal<SortField>('date');
@@ -88,6 +92,7 @@ export class EventList implements OnInit {
   }
 
   private fetchEvents(): void {
+    //let params = this.
     const params = {
       page: 0,
       size: 100,
@@ -95,12 +100,13 @@ export class EventList implements OnInit {
     };
 
     if (this.authService.isLoggedIn()) {
-      this.eventService.getAllEventsPaginated(params).subscribe({
+      this.eventService.getAllEvents(params, this.eventFilters()).subscribe({
         next: (events) => this.fetchedEvents.set(new List<EventSummary>(events.content)),
         error: (err) => console.error('Error fetching events:', err)
       });
     } else {
-      this.eventService.getAllPublicEventsPaginated(params).subscribe({
+      this.eventFilters().isPrivateEvent = false;
+      this.eventService.getAllEventsPaginated(params, this.eventFilters()).subscribe({
         next: (events) => this.fetchedEvents.set(new List<EventSummary>(events.content)),
         error: (err) => console.error('Error fetching public events:', err)
       });

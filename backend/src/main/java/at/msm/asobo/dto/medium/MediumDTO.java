@@ -1,6 +1,7 @@
 package at.msm.asobo.dto.medium;
 
 import at.msm.asobo.dto.user.UserPublicDTO;
+import java.time.Instant;
 import java.util.UUID;
 
 public class MediumDTO {
@@ -8,6 +9,7 @@ public class MediumDTO {
   private UUID eventId;
   private String mediumURI;
   private UserPublicDTO creator;
+  private Instant creationDate;
 
   public MediumDTO() {}
 
@@ -41,5 +43,13 @@ public class MediumDTO {
 
   public void setCreator(UserPublicDTO creator) {
     this.creator = creator;
+  }
+
+  public Instant getCreationDate() {
+    return this.creationDate;
+  }
+
+  public void setCreationDate(Instant creationDate) {
+    this.creationDate = creationDate;
   }
 }

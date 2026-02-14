@@ -9,7 +9,9 @@ import at.msm.asobo.entities.Medium;
 import at.msm.asobo.entities.User;
 import at.msm.asobo.entities.UserComment;
 import at.msm.asobo.mappers.*;
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.*;
 
 public class EventTestBuilder {
@@ -28,8 +30,8 @@ public class EventTestBuilder {
   private LocalDateTime date;
   private String location;
   private String pictureURI;
-  private LocalDateTime creationDate;
-  private LocalDateTime modificationDate;
+  private Instant creationDate;
+  private Instant modificationDate;
   private List<UserComment> comments;
   private List<Medium> media;
   private boolean isPrivateEvent;
@@ -50,8 +52,8 @@ public class EventTestBuilder {
     this.description = "Best event ever!";
 
     this.date = FIXED_TIME.plusDays(7);
-    this.creationDate = FIXED_TIME;
-    this.modificationDate = FIXED_TIME.plusHours(5);
+    this.creationDate = FIXED_TIME.toInstant(ZoneOffset.UTC);
+    this.modificationDate = FIXED_TIME.plusHours(5).toInstant(ZoneOffset.UTC);
 
     this.location = "Vienna";
     this.pictureURI = DEFAULT_PICTURE_URI;
@@ -162,12 +164,12 @@ public class EventTestBuilder {
     return this;
   }
 
-  public EventTestBuilder withCreationDate(LocalDateTime creationDate) {
+  public EventTestBuilder withCreationDate(Instant creationDate) {
     this.creationDate = creationDate;
     return this;
   }
 
-  public EventTestBuilder withModificationDate(LocalDateTime modificationDate) {
+  public EventTestBuilder withModificationDate(Instant modificationDate) {
     this.modificationDate = modificationDate;
     return this;
   }

@@ -1,10 +1,15 @@
 package at.msm.asobo.entities;
 
 import jakarta.persistence.*;
+import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 public class Role {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
@@ -15,6 +20,10 @@ public class Role {
 
   @ManyToMany(mappedBy = "roles")
   private Set<User> users;
+
+  @CreatedDate private Instant creationDate;
+
+  @LastModifiedDate private Instant modificationDate;
 
   public Role() {
     this.users = new HashSet<>();
@@ -42,5 +51,21 @@ public class Role {
 
   public void setUsers(Set<User> users) {
     this.users = users;
+  }
+
+  public Instant getCreationDate() {
+    return this.creationDate;
+  }
+
+  public void setCreationDate(Instant creationDate) {
+    this.creationDate = creationDate;
+  }
+
+  public Instant getModificationDate() {
+    return this.modificationDate;
+  }
+
+  public void setModificationDate(Instant modificationDate) {
+    this.modificationDate = modificationDate;
   }
 }

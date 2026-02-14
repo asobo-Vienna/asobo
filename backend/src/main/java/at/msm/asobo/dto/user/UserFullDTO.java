@@ -2,7 +2,7 @@ package at.msm.asobo.dto.user;
 
 import at.msm.asobo.dto.comment.UserCommentDTO;
 import at.msm.asobo.dto.event.EventDTO;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -21,7 +21,9 @@ public class UserFullDTO {
   private Set<RoleDTO> roles;
   private String pictureURI;
   private String location;
-  private LocalDateTime registerDate;
+  private Instant registerDate;
+  private Instant modificationDate;
+  private String country;
   private boolean isActive;
   private String salutation;
   private String aboutMe;
@@ -68,7 +70,7 @@ public class UserFullDTO {
     this.location = location;
   }
 
-  public void setRegisterDate(LocalDateTime registerDate) {
+  public void setRegisterDate(Instant registerDate) {
     this.registerDate = registerDate;
   }
 
@@ -112,8 +114,16 @@ public class UserFullDTO {
     return this.location;
   }
 
-  public LocalDateTime getRegisterDate() {
+  public Instant getRegisterDate() {
     return this.registerDate;
+  }
+
+  public String getCountry() {
+    return this.country;
+  }
+
+  public void setCountry(String country) {
+    this.country = country;
   }
 
   public String getFirstName() {
@@ -154,5 +164,13 @@ public class UserFullDTO {
 
   public void setRoles(Set<RoleDTO> roles) {
     this.roles = roles;
+  }
+
+  public Instant getModificationDate() {
+    return this.modificationDate;
+  }
+
+  public void setModificationDate(Instant modificationDate) {
+    this.modificationDate = modificationDate;
   }
 }

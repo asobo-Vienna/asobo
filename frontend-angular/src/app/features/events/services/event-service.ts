@@ -13,21 +13,32 @@ import {EventSummary} from '../models/event-summary';
 export class EventService {
   private http = inject(HttpClient);
 
-  public getAllEvents(): Observable<EventSummary[]> {
-    return this.http.get<EventSummary[]>(environment.eventsEndpoint);
+  public getAllEvents(eventFilters?: EventFilters): Observable<EventSummary[]> {
+    let params: HttpParams = new HttpParams();
+    if (eventFilters) {
+      params = this.filtersToHttpParams(eventFilters);
+    }
+
+    return this.http.get<EventSummary[]>(`${environment.eventsEndpoint}`, { params });
   }
 
-  public getAllPublicEvents(): Observable<EventSummary[]> {
-    return this.http.get<EventSummary[]>(environment.eventsEndpoint, {
-      params: { isPrivate: false }
+  private filtersToHttpParams(filters: EventFilters): HttpParams {
+    let params = new HttpParams();
+
+    Object.keys(filters).forEach(key => {
+      const value = filters[key as keyof EventFilters];
+      if (value !== null && value !== undefined) {
+        if (value instanceof Date) {
+          params = params.set(key, value.toISOString());
+        } else {
+          params = params.set(key, String(value));
+        }
+      }
     });
+
+    return params;
   }
 
-  public getAllPrivateEvents(): Observable<EventSummary[]> {
-    return this.http.get<EventSummary[]>(environment.eventsEndpoint, {
-      params: { isPrivate: true }
-    });
-  }
 
   getAllEventsPaginated(params: { page: number, size: number, sort?: string }): Observable<PageResponse<EventSummary>> {
     const queryParams = new HttpParams()
