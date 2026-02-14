@@ -8,6 +8,7 @@ import {PageResponse} from '../../../shared/entities/page-response';
 import {MediaItemWithEventTitle} from '../../events/models/media-item-with-event-title';
 import {Role} from '../../../shared/entities/role';
 import {UserRoles} from '../../../shared/entities/user-roles';
+import {UserFilters} from '../../users/user-profile/models/user-filters';
 
 @Injectable({
   providedIn: 'root',
@@ -26,12 +27,25 @@ export class AdminService {
     });
   }
 
-  public getAllUsers(page: number, size: number): Observable<PageResponse<User>> {
-    const params = new HttpParams()
+  public getAllUsers(userFilters: UserFilters, page: number, size: number): Observable<PageResponse<User>> {
+    let params: HttpParams = this.filtersToHttpParams(userFilters)
       .set('page', page.toString())
       .set('size', size.toString());
 
     return this.http.get<PageResponse<User>>(`${environment.apiBaseUrl}/admin/users/paginated`, { params });
+  }
+
+  private filtersToHttpParams(filters: UserFilters): HttpParams {
+    let params = new HttpParams();
+
+    Object.keys(filters).forEach(key => {
+      const value = filters[key as keyof UserFilters];
+      if (value !== null && value !== undefined) {
+        params = params.set(key, String(value));
+      }
+    });
+
+    return params;
   }
 
   public getAllCommentsWithEventTitle(page: number, size: number): Observable<PageResponse<CommentWithEventTitle>> {

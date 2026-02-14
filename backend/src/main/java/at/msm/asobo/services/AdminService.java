@@ -2,6 +2,8 @@ package at.msm.asobo.services;
 
 import at.msm.asobo.dto.comment.UserCommentDTO;
 import at.msm.asobo.dto.comment.UserCommentWithEventTitleDTO;
+import at.msm.asobo.dto.filter.UserCommentFilterDTO;
+import at.msm.asobo.dto.filter.UserFilterDTO;
 import at.msm.asobo.dto.medium.MediumWithEventTitleDTO;
 import at.msm.asobo.dto.user.UserAdminSummaryDTO;
 import at.msm.asobo.dto.user.UserFullDTO;
@@ -12,6 +14,8 @@ import at.msm.asobo.mappers.*;
 import at.msm.asobo.repositories.MediumRepository;
 import at.msm.asobo.repositories.UserCommentRepository;
 import at.msm.asobo.repositories.UserRepository;
+import at.msm.asobo.specifications.UserCommentSpecification;
+import at.msm.asobo.specifications.UserSpecification;
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -47,24 +51,31 @@ public class AdminService {
     this.mediumToMediumWithEventTitleDTOMapper = mediumToMediumWithEventTitleDTOMapper;
   }
 
-  public Page<UserAdminSummaryDTO> getAllUsersPaginated(Pageable pageable) {
-    Page<User> users = userRepository.findAll(pageable);
+  public Page<UserAdminSummaryDTO> getAllUsersPaginated(
+      UserFilterDTO filterDTO, Pageable pageable) {
+
+    Page<User> users =
+        this.userRepository.findAll(UserSpecification.withFilters(filterDTO), pageable);
     return this.userDTOUserMapper.mapUsersToAdminSummaryDTOs(users);
   }
 
-  public List<UserFullDTO> getAllUsers() {
-    List<User> users = userRepository.findAll();
+  public List<UserFullDTO> getAllUsers(UserFilterDTO filterDTO) {
+    List<User> users = userRepository.findAll(UserSpecification.withFilters(filterDTO));
     return this.userDTOUserMapper.mapUsersToUserFullDTOsAsList(users);
   }
 
-  public List<UserCommentDTO> getAllUserComments() {
-    List<UserComment> userComments = this.userCommentRepository.findAll();
+  public List<UserCommentDTO> getAllUserComments(UserCommentFilterDTO filterDTO) {
+    List<UserComment> userComments =
+        this.userCommentRepository.findAll(UserCommentSpecification.withFilters(filterDTO));
     return this.userCommentDTOUserCommentMapper.mapUserCommentsToUserCommentDTOs(userComments);
   }
 
-  public Page<UserCommentWithEventTitleDTO> getAllUserCommentsWithEventTitle(Pageable pageable) {
+  public Page<UserCommentWithEventTitleDTO> getAllUserCommentsWithEventTitle(
+      UserCommentFilterDTO filterDTO, Pageable pageable) {
+
     Page<UserComment> userCommentsWithEventTitles =
-        this.userCommentRepository.findAllPageable(pageable);
+        this.userCommentRepository.findAll(
+            UserCommentSpecification.withFilters(filterDTO), pageable);
 
     return userCommentsWithEventTitles.map(
         this.userCommentToUserCommentWithEventTitleDTOMapper::toDTO);

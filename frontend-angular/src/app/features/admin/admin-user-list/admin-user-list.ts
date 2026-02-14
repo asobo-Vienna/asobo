@@ -14,6 +14,7 @@ import {RoleEnum} from '../../../shared/enums/role-enum';
 import {Chip} from 'primeng/chip';
 import {UserRoles} from '../../../shared/entities/user-roles';
 import {LambdaFunctions} from '../../../shared/utils/lambda-functions';
+import {UserFilters} from '../../users/user-profile/models/user-filters';
 
 @Component({
   selector: 'app-admin-user-list',
@@ -43,6 +44,7 @@ export class AdminUserList implements OnInit {
   users = signal<User[]>([]);
   totalRecords = signal<number>(0);
   loading = signal<boolean>(true);
+  userFilters = signal<UserFilters>({});
 
   // Store all user roles in a single signal array
   private userRolesStore = signal<UserRoles[]>([]);
@@ -89,7 +91,7 @@ export class AdminUserList implements OnInit {
       return;
     }
 
-    this.adminService.getAllUsers(page, size).subscribe({
+    this.adminService.getAllUsers(this.userFilters(), page, size).subscribe({
       next: response => {
         this.pageCache.set(cacheKey, response.content);
 
