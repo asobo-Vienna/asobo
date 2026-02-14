@@ -2,6 +2,7 @@ package at.msm.asobo.services;
 
 import at.msm.asobo.dto.comment.UserCommentDTO;
 import at.msm.asobo.dto.comment.UserCommentWithEventTitleDTO;
+import at.msm.asobo.dto.filter.UserCommentFilterDTO;
 import at.msm.asobo.dto.filter.UserFilterDTO;
 import at.msm.asobo.dto.medium.MediumWithEventTitleDTO;
 import at.msm.asobo.dto.user.UserAdminSummaryDTO;
@@ -13,6 +14,7 @@ import at.msm.asobo.mappers.*;
 import at.msm.asobo.repositories.MediumRepository;
 import at.msm.asobo.repositories.UserCommentRepository;
 import at.msm.asobo.repositories.UserRepository;
+import at.msm.asobo.specifications.UserCommentSpecification;
 import at.msm.asobo.specifications.UserSpecification;
 import java.util.List;
 import org.springframework.data.domain.Page;
@@ -62,14 +64,18 @@ public class AdminService {
     return this.userDTOUserMapper.mapUsersToUserFullDTOsAsList(users);
   }
 
-  public List<UserCommentDTO> getAllUserComments() {
-    List<UserComment> userComments = this.userCommentRepository.findAll();
+  public List<UserCommentDTO> getAllUserComments(UserCommentFilterDTO filterDTO) {
+    List<UserComment> userComments =
+        this.userCommentRepository.findAll(UserCommentSpecification.withFilters(filterDTO));
     return this.userCommentDTOUserCommentMapper.mapUserCommentsToUserCommentDTOs(userComments);
   }
 
-  public Page<UserCommentWithEventTitleDTO> getAllUserCommentsWithEventTitle(Pageable pageable) {
+  public Page<UserCommentWithEventTitleDTO> getAllUserCommentsWithEventTitle(
+      UserCommentFilterDTO filterDTO, Pageable pageable) {
+
     Page<UserComment> userCommentsWithEventTitles =
-        this.userCommentRepository.findAllPageable(pageable);
+        this.userCommentRepository.findAll(
+            UserCommentSpecification.withFilters(filterDTO), pageable);
 
     return userCommentsWithEventTitles.map(
         this.userCommentToUserCommentWithEventTitleDTOMapper::toDTO);

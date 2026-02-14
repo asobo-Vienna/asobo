@@ -1,13 +1,16 @@
 package at.msm.asobo.controllers;
 
 import at.msm.asobo.dto.comment.UserCommentWithEventTitleDTO;
+import at.msm.asobo.dto.filter.UserCommentFilterDTO;
 import at.msm.asobo.dto.filter.UserFilterDTO;
 import at.msm.asobo.dto.medium.MediumWithEventTitleDTO;
 import at.msm.asobo.dto.user.UserAdminSummaryDTO;
 import at.msm.asobo.dto.user.UserFullDTO;
 import at.msm.asobo.services.AdminService;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -57,8 +60,15 @@ public class AdminController {
   public UserFullDTO getUserWithDetails(@PathVariable UUID id);*/
 
   @GetMapping("/comments")
-  public Page<UserCommentWithEventTitleDTO> getAllUserCommentsWithEventTitle(Pageable pageable) {
-    return this.adminService.getAllUserCommentsWithEventTitle(pageable);
+  public Page<UserCommentWithEventTitleDTO> getAllUserCommentsWithEventTitle(
+      @RequestParam(required = false) UUID authorId,
+      @RequestParam(required = false) UUID eventId,
+      @RequestParam(required = false) LocalDateTime dateFrom,
+      @RequestParam(required = false) LocalDateTime dateTo,
+      Pageable pageable) {
+    UserCommentFilterDTO filterDTO = new UserCommentFilterDTO(authorId, eventId, dateFrom, dateTo);
+
+    return this.adminService.getAllUserCommentsWithEventTitle(filterDTO, pageable);
   }
 
   @GetMapping("/media")
