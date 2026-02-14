@@ -36,41 +36,51 @@ public class EventController {
 
   @GetMapping
   public List<EventSummaryDTO> getAllEvents(
-      @RequestParam(required = false) UUID userId, EventFilterDTO filterDTO) {
+      @RequestParam(required = false) UUID userId,
+      @RequestParam(required = false) String location,
+      @RequestParam(required = false) UUID creatorId,
+      @RequestParam(required = false) Boolean isPrivateEvent,
+      @RequestParam(required = false) Set<UUID> eventAdminIds,
+      @RequestParam(required = false) Set<UUID> participantIds) {
+
+    EventFilterDTO filterDTO = new EventFilterDTO();
+    filterDTO.setLocation(location);
+    filterDTO.setCreatorId(creatorId);
+    filterDTO.setIsPrivateEvent(isPrivateEvent);
+    filterDTO.setEventAdminIds(eventAdminIds);
+    filterDTO.setParticipantIds(participantIds);
 
     if (userId != null) {
-      // Fetch events where the user is a participant
-      return this.eventService.getEventsByParticipantId(userId, filterDTO.getIsPrivateEvent());
+      return this.eventService.getEventsByParticipantId(userId, isPrivateEvent);
     } else {
       return this.eventService.getAllEvents(filterDTO);
     }
   }
 
-  @GetMapping("/filter")
-  public List<EventSummaryDTO> getFilteredEvents(EventFilterDTO filterDTO) {
-    return eventService.getAllEvents(filterDTO);
-  }
-
   @GetMapping("/paginated")
   public Page<EventSummaryDTO> getAllEventsPaginated(
       @RequestParam(required = false) UUID userId,
-      @RequestParam(required = false) Boolean isPrivate,
+      @RequestParam(required = false) String location,
+      @RequestParam(required = false) UUID creatorId,
+      @RequestParam(required = false) Boolean isPrivateEvent,
+      @RequestParam(required = false) Set<UUID> eventAdminIds,
+      @RequestParam(required = false) Set<UUID> participantIds,
       Pageable pageable) {
-    EventFilterDTO eventFilterDTO = new EventFilterDTO();
+
+    EventFilterDTO filterDTO = new EventFilterDTO();
+    filterDTO.setLocation(location);
+    filterDTO.setCreatorId(creatorId);
+    filterDTO.setIsPrivateEvent(isPrivateEvent);
+    filterDTO.setEventAdminIds(eventAdminIds);
+    filterDTO.setParticipantIds(participantIds);
+
     if (userId != null) {
-      return this.eventService.getEventsByParticipantIdPaginated(userId, isPrivate, pageable);
-    } else if (isPrivate == null) {
-      return this.eventService.getAllEventsPaginated(eventFilterDTO, pageable);
+      return this.eventService.getEventsByParticipantIdPaginated(
+          userId, filterDTO.getIsPrivateEvent(), pageable);
     } else {
-      eventFilterDTO.setIsPrivateEvent(isPrivate);
-      return this.eventService.getAllEventsPaginated(eventFilterDTO, pageable);
+      return this.eventService.getAllEventsPaginated(filterDTO, pageable);
     }
   }
-
-  //    @GetMapping
-  //    public List<EventDTO> getEventsByTitle(String title) {
-  //        return this.eventService.getEventsByTitle(title);
-  //    }
 
   @GetMapping(params = "location")
   public List<EventSummaryDTO> getEventsByLocation(

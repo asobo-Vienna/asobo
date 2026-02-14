@@ -137,7 +137,7 @@ class EventControllerTest {
     when(eventService.getAllEvents(any(EventFilterDTO.class))).thenReturn(events);
 
     mockMvc
-        .perform(get(EVENTS_URL).param("isPrivate", "false"))
+        .perform(get(EVENTS_URL).param("isPrivateEvent", "false")) // Changed from "isPrivate"
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
         .andExpect(content().string(expectedJson));
@@ -155,7 +155,7 @@ class EventControllerTest {
     when(eventService.getAllEvents(any(EventFilterDTO.class))).thenReturn(events);
 
     mockMvc
-        .perform(get(EVENTS_URL).param("isPrivate", "true"))
+        .perform(get(EVENTS_URL).param("isPrivateEvent", "true")) // Changed from "isPrivate"
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
         .andExpect(content().string(expectedJson));

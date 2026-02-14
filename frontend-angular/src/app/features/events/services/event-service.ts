@@ -15,13 +15,12 @@ export class EventService {
   private http = inject(HttpClient);
 
   public getAllEvents(eventFilters?: EventFilters): Observable<EventSummary[]> {
-
     let params: HttpParams = new HttpParams();
     if (eventFilters) {
       params = this.filtersToHttpParams(eventFilters);
     }
 
-    return this.http.get<EventSummary[]>(`${environment.eventsEndpoint}/filter`, { params });
+    return this.http.get<EventSummary[]>(`${environment.eventsEndpoint}`, { params });
   }
 
   private filtersToHttpParams(filters: EventFilters): HttpParams {
