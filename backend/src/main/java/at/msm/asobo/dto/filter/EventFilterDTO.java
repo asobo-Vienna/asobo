@@ -13,6 +13,23 @@ public class EventFilterDTO {
   private Set<UUID> eventAdminIds;
   private Set<UUID> participantIds;
 
+  public EventFilterDTO(
+      String location,
+      UUID creatorId,
+      LocalDateTime dateFrom,
+      LocalDateTime dateTo,
+      Boolean isPrivateEvent,
+      Set<UUID> eventAdminsIds,
+      Set<UUID> participantIds) {
+    this.location = location;
+    this.creatorId = creatorId;
+    this.dateFrom = dateFrom;
+    this.dateTo = dateTo;
+    this.isPrivateEvent = isPrivateEvent;
+    this.eventAdminIds = eventAdminsIds;
+    this.participantIds = participantIds;
+  }
+
   public String getLocation() {
     return this.location;
   }
@@ -54,7 +71,7 @@ public class EventFilterDTO {
   }
 
   public Set<UUID> getEventAdminIds() {
-    return eventAdminIds;
+    return this.eventAdminIds;
   }
 
   public void setEventAdminIds(Set<UUID> eventAdminIds) {
@@ -62,7 +79,7 @@ public class EventFilterDTO {
   }
 
   public Set<UUID> getParticipantIds() {
-    return participantIds;
+    return this.participantIds;
   }
 
   public void setParticipantIds(Set<UUID> participantIds) {

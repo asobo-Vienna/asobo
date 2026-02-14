@@ -39,16 +39,15 @@ public class EventController {
       @RequestParam(required = false) UUID userId,
       @RequestParam(required = false) String location,
       @RequestParam(required = false) UUID creatorId,
+      @RequestParam(required = false) LocalDateTime dateFrom,
+      @RequestParam(required = false) LocalDateTime dateTo,
       @RequestParam(required = false) Boolean isPrivateEvent,
       @RequestParam(required = false) Set<UUID> eventAdminIds,
       @RequestParam(required = false) Set<UUID> participantIds) {
 
-    EventFilterDTO filterDTO = new EventFilterDTO();
-    filterDTO.setLocation(location);
-    filterDTO.setCreatorId(creatorId);
-    filterDTO.setIsPrivateEvent(isPrivateEvent);
-    filterDTO.setEventAdminIds(eventAdminIds);
-    filterDTO.setParticipantIds(participantIds);
+    EventFilterDTO filterDTO =
+        new EventFilterDTO(
+            location, creatorId, dateFrom, dateTo, isPrivateEvent, eventAdminIds, participantIds);
 
     if (userId != null) {
       return this.eventService.getEventsByParticipantId(userId, isPrivateEvent);
@@ -62,17 +61,16 @@ public class EventController {
       @RequestParam(required = false) UUID userId,
       @RequestParam(required = false) String location,
       @RequestParam(required = false) UUID creatorId,
+      @RequestParam(required = false) LocalDateTime dateFrom,
+      @RequestParam(required = false) LocalDateTime dateTo,
       @RequestParam(required = false) Boolean isPrivateEvent,
       @RequestParam(required = false) Set<UUID> eventAdminIds,
       @RequestParam(required = false) Set<UUID> participantIds,
       Pageable pageable) {
 
-    EventFilterDTO filterDTO = new EventFilterDTO();
-    filterDTO.setLocation(location);
-    filterDTO.setCreatorId(creatorId);
-    filterDTO.setIsPrivateEvent(isPrivateEvent);
-    filterDTO.setEventAdminIds(eventAdminIds);
-    filterDTO.setParticipantIds(participantIds);
+    EventFilterDTO filterDTO =
+        new EventFilterDTO(
+            location, creatorId, dateFrom, dateTo, isPrivateEvent, eventAdminIds, participantIds);
 
     if (userId != null) {
       return this.eventService.getEventsByParticipantIdPaginated(
