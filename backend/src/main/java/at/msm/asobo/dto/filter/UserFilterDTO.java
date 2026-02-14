@@ -10,6 +10,21 @@ public class UserFilterDTO {
   private Boolean isActive;
   private Set<Long> roleIds;
 
+  public UserFilterDTO(
+      String firstName,
+      String surname,
+      String location,
+      String country,
+      Boolean isActive,
+      Set<Long> roleIds) {
+    this.firstName = firstName;
+    this.surname = surname;
+    this.location = location;
+    this.country = country;
+    this.isActive = isActive;
+    this.roleIds = roleIds;
+  }
+
   public String getFirstName() {
     return this.firstName;
   }

@@ -32,20 +32,24 @@ public class AdminController {
       @RequestParam(required = false) Boolean isActive,
       @RequestParam(required = false) Set<Long> roleIds,
       Pageable pageable) {
-    UserFilterDTO filterDTO = new UserFilterDTO();
-    filterDTO.setFirstName(firstName);
-    filterDTO.setSurname(surname);
-    filterDTO.setLocation(location);
-    filterDTO.setCountry(country);
-    filterDTO.setIsActive(isActive);
-    filterDTO.setRoleIds(roleIds);
+    UserFilterDTO filterDTO =
+        new UserFilterDTO(firstName, surname, location, country, isActive, roleIds);
 
     return this.adminService.getAllUsersPaginated(filterDTO, pageable);
   }
 
   @GetMapping("/users")
-  public List<UserFullDTO> getAllUsers() {
-    return this.adminService.getAllUsers();
+  public List<UserFullDTO> getAllUsers(
+      @RequestParam(required = false) String firstName,
+      @RequestParam(required = false) String surname,
+      @RequestParam(required = false) String location,
+      @RequestParam(required = false) String country,
+      @RequestParam(required = false) Boolean isActive,
+      @RequestParam(required = false) Set<Long> roleIds) {
+    UserFilterDTO filterDTO =
+        new UserFilterDTO(firstName, surname, location, country, isActive, roleIds);
+
+    return this.adminService.getAllUsers(filterDTO);
   }
 
   // TODO?: On expand get full user details for ONE user

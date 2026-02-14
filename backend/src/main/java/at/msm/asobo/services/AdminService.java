@@ -57,8 +57,8 @@ public class AdminService {
     return this.userDTOUserMapper.mapUsersToAdminSummaryDTOs(users);
   }
 
-  public List<UserFullDTO> getAllUsers() {
-    List<User> users = userRepository.findAll();
+  public List<UserFullDTO> getAllUsers(UserFilterDTO filterDTO) {
+    List<User> users = userRepository.findAll(UserSpecification.withFilters(filterDTO));
     return this.userDTOUserMapper.mapUsersToUserFullDTOsAsList(users);
   }
 
