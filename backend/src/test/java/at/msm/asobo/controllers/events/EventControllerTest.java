@@ -1,7 +1,7 @@
 package at.msm.asobo.controllers.events;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
@@ -16,6 +16,7 @@ import at.msm.asobo.dto.event.EventCreationDTO;
 import at.msm.asobo.dto.event.EventDTO;
 import at.msm.asobo.dto.event.EventSummaryDTO;
 import at.msm.asobo.dto.event.EventUpdateDTO;
+import at.msm.asobo.dto.filter.EventFilterDTO;
 import at.msm.asobo.exceptions.users.UserNotAuthorizedException;
 import at.msm.asobo.security.CustomUserDetailsService;
 import at.msm.asobo.security.JwtUtil;
@@ -33,6 +34,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.TestConfiguration;
@@ -116,7 +118,7 @@ class EventControllerTest {
     List<EventSummaryDTO> events = List.of(eventSummary1, eventSummary2);
     String expectedJson = objectMapper.writeValueAsString(events);
 
-    when(eventService.getAllEvents()).thenReturn(events);
+    when(eventService.getAllEvents(any(EventFilterDTO.class))).thenReturn(events);
 
     mockMvc
         .perform(get(EVENTS_URL))
@@ -124,7 +126,43 @@ class EventControllerTest {
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
         .andExpect(content().string(expectedJson));
 
-    verify(eventService).getAllEvents();
+    verify(eventService).getAllEvents(any(EventFilterDTO.class));
+  }
+
+  @Test
+  void getAllEvents_WithIsPrivateFalse_ReturnsPublicEvents() throws Exception {
+    List<EventSummaryDTO> events = List.of(eventSummary1);
+    String expectedJson = objectMapper.writeValueAsString(events);
+
+    when(eventService.getAllEvents(any(EventFilterDTO.class))).thenReturn(events);
+
+    mockMvc
+        .perform(get(EVENTS_URL).param("isPrivateEvent", "false"))
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(content().string(expectedJson));
+
+    ArgumentCaptor<EventFilterDTO> captor = ArgumentCaptor.forClass(EventFilterDTO.class);
+    verify(eventService).getAllEvents(captor.capture());
+    assertEquals(false, captor.getValue().getIsPrivateEvent());
+  }
+
+  @Test
+  void getAllEvents_WithIsPrivateTrue_ReturnsPrivateEvents() throws Exception {
+    List<EventSummaryDTO> events = List.of(eventSummary1);
+    String expectedJson = objectMapper.writeValueAsString(events);
+
+    when(eventService.getAllEvents(any(EventFilterDTO.class))).thenReturn(events);
+
+    mockMvc
+        .perform(get(EVENTS_URL).param("isPrivateEvent", "true"))
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(content().string(expectedJson));
+
+    ArgumentCaptor<EventFilterDTO> captor = ArgumentCaptor.forClass(EventFilterDTO.class);
+    verify(eventService).getAllEvents(captor.capture());
+    assertEquals(true, captor.getValue().getIsPrivateEvent());
   }
 
   @Test
@@ -144,45 +182,14 @@ class EventControllerTest {
   }
 
   @Test
-  void getAllEvents_WithIsPrivateTrue_ReturnsPrivateEvents() throws Exception {
-    List<EventSummaryDTO> events = List.of(eventSummary2);
-    String expectedJson = objectMapper.writeValueAsString(events);
-
-    when(eventService.getAllPrivateEvents()).thenReturn(events);
-
-    mockMvc
-        .perform(get(EVENTS_URL).param("isPrivate", "true"))
-        .andExpect(status().isOk())
-        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-        .andExpect(content().string(expectedJson));
-
-    verify(eventService).getAllPrivateEvents();
-  }
-
-  @Test
-  void getAllEvents_WithIsPrivateFalse_ReturnsPublicEvents() throws Exception {
-    List<EventSummaryDTO> events = List.of(eventSummary1);
-    String expectedJson = objectMapper.writeValueAsString(events);
-
-    when(eventService.getAllPublicEvents()).thenReturn(events);
-
-    mockMvc
-        .perform(get(EVENTS_URL).param("isPrivate", "false"))
-        .andExpect(status().isOk())
-        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-        .andExpect(content().string(expectedJson));
-
-    verify(eventService).getAllPublicEvents();
-  }
-
-  @Test
   void getAllEventsPaginated_WithoutParameters_ReturnsAllEventsPaginated() throws Exception {
     Pageable pageable = PageRequest.of(0, 10);
     Page<EventSummaryDTO> eventsPage =
         new PageImpl<>(List.of(eventSummary2, eventSummary1), pageable, 2);
     String expectedJson = objectMapper.writeValueAsString(eventsPage);
 
-    when(eventService.getAllEventsPaginated(any(Pageable.class))).thenReturn(eventsPage);
+    when(eventService.getAllEventsPaginated(any(EventFilterDTO.class), any(Pageable.class)))
+        .thenReturn(eventsPage);
 
     mockMvc
         .perform(get(EVENTS_PAGINATED_URL).param("page", "0").param("size", "10"))
@@ -190,7 +197,7 @@ class EventControllerTest {
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
         .andExpect(content().string(expectedJson));
 
-    verify(eventService).getAllEventsPaginated(any(Pageable.class));
+    verify(eventService).getAllEventsPaginated(any(EventFilterDTO.class), any(Pageable.class));
   }
 
   @Test

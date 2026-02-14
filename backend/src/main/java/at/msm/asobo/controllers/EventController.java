@@ -4,6 +4,7 @@ import at.msm.asobo.dto.event.EventCreationDTO;
 import at.msm.asobo.dto.event.EventDTO;
 import at.msm.asobo.dto.event.EventSummaryDTO;
 import at.msm.asobo.dto.event.EventUpdateDTO;
+import at.msm.asobo.dto.filter.EventFilterDTO;
 import at.msm.asobo.security.UserPrincipal;
 import at.msm.asobo.services.events.EventAdminService;
 import at.msm.asobo.services.events.EventService;
@@ -19,9 +20,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -39,39 +37,48 @@ public class EventController {
   @GetMapping
   public List<EventSummaryDTO> getAllEvents(
       @RequestParam(required = false) UUID userId,
-      @RequestParam(required = false) Boolean isPrivate) {
+      @RequestParam(required = false) String location,
+      @RequestParam(required = false) UUID creatorId,
+      @RequestParam(required = false) LocalDateTime dateFrom,
+      @RequestParam(required = false) LocalDateTime dateTo,
+      @RequestParam(required = false) Boolean isPrivateEvent,
+      @RequestParam(required = false) Set<UUID> eventAdminIds,
+      @RequestParam(required = false) Set<UUID> participantIds) {
+
+    EventFilterDTO filterDTO =
+        new EventFilterDTO(
+            location, creatorId, dateFrom, dateTo, isPrivateEvent, eventAdminIds, participantIds);
+
     if (userId != null) {
-      // Fetch events where the user is a participant
-      return this.eventService.getEventsByParticipantId(userId, isPrivate);
-    } else if (isPrivate == null) {
-      return this.eventService.getAllEvents();
-    } else if (isPrivate) {
-      return this.eventService.getAllPrivateEvents();
+      return this.eventService.getEventsByParticipantId(userId, isPrivateEvent);
     } else {
-      return this.eventService.getAllPublicEvents();
+      return this.eventService.getAllEvents(filterDTO);
     }
   }
 
   @GetMapping("/paginated")
   public Page<EventSummaryDTO> getAllEventsPaginated(
       @RequestParam(required = false) UUID userId,
-      @RequestParam(required = false) Boolean isPrivate,
+      @RequestParam(required = false) String location,
+      @RequestParam(required = false) UUID creatorId,
+      @RequestParam(required = false) LocalDateTime dateFrom,
+      @RequestParam(required = false) LocalDateTime dateTo,
+      @RequestParam(required = false) Boolean isPrivateEvent,
+      @RequestParam(required = false) Set<UUID> eventAdminIds,
+      @RequestParam(required = false) Set<UUID> participantIds,
       Pageable pageable) {
+
+    EventFilterDTO filterDTO =
+        new EventFilterDTO(
+            location, creatorId, dateFrom, dateTo, isPrivateEvent, eventAdminIds, participantIds);
+
     if (userId != null) {
-      return this.eventService.getEventsByParticipantIdPaginated(userId, isPrivate, pageable);
-    } else if (isPrivate == null) {
-      return this.eventService.getAllEventsPaginated(pageable);
-    } else if (isPrivate) {
-      return this.eventService.getAllPrivateEventsPaginated(pageable);
+      return this.eventService.getEventsByParticipantIdPaginated(
+          userId, filterDTO.getIsPrivateEvent(), pageable);
     } else {
-      return this.eventService.getAllPublicEventsPaginated(pageable);
+      return this.eventService.getAllEventsPaginated(filterDTO, pageable);
     }
   }
-
-  //    @GetMapping
-  //    public List<EventDTO> getEventsByTitle(String title) {
-  //        return this.eventService.getEventsByTitle(title);
-  //    }
 
   @GetMapping(params = "location")
   public List<EventSummaryDTO> getEventsByLocation(

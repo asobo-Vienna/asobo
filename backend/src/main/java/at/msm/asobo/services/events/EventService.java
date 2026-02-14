@@ -4,6 +4,7 @@ import at.msm.asobo.dto.event.EventCreationDTO;
 import at.msm.asobo.dto.event.EventDTO;
 import at.msm.asobo.dto.event.EventSummaryDTO;
 import at.msm.asobo.dto.event.EventUpdateDTO;
+import at.msm.asobo.dto.filter.EventFilterDTO;
 import at.msm.asobo.entities.Event;
 import at.msm.asobo.entities.User;
 import at.msm.asobo.exceptions.events.EventNotFoundException;
@@ -14,6 +15,7 @@ import at.msm.asobo.repositories.EventRepository;
 import at.msm.asobo.security.UserPrincipal;
 import at.msm.asobo.services.UserService;
 import at.msm.asobo.services.files.FileStorageService;
+import at.msm.asobo.specifications.EventSpecification;
 import at.msm.asobo.utils.PatchUtils;
 import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
@@ -47,6 +49,17 @@ public class EventService {
     this.eventAdminService = eventAdminService;
     this.eventDTOEventMapper = eventDTOEventMapper;
     this.userDTOUserMapper = userDTOUserMapper;
+  }
+
+  public List<EventSummaryDTO> getAllEvents(EventFilterDTO filterDTO) {
+    List<Event> filteredEvents = eventRepository.findAll(EventSpecification.withFilters(filterDTO));
+    return this.eventDTOEventMapper.mapEventsToEventSummaryDTOs(filteredEvents);
+  }
+
+  public Page<EventSummaryDTO> getAllEventsPaginated(EventFilterDTO filterDTO, Pageable pageable) {
+    Page<Event> filteredEvents =
+        eventRepository.findAll(EventSpecification.withFilters(filterDTO), pageable);
+    return this.eventDTOEventMapper.mapEventPageToEventSummaryDTOs(filteredEvents);
   }
 
   public List<EventSummaryDTO> getAllEvents() {

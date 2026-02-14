@@ -978,7 +978,7 @@ class EventServiceTest {
     verify(userService).getUserById(unauthorizedUser.getId());
     verify(eventAdminService).canManageEvent(publicEvent1, unauthorizedUser);
     verify(fileStorageService, never()).delete(any());
-    verify(eventRepository, never()).delete(any());
+    verify(eventRepository, never()).delete(any(Event.class));
     verify(eventDTOEventMapper, never()).mapEventToEventDTO(any());
   }
 
@@ -1001,7 +1001,7 @@ class EventServiceTest {
     verify(userService, never()).getUserById(any());
     verify(eventAdminService, never()).canManageEvent(any(), any());
     verify(fileStorageService, never()).delete(any());
-    verify(eventRepository, never()).delete(any());
+    verify(eventRepository, never()).delete(any(Event.class));
   }
 
   @Test
@@ -1027,7 +1027,7 @@ class EventServiceTest {
     verify(userService).getUserById(userPrincipal.getUserId());
     verify(eventAdminService, never()).canManageEvent(any(), any());
     verify(fileStorageService, never()).delete(any());
-    verify(eventRepository, never()).delete(any());
+    verify(eventRepository, never()).delete(any(Event.class));
   }
 
   @Test

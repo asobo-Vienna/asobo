@@ -8,12 +8,14 @@ import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface EventRepository extends JpaRepository<Event, UUID> {
+public interface EventRepository
+    extends JpaRepository<Event, UUID>, JpaSpecificationExecutor<Event> {
   @Query("SELECT e FROM Event e")
   Page<Event> findAllEvents(Pageable pageable);
 
@@ -27,9 +29,6 @@ public interface EventRepository extends JpaRepository<Event, UUID> {
   List<Event> findByIsPrivateEventFalse();
 
   Page<Event> findByIsPrivateEventFalse(Pageable pageable);
-
-  // @Query("SELECT e.title FROM Event e WHERE e.id = :id")
-  // String findEventTitleById(UUID id);
 
   List<Event> findEventsByDate(LocalDateTime date);
 
@@ -55,25 +54,25 @@ public interface EventRepository extends JpaRepository<Event, UUID> {
   @Query(
       value =
           """
-    SELECT DISTINCT e.*
-    FROM event e
-    WHERE
-      (:includePrivate = true OR e.is_private = false)
+                            SELECT DISTINCT e.*
+                            FROM event e
+                            WHERE
+                              (:includePrivate = true OR e.is_private = false)
 
-      AND (
-        :query IS NULL
-        OR LOWER(e.title) LIKE LOWER(CONCAT('%', :query, '%'))
-        OR LOWER(e.description) LIKE LOWER(CONCAT('%', :query, '%'))
-        OR LOWER(e.location) LIKE LOWER(CONCAT('%', :query, '%'))
-      )
+                              AND (
+                                :query IS NULL
+                                OR LOWER(e.title) LIKE LOWER(CONCAT('%', :query, '%'))
+                                OR LOWER(e.description) LIKE LOWER(CONCAT('%', :query, '%'))
+                                OR LOWER(e.location) LIKE LOWER(CONCAT('%', :query, '%'))
+                              )
 
-      AND e.date >= COALESCE(:startDate, e.date)
-      AND e.date <= COALESCE(:endDate, e.date)
+                              AND e.date >= COALESCE(:startDate, e.date)
+                              AND e.date <= COALESCE(:endDate, e.date)
 
-      AND LOWER(e.location) LIKE LOWER(CONCAT('%', COALESCE(:location, ''), '%'))
+                              AND LOWER(e.location) LIKE LOWER(CONCAT('%', COALESCE(:location, ''), '%'))
 
-    ORDER BY e.date ASC
-    """,
+                            ORDER BY e.date ASC
+                            """,
       nativeQuery = true)
   List<Event> globalSearch(
       @Param("query") String query,
