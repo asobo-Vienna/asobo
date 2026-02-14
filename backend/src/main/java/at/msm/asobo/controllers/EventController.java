@@ -36,16 +36,12 @@ public class EventController {
 
   @GetMapping
   public List<EventSummaryDTO> getAllEvents(
-      @RequestParam(required = false) UUID userId,
-      @RequestParam(required = false) Boolean isPrivate) {
-    EventFilterDTO filterDTO = new EventFilterDTO();
+      @RequestParam(required = false) UUID userId, EventFilterDTO filterDTO) {
+
     if (userId != null) {
       // Fetch events where the user is a participant
-      return this.eventService.getEventsByParticipantId(userId, isPrivate);
-    } else if (isPrivate == null) {
-      return this.eventService.getAllEvents(filterDTO);
+      return this.eventService.getEventsByParticipantId(userId, filterDTO.getIsPrivateEvent());
     } else {
-      filterDTO.setIsPrivateEvent(isPrivate);
       return this.eventService.getAllEvents(filterDTO);
     }
   }

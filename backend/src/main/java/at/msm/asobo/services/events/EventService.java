@@ -52,6 +52,9 @@ public class EventService {
   }
 
   public List<EventSummaryDTO> getAllEvents(EventFilterDTO filterDTO) {
+    if (filterDTO == null) {
+      filterDTO = new EventFilterDTO();
+    }
     List<Event> filteredEvents = eventRepository.findAll(EventSpecification.withFilters(filterDTO));
     return this.eventDTOEventMapper.mapEventsToEventSummaryDTOs(filteredEvents);
   }
