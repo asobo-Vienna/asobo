@@ -1,13 +1,21 @@
 package at.msm.asobo.controllers;
 
 import at.msm.asobo.dto.comment.UserCommentWithEventTitleDTO;
+import at.msm.asobo.dto.filter.MediumFilterDTO;
+import at.msm.asobo.dto.filter.UserCommentFilterDTO;
+import at.msm.asobo.dto.filter.UserFilterDTO;
 import at.msm.asobo.dto.medium.MediumWithEventTitleDTO;
 import at.msm.asobo.dto.user.UserAdminSummaryDTO;
 import at.msm.asobo.dto.user.UserFullDTO;
 import at.msm.asobo.services.AdminService;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,13 +30,32 @@ public class AdminController {
   }
 
   @GetMapping("/users/paginated")
-  public Page<UserAdminSummaryDTO> getAllUsersPaginated(Pageable pageable) {
-    return this.adminService.getAllUsersPaginated(pageable);
+  public Page<UserAdminSummaryDTO> getAllUsersPaginated(
+      @RequestParam(required = false) String firstName,
+      @RequestParam(required = false) String surname,
+      @RequestParam(required = false) String location,
+      @RequestParam(required = false) String country,
+      @RequestParam(required = false) Boolean isActive,
+      @RequestParam(required = false) Set<Long> roleIds,
+      @PageableDefault(sort = "surname", direction = Sort.Direction.ASC) Pageable pageable) {
+    UserFilterDTO filterDTO =
+        new UserFilterDTO(firstName, surname, location, country, isActive, roleIds);
+
+    return this.adminService.getAllUsersPaginated(filterDTO, pageable);
   }
 
   @GetMapping("/users")
-  public List<UserFullDTO> getAllUsers() {
-    return this.adminService.getAllUsers();
+  public List<UserFullDTO> getAllUsers(
+      @RequestParam(required = false) String firstName,
+      @RequestParam(required = false) String surname,
+      @RequestParam(required = false) String location,
+      @RequestParam(required = false) String country,
+      @RequestParam(required = false) Boolean isActive,
+      @RequestParam(required = false) Set<Long> roleIds) {
+    UserFilterDTO filterDTO =
+        new UserFilterDTO(firstName, surname, location, country, isActive, roleIds);
+
+    return this.adminService.getAllUsers(filterDTO);
   }
 
   // TODO?: On expand get full user details for ONE user
@@ -36,13 +63,30 @@ public class AdminController {
   public UserFullDTO getUserWithDetails(@PathVariable UUID id);*/
 
   @GetMapping("/comments")
-  public Page<UserCommentWithEventTitleDTO> getAllUserCommentsWithEventTitle(Pageable pageable) {
-    return this.adminService.getAllUserCommentsWithEventTitle(pageable);
+  public Page<UserCommentWithEventTitleDTO> getAllUserCommentsWithEventTitle(
+      @RequestParam(required = false) UUID authorId,
+      @RequestParam(required = false) UUID eventId,
+      @RequestParam(required = false) LocalDateTime date,
+      @RequestParam(required = false) LocalDateTime dateFrom,
+      @RequestParam(required = false) LocalDateTime dateTo,
+      @PageableDefault(sort = "date", direction = Sort.Direction.DESC) Pageable pageable) {
+    UserCommentFilterDTO filterDTO =
+        new UserCommentFilterDTO(authorId, eventId, date, dateFrom, dateTo);
+
+    return this.adminService.getAllUserCommentsWithEventTitle(filterDTO, pageable);
   }
 
   @GetMapping("/media")
-  public Page<MediumWithEventTitleDTO> getAllMediaWithEventTitle(Pageable pageable) {
-    return this.adminService.getAllMediaWithEventTitle(pageable);
+  public Page<MediumWithEventTitleDTO> getAllMediaWithEventTitle(
+      @RequestParam(required = false) UUID creatorId,
+      @RequestParam(required = false) UUID eventId,
+      @RequestParam(required = false) LocalDateTime date,
+      @RequestParam(required = false) LocalDateTime dateFrom,
+      @RequestParam(required = false) LocalDateTime dateTo,
+      @PageableDefault(sort = "date", direction = Sort.Direction.DESC) Pageable pageable) {
+    MediumFilterDTO filterDTO = new MediumFilterDTO(creatorId, eventId, date, dateFrom, dateTo);
+
+    return this.adminService.getAllMediaWithEventTitle(filterDTO, pageable);
   }
 
   /*@GetMapping

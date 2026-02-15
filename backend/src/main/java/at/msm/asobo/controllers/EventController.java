@@ -10,7 +10,6 @@ import at.msm.asobo.services.events.EventAdminService;
 import at.msm.asobo.services.events.EventService;
 import jakarta.validation.Valid;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -23,7 +22,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("/api/events")
@@ -79,35 +77,6 @@ public class EventController {
           userId, filterDTO.getIsPrivateEvent(), pageable);
     } else {
       return this.eventService.getAllEventsPaginated(filterDTO, pageable);
-    }
-  }
-
-  @GetMapping(params = "location")
-  public List<EventSummaryDTO> getEventsByLocation(
-      @RequestParam(required = false) String location, Pageable pageable) {
-
-    if (location == null || location.isBlank()) {
-      return this.eventService.getAllEvents();
-    }
-
-    return this.eventService.getEventsByLocation(location);
-  }
-
-  @GetMapping(params = "date")
-  public List<EventSummaryDTO> getEventsByDate(
-      @RequestParam(required = false) String date, Pageable pageable) {
-    if (date == null || date.isBlank()) {
-      return this.eventService.getAllEvents();
-    }
-
-    try {
-      LocalDateTime dateTime = LocalDateTime.parse(date);
-      return this.eventService.getEventsByDate(dateTime);
-    } catch (DateTimeParseException dtpe) {
-      throw new ResponseStatusException(
-          HttpStatus.BAD_REQUEST,
-          "Invalid date format. Expected ISO-8601 format (e.g., 2024-12-01T14:30:00)",
-          dtpe);
     }
   }
 

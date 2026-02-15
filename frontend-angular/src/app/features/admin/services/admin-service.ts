@@ -8,12 +8,17 @@ import {PageResponse} from '../../../shared/entities/page-response';
 import {MediaItemWithEventTitle} from '../../events/models/media-item-with-event-title';
 import {Role} from '../../../shared/entities/role';
 import {UserRoles} from '../../../shared/entities/user-roles';
+import {UserFilters} from '../../users/user-profile/models/user-filters';
+import {CommentFilters} from '../../events/models/comment-filters';
+import {EntityFilterService} from './entity-filter-service';
+import {MediumFilters} from '../../events/models/medium-filters';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AdminService {
   private http = inject(HttpClient);
+  private entityFilterService = inject(EntityFilterService)
 
   public getAllRoles(): Observable<Role[]> {
     return this.http.get<Role[]>(`${environment.apiBaseUrl}/roles`);
@@ -26,26 +31,36 @@ export class AdminService {
     });
   }
 
-  public getAllUsers(page: number, size: number): Observable<PageResponse<User>> {
-    const params = new HttpParams()
+  public getAllUsers(page: number, size: number, userFilters?: UserFilters): Observable<PageResponse<User>> {
+    let params: HttpParams = userFilters
+      ? this.entityFilterService.filtersToHttpParams(userFilters)
+      : new HttpParams();
+
+    params = params
       .set('page', page.toString())
       .set('size', size.toString());
 
     return this.http.get<PageResponse<User>>(`${environment.apiBaseUrl}/admin/users/paginated`, { params });
   }
 
-  public getAllCommentsWithEventTitle(page: number, size: number): Observable<PageResponse<CommentWithEventTitle>> {
-    const params = new HttpParams()
+
+
+  public getAllCommentsWithEventTitle(page: number, size: number, commentFilters?: CommentFilters): Observable<PageResponse<CommentWithEventTitle>> {
+    let params = commentFilters ? this.entityFilterService.filtersToHttpParams(commentFilters) : new HttpParams();
+
+    params = params
       .set('page', page.toString())
       .set('size', size.toString());
 
     return this.http.get<PageResponse<CommentWithEventTitle>>(`${environment.apiBaseUrl}/admin/comments`, { params });
   }
 
-  public getAllMediaWithEventTitle(page: number, size: number): Observable<PageResponse<MediaItemWithEventTitle>> {
-    const params = new HttpParams()
-      .set('page', page.toString())
-      .set('size', size.toString());
+  public getAllMediaWithEventTitle(page: number, size: number, mediumFilters?: MediumFilters): Observable<PageResponse<MediaItemWithEventTitle>> {
+    let params = mediumFilters ? this.entityFilterService.filtersToHttpParams(mediumFilters) : new HttpParams()
+
+      params = params
+        .set('page', page.toString())
+        .set('size', size.toString());
 
     return this.http.get<PageResponse<MediaItemWithEventTitle>>(`${environment.apiBaseUrl}/admin/media`, { params});
   }

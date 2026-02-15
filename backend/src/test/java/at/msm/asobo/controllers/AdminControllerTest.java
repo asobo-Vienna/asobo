@@ -9,6 +9,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import at.msm.asobo.config.FileStorageProperties;
 import at.msm.asobo.dto.comment.UserCommentWithEventTitleDTO;
+import at.msm.asobo.dto.filter.MediumFilterDTO;
+import at.msm.asobo.dto.filter.UserCommentFilterDTO;
+import at.msm.asobo.dto.filter.UserFilterDTO;
 import at.msm.asobo.dto.medium.MediumWithEventTitleDTO;
 import at.msm.asobo.dto.user.UserAdminSummaryDTO;
 import at.msm.asobo.security.CustomUserDetailsService;
@@ -78,7 +81,8 @@ class AdminControllerTest {
     Page<UserAdminSummaryDTO> userPage = new PageImpl<>(List.of(user1, user2), pageable, 2);
     String expectedJson = objectMapper.writeValueAsString(userPage);
 
-    when(adminService.getAllUsersPaginated(any(Pageable.class))).thenReturn(userPage);
+    when(adminService.getAllUsersPaginated(any(UserFilterDTO.class), any(Pageable.class)))
+        .thenReturn(userPage);
 
     mockMvc
         .perform(
@@ -90,7 +94,7 @@ class AdminControllerTest {
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
         .andExpect(content().string(expectedJson));
 
-    verify(adminService).getAllUsersPaginated(any(Pageable.class));
+    verify(adminService).getAllUsersPaginated(any(UserFilterDTO.class), any(Pageable.class));
   }
 
   @ParameterizedTest
@@ -104,7 +108,8 @@ class AdminControllerTest {
         new PageImpl<>(List.of(comment1, comment2), pageable, 2);
     String expectedJson = objectMapper.writeValueAsString(commentPage);
 
-    when(adminService.getAllUserCommentsWithEventTitle(any(Pageable.class)))
+    when(adminService.getAllUserCommentsWithEventTitle(
+            any(UserCommentFilterDTO.class), any(Pageable.class)))
         .thenReturn(commentPage);
 
     mockMvc
@@ -117,7 +122,8 @@ class AdminControllerTest {
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
         .andExpect(content().string(expectedJson));
 
-    verify(adminService).getAllUserCommentsWithEventTitle(any(Pageable.class));
+    verify(adminService)
+        .getAllUserCommentsWithEventTitle(any(UserCommentFilterDTO.class), any(Pageable.class));
   }
 
   @ParameterizedTest
@@ -130,7 +136,8 @@ class AdminControllerTest {
     Page<MediumWithEventTitleDTO> mediaPage = new PageImpl<>(List.of(media1, media2), pageable, 2);
     String expectedJson = objectMapper.writeValueAsString(mediaPage);
 
-    when(adminService.getAllMediaWithEventTitle(any(Pageable.class))).thenReturn(mediaPage);
+    when(adminService.getAllMediaWithEventTitle(any(MediumFilterDTO.class), any(Pageable.class)))
+        .thenReturn(mediaPage);
 
     mockMvc
         .perform(
@@ -142,6 +149,6 @@ class AdminControllerTest {
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
         .andExpect(content().string(expectedJson));
 
-    verify(adminService).getAllMediaWithEventTitle(any(Pageable.class));
+    verify(adminService).getAllMediaWithEventTitle(any(MediumFilterDTO.class), any(Pageable.class));
   }
 }

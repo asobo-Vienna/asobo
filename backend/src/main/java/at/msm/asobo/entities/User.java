@@ -76,6 +76,7 @@ public class User implements PictureEntity {
   @CreatedDate private Instant registerDate;
 
   @LastModifiedDate private Instant modificationDate;
+
   @ValidCountryCode private String country;
 
   private boolean isActive = true;

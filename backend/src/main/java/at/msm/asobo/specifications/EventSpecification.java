@@ -3,6 +3,7 @@ package at.msm.asobo.specifications;
 import at.msm.asobo.dto.filter.EventFilterDTO;
 import at.msm.asobo.entities.Event;
 import jakarta.persistence.criteria.Predicate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.data.jpa.domain.Specification;
@@ -28,7 +29,8 @@ public class EventSpecification {
         predicates.add(cb.greaterThanOrEqualTo(root.get("date"), filterDTO.getDateFrom()));
       }
       if (filterDTO.getDateTo() != null) {
-        predicates.add(cb.lessThanOrEqualTo(root.get("date"), filterDTO.getDateTo()));
+        LocalDateTime endOfDay = filterDTO.getDateTo().toLocalDate().atTime(23, 59, 59);
+        predicates.add(cb.lessThanOrEqualTo(root.get("date"), endOfDay));
       }
       if (filterDTO.getIsPrivateEvent() != null) {
         predicates.add(cb.equal(root.get("isPrivateEvent"), filterDTO.getIsPrivateEvent()));
