@@ -7,6 +7,7 @@ import java.util.UUID;
 public class EventFilterDTO {
   private String location;
   private UUID creatorId;
+  private LocalDateTime date;
   private LocalDateTime dateFrom;
   private LocalDateTime dateTo;
   private Boolean isPrivateEvent;
@@ -16,6 +17,7 @@ public class EventFilterDTO {
   public EventFilterDTO(
       String location,
       UUID creatorId,
+      LocalDateTime date,
       LocalDateTime dateFrom,
       LocalDateTime dateTo,
       Boolean isPrivateEvent,
@@ -23,6 +25,7 @@ public class EventFilterDTO {
       Set<UUID> participantIds) {
     this.location = location;
     this.creatorId = creatorId;
+    this.date = date;
     this.dateFrom = dateFrom;
     this.dateTo = dateTo;
     this.isPrivateEvent = isPrivateEvent;
@@ -36,6 +39,14 @@ public class EventFilterDTO {
 
   public void setLocation(String location) {
     this.location = location;
+  }
+
+  public LocalDateTime getDate() {
+    return this.date;
+  }
+
+  public void setDate(LocalDateTime date) {
+    this.date = date;
   }
 
   public LocalDateTime getDateFrom() {
