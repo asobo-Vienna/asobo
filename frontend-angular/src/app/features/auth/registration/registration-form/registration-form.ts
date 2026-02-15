@@ -73,6 +73,7 @@ export class RegistrationForm {
       username: ['', [Validators.required, Validators.minLength(environment.minIdentifierLength)]],
       email: ['', [Validators.required, FormUtilService.validateEmailCustom]],
       location: ['', [Validators.required]],
+      country: ['', Validators.required],
       password: ['', this.passwordValidator.getPasswordValidators()],
       passwordConfirmation: ['', [Validators.required]],
     }, {

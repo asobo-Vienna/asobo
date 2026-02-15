@@ -256,6 +256,33 @@
           }
         </div>
 
+        <div class="update-field">
+          <p-inputgroup>
+            <p-inputgroup-addon>
+              <i class="pi pi-flag"></i>
+            </p-inputgroup-addon>
+            <p-float-label variant="on">
+              <p-select
+                id="profile-country"
+                [options]="countryCodes"
+                formControlName="country"
+                placeholder="Select your country"
+                panelStyleClass="solid-dropdown"
+                (onChange)="onCountryChange($event)"
+              />
+              <label for="profile-country">Country</label>
+            </p-float-label>
+          </p-inputgroup>
+
+          @if (getFormControls['country'].touched && getFormControls['country'].invalid) {
+            <small class="error-message">
+              @if (getFormControls['country'].errors?.['required']) {
+                <span>Country is required.</span>
+              }
+            </small>
+          }
+        </div>
+
         <!-- Email -->
         <div class="update-field">
           <p-iconfield>

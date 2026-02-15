@@ -9,5 +9,6 @@ export interface UserRegistrationData {
   isActive: boolean;
   pictureURI: string;
   location: string;
+  country: string;
   salutation: string;
 }

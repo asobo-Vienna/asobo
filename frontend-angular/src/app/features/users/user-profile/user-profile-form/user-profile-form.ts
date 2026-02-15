@@ -21,6 +21,7 @@ import {Select} from 'primeng/select';
 import {Textarea} from 'primeng/textarea';
 import {List} from '../../../../core/data_structures/lists/list';
 import { Event } from '../../../events/models/event';
+import {UserService} from '../../services/user-service';
 
 @Component({
   selector: 'app-user-profile-form',
@@ -44,6 +45,7 @@ import { Event } from '../../../events/models/event';
 })
 export class UserProfileForm implements OnInit {
   private userProfileService = inject(UserProfileService);
+  private userService = inject(UserService);
   public authService = inject(AuthService);
   private userValidationService = inject(UserValidationService);
   private router = inject(Router);
@@ -56,6 +58,7 @@ export class UserProfileForm implements OnInit {
 
   updateForm: FormGroup;
   salutations: string[];
+  countryCodes: {label: string, value: string}[] = [];
   showCustomSalutation = signal(false);
   usernameExists = signal(false);
   emailExists = signal(false);
@@ -89,6 +92,7 @@ export class UserProfileForm implements OnInit {
       username: ['', [Validators.required, Validators.minLength(environment.minIdentifierLength)]],
       email: ['', [Validators.required, FormUtilService.validateEmailCustom]],
       location: ['', [Validators.required]],
+      country: ['', [Validators.required]],
       password: [''], // make pw optional
       passwordConfirmation: [''],
     }, {
@@ -132,7 +136,10 @@ export class UserProfileForm implements OnInit {
     this.enableField('password');
     this.enableField('passwordConfirmation');
     this.enableField('salutation');
+    this.enableField('country');
     //this.enableField('customSalutation');
+
+    this.loadCountries();
 
     // Get username from route params and load profile
     this.route.params.subscribe(params => {
@@ -146,6 +153,18 @@ export class UserProfileForm implements OnInit {
           this.router.navigate(['/user', currentUsername]);
         }
       }
+    });
+  }
+
+  private loadCountries(): void {
+    this.userService.getCountryCodes().subscribe({
+      next: (codes) => {
+        this.countryCodes = codes.map(code => ({
+          label: new Intl.DisplayNames(['en'], {type: 'region'}).of(code) || code,
+          value: code
+        }));
+      },
+      error: (err) => console.error('Error loading countries:', err)
     });
   }
 
@@ -256,6 +275,7 @@ export class UserProfileForm implements OnInit {
             firstName: user.firstName,
             surname: user.surname,
             location: user.location || '',
+            country: user.country,
             email: user.email,
             salutation: user.salutation,
             customSalutation: '',
@@ -272,6 +292,7 @@ export class UserProfileForm implements OnInit {
             firstName: user.firstName,
             surname: user.surname,
             location: user.location || '',
+            country: user.country,
             email: user.email,
             salutation: 'Other',
             customSalutation: user.salutation,
@@ -287,6 +308,7 @@ export class UserProfileForm implements OnInit {
             firstName: user.firstName,
             surname: user.surname,
             location: user.location || '',
+            country: user.country,
             email: user.email,
             salutation: user.salutation || '',
             customSalutation: '',
@@ -421,6 +443,11 @@ export class UserProfileForm implements OnInit {
       return;
     }
 
+    if (fieldName === 'country' && value === this.authService.currentUser()?.country) {
+      console.warn(`${fieldName} coincides with logged in user's country`);
+      return;
+    }
+
     // if the field to update is customSalutation, actually set the salutation to the value of customSalutation
     fieldName = fieldName === 'customSalutation' ? 'salutation' : fieldName;
 
@@ -443,6 +470,15 @@ export class UserProfileForm implements OnInit {
         }
 
         this.loadUserProfile(response.user.username);
+
+        // Re-enable salutation and country fields after reload
+        if (fieldName === 'salutation') {
+          this.enableField('salutation');
+        }
+
+        if (fieldName === 'country') {
+          this.enableField('country');
+        }
       },
       error: (err) => {
         console.error(`Failed to update ${fieldName}:`, err);
@@ -458,6 +494,10 @@ export class UserProfileForm implements OnInit {
     if (!isOther) {
       this.saveField('salutation');
     }
+  }
+
+  onCountryChange(event: any) {
+      this.saveField('country');
   }
 
   handleFileSelected(file: File) {

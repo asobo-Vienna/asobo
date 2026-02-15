@@ -11,6 +11,7 @@ export interface User {
   isActive: boolean;
   pictureURI: string;
   location: string;
+  country: string;
   salutation: string;
   roles?: Role[];
 }

@@ -9,7 +9,6 @@ import {jwtDecode} from 'jwt-decode';
 import {UserProfile} from '../../users/user-profile/models/user-profile-model';
 import {UrlUtilService} from '../../../shared/utils/url/url-util-service';
 import {RoleEnum} from '../../../shared/enums/role-enum';
-import {Role} from '../../../shared/entities/role';
 import {UserRegistrationData} from '../models/user-registration-data';
 
 @Injectable({ providedIn: 'root' })
