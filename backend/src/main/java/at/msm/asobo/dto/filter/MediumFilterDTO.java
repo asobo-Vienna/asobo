@@ -18,7 +18,7 @@ public class MediumFilterDTO {
   }
 
   public UUID getCreatorId() {
-    return creatorId;
+    return this.creatorId;
   }
 
   public void setCreatorId(UUID creatorId) {
@@ -26,7 +26,7 @@ public class MediumFilterDTO {
   }
 
   public UUID getEventId() {
-    return eventId;
+    return this.eventId;
   }
 
   public void setEventId(UUID eventId) {
@@ -34,7 +34,7 @@ public class MediumFilterDTO {
   }
 
   public LocalDateTime getDateFrom() {
-    return dateFrom;
+    return this.dateFrom;
   }
 
   public void setDateFrom(LocalDateTime dateFrom) {
@@ -42,7 +42,7 @@ public class MediumFilterDTO {
   }
 
   public LocalDateTime getDateTo() {
-    return dateTo;
+    return this.dateTo;
   }
 
   public void setDateTo(LocalDateTime dateTo) {

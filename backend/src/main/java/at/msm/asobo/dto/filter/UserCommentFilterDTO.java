@@ -18,7 +18,7 @@ public class UserCommentFilterDTO {
   }
 
   public UUID getAuthorId() {
-    return authorId;
+    return this.authorId;
   }
 
   public void setAuthorId(UUID authorId) {
@@ -26,7 +26,7 @@ public class UserCommentFilterDTO {
   }
 
   public UUID getEventId() {
-    return eventId;
+    return this.eventId;
   }
 
   public void setEventId(UUID eventId) {
@@ -34,7 +34,7 @@ public class UserCommentFilterDTO {
   }
 
   public LocalDateTime getDateFrom() {
-    return dateFrom;
+    return this.dateFrom;
   }
 
   public void setDateFrom(LocalDateTime dateFrom) {
@@ -42,7 +42,7 @@ public class UserCommentFilterDTO {
   }
 
   public LocalDateTime getDateTo() {
-    return dateTo;
+    return this.dateTo;
   }
 
   public void setDateTo(LocalDateTime dateTo) {
