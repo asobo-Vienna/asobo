@@ -4,6 +4,7 @@ import at.msm.asobo.dto.filter.UserCommentFilterDTO;
 import at.msm.asobo.entities.UserComment;
 import jakarta.persistence.criteria.JoinType;
 import jakarta.persistence.criteria.Predicate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.data.jpa.domain.Specification;
@@ -30,7 +31,8 @@ public class UserCommentSpecification {
       }
 
       if (filterDTO.getDateTo() != null) {
-        predicates.add(cb.lessThanOrEqualTo(root.get("createdAt"), filterDTO.getDateTo()));
+        LocalDateTime endOfDay = filterDTO.getDateTo().toLocalDate().atTime(23, 59, 59);
+        predicates.add(cb.lessThanOrEqualTo(root.get("date"), endOfDay));
       }
 
       assert query != null;

@@ -64,10 +64,12 @@ public class AdminController {
   public Page<UserCommentWithEventTitleDTO> getAllUserCommentsWithEventTitle(
       @RequestParam(required = false) UUID authorId,
       @RequestParam(required = false) UUID eventId,
+      @RequestParam(required = false) LocalDateTime date,
       @RequestParam(required = false) LocalDateTime dateFrom,
       @RequestParam(required = false) LocalDateTime dateTo,
       Pageable pageable) {
-    UserCommentFilterDTO filterDTO = new UserCommentFilterDTO(authorId, eventId, dateFrom, dateTo);
+    UserCommentFilterDTO filterDTO =
+        new UserCommentFilterDTO(authorId, eventId, date, dateFrom, dateTo);
 
     return this.adminService.getAllUserCommentsWithEventTitle(filterDTO, pageable);
   }
@@ -76,10 +78,11 @@ public class AdminController {
   public Page<MediumWithEventTitleDTO> getAllMediaWithEventTitle(
       @RequestParam(required = false) UUID creatorId,
       @RequestParam(required = false) UUID eventId,
+      @RequestParam(required = false) LocalDateTime date,
       @RequestParam(required = false) LocalDateTime dateFrom,
       @RequestParam(required = false) LocalDateTime dateTo,
       Pageable pageable) {
-    MediumFilterDTO filterDTO = new MediumFilterDTO(creatorId, eventId, dateFrom, dateTo);
+    MediumFilterDTO filterDTO = new MediumFilterDTO(creatorId, eventId, date, dateFrom, dateTo);
 
     return this.adminService.getAllMediaWithEventTitle(filterDTO, pageable);
   }
