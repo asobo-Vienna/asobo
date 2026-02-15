@@ -1,24 +1,24 @@
 package at.msm.asobo.specifications;
 
-import at.msm.asobo.dto.filter.UserCommentFilterDTO;
-import at.msm.asobo.entities.UserComment;
+import at.msm.asobo.dto.filter.MediumFilterDTO;
+import at.msm.asobo.entities.Medium;
 import jakarta.persistence.criteria.JoinType;
 import jakarta.persistence.criteria.Predicate;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.data.jpa.domain.Specification;
 
-public class UserCommentSpecification {
+public class MediumSpecification {
 
-  public static Specification<UserComment> withFilters(UserCommentFilterDTO filterDTO) {
+  public static Specification<Medium> withFilters(MediumFilterDTO filterDTO) {
     return (root, query, cb) -> {
       List<Predicate> predicates = new ArrayList<>();
 
-      root.join("author", JoinType.LEFT);
+      root.join("creator", JoinType.LEFT);
       root.join("event", JoinType.LEFT);
 
-      if (filterDTO.getAuthorId() != null) {
-        predicates.add(cb.equal(root.get("author").get("id"), filterDTO.getAuthorId()));
+      if (filterDTO.getCreatorId() != null) {
+        predicates.add(cb.equal(root.get("author").get("id"), filterDTO.getCreatorId()));
       }
 
       if (filterDTO.getEventId() != null) {

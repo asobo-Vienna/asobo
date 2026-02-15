@@ -91,7 +91,7 @@ export class AdminUserList implements OnInit {
       return;
     }
 
-    this.adminService.getAllUsers(this.userFilters(), page, size).subscribe({
+    this.adminService.getAllUsers(page, size, this.userFilters()).subscribe({
       next: response => {
         this.pageCache.set(cacheKey, response.content);
 

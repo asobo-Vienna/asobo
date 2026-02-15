@@ -7,6 +7,8 @@ import {environment} from '../../../../environments/environment';
 import {AdminService} from '../services/admin-service';
 import {CommentWithEventTitle} from '../../events/models/comment-with-event-title';
 import { RouterLink } from '@angular/router';
+import {UserFilters} from '../../users/user-profile/models/user-filters';
+import {CommentFilters} from '../../events/models/comment-filters';
 
 @Component({
   selector: 'app-admin-comment-list',
@@ -24,6 +26,7 @@ export class AdminCommentList implements OnInit {
   comments = signal<CommentWithEventTitle[]>([]);
   totalRecords = signal<number>(0);
   loading = signal<boolean>(true);
+  commentFilters = signal<CommentFilters>({});
 
   private pageCache = new Map<string, CommentWithEventTitle[]>();
 
@@ -41,7 +44,7 @@ export class AdminCommentList implements OnInit {
 
     this.loading.set(true);
 
-    this.adminService.getAllCommentsWithEventTitle(page, size).subscribe({
+    this.adminService.getAllCommentsWithEventTitle(page, size, this.commentFilters()).subscribe({
       next: (response) => {
         // Cache the page data
         this.pageCache.set(cacheKey, response.content);

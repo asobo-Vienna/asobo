@@ -2,6 +2,7 @@ package at.msm.asobo.services;
 
 import at.msm.asobo.dto.comment.UserCommentDTO;
 import at.msm.asobo.dto.comment.UserCommentWithEventTitleDTO;
+import at.msm.asobo.dto.filter.MediumFilterDTO;
 import at.msm.asobo.dto.filter.UserCommentFilterDTO;
 import at.msm.asobo.dto.filter.UserFilterDTO;
 import at.msm.asobo.dto.medium.MediumWithEventTitleDTO;
@@ -14,6 +15,7 @@ import at.msm.asobo.mappers.*;
 import at.msm.asobo.repositories.MediumRepository;
 import at.msm.asobo.repositories.UserCommentRepository;
 import at.msm.asobo.repositories.UserRepository;
+import at.msm.asobo.specifications.MediumSpecification;
 import at.msm.asobo.specifications.UserCommentSpecification;
 import at.msm.asobo.specifications.UserSpecification;
 import java.util.List;
@@ -81,8 +83,10 @@ public class AdminService {
         this.userCommentToUserCommentWithEventTitleDTOMapper::toDTO);
   }
 
-  public Page<MediumWithEventTitleDTO> getAllMediaWithEventTitle(Pageable pageable) {
-    Page<Medium> mediaListWithEventTitles = this.mediumRepository.findAllPageable(pageable);
+  public Page<MediumWithEventTitleDTO> getAllMediaWithEventTitle(
+      MediumFilterDTO filterDTO, Pageable pageable) {
+    Page<Medium> mediaListWithEventTitles =
+        this.mediumRepository.findAll(MediumSpecification.withFilters(filterDTO), pageable);
     return mediaListWithEventTitles.map(this.mediumToMediumWithEventTitleDTOMapper::toDTO);
   }
 }

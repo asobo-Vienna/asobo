@@ -1,6 +1,7 @@
 package at.msm.asobo.controllers;
 
 import at.msm.asobo.dto.comment.UserCommentWithEventTitleDTO;
+import at.msm.asobo.dto.filter.MediumFilterDTO;
 import at.msm.asobo.dto.filter.UserCommentFilterDTO;
 import at.msm.asobo.dto.filter.UserFilterDTO;
 import at.msm.asobo.dto.medium.MediumWithEventTitleDTO;
@@ -72,8 +73,15 @@ public class AdminController {
   }
 
   @GetMapping("/media")
-  public Page<MediumWithEventTitleDTO> getAllMediaWithEventTitle(Pageable pageable) {
-    return this.adminService.getAllMediaWithEventTitle(pageable);
+  public Page<MediumWithEventTitleDTO> getAllMediaWithEventTitle(
+      @RequestParam(required = false) UUID creatorId,
+      @RequestParam(required = false) UUID eventId,
+      @RequestParam(required = false) LocalDateTime dateFrom,
+      @RequestParam(required = false) LocalDateTime dateTo,
+      Pageable pageable) {
+    MediumFilterDTO filterDTO = new MediumFilterDTO(creatorId, eventId, dateFrom, dateTo);
+
+    return this.adminService.getAllMediaWithEventTitle(filterDTO, pageable);
   }
 
   /*@GetMapping

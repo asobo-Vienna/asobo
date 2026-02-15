@@ -6,6 +6,7 @@ import {UrlUtilService} from '../../../shared/utils/url/url-util-service';
 import {AdminService} from '../services/admin-service';
 import { RouterLink } from '@angular/router';
 import {MediaItemWithEventTitle} from '../../events/models/media-item-with-event-title';
+import {MediumFilters} from '../../events/models/medium-filters';
 
 @Component({
   selector: 'app-admin-media-list',
@@ -22,6 +23,7 @@ export class AdminMediaList implements OnInit {
   mediaItems = signal<MediaItemWithEventTitle[]>([]);
   totalRecords = signal<number>(0);
   loading = signal<boolean>(true);
+  mediumFilters = signal<MediumFilters>({});
 
   private pageCache = new Map<string, MediaItemWithEventTitle[]>();
 
@@ -39,7 +41,7 @@ export class AdminMediaList implements OnInit {
 
     this.loading.set(true);
 
-    this.adminService.getAllMediaWithEventTitle(page, size).subscribe({
+    this.adminService.getAllMediaWithEventTitle(page, size, this.mediumFilters()).subscribe({
       next: (response) => {
         this.pageCache.set(cacheKey, response.content);
 
