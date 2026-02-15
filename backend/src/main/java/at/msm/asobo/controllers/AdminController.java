@@ -14,6 +14,8 @@ import java.util.Set;
 import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,7 +37,7 @@ public class AdminController {
       @RequestParam(required = false) String country,
       @RequestParam(required = false) Boolean isActive,
       @RequestParam(required = false) Set<Long> roleIds,
-      Pageable pageable) {
+      @PageableDefault(sort = "surname", direction = Sort.Direction.ASC) Pageable pageable) {
     UserFilterDTO filterDTO =
         new UserFilterDTO(firstName, surname, location, country, isActive, roleIds);
 
@@ -67,7 +69,7 @@ public class AdminController {
       @RequestParam(required = false) LocalDateTime date,
       @RequestParam(required = false) LocalDateTime dateFrom,
       @RequestParam(required = false) LocalDateTime dateTo,
-      Pageable pageable) {
+      @PageableDefault(sort = "date", direction = Sort.Direction.DESC) Pageable pageable) {
     UserCommentFilterDTO filterDTO =
         new UserCommentFilterDTO(authorId, eventId, date, dateFrom, dateTo);
 
@@ -81,7 +83,7 @@ public class AdminController {
       @RequestParam(required = false) LocalDateTime date,
       @RequestParam(required = false) LocalDateTime dateFrom,
       @RequestParam(required = false) LocalDateTime dateTo,
-      Pageable pageable) {
+      @PageableDefault(sort = "date", direction = Sort.Direction.DESC) Pageable pageable) {
     MediumFilterDTO filterDTO = new MediumFilterDTO(creatorId, eventId, date, dateFrom, dateTo);
 
     return this.adminService.getAllMediaWithEventTitle(filterDTO, pageable);
