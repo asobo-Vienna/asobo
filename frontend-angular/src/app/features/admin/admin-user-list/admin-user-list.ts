@@ -39,7 +39,6 @@ export class AdminUserList implements OnInit {
     [RoleEnum.ADMIN]: [RoleEnum.USER]
   };
 
-
   allRoles = signal<Role[]>([]);
   users = signal<User[]>([]);
   totalRecords = signal<number>(0);
