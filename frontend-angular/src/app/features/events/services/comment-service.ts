@@ -18,7 +18,7 @@ export class CommentService {
 
     let params = new HttpParams();
     params.set('page', 0)
-      .set('size', environment.defaultPageSize);
+          .set('size', environment.commentDefaultPageSize);
 
     return this.http
       .get<PageResponse<Comment>>(`${this.getCommentsUrl(eventId)}/paginated`, { params });
