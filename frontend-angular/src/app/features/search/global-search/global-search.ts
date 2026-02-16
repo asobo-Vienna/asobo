@@ -5,8 +5,6 @@ import { AutoCompleteCompleteEvent, AutoCompleteModule } from 'primeng/autocompl
 import { Router } from '@angular/router';
 import { SearchService } from '../services/search-service';
 import { AutocompleteItem } from '../../../shared/entities/search';
-import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
-import {of} from 'rxjs';
 import {UrlUtilService} from '../../../shared/utils/url/url-util-service';
 import {AuthService} from '../../auth/services/auth-service';
 
@@ -46,7 +44,6 @@ export class GlobalSearch {
     const input = event.target as HTMLInputElement;
     const query = input.value;
 
-    // Emit the query to parent component
     this.searchOutput.emit(query);
   }
 
@@ -68,8 +65,9 @@ export class GlobalSearch {
       query = value.name;
     }
 
+    // TODO: adapt this to page with results for users and events
     if (query && query.trim().length >= 2) {
-      this.router.navigate(['/search'], { queryParams: { q: query } });
+      this.router.navigate(['/events'], { queryParams: { q: query } });
     }
   }
 

@@ -1,7 +1,6 @@
 import {Component, computed, inject, input, OnInit, signal} from '@angular/core';
 import {EventCard} from '../event-card/event-card';
 import {EventService} from '../services/event-service';
-import {Event} from '../models/event'
 import {AuthService} from '../../auth/services/auth-service';
 import {List} from '../../../core/data_structures/lists/list';
 import {EventSummary} from '../models/event-summary';
@@ -9,7 +8,6 @@ import {routes} from '../../../app.routes';
 import {Router} from '@angular/router';
 
 type SortField = 'date' | 'title' | 'location' | 'isPrivateEvent';
-import {HttpParams} from '@angular/common/http';
 import {EventFilters} from '../models/event-filters';
 import {GlobalSearch} from '../../search/global-search/global-search';
 import {debounceTime, Subject} from 'rxjs';
@@ -46,7 +44,7 @@ export class EventList implements OnInit {
   });
 
   // Computed: use input if provided, otherwise use fetched
-  events = computed(() => {
+  private sourceEvents = computed(() => {
     const sourceList = this.hasInputEvents()
       ? this.inputEvents()!
       : this.fetchedEvents();
@@ -54,12 +52,74 @@ export class EventList implements OnInit {
     return new List<EventSummary>([...sourceList.toArray()]);
   });
 
+  // Computed: filtered events (client-side filtering for inputEvents)
+  private filteredEvents = computed(() => {
+    const source = this.sourceEvents();
+    const query = this.searchQuery().toLowerCase().trim();
+
+    if (!query) {
+      return source;
+    }
+
+    // Client-side filtering when using inputEvents
+    if (this.hasInputEvents()) {
+      const filtered = source.toArray().filter(event =>
+        event.title?.toLowerCase().includes(query) ||
+        event.description?.toLowerCase().includes(query) ||
+        event.location?.toLowerCase().includes(query)
+      );
+      return new List<EventSummary>(filtered);
+    }
+
+    // For fetched events, filtering happens server-side
+    return source;
+  });
+
+  events = computed(() => {
+    const list = this.filteredEvents();
+    const sorted = [...list.toArray()];
+
+    const field = this.sortField();
+    const direction = this.sortDirection();
+
+    sorted.sort((a, b) => {
+      let comparison = 0;
+
+      if (field === 'isPrivateEvent') {
+        const privacyComparison = (a.isPrivate === b.isPrivate) ? 0 : a.isPrivate ? 1 : -1;
+
+        if (privacyComparison !== 0) {
+          return direction === 'asc' ? privacyComparison : -privacyComparison;
+        }
+
+        comparison = new Date(a.date).getTime() - new Date(b.date).getTime();
+        return comparison; // Immer aufsteigend nach Datum innerhalb der Gruppe
+      }
+
+      switch (field) {
+        case 'date':
+          comparison = new Date(a.date).getTime() - new Date(b.date).getTime();
+          break;
+        case 'title':
+          comparison = (a.title || '').localeCompare(b.title || '');
+          break;
+        case 'location':
+          comparison = (a.location || '').localeCompare(b.location || '');
+          break;
+      }
+
+      return direction === 'asc' ? comparison : -comparison;
+    });
+
+    return new List<EventSummary>(sorted);
+  });
+
   ngOnInit(): void {
-    // Setup search debounce
     this.searchSubject.pipe(
       debounceTime(environment.defaultSearchDebounceTime),
     ).subscribe((query) => {
       this.searchQuery.set(query);
+      // Only fetch if we're using fetched events (not input events)
       if (!this.hasInputEvents()) {
         this.fetchEvents();
       }
@@ -72,7 +132,6 @@ export class EventList implements OnInit {
   }
 
   private fetchEvents(): void {
-    // Build filters with query
     const filters = { ...this.eventFilters() };
 
     if (this.searchQuery()) {
@@ -108,6 +167,8 @@ export class EventList implements OnInit {
       this.sortDirection.set('asc');
     }
 
+    // Only fetch if we're using fetched events (not input events)
+    // For input events, sorting happens client-side in the computed
     if (!this.hasInputEvents()) {
       this.fetchEvents();
     }
