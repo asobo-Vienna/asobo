@@ -66,8 +66,8 @@ export class EventList implements OnInit {
         case 'isPrivateEvent':
           // primary visibility sort order
           result = dir === 'asc'
-            ? Number(a.isPrivate) - Number(b.isPrivate) // public first
-            : Number(b.isPrivate) - Number(a.isPrivate); // private first
+            ? Number(a.isPrivateEvent) - Number(b.isPrivateEvent) // public first
+            : Number(b.isPrivateEvent) - Number(a.isPrivateEvent); // private first
 
           // secondary: date within visibility group always descending
           if (result === 0) {

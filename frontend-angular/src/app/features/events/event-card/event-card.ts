@@ -29,7 +29,7 @@ export class EventCard {
     time: '',
     location: '',
     description: '',
-    isPrivate: false,
+    isPrivateEvent: false,
     participantCount: 0,
     commentCount: 0,
     mediaCount: 0,

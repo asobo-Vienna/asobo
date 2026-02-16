@@ -57,7 +57,7 @@ export class EventService {
       .set('page', params.page.toString())
       .set('size', params.size.toString())
       .set('sort', params.sort)
-      .set('isPrivate', 'false');
+      .set('isPrivateEvent', 'false');
 
     return this.http.get<PageResponse<EventSummary>>(`${environment.eventsEndpoint}/paginated`, { params: queryParams });
   }

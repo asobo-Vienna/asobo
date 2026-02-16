@@ -74,7 +74,11 @@
           <i class="pi pi-check-circle clickable" (click)="onSubmit()"></i>
           <i class="pi pi-times-circle clickable" (click)="cancelEdit()"></i>
         </div>
-        <p-toggleswitch [(ngModel)]="isPrivateEvent" />
+        <p-toggleswitch
+          [ngModel]="event()?.isPrivateEvent"
+          [ngModelOptions]="{ standalone: true }"
+          (onChange)="onIsPrivateToggle($event)">
+        </p-toggleswitch>
       }
     </div>
   </div>

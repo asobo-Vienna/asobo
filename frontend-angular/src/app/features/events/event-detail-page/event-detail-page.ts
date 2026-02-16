@@ -99,7 +99,7 @@ export class EventDetailPage implements OnInit {
       this.commentService.getAllByEventId(event.id).subscribe((comments: PageResponse<Comment>) => {
         this.comments.set(new List(comments.content));
       });
-      
+
       this.mediaService.getAllByEventId(event.id).subscribe((mediaItems: List<MediaItem>) => {
         this.mediaItems.set(mediaItems);
       });

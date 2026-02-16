@@ -10,9 +10,9 @@
     @if (authService.isLoggedIn()) {
       <p-tag
         class="event-badge"
-        [icon]="event()?.isPrivate ? 'pi pi-lock' : 'pi pi-globe'"
-        [severity]="event()?.isPrivate ? 'warn' : 'success'"
-        [value]="event()?.isPrivate ? 'Private' : 'Public'"
+        [icon]="event()?.isPrivateEvent ? 'pi pi-lock' : 'pi pi-globe'"
+        [severity]="event()?.isPrivateEvent ? 'warn' : 'success'"
+        [value]="event()?.isPrivateEvent ? 'Private' : 'Public'"
       />
     }
   </div>
@@ -30,7 +30,7 @@
           location: event()!.location,
           date: event()!.date,
           time: event()!.date,
-          isPrivate: event()!.isPrivate
+          isPrivateEvent: event()!.isPrivateEvent
         }"
         [currentUser]="currentUser"
         (eventUpdated)="onEventUpdated($event)"

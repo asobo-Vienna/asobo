@@ -57,8 +57,6 @@ export class EventBasicInfo implements OnInit {
 
   editEventForm: FormGroup;
   isEditing = signal(false);
-  isPrivateEvent: boolean = false;
-
 
   constructor() {
     this.editEventForm = this.formBuilder.group({
@@ -66,7 +64,7 @@ export class EventBasicInfo implements OnInit {
       description: ['', [Validators.required, Validators.minLength(environment.minEventDescriptionLength), Validators.maxLength(environment.maxEventDescriptionLength)]],
       location: ['', [Validators.required]],
       date: ['', [Validators.required, DateUtils.validateDate]],
-      isPrivate: [false, [Validators.required]],
+      isPrivateEvent: [false, [Validators.required]],
     });
   }
 
@@ -78,7 +76,7 @@ export class EventBasicInfo implements OnInit {
         description: coreInfo.description,
         location: coreInfo.location,
         date: coreInfo.date ? new Date(coreInfo.date) : null,
-        isPrivate: coreInfo.isPrivate
+        isPrivateEvent: coreInfo.isPrivateEvent
       });
     }
   }
@@ -112,6 +110,21 @@ export class EventBasicInfo implements OnInit {
     });
   }
 
+  public onIsPrivateToggle(event: { checked: boolean }) {
+    const currentEvent = this.event();
+    if (!currentEvent) return;
+
+    this.eventService
+      .updateEvent(currentEvent.id, { 'isPrivateEvent': event.checked })
+      .subscribe({
+        next: (updatedEvent) => {
+          this.eventUpdated.emit(updatedEvent);
+        },
+        error: (err) => {
+          console.error('Failed to update event privacy', err);
+        }
+      });
+  }
 
   public enterEdit() {
     this.isEditing.set(true);
@@ -126,7 +139,7 @@ export class EventBasicInfo implements OnInit {
       description: coreInfo.description,
       location: coreInfo.location,
       date: coreInfo.date ? new Date(coreInfo.date) : null,
-      isPrivate: coreInfo.isPrivate
+      isPrivateEvent: coreInfo.isPrivateEvent
     });
 
     this.isEditing.set(false);

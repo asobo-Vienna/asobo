@@ -40,7 +40,7 @@ export class CreateEventForm {
       description: ['', [Validators.required, Validators.minLength(environment.minEventDescriptionLength), Validators.maxLength(environment.maxEventDescriptionLength)]],
       location: ['', [Validators.required]],
       date: [today, [Validators.required, DateUtils.validateDate]],
-      isPrivate: [false]
+      isPrivateEvent: [false]
     });
   }
 
