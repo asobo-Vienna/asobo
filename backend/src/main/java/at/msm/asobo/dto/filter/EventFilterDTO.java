@@ -5,6 +5,7 @@ import java.util.Set;
 import java.util.UUID;
 
 public class EventFilterDTO {
+  private String query;
   private String location;
   private UUID creatorId;
   private LocalDateTime date;
@@ -15,6 +16,7 @@ public class EventFilterDTO {
   private Set<UUID> participantIds;
 
   public EventFilterDTO(
+      String query,
       String location,
       UUID creatorId,
       LocalDateTime date,
@@ -23,6 +25,7 @@ public class EventFilterDTO {
       Boolean isPrivateEvent,
       Set<UUID> eventAdminsIds,
       Set<UUID> participantIds) {
+    this.query = query;
     this.location = location;
     this.creatorId = creatorId;
     this.date = date;
@@ -31,6 +34,14 @@ public class EventFilterDTO {
     this.isPrivateEvent = isPrivateEvent;
     this.eventAdminIds = eventAdminsIds;
     this.participantIds = participantIds;
+  }
+
+  public String getQuery() {
+    return query;
+  }
+
+  public void setQuery(String query) {
+    this.query = query;
   }
 
   public String getLocation() {

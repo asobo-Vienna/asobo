@@ -18,7 +18,7 @@ export class SearchService {
 
   search(query: string, includePrivate: boolean): Observable<AutocompleteItem[]> {
     return this.http
-      .get<GlobalSearchResponse>(`${environment.apiBaseUrl}/search?q=${encodeURIComponent(query)}&includePrivate=${includePrivate}`)
+      .get<GlobalSearchResponse>(`${environment.apiBaseUrl}/search?query=${encodeURIComponent(query)}&includePrivate=${includePrivate}`)
       .pipe(
         map((response) => [
           ...response.events.map((e: EventSearchResult) => ({

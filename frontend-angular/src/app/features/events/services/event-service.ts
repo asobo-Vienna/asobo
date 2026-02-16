@@ -40,7 +40,6 @@ export class EventService {
     return params;
   }
 
-
   getAllEventsPaginated(params: { page: number, size: number, sort?: string }, eventFilters: EventFilters): Observable<PageResponse<EventSummary>> {
     const queryParams = this.filtersToHttpParams(eventFilters)
       .set('page', params.page.toString())
@@ -50,14 +49,24 @@ export class EventService {
     return this.http.get<PageResponse<EventSummary>>(`${environment.eventsEndpoint}/paginated`, { params: queryParams });
   }
 
-  getAllPublicEventsPaginated(params: { page: number, size: number, sort: string }): Observable<PageResponse<EventSummary>> {
-    const queryParams = new HttpParams()
-      .set('page', params.page.toString())
-      .set('size', params.size.toString())
-      .set('sort', params.sort)
-      .set('isPrivate', 'false');
+  searchEvents(
+    query?: string,
+    location?: string,
+    dateFrom?: string,
+    dateTo?: string,
+    page: number = 0,
+    size: number = 20
+  ): Observable<PageResponse<EventSummary>> {
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString());
 
-    return this.http.get<PageResponse<EventSummary>>(`${environment.eventsEndpoint}/paginated`, { params: queryParams });
+    if (query) params = params.set('query', query);
+    if (location) params = params.set('location', location);
+    if (dateFrom) params = params.set('dateFrom', dateFrom);
+    if (dateTo) params = params.set('dateTo', dateTo);
+
+    return this.http.get<PageResponse<EventSummary>>(`${environment.eventsEndpoint}/paginated`, { params });
   }
 
   public getPublicEventsByUserId(userId: string): Observable<EventSummary[]> {

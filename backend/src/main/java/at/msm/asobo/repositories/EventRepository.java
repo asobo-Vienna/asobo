@@ -1,5 +1,6 @@
 package at.msm.asobo.repositories;
 
+import at.msm.asobo.dto.filter.EventFilterDTO;
 import at.msm.asobo.entities.Event;
 import java.time.LocalDateTime;
 import java.util.List;

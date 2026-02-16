@@ -1,14 +1,12 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormControl } from '@angular/forms';
-import {AutoCompleteCompleteEvent, AutoCompleteModule} from 'primeng/autocomplete';
-import {Router, RouterLink} from '@angular/router';
+import { AutoCompleteCompleteEvent, AutoCompleteModule } from 'primeng/autocomplete';
+import { Router } from '@angular/router';
 import { SearchService } from '../services/search-service';
 import { AutocompleteItem } from '../../../shared/entities/search';
-import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
-import {of} from 'rxjs';
-import {UrlUtilService} from '../../../shared/utils/url/url-util-service';
-import {AuthService} from '../../auth/services/auth-service';
+import { AuthService } from '../../auth/services/auth-service';
+import { UrlUtilService } from '../../../shared/utils/url/url-util-service';
 
 @Component({
   selector: 'app-global-search',
@@ -18,6 +16,9 @@ import {AuthService} from '../../auth/services/auth-service';
   imports: [CommonModule, ReactiveFormsModule, AutoCompleteModule],
 })
 export class GlobalSearch {
+  searchType = input<'all' | 'events' | 'simple'>('all');
+  searchOutput = output<string>();
+
   private searchService = inject(SearchService);
   private authService = inject(AuthService);
   private router = inject(Router);
@@ -25,19 +26,26 @@ export class GlobalSearch {
   searchControl = new FormControl<string | AutocompleteItem | null>(null);
   searchResults: AutocompleteItem[] = [];
 
-  // PrimeNG's completeMethod - this is what triggers as you type
   search(event: AutoCompleteCompleteEvent) {
     const query = event.query;
-
     if (!query || query.length < 2) {
       this.searchResults = [];
       return;
     }
 
     this.searchService.search(query, this.authService.isLoggedIn()).subscribe((results) => {
-      console.log('searchResults array?', results, Array.isArray(results));
-      this.searchResults = results;
+      this.searchResults = this.searchType() === 'events'
+        ? results.filter(item => item.type === 'EVENT')
+        : results;
     });
+  }
+
+  onSimpleSearch(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const query = input.value;
+
+    // Emit the query to parent component
+    this.searchOutput.emit(query);
   }
 
   onSelect(event: any) {
@@ -52,7 +60,6 @@ export class GlobalSearch {
   triggerSearch() {
     const value = this.searchControl.value;
     let query = '';
-
     if (typeof value === 'string') {
       query = value;
     } else if (value && typeof value === 'object') {
@@ -63,6 +70,4 @@ export class GlobalSearch {
       this.router.navigate(['/search'], { queryParams: { q: query } });
     }
   }
-
-  protected readonly UrlUtilService = UrlUtilService;
 }
