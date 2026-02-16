@@ -19,8 +19,8 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
   private final CustomUserDetailsService customUserDetailsService;
 
   // List of public endpoints that don't require authentication
-  private static final List<String> PUBLIC_ENDPOINTS =
-      List.of("/api/auth/", "/api/search", "/uploads/");
+  // BUT we still want to SET authentication if token is present
+  private static final List<String> PUBLIC_ENDPOINTS = List.of("/api/auth/", "/uploads/");
 
   public TokenAuthenticationFilter(
       JwtUtil jwtUtil, CustomUserDetailsService customUserDetailsService) {
@@ -39,28 +39,41 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
     // Check if this is a public endpoint
     boolean isPublicEndpoint = PUBLIC_ENDPOINTS.stream().anyMatch(requestURI::startsWith);
 
-    if (isPublicEndpoint) {
-      System.out.println(">>> Skipping JWT check for: " + requestURI);
-      filterChain.doFilter(request, response);
-      return;
-    }
-
     String authHeader = request.getHeader("Authorization");
 
     if (authHeader != null && authHeader.startsWith("Bearer ")) {
       String token = authHeader.substring(7);
 
-      if (jwtUtil.validateToken(token)) {
-        UUID userId = UUID.fromString(jwtUtil.getUserIdFromToken(token));
+      try {
+        if (jwtUtil.validateToken(token)) {
+          UUID userId = UUID.fromString(jwtUtil.getUserIdFromToken(token));
 
-        UserPrincipal userPrincipal =
-            (UserPrincipal) this.customUserDetailsService.loadUserById(userId);
+          UserPrincipal userPrincipal =
+              (UserPrincipal) this.customUserDetailsService.loadUserById(userId);
 
-        UserPrincipalAuthenticationToken authentication =
-            new UserPrincipalAuthenticationToken(userPrincipal);
+          UserPrincipalAuthenticationToken authentication =
+              new UserPrincipalAuthenticationToken(userPrincipal);
 
-        authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+          authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+          SecurityContextHolder.getContext().setAuthentication(authentication);
+
+          System.out.println(">>> Authentication set for user: " + userPrincipal.getUsername());
+        } else {
+          System.out.println(">>> Token invalid");
+        }
+      } catch (Exception e) {
+        System.err.println(">>> Could not set authentication: " + e.getMessage());
+        // for public endpoints: Token invalid, but carry on
+        // for protected endpoints: ExceptionHandler throws 401
+        if (!isPublicEndpoint) {
+          throw e;
+        }
+      }
+    } else {
+      if (isPublicEndpoint) {
+        System.out.println(">>> No token for public endpoint: " + requestURI);
+      } else {
+        System.out.println(">>> No token for protected endpoint: " + requestURI);
       }
     }
 

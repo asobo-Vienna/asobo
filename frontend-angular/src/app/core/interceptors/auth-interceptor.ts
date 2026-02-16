@@ -10,9 +10,8 @@ export class AuthInterceptor implements HttpInterceptor {
 
   intercept(req: HttpRequest<any>, next: HttpHandler) {
     const token = localStorage.getItem(environment.JWT_TOKEN_STORAGE_KEY);
-
-    // Define public endpoints
-    const publicEndpoints = ['/api/search', '/api/auth/login', '/api/auth/register'];
+    
+    const publicEndpoints = ['/api/auth/login', '/api/auth/register'];
 
     // Extract pathname to ignore host/port/query
     const urlPath = new URL(req.url, window.location.origin).pathname;
@@ -22,6 +21,7 @@ export class AuthInterceptor implements HttpInterceptor {
       return next.handle(req);
     }
 
+    // If token exists, add it (even for /api/search)
     if (token) {
       const cloned = req.clone({
         headers: req.headers.set('Authorization', `Bearer ${token}`)
@@ -32,7 +32,6 @@ export class AuthInterceptor implements HttpInterceptor {
           if (error.status === 401) {
             localStorage.removeItem(environment.JWT_TOKEN_STORAGE_KEY);
             console.log('Session expired. Please login again.');
-            // Or show a toast/notification
             this.router.navigate(['/login'], {
               queryParams: { returnUrl: this.router.url, expired: true }
             });
@@ -44,9 +43,12 @@ export class AuthInterceptor implements HttpInterceptor {
       );
     }
 
+    // No token: send request without Authorization header
+    // (Backend will treat as unauthenticated → no private events)
     return next.handle(req).pipe(
       catchError((error: HttpErrorResponse) => {
-        if (error.status === 401) {
+        // Don't redirect to login for 401 on search
+        if (error.status === 401 && !urlPath.startsWith('/api/search')) {
           this.router.navigate(['/login']);
         }
         return throwError(() => error);
