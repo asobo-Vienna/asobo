@@ -1,6 +1,6 @@
 <div class="search-bar d-flex align-items-center me-auto">
   <div class="search-div d-flex w-100 position-relative">
-    <!-- Simple Mode: nur Text-Input -->
+    <!-- Simple Mode: only text input -->
     @if (searchType() === 'simple') {
       <input
         type="text"
@@ -10,7 +10,7 @@
       />
     }
     @else {
-      <!-- Autocomplete Mode: all oder events -->
+      <!-- Autocomplete Mode: all or events -->
       <p-autoComplete
         [formControl]="searchControl"
         [suggestions]="searchResults"

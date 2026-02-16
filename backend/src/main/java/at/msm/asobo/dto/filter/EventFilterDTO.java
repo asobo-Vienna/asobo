@@ -5,106 +5,106 @@ import java.util.Set;
 import java.util.UUID;
 
 public class EventFilterDTO {
-  private String query;
-  private String location;
-  private UUID creatorId;
-  private LocalDateTime date;
-  private LocalDateTime dateFrom;
-  private LocalDateTime dateTo;
-  private Boolean isPrivateEvent;
-  private Set<UUID> eventAdminIds;
-  private Set<UUID> participantIds;
+    private String query;
+    private String location;
+    private UUID creatorId;
+    private LocalDateTime date;
+    private LocalDateTime dateFrom;
+    private LocalDateTime dateTo;
+    private Boolean isPrivateEvent;
+    private Set<UUID> eventAdminIds;
+    private Set<UUID> participantIds;
 
-  public EventFilterDTO(
-      String query,
-      String location,
-      UUID creatorId,
-      LocalDateTime date,
-      LocalDateTime dateFrom,
-      LocalDateTime dateTo,
-      Boolean isPrivateEvent,
-      Set<UUID> eventAdminsIds,
-      Set<UUID> participantIds) {
-    this.query = query;
-    this.location = location;
-    this.creatorId = creatorId;
-    this.date = date;
-    this.dateFrom = dateFrom;
-    this.dateTo = dateTo;
-    this.isPrivateEvent = isPrivateEvent;
-    this.eventAdminIds = eventAdminsIds;
-    this.participantIds = participantIds;
-  }
+    public EventFilterDTO(
+            String query,
+            String location,
+            UUID creatorId,
+            LocalDateTime date,
+            LocalDateTime dateFrom,
+            LocalDateTime dateTo,
+            Boolean isPrivateEvent,
+            Set<UUID> eventAdminsIds,
+            Set<UUID> participantIds) {
+        this.query = query;
+        this.location = location;
+        this.creatorId = creatorId;
+        this.date = date;
+        this.dateFrom = dateFrom;
+        this.dateTo = dateTo;
+        this.isPrivateEvent = isPrivateEvent;
+        this.eventAdminIds = eventAdminsIds;
+        this.participantIds = participantIds;
+    }
 
-  public String getQuery() {
-    return query;
-  }
+    public String getQuery() {
+        return this.query;
+    }
 
-  public void setQuery(String query) {
-    this.query = query;
-  }
+    public void setQuery(String query) {
+        this.query = query;
+    }
 
-  public String getLocation() {
-    return this.location;
-  }
+    public String getLocation() {
+        return this.location;
+    }
 
-  public void setLocation(String location) {
-    this.location = location;
-  }
+    public void setLocation(String location) {
+        this.location = location;
+    }
 
-  public LocalDateTime getDate() {
-    return this.date;
-  }
+    public LocalDateTime getDate() {
+        return this.date;
+    }
 
-  public void setDate(LocalDateTime date) {
-    this.date = date;
-  }
+    public void setDate(LocalDateTime date) {
+        this.date = date;
+    }
 
-  public LocalDateTime getDateFrom() {
-    return this.dateFrom;
-  }
+    public LocalDateTime getDateFrom() {
+        return this.dateFrom;
+    }
 
-  public void setDateFrom(LocalDateTime dateFrom) {
-    this.dateFrom = dateFrom;
-  }
+    public void setDateFrom(LocalDateTime dateFrom) {
+        this.dateFrom = dateFrom;
+    }
 
-  public LocalDateTime getDateTo() {
-    return this.dateTo;
-  }
+    public LocalDateTime getDateTo() {
+        return this.dateTo;
+    }
 
-  public void setDateTo(LocalDateTime dateTo) {
-    this.dateTo = dateTo;
-  }
+    public void setDateTo(LocalDateTime dateTo) {
+        this.dateTo = dateTo;
+    }
 
-  public UUID getCreatorId() {
-    return this.creatorId;
-  }
+    public UUID getCreatorId() {
+        return this.creatorId;
+    }
 
-  public void setCreatorId(UUID creatorId) {
-    this.creatorId = creatorId;
-  }
+    public void setCreatorId(UUID creatorId) {
+        this.creatorId = creatorId;
+    }
 
-  public Boolean getIsPrivateEvent() {
-    return this.isPrivateEvent;
-  }
+    public Boolean getIsPrivateEvent() {
+        return this.isPrivateEvent;
+    }
 
-  public void setIsPrivateEvent(Boolean isPrivateEvent) {
-    this.isPrivateEvent = isPrivateEvent;
-  }
+    public void setIsPrivateEvent(Boolean isPrivateEvent) {
+        this.isPrivateEvent = isPrivateEvent;
+    }
 
-  public Set<UUID> getEventAdminIds() {
-    return this.eventAdminIds;
-  }
+    public Set<UUID> getEventAdminIds() {
+        return this.eventAdminIds;
+    }
 
-  public void setEventAdminIds(Set<UUID> eventAdminIds) {
-    this.eventAdminIds = eventAdminIds;
-  }
+    public void setEventAdminIds(Set<UUID> eventAdminIds) {
+        this.eventAdminIds = eventAdminIds;
+    }
 
-  public Set<UUID> getParticipantIds() {
-    return this.participantIds;
-  }
+    public Set<UUID> getParticipantIds() {
+        return this.participantIds;
+    }
 
-  public void setParticipantIds(Set<UUID> participantIds) {
-    this.participantIds = participantIds;
-  }
+    public void setParticipantIds(Set<UUID> participantIds) {
+        this.participantIds = participantIds;
+    }
 }
