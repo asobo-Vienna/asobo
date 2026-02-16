@@ -6,6 +6,7 @@ import at.msm.asobo.entities.User;
 import at.msm.asobo.entities.UserComment;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -51,5 +52,9 @@ public class UserCommentDTOUserCommentMapper {
 
   public List<UserCommentDTO> mapUserCommentsToUserCommentDTOs(List<UserComment> comments) {
     return comments.stream().map(this::mapUserCommentToUserCommentDTO).collect(Collectors.toList());
+  }
+
+  public Page<UserCommentDTO> mapUserCommentsToUserCommentDTOs(Page<UserComment> comments) {
+    return comments.map(this::mapUserCommentToUserCommentDTO);
   }
 }

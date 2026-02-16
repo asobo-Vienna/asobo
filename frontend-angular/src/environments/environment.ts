@@ -34,4 +34,5 @@ export const environment = {
   eventDummyCoverPicRelativeUrl: '/uploads/event-cover-pictures/event-cover-default.svg',
   defaultDebounceTimeForFormFields: 500,
   defaultPageSize: 10,
+  commentDefaultPageSize: 5000
 };

@@ -75,7 +75,7 @@ public class EventController {
       @RequestParam(required = false) Boolean isPrivateEvent,
       @RequestParam(required = false) Set<UUID> eventAdminIds,
       @RequestParam(required = false) Set<UUID> participantIds,
-      @PageableDefault(sort = "date", direction = Sort.Direction.DESC) Pageable pageable) {
+      @PageableDefault(sort = "date", direction = Sort.Direction.ASC) Pageable pageable) {
 
     EventFilterDTO filterDTO =
         new EventFilterDTO(

@@ -25,6 +25,8 @@ public interface UserCommentRepository
 
   List<UserComment> findUserCommentsByEventIdOrderByCreationDate(UUID eventId);
 
+  Page<UserComment> findUserCommentsByEventIdOrderByCreationDate(UUID eventId, Pageable pageable);
+
   Optional<UserComment> findUserCommentByEventIdAndId(UUID eventId, UUID commentId);
 
   @Query("SELECT c FROM UserComment c JOIN FETCH c.author JOIN FETCH c.event")

@@ -6,6 +6,10 @@ import at.msm.asobo.services.UserCommentService;
 import jakarta.validation.Valid;
 import java.util.List;
 import java.util.UUID;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -24,6 +28,13 @@ public class UserCommentController {
   @GetMapping
   public List<UserCommentDTO> getAllUserCommentsByEventId(@PathVariable UUID eventId) {
     return this.userCommentService.getUserCommentsByEventId(eventId);
+  }
+
+  @GetMapping("/paginated")
+  public Page<UserCommentDTO> getAllUserCommentsByEventIdPaginated(
+      @PathVariable UUID eventId,
+      @PageableDefault(sort = "creationDate", direction = Sort.Direction.DESC) Pageable pageable) {
+    return this.userCommentService.getUserCommentsByEventIdPaginated(eventId, pageable);
   }
 
   @GetMapping("/{commentId}")

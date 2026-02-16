@@ -43,12 +43,17 @@ public class GlobalSearchService {
       response.setEvents(
           events.stream().map(this::mapToEventResult).limit(15).collect(Collectors.toList()));
 
-      // Search users
-      List<User> users = userRepository.searchUsers(query);
-      response.setUsers(
-          users.stream().map(this::mapToUserResult).limit(15).collect(Collectors.toList()));
+      response.setUsers(List.of());
+      response.setTotalResults(response.getEvents().size());
 
-      response.setTotalResults(response.getEvents().size() + response.getUsers().size());
+      if (request.getIncludeUsers()) {
+        // Search users
+        List<User> users = userRepository.searchUsers(query);
+        response.setUsers(
+            users.stream().map(this::mapToUserResult).limit(15).collect(Collectors.toList()));
+
+        response.setTotalResults(response.getEvents().size() + response.getUsers().size());
+      }
     } else {
       response.setEvents(List.of());
       response.setUsers(List.of());

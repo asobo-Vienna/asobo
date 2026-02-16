@@ -12,6 +12,8 @@ import at.msm.asobo.services.events.EventService;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -68,6 +70,13 @@ public class UserCommentService {
   public List<UserCommentDTO> getUserCommentsByEventId(UUID eventId) {
     List<UserComment> userComments =
         this.userCommentRepository.findUserCommentsByEventIdOrderByCreationDate(eventId);
+    return this.userCommentDTOUserCommentMapper.mapUserCommentsToUserCommentDTOs(userComments);
+  }
+
+  public Page<UserCommentDTO> getUserCommentsByEventIdPaginated(UUID eventId, Pageable pageable) {
+    Page<UserComment> userComments =
+        this.userCommentRepository.findUserCommentsByEventIdOrderByCreationDate(eventId, pageable);
+
     return this.userCommentDTOUserCommentMapper.mapUserCommentsToUserCommentDTOs(userComments);
   }
 

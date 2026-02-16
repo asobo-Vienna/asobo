@@ -30,16 +30,17 @@ public class SearchController {
       @RequestParam(required = false) String location,
       @RequestParam(defaultValue = "false") Boolean includePrivate,
       Authentication authentication) {
-
     GlobalSearchRequestDTO request = new GlobalSearchRequestDTO();
     request.setQuery(q);
     request.setStartDate(startDate);
     request.setEndDate(endDate);
     request.setLocation(location);
+    request.setIncludePrivateEvents(includePrivate);
 
     // Only authenticated users can search private events
     boolean isAuthenticated = authentication != null && authentication.isAuthenticated();
     request.setIncludePrivateEvents(includePrivate && isAuthenticated);
+    request.setIncludeUsers(isAuthenticated);
 
     return searchService.search(request);
   }
