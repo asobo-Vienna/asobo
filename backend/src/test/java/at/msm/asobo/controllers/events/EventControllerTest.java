@@ -145,6 +145,7 @@ class EventControllerTest {
   }
 
   @Test
+  @WithMockUser
   void getAllEvents_WithIsPrivateTrue_ReturnsPrivateEvents() throws Exception {
     List<EventSummaryDTO> events = List.of(eventSummary1);
     String expectedJson = objectMapper.writeValueAsString(events);
@@ -163,6 +164,7 @@ class EventControllerTest {
   }
 
   @Test
+  @WithMockUser
   void getAllEvents_WithUserIdParameter_ReturnsUserEvents() throws Exception {
     List<EventSummaryDTO> events = List.of(eventSummary1);
     String expectedJson = objectMapper.writeValueAsString(events);
@@ -198,12 +200,13 @@ class EventControllerTest {
   }
 
   @Test
+  @WithMockUser
   void getAllEventsPaginated_WithUserId_ReturnsUserEventsPaginated() throws Exception {
-    Pageable pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "date"));
+    Pageable pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.ASC, "date"));
     Page<EventSummaryDTO> eventsPage = new PageImpl<>(List.of(eventSummary1), pageable, 1);
     String expectedJson = objectMapper.writeValueAsString(eventsPage);
 
-    when(eventService.getEventsByParticipantIdPaginated(eq(userId), eq(null), any(Pageable.class)))
+    when(eventService.getEventsByParticipantIdPaginated(eq(userId), isNull(), any(Pageable.class)))
         .thenReturn(eventsPage);
 
     mockMvc
@@ -217,7 +220,7 @@ class EventControllerTest {
         .andExpect(content().string(expectedJson));
 
     verify(eventService)
-        .getEventsByParticipantIdPaginated(eq(userId), eq(null), any(Pageable.class));
+        .getEventsByParticipantIdPaginated(eq(userId), isNull(), any(Pageable.class));
   }
 
   // these commented tests must be rewritten using getAllEventsPaginated with filters
