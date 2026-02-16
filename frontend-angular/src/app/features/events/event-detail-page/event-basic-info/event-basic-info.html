@@ -71,8 +71,8 @@
 
       @if (isEditing()) {
         <div class="form-group d-flex justify-content-center gap-2">
-          <i class="pi pi-check-circle clickable" (click)="onSubmit()"></i>
-          <i class="pi pi-times-circle clickable" (click)="cancelEdit()"></i>
+          <i class="pi pi-check clickable me-1" (click)="onSubmit()"></i>
+          <i class="pi pi-times clickable" (click)="cancelEdit()"></i>
         </div>
         <p-toggleswitch
           [ngModel]="event()?.isPrivateEvent"

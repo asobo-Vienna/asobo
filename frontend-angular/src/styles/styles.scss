@@ -282,6 +282,23 @@ p-inputicon {
   background-color: $asobo-purple !important;
 }
 
-.admin-page .pi-trash {
+.pi {
+  color: $asobo-purple;
+}
+
+.pi-check,
+.pi-times {
+  font-weight: bold !important;
+}
+
+.pi-check {
+  color: green;
+}
+
+.pi-times {
+  color: red;
+}
+
+.pi-trash {
   color: red;
 }
