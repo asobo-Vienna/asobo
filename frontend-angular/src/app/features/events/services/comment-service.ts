@@ -1,10 +1,11 @@
 import {inject, Injectable} from '@angular/core';
 import {environment} from '../../../../environments/environment';
 import {Comment} from '../models/comment';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpParams} from '@angular/common/http';
 import {map, Observable} from 'rxjs';
 import {List} from '../../../core/data_structures/lists/list';
 import {NewComment} from '../models/new-comment';
+import {PageResponse} from '../../../shared/entities/page-response';
 
 @Injectable({
   providedIn: 'root'
@@ -13,10 +14,14 @@ export class CommentService {
 
   private http = inject(HttpClient);
 
-  getAllByEventId(eventId: string): Observable<List<Comment>> {
+  getAllByEventId(eventId: string): Observable<PageResponse<Comment>> {
+
+    let params = new HttpParams();
+    params.set('page', 0)
+          .set('size', environment.commentDefaultPageSize);
+
     return this.http
-      .get<Comment[]>(this.getCommentsUrl(eventId))
-      .pipe(map(comments => new List<Comment>(comments)));
+      .get<PageResponse<Comment>>(`${this.getCommentsUrl(eventId)}/paginated`, { params });
   }
 
 

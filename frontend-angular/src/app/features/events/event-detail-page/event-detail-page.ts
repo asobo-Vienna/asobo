@@ -21,6 +21,7 @@ import {ParticipantService} from '../services/participant-service';
 import {LambdaFunctions} from '../../../shared/utils/lambda-functions';
 import {environment} from '../../../../environments/environment';
 import {Tag} from 'primeng/tag';
+import {PageResponse} from '../../../shared/entities/page-response';
 
 @Component({
   selector: 'app-event-detail-page',
@@ -97,9 +98,10 @@ export class EventDetailPage implements OnInit {
         }
       });
 
-      this.commentService.getAllByEventId(event.id).subscribe((comments: List<Comment>) => {
-        this.comments.set(comments);
+      this.commentService.getAllByEventId(event.id).subscribe((comments: PageResponse<Comment>) => {
+        this.comments.set(new List(comments.content));
       });
+      
       this.mediaService.getAllByEventId(event.id).subscribe((mediaItems: List<MediaItem>) => {
         this.mediaItems.set(mediaItems);
       });
