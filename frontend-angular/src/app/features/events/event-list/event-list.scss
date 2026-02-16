@@ -4,6 +4,14 @@
 $event-card-gap: 1.2rem;
 $number-of-event-cards-per-row: 3;
 
+.event-search-bar {
+  margin-bottom: 2rem;
+
+  app-global-search {
+    width: 50%;
+  }
+}
+
 #event-list {
   display: flex;
   flex-wrap: wrap;

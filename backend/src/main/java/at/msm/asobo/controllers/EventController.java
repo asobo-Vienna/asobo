@@ -19,6 +19,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -36,36 +37,7 @@ public class EventController {
 
   @GetMapping
   public List<EventSummaryDTO> getAllEvents(
-      @RequestParam(required = false) UUID userId,
-      @RequestParam(required = false) String location,
-      @RequestParam(required = false) UUID creatorId,
-      @RequestParam(required = false) LocalDateTime date,
-      @RequestParam(required = false) LocalDateTime dateFrom,
-      @RequestParam(required = false) LocalDateTime dateTo,
-      @RequestParam(required = false) Boolean isPrivateEvent,
-      @RequestParam(required = false) Set<UUID> eventAdminIds,
-      @RequestParam(required = false) Set<UUID> participantIds) {
-
-    EventFilterDTO filterDTO =
-        new EventFilterDTO(
-            location,
-            creatorId,
-            date,
-            dateFrom,
-            dateTo,
-            isPrivateEvent,
-            eventAdminIds,
-            participantIds);
-
-    if (userId != null) {
-      return this.eventService.getEventsByParticipantId(userId, isPrivateEvent);
-    } else {
-      return this.eventService.getAllEvents(filterDTO);
-    }
-  }
-
-  @GetMapping("/paginated")
-  public Page<EventSummaryDTO> getAllEventsPaginated(
+      @RequestParam(required = false) String query,
       @RequestParam(required = false) UUID userId,
       @RequestParam(required = false) String location,
       @RequestParam(required = false) UUID creatorId,
@@ -75,10 +47,13 @@ public class EventController {
       @RequestParam(required = false) Boolean isPrivateEvent,
       @RequestParam(required = false) Set<UUID> eventAdminIds,
       @RequestParam(required = false) Set<UUID> participantIds,
-      @PageableDefault(sort = "date", direction = Sort.Direction.ASC) Pageable pageable) {
+      Authentication authentication) {
+
+    boolean isAuthenticated = authentication != null && authentication.isAuthenticated();
 
     EventFilterDTO filterDTO =
         new EventFilterDTO(
+            query,
             location,
             creatorId,
             date,
@@ -87,6 +62,56 @@ public class EventController {
             isPrivateEvent,
             eventAdminIds,
             participantIds);
+
+    // private events only visible for authenticated users
+    if (isPrivateEvent == null) {
+      filterDTO.setIsPrivateEvent(isAuthenticated ? null : false);
+    } else if (isPrivateEvent && !isAuthenticated) {
+      filterDTO.setIsPrivateEvent(false);
+    }
+
+    if (userId != null) {
+      return this.eventService.getEventsByParticipantId(userId, filterDTO.getIsPrivateEvent());
+    } else {
+      return this.eventService.getAllEvents(filterDTO);
+    }
+  }
+
+  @GetMapping("/paginated")
+  public Page<EventSummaryDTO> getAllEventsPaginated(
+      @RequestParam(required = false) String query,
+      @RequestParam(required = false) UUID userId,
+      @RequestParam(required = false) String location,
+      @RequestParam(required = false) UUID creatorId,
+      @RequestParam(required = false) LocalDateTime date,
+      @RequestParam(required = false) LocalDateTime dateFrom,
+      @RequestParam(required = false) LocalDateTime dateTo,
+      @RequestParam(required = false) Boolean isPrivateEvent,
+      @RequestParam(required = false) Set<UUID> eventAdminIds,
+      @RequestParam(required = false) Set<UUID> participantIds,
+      @PageableDefault(sort = "date", direction = Sort.Direction.ASC) Pageable pageable,
+      Authentication authentication) {
+
+    boolean isAuthenticated = authentication != null && authentication.isAuthenticated();
+
+    EventFilterDTO filterDTO =
+        new EventFilterDTO(
+            query,
+            location,
+            creatorId,
+            date,
+            dateFrom,
+            dateTo,
+            isPrivateEvent,
+            eventAdminIds,
+            participantIds);
+
+    // private events only visible for authenticated users
+    if (isPrivateEvent == null) {
+      filterDTO.setIsPrivateEvent(isAuthenticated ? null : false);
+    } else if (isPrivateEvent && !isAuthenticated) {
+      filterDTO.setIsPrivateEvent(false);
+    }
 
     if (userId != null) {
       return this.eventService.getEventsByParticipantIdPaginated(

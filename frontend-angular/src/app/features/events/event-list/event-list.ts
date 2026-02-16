@@ -11,11 +11,15 @@ import {Router} from '@angular/router';
 type SortField = 'date' | 'title' | 'location' | 'isPrivateEvent';
 import {HttpParams} from '@angular/common/http';
 import {EventFilters} from '../models/event-filters';
+import {GlobalSearch} from '../../search/global-search/global-search';
+import {debounceTime, Subject} from 'rxjs';
+import {environment} from '../../../../environments/environment';
 
 @Component({
   selector: 'app-event-list',
   imports: [
     EventCard,
+    GlobalSearch,
   ],
   templateUrl: './event-list.html',
   styleUrl: './event-list.scss'
@@ -28,10 +32,13 @@ export class EventList implements OnInit {
   inputEvents = input<List<EventSummary>>();
   private fetchedEvents = signal<List<EventSummary>>(new List<EventSummary>());
   eventFilters = signal<EventFilters>({});
+  searchQuery = signal<string>('');
 
-  // default sort order: descending by date
+  // default sort order: ascending by date
   sortField = signal<SortField>('date');
-  sortDirection = signal<'asc' | 'desc'>('desc');
+  sortDirection = signal<'asc' | 'desc'>('asc');
+
+  private searchSubject = new Subject<string>();
 
   hasInputEvents = computed(() => {
     const input = this.inputEvents();
@@ -44,47 +51,20 @@ export class EventList implements OnInit {
       ? this.inputEvents()!
       : this.fetchedEvents();
 
-    const sorted = [...sourceList.toArray()].sort((a, b) => {
-      const field = this.sortField();
-      const dir = this.sortDirection();
-
-      let result = 0;
-
-      switch (field) {
-        case 'date':
-          result = a.date.localeCompare(b.date);
-          break;
-
-        case 'title':
-          result = a.title.localeCompare(b.title);
-          break;
-
-        case 'location':
-          result = a.location.localeCompare(b.location);
-          break;
-
-        case 'isPrivateEvent':
-          // primary visibility sort order
-          result = dir === 'asc'
-            ? Number(a.isPrivate) - Number(b.isPrivate) // public first
-            : Number(b.isPrivate) - Number(a.isPrivate); // private first
-
-          // secondary: date within visibility group always descending
-          if (result === 0) {
-            result = b.date.localeCompare(a.date);
-          }
-
-          return result;
-      }
-
-      // Use sortDirection for all other fields
-      return dir === 'asc' ? result : -result;
-    });
-
-    return new List<EventSummary>(sorted);
+    return new List<EventSummary>([...sourceList.toArray()]);
   });
 
   ngOnInit(): void {
+    // Setup search debounce
+    this.searchSubject.pipe(
+      debounceTime(environment.defaultSearchDebounceTime),
+    ).subscribe((query) => {
+      this.searchQuery.set(query);
+      if (!this.hasInputEvents()) {
+        this.fetchEvents();
+      }
+    });
+
     // Only fetch if no input was provided
     if (!this.hasInputEvents()) {
       this.fetchEvents();
@@ -92,40 +72,49 @@ export class EventList implements OnInit {
   }
 
   private fetchEvents(): void {
-    //let params = this.
+    // Build filters with query
+    const filters = { ...this.eventFilters() };
+
+    if (this.searchQuery()) {
+      filters.query = this.searchQuery();
+    }
+
+    if (!this.authService.isLoggedIn()) {
+      filters.isPrivateEvent = false;
+    }
+
     const params = {
       page: 0,
       size: 100,
       sort: `${this.sortField()},${this.sortDirection()}`
     };
 
-    if (this.authService.isLoggedIn()) {
-      this.eventService.getAllEventsPaginated(params, this.eventFilters()).subscribe({
-        next: (events) => this.fetchedEvents.set(new List<EventSummary>(events.content)),
-        error: (err) => console.error('Error fetching events:', err)
-      });
-    } else {
-      this.eventFilters().isPrivateEvent = false;
-      this.eventService.getAllEventsPaginated(params, this.eventFilters()).subscribe({
-        next: (events) => this.fetchedEvents.set(new List<EventSummary>(events.content)),
-        error: (err) => console.error('Error fetching public events:', err)
-      });
-    }
+    console.log('Fetching with filters:', filters, 'params:', params);
+
+    this.eventService.getAllEventsPaginated(params, filters).subscribe({
+      next: (events) => {
+        console.log('Events fetched:', events);
+        this.fetchedEvents.set(new List<EventSummary>(events.content));
+      },
+      error: (err) => console.error('Error fetching events:', err)
+    });
   }
 
   onSort(field: SortField): void {
     if (field === this.sortField()) {
-      // Toggle direction
       this.sortDirection.set(this.sortDirection() === 'asc' ? 'desc' : 'asc');
     } else {
       this.sortField.set(field);
       this.sortDirection.set('asc');
     }
 
-    // reload only if events come from backend
     if (!this.hasInputEvents()) {
       this.fetchEvents();
     }
+  }
+
+  onSearch(query: string): void {
+    this.searchSubject.next(query);
   }
 
   getSortIcon(field: SortField): string {
