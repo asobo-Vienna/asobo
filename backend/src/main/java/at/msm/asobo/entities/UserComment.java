@@ -3,13 +3,15 @@ package at.msm.asobo.entities;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.Objects;
 import java.util.UUID;
-import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 public class UserComment {
 
   @Id
@@ -28,9 +30,9 @@ public class UserComment {
   @JoinColumn(name = "event_id")
   private Event event;
 
-  @CreationTimestamp private LocalDateTime creationDate;
+  @CreatedDate private Instant creationDate;
 
-  @LastModifiedDate private LocalDateTime modificationDate;
+  @LastModifiedDate private Instant modificationDate;
 
   // private File file;
 
@@ -44,19 +46,19 @@ public class UserComment {
     this.text = text;
   }
 
-  public LocalDateTime getCreationDate() {
+  public Instant getCreationDate() {
     return this.creationDate;
   }
 
-  public void setCreationDate(LocalDateTime creationDate) {
+  public void setCreationDate(Instant creationDate) {
     this.creationDate = creationDate;
   }
 
-  public LocalDateTime getModificationDate() {
+  public Instant getModificationDate() {
     return this.modificationDate;
   }
 
-  public void setModificationDate(LocalDateTime modificationDate) {
+  public void setModificationDate(Instant modificationDate) {
     this.modificationDate = modificationDate;
   }
 

@@ -5,7 +5,9 @@ import at.msm.asobo.entities.Event;
 import at.msm.asobo.entities.User;
 import at.msm.asobo.entities.UserComment;
 import at.msm.asobo.mappers.UserCommentDTOUserCommentMapper;
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.HashSet;
 import java.util.UUID;
 
@@ -18,8 +20,8 @@ public class UserCommentTestBuilder {
   private String text;
   private User author;
   private Event event;
-  private LocalDateTime creationDate;
-  private LocalDateTime modificationDate;
+  private Instant creationDate;
+  private Instant modificationDate;
 
   private final UserCommentDTOUserCommentMapper userCommentDTOUserCommentMapper;
 
@@ -28,8 +30,8 @@ public class UserCommentTestBuilder {
     this.text = "Best comment ever!";
     this.author = defaultAuthor();
     this.event = defaultEvent();
-    this.creationDate = FIXED_DATE;
-    this.modificationDate = FIXED_DATE.plusDays(1);
+    this.creationDate = FIXED_DATE.toInstant(ZoneOffset.UTC);
+    this.modificationDate = FIXED_DATE.plusDays(1).toInstant(ZoneOffset.UTC);
 
     this.userCommentDTOUserCommentMapper = new UserCommentDTOUserCommentMapper();
   }
@@ -54,12 +56,12 @@ public class UserCommentTestBuilder {
     return this;
   }
 
-  public UserCommentTestBuilder withCreationDate(LocalDateTime creationDate) {
+  public UserCommentTestBuilder withCreationDate(Instant creationDate) {
     this.creationDate = creationDate;
     return this;
   }
 
-  public UserCommentTestBuilder withModificationDate(LocalDateTime modificationDate) {
+  public UserCommentTestBuilder withModificationDate(Instant modificationDate) {
     this.modificationDate = modificationDate;
     return this;
   }

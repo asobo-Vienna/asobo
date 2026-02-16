@@ -2,10 +2,15 @@ package at.msm.asobo.entities;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import java.time.Instant;
 import java.util.Objects;
 import java.util.UUID;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 public class Medium {
 
   @Id
@@ -24,6 +29,10 @@ public class Medium {
   @ManyToOne
   @JoinColumn(name = "event_id")
   private Event event;
+
+  @CreatedDate private Instant creationDate;
+
+  @LastModifiedDate private Instant modificationDate;
 
   public Medium() {}
 
@@ -57,6 +66,22 @@ public class Medium {
 
   public void setCreator(User creator) {
     this.creator = creator;
+  }
+
+  public Instant getCreationDate() {
+    return this.creationDate;
+  }
+
+  public void setCreationDate(Instant creationDate) {
+    this.creationDate = creationDate;
+  }
+
+  public Instant getModificationDate() {
+    return this.modificationDate;
+  }
+
+  public void setModificationDate(Instant modificationDate) {
+    this.modificationDate = modificationDate;
   }
 
   @Override

@@ -5,6 +5,7 @@ import {map, Observable} from 'rxjs';
 import {Event} from '../models/event'
 import {PageResponse} from '../../../shared/entities/page-response';
 import {EventSummary} from '../models/event-summary';
+import {EventFilters} from '../models/event-filters';
 import {List} from '../../../core/data-structures/lists/list';
 import {User} from '../../auth/models/user';
 
@@ -15,28 +16,50 @@ import {User} from '../../auth/models/user';
 export class EventService {
   private http = inject(HttpClient);
 
-  public getAllEvents(): Observable<EventSummary[]> {
-    return this.http.get<EventSummary[]>(environment.eventsEndpoint);
+  public getAllEvents(eventFilters?: EventFilters): Observable<EventSummary[]> {
+    let params: HttpParams = new HttpParams();
+    if (eventFilters) {
+      params = this.filtersToHttpParams(eventFilters);
+    }
+
+    return this.http.get<EventSummary[]>(`${environment.eventsEndpoint}`, { params });
   }
 
-  public getAllEventsPaginated(page: number, size: number): Observable<PageResponse<EventSummary>> {
-    const params = new HttpParams()
-      .set('page', page.toString())
-      .set('size', size.toString());
+  private filtersToHttpParams(filters: EventFilters): HttpParams {
+    let params = new HttpParams();
 
-    return this.http.get<PageResponse<EventSummary>>(`${environment.eventsEndpoint}/paginated`, { params });
-  }
-
-  public getAllPublicEvents(): Observable<EventSummary[]> {
-    return this.http.get<EventSummary[]>(environment.eventsEndpoint, {
-      params: { isPrivate: false }
+    Object.keys(filters).forEach(key => {
+      const value = filters[key as keyof EventFilters];
+      if (value !== null && value !== undefined) {
+        if (value instanceof Date) {
+          params = params.set(key, value.toISOString());
+        } else {
+          params = params.set(key, String(value));
+        }
+      }
     });
+
+    return params;
   }
 
-  public getAllPrivateEvents(): Observable<EventSummary[]> {
-    return this.http.get<EventSummary[]>(environment.eventsEndpoint, {
-      params: { isPrivate: true }
-    });
+
+  getAllEventsPaginated(params: { page: number, size: number, sort?: string }, eventFilters: EventFilters): Observable<PageResponse<EventSummary>> {
+    const queryParams = this.filtersToHttpParams(eventFilters)
+      .set('page', params.page.toString())
+      .set('size', params.size.toString())
+      .set('sort', params.sort ?? 'date,desc');
+
+    return this.http.get<PageResponse<EventSummary>>(`${environment.eventsEndpoint}/paginated`, { params: queryParams });
+  }
+
+  getAllPublicEventsPaginated(params: { page: number, size: number, sort: string }): Observable<PageResponse<EventSummary>> {
+    const queryParams = new HttpParams()
+      .set('page', params.page.toString())
+      .set('size', params.size.toString())
+      .set('sort', params.sort)
+      .set('isPrivate', 'false');
+
+    return this.http.get<PageResponse<EventSummary>>(`${environment.eventsEndpoint}/paginated`, { params: queryParams });
   }
 
   public getPublicEventsByUserId(userId: string): Observable<EventSummary[]> {

@@ -544,7 +544,7 @@ class UserCommentServiceTest {
     verify(userCommentRepository)
         .findUserCommentByEventIdAndId(event.getId(), userComment1.getId());
     verify(accessControlService).assertCanDeleteComment(userComment1, notAuthor);
-    verify(userCommentRepository, never()).delete(any());
+    verify(userCommentRepository, never()).delete(any(UserComment.class));
   }
 
   @Test
@@ -562,7 +562,7 @@ class UserCommentServiceTest {
         .findUserCommentByEventIdAndId(event.getId(), userComment1.getId());
     verify(userService, never()).getUserById(any());
     verify(accessControlService, never()).assertCanDeleteComment(any(), any());
-    verify(userCommentRepository, never()).delete(any());
+    verify(userCommentRepository, never()).delete(any(UserComment.class));
   }
 
   @Test
@@ -583,6 +583,6 @@ class UserCommentServiceTest {
         .findUserCommentByEventIdAndId(event.getId(), userComment1.getId());
     verify(userService).getUserById(author.getId());
     verify(accessControlService, never()).assertCanDeleteComment(any(), any());
-    verify(userCommentRepository, never()).delete(any());
+    verify(userCommentRepository, never()).delete(any(UserComment.class));
   }
 }

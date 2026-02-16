@@ -102,7 +102,6 @@ public class UserCommentService {
     this.accessControlService.assertCanUpdateComment(existingComment, loggedInUser);
 
     existingComment.setText(updatedCommentDTO.getText());
-    existingComment.setModificationDate(LocalDateTime.now());
     UserComment savedExistingComment = userCommentRepository.save(existingComment);
 
     return this.userCommentDTOUserCommentMapper.mapUserCommentToUserCommentDTO(

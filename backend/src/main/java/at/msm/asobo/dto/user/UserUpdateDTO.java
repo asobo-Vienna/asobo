@@ -22,6 +22,8 @@ public class UserUpdateDTO {
 
   private String location;
 
+  private String country;
+
   private String password;
 
   @Size(min = 1, message = "About me must contain at least 1 character")
@@ -77,6 +79,14 @@ public class UserUpdateDTO {
 
   public void setLocation(String location) {
     this.location = location;
+  }
+
+  public String getCountry() {
+    return this.country;
+  }
+
+  public void setCountry(String country) {
+    this.country = country;
   }
 
   public String getPassword() {

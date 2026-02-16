@@ -32,4 +32,8 @@ export class UserService {
     return this.http.patch<LoginResponse>(`${environment.apiBaseUrl}/users/${this.authService.currentUser()?.id}`, { password })
       .pipe(take(1));
   }
+
+  public getCountryCodes(): Observable<string[]> {
+    return this.http.get<string[]>(`${environment.apiBaseUrl}/users/countries`);
+  }
 }

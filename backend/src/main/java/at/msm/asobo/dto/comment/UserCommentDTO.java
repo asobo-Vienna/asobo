@@ -1,6 +1,6 @@
 package at.msm.asobo.dto.comment;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.UUID;
 
 public class UserCommentDTO {
@@ -11,8 +11,8 @@ public class UserCommentDTO {
   private UUID authorId;
   private UUID eventId;
   private String pictureURI;
-  private LocalDateTime creationDate;
-  private LocalDateTime modificationDate;
+  private Instant creationDate;
+  private Instant modificationDate;
 
   // private File file;
 
@@ -42,11 +42,11 @@ public class UserCommentDTO {
     this.eventId = eventId;
   }
 
-  public void setCreationDate(LocalDateTime creationDate) {
+  public void setCreationDate(Instant creationDate) {
     this.creationDate = creationDate;
   }
 
-  public void setModificationDate(LocalDateTime modificationDate) {
+  public void setModificationDate(Instant modificationDate) {
     this.modificationDate = modificationDate;
   }
 
@@ -58,11 +58,11 @@ public class UserCommentDTO {
     this.authorId = authorId;
   }
 
-  public LocalDateTime getCreationDate() {
+  public Instant getCreationDate() {
     return this.creationDate;
   }
 
-  public LocalDateTime getModificationDate() {
+  public Instant getModificationDate() {
     return this.modificationDate;
   }
 

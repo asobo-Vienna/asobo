@@ -23,6 +23,8 @@ import at.msm.asobo.repositories.EventRepository;
 import at.msm.asobo.security.UserPrincipal;
 import at.msm.asobo.services.UserService;
 import at.msm.asobo.services.files.FileStorageService;
+import java.time.Duration;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.*;
 import org.junit.jupiter.api.BeforeEach;
@@ -976,7 +978,7 @@ class EventServiceTest {
     verify(userService).getUserById(unauthorizedUser.getId());
     verify(eventAdminService).canManageEvent(publicEvent1, unauthorizedUser);
     verify(fileStorageService, never()).delete(any());
-    verify(eventRepository, never()).delete(any());
+    verify(eventRepository, never()).delete(any(Event.class));
     verify(eventDTOEventMapper, never()).mapEventToEventDTO(any());
   }
 
@@ -999,7 +1001,7 @@ class EventServiceTest {
     verify(userService, never()).getUserById(any());
     verify(eventAdminService, never()).canManageEvent(any(), any());
     verify(fileStorageService, never()).delete(any());
-    verify(eventRepository, never()).delete(any());
+    verify(eventRepository, never()).delete(any(Event.class));
   }
 
   @Test
@@ -1025,7 +1027,7 @@ class EventServiceTest {
     verify(userService).getUserById(userPrincipal.getUserId());
     verify(eventAdminService, never()).canManageEvent(any(), any());
     verify(fileStorageService, never()).delete(any());
-    verify(eventRepository, never()).delete(any());
+    verify(eventRepository, never()).delete(any(Event.class));
   }
 
   @Test
@@ -1279,7 +1281,8 @@ class EventServiceTest {
   @Test
   void updateEventById_setsModificationDate() {
     publicEvent1.setCreator(creator);
-    LocalDateTime beforeUpdate = LocalDateTime.now();
+    Instant beforeUpdate = Instant.now();
+    publicEvent1.setModificationDate(beforeUpdate.plus(Duration.ofHours(1)));
 
     EventUpdateDTO updateDTO =
         new EventTestBuilder().withTitle("New Title").withParticipants(null).buildEventUpdateDTO();

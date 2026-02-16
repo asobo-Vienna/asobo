@@ -1,4 +1,4 @@
-import {Component, ElementRef, input, output, signal, viewChild} from '@angular/core';
+import {Component, ElementRef, input, OnInit, output, signal, viewChild} from '@angular/core';
 
 @Component({
   selector: 'app-picture-upload',
@@ -8,7 +8,7 @@ import {Component, ElementRef, input, output, signal, viewChild} from '@angular/
   ],
   styleUrl: './picture-upload.scss'
 })
-export class PictureUpload {
+export class PictureUpload implements OnInit {
   pictureBox = viewChild<ElementRef<HTMLElement>>('pictureBox');
   currentImage = input<string | ArrayBuffer | null>(null);
   showPlusBeforeUpload = input<boolean>(false);
@@ -19,7 +19,7 @@ export class PictureUpload {
   preview = signal<string | null>(null);
   dimensions = input<[number, number]>([20, 20]);
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.setFrameDimensions(this.dimensions()[0], this.dimensions()[1]);
     if (!this.showPlusBeforeUpload()) {
       this.removePictureBoxBorder();

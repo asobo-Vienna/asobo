@@ -30,6 +30,8 @@ public class UserRegisterDTO {
 
   private String location;
 
+  private String country;
+
   @NotBlank(message = "Salutation is mandatory for user registration")
   private String salutation;
 
@@ -89,6 +91,14 @@ public class UserRegisterDTO {
 
   public void setLocation(String location) {
     this.location = location;
+  }
+
+  public String getCountry() {
+    return this.country;
+  }
+
+  public void setCountry(String country) {
+    this.country = country;
   }
 
   public String getSalutation() {

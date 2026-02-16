@@ -1,4 +1,4 @@
-import {Component, ViewEncapsulation, inject, signal} from '@angular/core';
+import {Component, ViewEncapsulation, inject, signal, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {AuthService} from '../../services/auth-service';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -57,6 +57,7 @@ export class RegistrationForm {
   private route = inject(ActivatedRoute);
   previewUrl = signal<string | ArrayBuffer | null>(null);
   selectedImage: File | null = null;
+  countryCodes: {label: string, value: string}[] = [];
 
   constructor() {
     this.salutations = environment.defaultSalutations;
@@ -72,11 +73,14 @@ export class RegistrationForm {
       username: ['', [Validators.required, Validators.minLength(environment.minIdentifierLength)]],
       email: ['', [Validators.required, FormUtilService.validateEmailCustom]],
       location: ['', [Validators.required]],
+      country: ['', Validators.required],
       password: ['', this.passwordValidator.getPasswordValidators()],
       passwordConfirmation: ['', [Validators.required]],
     }, {
       validators: this.passwordValidator.passwordMatchValidator()
     });
+
+    this.loadCountries();
 
     this.registerForm.get('salutation')?.valueChanges.subscribe(value => {
       this.showCustomSalutation.set(value === this.salutations[this.salutations.length - 1]);
@@ -101,6 +105,18 @@ export class RegistrationForm {
         this.registerForm.get('password'),
         this.passwordRequirements
       );
+    });
+  }
+
+  private loadCountries(): void {
+    this.userService.getCountryCodes().subscribe({
+      next: (codes) => {
+        this.countryCodes = codes.map(code => ({
+          label: new Intl.DisplayNames(['en'], {type: 'region'}).of(code) || code,
+          value: code
+        }));
+      },
+      error: (err) => console.error('Error loading countries:', err)
     });
   }
 

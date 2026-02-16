@@ -223,6 +223,32 @@
     }
   </div>
 
+  <!-- Country -->
+  <div class="update-field">
+    <p-iconfield>
+      <p-inputgroup>
+        <p-inputgroup-addon>
+          <i class="pi pi-flag"></i>
+        </p-inputgroup-addon>
+          <p-select
+            id="profile-country"
+            [options]="countryCodes"
+            formControlName="country"
+            placeholder="Select a country"
+            optionLabel="label"
+            optionValue="value">
+          </p-select>
+      </p-inputgroup>
+    </p-iconfield>
+
+    @if (getFormControls['country'].touched && getFormControls['country'].invalid) {
+      <small class="error-message">
+        @if (getFormControls['country'].errors?.['required']) {
+          <span>Country is required.</span>
+        }
+      </small>
+    }
+  </div>
 
   <!-- Password Section -->
   <div class="update-field">

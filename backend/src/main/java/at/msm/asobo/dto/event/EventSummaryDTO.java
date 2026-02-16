@@ -1,6 +1,7 @@
 package at.msm.asobo.dto.event;
 
 import at.msm.asobo.dto.user.UserPublicDTO;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -11,8 +12,8 @@ public class EventSummaryDTO {
   private String pictureURI;
   private String location;
   private LocalDateTime date;
-  private LocalDateTime creationDate;
-  private LocalDateTime modificationDate;
+  private Instant creationDate;
+  private Instant modificationDate;
   private UserPublicDTO creator;
   private boolean isPrivate;
 
@@ -72,19 +73,19 @@ public class EventSummaryDTO {
     this.date = date;
   }
 
-  public LocalDateTime getCreationDate() {
+  public Instant getCreationDate() {
     return this.creationDate;
   }
 
-  public void setCreationDate(LocalDateTime creationDate) {
+  public void setCreationDate(Instant creationDate) {
     this.creationDate = creationDate;
   }
 
-  public LocalDateTime getModificationDate() {
+  public Instant getModificationDate() {
     return this.modificationDate;
   }
 
-  public void setModificationDate(LocalDateTime modificationDate) {
+  public void setModificationDate(Instant modificationDate) {
     this.modificationDate = modificationDate;
   }
 

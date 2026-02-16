@@ -3,6 +3,7 @@ package at.msm.asobo.dto.event;
 import at.msm.asobo.dto.comment.UserCommentDTO;
 import at.msm.asobo.dto.medium.MediumDTO;
 import at.msm.asobo.dto.user.UserPublicDTO;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -20,9 +21,9 @@ public class EventDTO {
 
   private LocalDateTime date;
 
-  private LocalDateTime creationDate;
+  private Instant creationDate;
 
-  private LocalDateTime modificationDate;
+  private Instant modificationDate;
 
   // TODO refactor to a new DTO EventCreator (after refactoring mappers to factories) private
   // EventCreatorDTO creator;
@@ -69,11 +70,11 @@ public class EventDTO {
     this.date = date;
   }
 
-  public void setCreationDate(LocalDateTime creationDate) {
+  public void setCreationDate(Instant creationDate) {
     this.creationDate = creationDate;
   }
 
-  public void setModificationDate(LocalDateTime modificationDate) {
+  public void setModificationDate(Instant modificationDate) {
     this.modificationDate = modificationDate;
   }
 
@@ -113,7 +114,7 @@ public class EventDTO {
     return this.date;
   }
 
-  public LocalDateTime getCreationDate() {
+  public Instant getCreationDate() {
     return this.creationDate;
   }
 
@@ -137,7 +138,7 @@ public class EventDTO {
     return this.pictureURI;
   }
 
-  public LocalDateTime getModificationDate() {
+  public Instant getModificationDate() {
     return this.modificationDate;
   }
 
