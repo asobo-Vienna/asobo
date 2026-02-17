@@ -498,7 +498,7 @@ class EventServiceTest {
 
     assertThat(result)
         .isEqualTo(mappedDtos)
-        .allSatisfy(dto -> assertThat(dto.getIsPrivate()).isTrue());
+        .allSatisfy(dto -> assertThat(dto.getIsPrivateEvent()).isTrue());
 
     verify(eventRepository).findByParticipantsIdAndIsPrivateEventTrue(participantId);
     verify(eventRepository, never()).findByParticipantsId(any());
@@ -520,7 +520,7 @@ class EventServiceTest {
 
     assertThat(result)
         .isEqualTo(mappedDtos)
-        .allSatisfy(dto -> assertThat(dto.getIsPrivate()).isFalse());
+        .allSatisfy(dto -> assertThat(dto.getIsPrivateEvent()).isFalse());
 
     verify(eventRepository).findByParticipantsIdAndIsPrivateEventFalse(participantId);
     verify(eventRepository, never()).findByParticipantsId(any());

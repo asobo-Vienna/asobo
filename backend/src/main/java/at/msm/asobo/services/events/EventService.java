@@ -154,9 +154,9 @@ public class EventService {
   public EventDTO getEventDTOById(UUID id, boolean isAuthenticated) {
     Event event = this.getEventById(id);
 
-    boolean hasAccessToPrivateEvent = isAuthenticated && event.isPrivateEvent();
+    boolean hasAccessToEvent = isAuthenticated || !event.getIsPrivateEvent();
 
-    if (!hasAccessToPrivateEvent) {
+    if (!hasAccessToEvent) {
       throw new UserNotAuthorizedException("You cannot access this event");
     }
     return this.eventDTOEventMapper.mapEventToEventDTO(event);
