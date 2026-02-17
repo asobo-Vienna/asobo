@@ -86,14 +86,14 @@ export class EventList implements OnInit {
       let comparison = 0;
 
       if (field === 'isPrivateEvent') {
-        const privacyComparison = (a.isPrivate === b.isPrivate) ? 0 : a.isPrivate ? 1 : -1;
+        const privacyComparison = (a.isPrivateEvent === b.isPrivateEvent) ? 0 : a.isPrivateEvent ? 1 : -1;
 
         if (privacyComparison !== 0) {
           return direction === 'asc' ? privacyComparison : -privacyComparison;
         }
 
         comparison = new Date(a.date).getTime() - new Date(b.date).getTime();
-        return comparison; // Immer aufsteigend nach Datum innerhalb der Gruppe
+        return comparison;
       }
 
       switch (field) {
