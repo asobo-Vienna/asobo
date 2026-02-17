@@ -87,7 +87,7 @@ public class EventTestBuilder {
     this.pictureURI = event.getPictureURI();
     this.comments = event.getComments();
     this.media = event.getMedia();
-    this.isPrivateEvent = event.isPrivateEvent();
+    this.isPrivateEvent = event.getIsPrivateEvent();
     return this;
   }
 
@@ -204,7 +204,7 @@ public class EventTestBuilder {
     event.setModificationDate(this.modificationDate);
     event.setComments(this.comments);
     event.setMedia(this.media);
-    event.setPrivateEvent(this.isPrivateEvent);
+    event.setIsPrivateEvent(this.isPrivateEvent);
 
     return event;
   }
@@ -225,7 +225,7 @@ public class EventTestBuilder {
     eventDTO.setComments(
         this.userCommentDTOUserCommentMapper.mapUserCommentsToUserCommentDTOs(this.comments));
     eventDTO.setMedia(this.mediumDTOMediumMapper.mapMediaToMediaDTOList(this.media));
-    eventDTO.setIsPrivate(this.isPrivateEvent);
+    eventDTO.setIsPrivateEvent(this.isPrivateEvent);
 
     return eventDTO;
   }
@@ -236,7 +236,7 @@ public class EventTestBuilder {
     eventCreationDTO.setTitle(this.title);
     eventCreationDTO.setDescription(this.description);
     eventCreationDTO.setLocation(this.location);
-    eventCreationDTO.setPrivate(this.isPrivateEvent);
+    eventCreationDTO.setIsPrivateEvent(this.isPrivateEvent);
     eventCreationDTO.setDate(this.date);
     eventCreationDTO.setCreationDate(this.creationDate);
     eventCreationDTO.setModificationDate(this.modificationDate);
@@ -257,7 +257,7 @@ public class EventTestBuilder {
     eventUpdateDTO.setTitle(this.title);
     eventUpdateDTO.setDescription(this.description);
     eventUpdateDTO.setLocation(this.location);
-    eventUpdateDTO.setPrivate(this.isPrivateEvent);
+    eventUpdateDTO.setIsPrivateEvent(this.isPrivateEvent);
     eventUpdateDTO.setDate(this.date);
     eventUpdateDTO.setParticipants(
         this.userDTOUserMapper.mapUsersToUserPublicDTOs(this.participants));
@@ -282,7 +282,7 @@ public class EventTestBuilder {
     eventDTO.setModificationDate(this.modificationDate);
     eventDTO.setCommentCount(this.comments.size());
     eventDTO.setMediaCount(this.media.size());
-    eventDTO.setIsPrivate(this.isPrivateEvent);
+    eventDTO.setIsPrivateEvent(this.isPrivateEvent);
 
     return eventDTO;
   }

@@ -2,13 +2,13 @@ import {Component, inject, input, output, signal} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {Comment} from '../models/comment';
 import {DatePipe} from '@angular/common';
-import {MatIcon} from '@angular/material/icon';
-import {List} from '../../../core/data_structures/lists/list';
+import {List} from '../../../core/data-structures/lists/list';
 import {UrlUtilService} from '../../../shared/utils/url/url-util-service';
 import {environment} from '../../../../environments/environment';
 import {RouterLink} from '@angular/router';
 import {Textarea} from 'primeng/textarea';
-import {AuthService} from '../../auth/services/auth-service';
+import {AccessControlService} from '../../../shared/services/access-control-service';
+import {Event} from '../models/event';
 
 
 @Component({
@@ -16,7 +16,6 @@ import {AuthService} from '../../auth/services/auth-service';
   imports: [
     FormsModule,
     DatePipe,
-    MatIcon,
     RouterLink,
     Textarea
   ],
@@ -24,11 +23,14 @@ import {AuthService} from '../../auth/services/auth-service';
   styleUrl: './comments-list.scss'
 })
 export class CommentsList {
-  authService = inject(AuthService);
+  accessControlService = inject(AccessControlService);
 
   comments = input<List<Comment>>(new List());
+  event = input<Event | null>(null);
+
   commentDeleted = output<Comment>();
   commentEdited = output<Comment>();
+
   protected readonly UrlUtilService = UrlUtilService;
   protected readonly environment = environment;
 

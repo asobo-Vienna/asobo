@@ -2,7 +2,7 @@ import {Component, inject, OnInit, signal} from '@angular/core';
 import {UserProfileForm} from '../user-profile-form/user-profile-form';
 import {ActivatedRoute} from '@angular/router';
 import {EventList} from '../../../events/event-list/event-list';
-import {List} from '../../../../core/data_structures/lists/list';
+import {List} from '../../../../core/data-structures/lists/list';
 import {Event} from '../../../events/models/event';
 import {EventService} from '../../../events/services/event-service';
 import {EventSummary} from '../../../events/models/event-summary';

@@ -16,7 +16,7 @@ public class EventUpdateDTO {
 
   private String location;
 
-  private boolean isPrivate;
+  private boolean isPrivateEvent;
 
   private LocalDateTime date;
 
@@ -65,12 +65,12 @@ public class EventUpdateDTO {
     return this.date;
   }
 
-  public boolean isPrivate() {
-    return this.isPrivate;
+  public boolean getIsPrivateEvent() {
+    return this.isPrivateEvent;
   }
 
-  public void setPrivate(boolean isPrivate) {
-    this.isPrivate = isPrivate;
+  public void setIsPrivateEvent(boolean isPrivate) {
+    this.isPrivateEvent = isPrivate;
   }
 
   public Set<UserPublicDTO> getParticipants() {

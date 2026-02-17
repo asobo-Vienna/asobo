@@ -23,7 +23,6 @@
       <span class="navbar-toggler-icon"></span>
     </button>
 
-    <!-- TODO: also check if user has permission to add event -->
     @if (this.authService.isLoggedIn()) {
       <div class="d-flex">
         <a routerLink="/create-event" class="btn form-control me-2 d-flex align-items-center btn-purple btn-primary" id="create-event-nav-anchor">
@@ -42,7 +41,7 @@
           <a routerLink="/events" class="nav-link active" aria-current="page">Events</a>
         </li>
         @if (authService.isLoggedIn()) {
-          @if (authService.hasAdminAccess()) {
+          @if (accessControlService.hasAdminAccess()) {
             <li class="nav-item">
               <a [routerLink]="environment.adminSectionBaseUrl" class="nav-link"><i class="pi pi-cog admin-nav-icon"></i> Admin</a>
             </li>

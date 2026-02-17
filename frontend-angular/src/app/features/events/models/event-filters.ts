@@ -1,4 +1,4 @@
-import {List} from '../../../core/data_structures/lists/list';
+import {List} from '../../../core/data-structures/lists/list';
 
 export interface EventFilters {
   query?: string;

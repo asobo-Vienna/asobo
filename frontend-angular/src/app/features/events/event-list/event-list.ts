@@ -2,7 +2,7 @@ import {Component, computed, inject, input, OnInit, signal} from '@angular/core'
 import {EventCard} from '../event-card/event-card';
 import {EventService} from '../services/event-service';
 import {AuthService} from '../../auth/services/auth-service';
-import {List} from '../../../core/data_structures/lists/list';
+import {List} from '../../../core/data-structures/lists/list';
 import {EventSummary} from '../models/event-summary';
 import {routes} from '../../../app.routes';
 import {Router} from '@angular/router';
@@ -86,14 +86,14 @@ export class EventList implements OnInit {
       let comparison = 0;
 
       if (field === 'isPrivateEvent') {
-        const privacyComparison = (a.isPrivate === b.isPrivate) ? 0 : a.isPrivate ? 1 : -1;
+        const privacyComparison = (a.isPrivateEvent === b.isPrivateEvent) ? 0 : a.isPrivateEvent ? 1 : -1;
 
         if (privacyComparison !== 0) {
           return direction === 'asc' ? privacyComparison : -privacyComparison;
         }
 
         comparison = new Date(a.date).getTime() - new Date(b.date).getTime();
-        return comparison; // Immer aufsteigend nach Datum innerhalb der Gruppe
+        return comparison;
       }
 
       switch (field) {

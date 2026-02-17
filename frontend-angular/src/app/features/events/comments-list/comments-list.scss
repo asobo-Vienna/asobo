@@ -37,15 +37,10 @@
 
 .comment-actions {
   display: flex;
-  gap: 0px;
+  gap: 5px;
   align-items: center;
 }
 
 .p-textarea {
   resize: none;
-}
-
-.pi {
-  color: $asobo-purple;
-  font-weight: bold;
 }

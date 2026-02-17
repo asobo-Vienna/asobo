@@ -12,10 +12,6 @@
   height: 7vw;
 }
 
-.single-media-container:hover .delete-media-button {
-  display: flex !important;
-}
-
 .single-media-container img {
   width: 100%;
   height: 100%;
@@ -44,12 +40,12 @@
 }
 
 .delete-media-button {
-  display: none !important; // hidden by default
-  background: rgba(210, 210, 210, 0.8);
-  font-size: 0.8rem;
+  color: $asobo-purple;
+  display: flex;
   justify-content: center;
   align-items: center;
-  margin: 0 auto 0 auto;
+  margin: 0.3rem auto 0 auto;
+  background: rgba(255, 255, 255, 0.9);
 }
 
 .carousel-overlay {

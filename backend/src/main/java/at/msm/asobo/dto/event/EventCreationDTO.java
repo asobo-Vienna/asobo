@@ -24,7 +24,7 @@ public class EventCreationDTO {
   @NotBlank(message = "Location is mandatory for event creation")
   private String location;
 
-  private boolean isPrivate;
+  private boolean isPrivateEvent;
 
   @NotNull(message = "Date is mandatory for event creation")
   @FutureOrPresent(message = "Date of event must be today or in the future")
@@ -126,12 +126,12 @@ public class EventCreationDTO {
     this.creator = creator;
   }
 
-  public boolean isPrivate() {
-    return this.isPrivate;
+  public boolean getIsPrivateEvent() {
+    return this.isPrivateEvent;
   }
 
-  public void setPrivate(boolean isPrivate) {
-    this.isPrivate = isPrivate;
+  public void setIsPrivateEvent(boolean isPrivateEvent) {
+    this.isPrivateEvent = isPrivateEvent;
   }
 
   public void setParticipants(Set<UserPublicDTO> participants) {

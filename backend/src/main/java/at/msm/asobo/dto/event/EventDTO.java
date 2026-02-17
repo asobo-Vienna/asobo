@@ -31,7 +31,7 @@ public class EventDTO {
 
   private Set<UserPublicDTO> eventAdmins;
 
-  private boolean isPrivate;
+  private boolean isPrivateEvent;
 
   private Set<UserPublicDTO> participants;
 
@@ -122,12 +122,12 @@ public class EventDTO {
     return this.creator;
   }
 
-  public boolean getIsPrivate() {
-    return this.isPrivate;
+  public boolean getIsPrivateEvent() {
+    return this.isPrivateEvent;
   }
 
-  public void setIsPrivate(boolean isPrivate) {
-    this.isPrivate = isPrivate;
+  public void setIsPrivateEvent(boolean isPrivateEvent) {
+    this.isPrivateEvent = isPrivateEvent;
   }
 
   public Set<UserPublicDTO> getParticipants() {

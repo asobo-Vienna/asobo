@@ -169,11 +169,11 @@ public class Event implements PictureEntity {
     this.id = id;
   }
 
-  public boolean isPrivateEvent() {
+  public boolean getIsPrivateEvent() {
     return this.isPrivateEvent;
   }
 
-  public void setPrivateEvent(boolean isPrivateEvent) {
+  public void setIsPrivateEvent(boolean isPrivateEvent) {
     this.isPrivateEvent = isPrivateEvent;
   }
 

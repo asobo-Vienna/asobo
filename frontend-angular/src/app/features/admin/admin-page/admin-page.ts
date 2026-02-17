@@ -3,8 +3,8 @@ import {AdminUserList} from '../admin-user-list/admin-user-list';
 import {AdminEventList} from '../admin-event-list/admin-event-list';
 import {AdminCommentList} from '../admin-comment-list/admin-comment-list';
 import {AdminMediaList} from '../admin-media-list/admin-media-list';
-import {AuthService} from '../../auth/services/auth-service';
 import {Tab, TabList, TabPanel, TabPanels, Tabs} from 'primeng/tabs';
+import {AccessControlService} from '../../../shared/services/access-control-service';
 
 @Component({
   selector: 'app-admin-page',
@@ -23,7 +23,8 @@ import {Tab, TabList, TabPanel, TabPanels, Tabs} from 'primeng/tabs';
   styleUrl: './admin-page.scss',
 })
 export class AdminPage {
-  authService = inject(AuthService);
+  accessControlService = inject(AccessControlService);
+
   private _selectedTab: string = "users";
   loadedTabs: Set<string> = new Set(["users"]);
 

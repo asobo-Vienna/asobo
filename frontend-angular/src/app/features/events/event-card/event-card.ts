@@ -2,7 +2,7 @@ import {Component, inject, input, Input} from '@angular/core';
 import {DatePipe} from '@angular/common';
 import {RouterLink} from '@angular/router';
 import {UrlUtilService} from '../../../shared/utils/url/url-util-service';
-import {List} from '../../../core/data_structures/lists/list';
+import {List} from '../../../core/data-structures/lists/list';
 import {Participant} from '../models/participant';
 import {Comment} from '../models/comment';
 import {Event} from '../models/event';
@@ -29,7 +29,7 @@ export class EventCard {
     time: '',
     location: '',
     description: '',
-    isPrivate: false,
+    isPrivateEvent: false,
     participantCount: 0,
     commentCount: 0,
     mediaCount: 0,

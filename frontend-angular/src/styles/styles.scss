@@ -50,11 +50,6 @@ a.btn-purple {
   text-decoration: none;
 }
 
-.mat-icon-custom {
-  color: $asobo-purple;          /* base color */
-  transition: color 0.2s;       /* smooth hover */
-}
-
 .user-thumbnail {
   /*height: 40px;
   width: 40px;*/
@@ -287,6 +282,23 @@ p-inputicon {
   background-color: $asobo-purple !important;
 }
 
-.admin-page .pi-trash {
+.pi-pen-to-square {
+  color: $asobo-purple !important;
+}
+
+.pi-check,
+.pi-times {
+  font-weight: bold !important;
+}
+
+.pi-check {
+  color: green;
+}
+
+.pi-times {
+  color: red;
+}
+
+.pi-trash {
   color: red;
 }

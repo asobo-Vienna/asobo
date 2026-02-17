@@ -23,7 +23,7 @@ public interface EventSummaryProjection {
 
   User getCreator();
 
-  boolean getIsPrivate();
+  boolean getIsPrivateEvent();
 
   int getParticipantCount();
 

@@ -89,7 +89,7 @@ public class GlobalSearchService {
     result.setDate(event.getDate());
     result.setLocation(event.getLocation());
     result.setPictureURI(event.getPictureURI());
-    result.setPrivateEvent(event.isPrivateEvent());
+    result.setPrivateEvent(event.getIsPrivateEvent());
 
     if (event.getCreator() != null) {
       result.setCreatorName(event.getCreator().getUsername());

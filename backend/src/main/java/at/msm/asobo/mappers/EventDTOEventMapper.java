@@ -44,7 +44,7 @@ public class EventDTOEventMapper {
     dto.setCreationDate(event.getCreationDate());
     dto.setModificationDate(event.getModificationDate());
     dto.setCreator(this.userDTOUserMapper.mapUserToUserPublicDTO(event.getCreator()));
-    dto.setIsPrivate(event.isPrivateEvent());
+    dto.setIsPrivateEvent(event.getIsPrivateEvent());
 
     if (event.getEventAdmins() != null) {
       dto.setEventAdmins(userDTOUserMapper.mapUsersToUserPublicDTOs(event.getEventAdmins()));
@@ -85,7 +85,7 @@ public class EventDTOEventMapper {
     event.setCreationDate(dto.getCreationDate());
     event.setModificationDate(dto.getModificationDate());
     event.setCreator(this.userDTOUserMapper.mapUserPublicDTOToUser(dto.getCreator()));
-    event.setPrivateEvent(dto.getIsPrivate());
+    event.setIsPrivateEvent(dto.getIsPrivateEvent());
 
     // TODO: this is where the replacing of mappers to factory patterns ticket #37 comes in
     // Note: participants, comments, and media should be handled separately
@@ -109,7 +109,7 @@ public class EventDTOEventMapper {
     dto.setCreationDate(event.getCreationDate());
     dto.setModificationDate(event.getModificationDate());
     dto.setCreator(this.userDTOUserMapper.mapUserToUserPublicDTO(event.getCreator()));
-    dto.setIsPrivate(event.isPrivateEvent());
+    dto.setIsPrivateEvent(event.getIsPrivateEvent());
     dto.setParticipantCount(event.getParticipants().size());
     dto.setCommentCount(event.getComments().size());
     dto.setMediaCount(event.getMedia().size());
@@ -130,7 +130,7 @@ public class EventDTOEventMapper {
     // Note: picture is MultipartFile, not mapped from entity
     dto.setLocation(event.getLocation());
     dto.setDate(event.getDate());
-    dto.setPrivate(event.isPrivateEvent());
+    dto.setIsPrivateEvent(event.getIsPrivateEvent());
     // Note: modification date & creation date are set in the database, EventUpdateDTO only has the
     // values that can be updated by the user
 
@@ -192,7 +192,7 @@ public class EventDTOEventMapper {
     event.setLocation(dto.getLocation());
     event.setDate(dto.getDate());
     event.setCreator(this.userDTOUserMapper.mapUserPublicDTOToUser(dto.getCreator()));
-    event.setPrivateEvent(dto.isPrivate());
+    event.setIsPrivateEvent(dto.getIsPrivateEvent());
     event.setEventAdmins(this.userDTOUserMapper.mapUserPublicDTOsToUsers(dto.getEventAdmins()));
     // pictureURI is ignored and handled in service layer
 

@@ -3,7 +3,7 @@ import {environment} from '../../../../environments/environment';
 import {Comment} from '../models/comment';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {map, Observable} from 'rxjs';
-import {List} from '../../../core/data_structures/lists/list';
+import {List} from '../../../core/data-structures/lists/list';
 import {NewComment} from '../models/new-comment';
 import {PageResponse} from '../../../shared/entities/page-response';
 

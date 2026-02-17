@@ -15,7 +15,7 @@ public class EventSummaryDTO {
   private Instant creationDate;
   private Instant modificationDate;
   private UserPublicDTO creator;
-  private boolean isPrivate;
+  private boolean isPrivateEvent;
 
   // Counts instead of full lists
   private int participantCount;
@@ -97,12 +97,12 @@ public class EventSummaryDTO {
     this.creator = creator;
   }
 
-  public boolean getIsPrivate() {
-    return this.isPrivate;
+  public boolean getIsPrivateEvent() {
+    return this.isPrivateEvent;
   }
 
-  public void setIsPrivate(boolean isPrivate) {
-    this.isPrivate = isPrivate;
+  public void setIsPrivateEvent(boolean isPrivateEvent) {
+    this.isPrivateEvent = isPrivateEvent;
   }
 
   public int getParticipantCount() {

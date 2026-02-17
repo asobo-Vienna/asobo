@@ -2,7 +2,6 @@ import {Component, inject, OnInit, signal} from '@angular/core';
 import {EventService} from '../services/event-service';
 import {Event} from '../models/event';
 import {ActivatedRoute} from '@angular/router';
-import {DatePipe} from '@angular/common';
 import {CreateComment} from "../create-comment/create-comment";
 import {Participants} from '../participants/participants';
 import {CommentsList} from '../comments-list/comments-list';
@@ -13,7 +12,7 @@ import {distinctUntilChanged, filter, map, Observable, switchMap} from 'rxjs';
 import {Gallery} from '../gallery/gallery';
 import {MediaService} from '../services/media-service';
 import {MediaItem} from '../models/media-item';
-import {List} from '../../../core/data_structures/lists/list';
+import {List} from '../../../core/data-structures/lists/list';
 import {UrlUtilService} from '../../../shared/utils/url/url-util-service';
 import {AuthService} from '../../auth/services/auth-service';
 import {User} from '../../auth/models/user';
@@ -23,15 +22,23 @@ import {environment} from '../../../../environments/environment';
 import {Tag} from 'primeng/tag';
 import {PageResponse} from '../../../shared/entities/page-response';
 
+import {
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
+import {EventBasicInfo} from './event-basic-info/event-basic-info';
+
 @Component({
   selector: 'app-event-detail-page',
   imports: [
-    DatePipe,
     CreateComment,
     Participants,
     CommentsList,
     Gallery,
-    Tag
+    Tag,
+    FormsModule,
+    ReactiveFormsModule,
+    EventBasicInfo,
   ],
   templateUrl: './event-detail-page.html',
   styleUrl: './event-detail-page.scss'
@@ -44,21 +51,17 @@ export class EventDetailPage implements OnInit {
   authService = inject(AuthService);
   participantService = inject(ParticipantService);
 
-  id!: string;
-  title!: string;
-  pictureURI!: string;
-  date!: string;
-  time!: string;
-  location!: string;
-  description?: string;
-  isPrivate!: boolean;
-
+  event = signal<Event | null>(null);
   comments = signal<List<Comment>>(new List<Comment>());
   participants = signal<List<Participant>>(new List<Participant>());
   mediaItems = signal<List<MediaItem>>(new List<MediaItem>());
-  currentUser: User | null = this.authService.currentUser();
+
   isUserAlreadyPartOfEvent = signal(false);
+
+  currentUser: User | null = this.authService.currentUser();
+
   protected readonly UrlUtilService = UrlUtilService;
+  protected readonly environment = environment;
 
   ngOnInit(): void {
       this.route.paramMap.pipe(
@@ -72,19 +75,14 @@ export class EventDetailPage implements OnInit {
       });
   }
 
+
   public loadEvent(eventId: string): Observable<Event> {
     return this.eventService.getEventById(eventId);
   }
 
+
   private populateEvent(event: Event): void {
-    this.id = event.id;
-    this.title = event.title;
-    this.pictureURI = event.pictureURI;
-    this.date = event.date;
-    this.time = event.date;
-    this.location = event.location;
-    this.description = event.description;
-    this.isPrivate = event.isPrivate;
+    this.event.set(this.eventService.convertEventAdminsToList(event));
 
     if (this.authService.isLoggedIn()) {
 
@@ -101,7 +99,7 @@ export class EventDetailPage implements OnInit {
       this.commentService.getAllByEventId(event.id).subscribe((comments: PageResponse<Comment>) => {
         this.comments.set(new List(comments.content));
       });
-      
+
       this.mediaService.getAllByEventId(event.id).subscribe((mediaItems: List<MediaItem>) => {
         this.mediaItems.set(mediaItems);
       });
@@ -148,7 +146,10 @@ export class EventDetailPage implements OnInit {
 
 
   public uploadMedia(file: File) {
-    this.mediaService.upload(this.id, file).subscribe({
+    const currentEvent = this.event();
+    if (!currentEvent) return;
+
+    this.mediaService.upload(currentEvent.id, file).subscribe({
       next: (mediaItem) => this.mediaItems().add(mediaItem),
       error: (err) => console.error('Failed to upload media!', err)
     });
@@ -156,8 +157,11 @@ export class EventDetailPage implements OnInit {
 
 
   public deleteMedia(item: MediaItem) {
+    const currentEvent = this.event();
+    if (!currentEvent) return;
+
     this.mediaItems().remove(item);       // remove immediately
-    this.mediaService.delete(this.id, item).subscribe({
+    this.mediaService.delete(currentEvent.id, item).subscribe({
       error: (err) => {
         console.error('Failed to delete media!', err);
         this.mediaItems().add(item);     // revert if backend fails
@@ -171,7 +175,10 @@ export class EventDetailPage implements OnInit {
       return;
     }
 
-    this.participantService.joinOrLeaveEvent(this.id, this.currentUser).subscribe({
+    const currentEvent = this.event();
+    if (!currentEvent) return;
+
+    this.participantService.joinOrLeaveEvent(currentEvent.id, this.currentUser).subscribe({
       next: (participants: List<Participant>) => {
         if (!this.currentUser) {
           return;
@@ -192,5 +199,9 @@ export class EventDetailPage implements OnInit {
     });
   }
 
-  protected readonly environment = environment;
+
+  public onEventUpdated(updatedEvent: Event) {
+    this.event.set(this.eventService.convertEventAdminsToList(updatedEvent));
+  }
 }
+

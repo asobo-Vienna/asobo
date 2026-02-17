@@ -6,5 +6,5 @@ export interface EventCoreInfo {
   time: string;
   location: string;
   description: string;
-  isPrivate: boolean;
+  isPrivateEvent: boolean;
 }
