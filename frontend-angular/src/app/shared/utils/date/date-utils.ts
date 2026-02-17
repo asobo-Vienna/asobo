@@ -14,7 +14,7 @@ export class DateUtils {
   public static validateDate(control: AbstractControl): ValidationErrors | null {
     if (!control.value) return null;
     const selected = new Date(control.value);
-    if (this.isDateInThePast(selected)) {
+    if (DateUtils.isDateInThePast(selected)) {
       return { pastDate: true };
     }
     return null;
