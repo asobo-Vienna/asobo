@@ -801,11 +801,11 @@ class EventServiceTest {
   }
 
   @Test
-  void getEventDTOById_eventExists_returnsMappedDTO() {
+  void getEventDTOById_eventPrivate_returnsMappedDTO() {
     when(eventRepository.findById(privateEvent1.getId())).thenReturn(Optional.of(privateEvent1));
     when(eventDTOEventMapper.mapEventToEventDTO(privateEvent1)).thenReturn(privateEventDTO1);
 
-    EventDTO result = eventService.getEventDTOById(privateEvent1.getId());
+    EventDTO result = eventService.getEventDTOById(privateEvent1.getId(), true);
 
     assertEquals(privateEventDTO1, result);
     assertEquals(privateEventDTO1.getId(), result.getId());
@@ -819,7 +819,8 @@ class EventServiceTest {
     when(eventRepository.findById(privateEvent1.getId())).thenReturn(Optional.empty());
 
     assertThrows(
-        EventNotFoundException.class, () -> eventService.getEventDTOById(privateEvent1.getId()));
+        EventNotFoundException.class,
+        () -> eventService.getEventDTOById(privateEvent1.getId(), true));
 
     verify(eventRepository).findById(privateEvent1.getId());
   }
