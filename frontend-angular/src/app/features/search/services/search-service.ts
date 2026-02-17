@@ -16,9 +16,9 @@ import {UrlUtilService} from '../../../shared/utils/url/url-util-service';
 export class SearchService {
   private http = inject(HttpClient);
 
-  search(query: string, includePrivate: boolean): Observable<AutocompleteItem[]> {
+  search(query: string): Observable<AutocompleteItem[]> {
     return this.http
-      .get<GlobalSearchResponse>(`${environment.apiBaseUrl}/search?q=${encodeURIComponent(query)}&includePrivate=${includePrivate}`)
+      .get<GlobalSearchResponse>(`${environment.apiBaseUrl}/search?q=${encodeURIComponent(query)}`)
       .pipe(
         map((response) => [
           ...response.events.map((e: EventSearchResult) => ({

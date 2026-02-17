@@ -151,8 +151,14 @@ public class EventService {
     return this.eventRepository.findById(id).orElseThrow(() -> new EventNotFoundException(id));
   }
 
-  public EventDTO getEventDTOById(UUID id) {
+  public EventDTO getEventDTOById(UUID id, boolean isAuthenticated) {
     Event event = this.getEventById(id);
+
+    boolean hasAccessToPrivateEvent = isAuthenticated && event.isPrivateEvent();
+
+    if (!hasAccessToPrivateEvent) {
+      throw new UserNotAuthorizedException("You cannot access this event");
+    }
     return this.eventDTOEventMapper.mapEventToEventDTO(event);
   }
 

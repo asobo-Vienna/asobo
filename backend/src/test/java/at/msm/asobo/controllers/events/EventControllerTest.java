@@ -1,7 +1,8 @@
 package at.msm.asobo.controllers.events;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
@@ -278,10 +279,10 @@ class EventControllerTest {
   }*/
 
   @Test
-  void getEventById_WithValidId_ReturnsEvent() throws Exception {
+  void getEventById_WithValidId_EventPublic_ReturnsEvent() throws Exception {
     String expectedJson = objectMapper.writeValueAsString(eventDTO);
 
-    when(eventService.getEventDTOById(eventId)).thenReturn(eventDTO);
+    when(eventService.getEventDTOById(eventId, false)).thenReturn(eventDTO);
 
     mockMvc
         .perform(get(SINGLE_EVENT_URL, eventId))
@@ -289,7 +290,7 @@ class EventControllerTest {
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
         .andExpect(content().string(expectedJson));
 
-    verify(eventService).getEventDTOById(eventId);
+    verify(eventService).getEventDTOById(eventId, false);
   }
 
   @Test

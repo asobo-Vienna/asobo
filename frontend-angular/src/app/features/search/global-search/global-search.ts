@@ -8,7 +8,6 @@ import { AutocompleteItem } from '../../../shared/entities/search';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import {of} from 'rxjs';
 import {UrlUtilService} from '../../../shared/utils/url/url-util-service';
-import {AuthService} from '../../auth/services/auth-service';
 
 @Component({
   selector: 'app-global-search',
@@ -19,7 +18,6 @@ import {AuthService} from '../../auth/services/auth-service';
 })
 export class GlobalSearch {
   private searchService = inject(SearchService);
-  private authService = inject(AuthService);
   private router = inject(Router);
 
   searchControl = new FormControl<string | AutocompleteItem | null>(null);
@@ -34,7 +32,7 @@ export class GlobalSearch {
       return;
     }
 
-    this.searchService.search(query, this.authService.isLoggedIn()).subscribe((results) => {
+    this.searchService.search(query).subscribe((results) => {
       console.log('searchResults array?', results, Array.isArray(results));
       this.searchResults = results;
     });

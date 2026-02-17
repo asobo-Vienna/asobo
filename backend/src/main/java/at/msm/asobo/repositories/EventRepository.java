@@ -52,26 +52,28 @@ public interface EventRepository
   Page<Event> findByParticipantsIdAndIsPrivateEventFalse(UUID userId, Pageable pageable);
 
   @Query(
-      """
-          SELECT DISTINCT e
-          FROM Event e
-          WHERE
-            (:includePrivate = true OR e.isPrivateEvent = false)
+      value =
+          """
+                            SELECT DISTINCT e.*
+                            FROM event e
+                            WHERE
+                              (:includePrivate = true OR e.is_private = false)
 
-            AND (
-              :query IS NULL
-              OR LOWER(e.title) LIKE LOWER(CONCAT('%', :query, '%'))
-              OR LOWER(e.description) LIKE LOWER(CONCAT('%', :query, '%'))
-              OR LOWER(e.location) LIKE LOWER(CONCAT('%', :query, '%'))
-            )
+                              AND (
+                                :query IS NULL
+                                OR LOWER(e.title) LIKE LOWER(CONCAT('%', :query, '%'))
+                                OR LOWER(e.description) LIKE LOWER(CONCAT('%', :query, '%'))
+                                OR LOWER(e.location) LIKE LOWER(CONCAT('%', :query, '%'))
+                              )
 
-            AND e.date >= COALESCE(:startDate, e.date)
-            AND e.date <= COALESCE(:endDate, e.date)
+                              AND e.date >= COALESCE(:startDate, e.date)
+                              AND e.date <= COALESCE(:endDate, e.date)
 
-            AND LOWER(e.location) LIKE LOWER(CONCAT('%', COALESCE(:location, ''), '%'))
+                              AND LOWER(e.location) LIKE LOWER(CONCAT('%', COALESCE(:location, ''), '%'))
 
-          ORDER BY e.date ASC
-          """)
+                            ORDER BY e.date ASC
+                            """,
+      nativeQuery = true)
   List<Event> globalSearch(
       @Param("query") String query,
       @Param("startDate") LocalDateTime startDate,

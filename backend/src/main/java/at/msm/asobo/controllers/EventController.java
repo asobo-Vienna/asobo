@@ -19,6 +19,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -117,8 +118,9 @@ public class EventController {
   }
 
   @GetMapping("/{id}")
-  public EventDTO getEventById(@PathVariable UUID id) {
-    return this.eventService.getEventDTOById(id);
+  public EventDTO getEventById(@PathVariable UUID id, Authentication authentication) {
+    boolean isAuthenticated = authentication != null && authentication.isAuthenticated();
+    return this.eventService.getEventDTOById(id, isAuthenticated);
   }
 
   @PatchMapping("/{id}")
@@ -137,7 +139,7 @@ public class EventController {
     return this.eventService.deleteEventById(id, loggedInUser);
   }
 
-  @PatchMapping("/{eventId}/addAdmins")
+  @PatchMapping("/{eventId}/admins")
   @PreAuthorize("hasAnyRole('USER','ADMIN','SUPERADMIN')")
   @ResponseStatus(HttpStatus.CREATED)
   public EventDTO addEventAdmin(
@@ -147,7 +149,7 @@ public class EventController {
     return eventAdminService.addAdminsToEvent(eventId, userIds, loggedInUser);
   }
 
-  @DeleteMapping("/{eventId}/removeAdmins")
+  @DeleteMapping("/{eventId}/admins")
   @PreAuthorize("hasAnyRole('USER','ADMIN','SUPERADMIN')")
   public EventDTO removeEventAdmin(
       @PathVariable UUID eventId,
