@@ -26,13 +26,19 @@ public class MediumSpecification {
         predicates.add(cb.equal(root.get("event").get("id"), filterDTO.getEventId()));
       }
 
-      if (filterDTO.getDateFrom() != null) {
-        predicates.add(cb.greaterThanOrEqualTo(root.get("createdAt"), filterDTO.getDateFrom()));
-      }
+      if (filterDTO.getDate() != null) {
+        LocalDateTime startOfDay = filterDTO.getDate().toLocalDate().atStartOfDay();
+        LocalDateTime endOfDay = startOfDay.plusDays(1);
 
+        predicates.add(cb.greaterThanOrEqualTo(root.get("creationDate"), startOfDay));
+        predicates.add(cb.lessThan(root.get("creationDate"), endOfDay));
+      }
+      if (filterDTO.getDateFrom() != null) {
+        predicates.add(cb.greaterThanOrEqualTo(root.get("creationDate"), filterDTO.getDateFrom()));
+      }
       if (filterDTO.getDateTo() != null) {
         LocalDateTime endOfDay = filterDTO.getDateTo().toLocalDate().atTime(23, 59, 59);
-        predicates.add(cb.lessThanOrEqualTo(root.get("date"), endOfDay));
+        predicates.add(cb.lessThanOrEqualTo(root.get("creationDate"), endOfDay));
       }
 
       assert query != null;

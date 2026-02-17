@@ -9,6 +9,7 @@ import {CommentWithEventTitle} from '../../events/models/comment-with-event-titl
 import { RouterLink } from '@angular/router';
 import {UserFilters} from '../../users/user-profile/models/user-filters';
 import {CommentFilters} from '../../events/models/comment-filters';
+import {Spinner} from '../../../core/ui-elements/spinner/spinner';
 
 @Component({
   selector: 'app-admin-comment-list',
@@ -16,7 +17,8 @@ import {CommentFilters} from '../../events/models/comment-filters';
     TableModule,
     TagModule,
     DatePipe,
-    RouterLink
+    RouterLink,
+    Spinner
   ],
   templateUrl: './admin-comment-list.html',
   styleUrl: './admin-comment-list.scss',

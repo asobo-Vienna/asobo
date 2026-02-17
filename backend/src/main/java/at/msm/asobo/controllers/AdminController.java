@@ -72,7 +72,7 @@ public class AdminController {
       @RequestParam(required = false) LocalDateTime date,
       @RequestParam(required = false) LocalDateTime dateFrom,
       @RequestParam(required = false) LocalDateTime dateTo,
-      @PageableDefault(sort = "date", direction = Sort.Direction.DESC) Pageable pageable) {
+      @PageableDefault(sort = "creationDate", direction = Sort.Direction.DESC) Pageable pageable) {
     UserCommentFilterDTO filterDTO =
         new UserCommentFilterDTO(authorId, eventId, date, dateFrom, dateTo);
 
@@ -86,7 +86,7 @@ public class AdminController {
       @RequestParam(required = false) LocalDateTime date,
       @RequestParam(required = false) LocalDateTime dateFrom,
       @RequestParam(required = false) LocalDateTime dateTo,
-      @PageableDefault(sort = "date", direction = Sort.Direction.DESC) Pageable pageable) {
+      @PageableDefault(sort = "creationDate", direction = Sort.Direction.DESC) Pageable pageable) {
     MediumFilterDTO filterDTO = new MediumFilterDTO(creatorId, eventId, date, dateFrom, dateTo);
 
     return this.adminService.getAllMediaWithEventTitle(filterDTO, pageable);
