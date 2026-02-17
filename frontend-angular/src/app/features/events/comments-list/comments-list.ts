@@ -8,7 +8,6 @@ import {environment} from '../../../../environments/environment';
 import {RouterLink} from '@angular/router';
 import {Textarea} from 'primeng/textarea';
 import {AccessControlService} from '../../../shared/services/access-control-service';
-import {User} from '../../auth/models/user';
 import {Event} from '../models/event';
 
 
@@ -28,7 +27,6 @@ export class CommentsList {
 
   comments = input<List<Comment>>(new List());
   event = input<Event | null>(null);
-  currentUser = input<User | null>(null);
 
   commentDeleted = output<Comment>();
   commentEdited = output<Comment>();

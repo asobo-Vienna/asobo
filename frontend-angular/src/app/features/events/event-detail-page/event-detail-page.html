@@ -22,17 +22,6 @@
     @if (event()) {
       <app-event-basic-info
         [event]="event()"
-        [eventCoreInfo]="{
-          id: event()!.id,
-          title: event()!.title,
-          pictureURI: event()!.pictureURI,
-          description: event()!.description,
-          location: event()!.location,
-          date: event()!.date,
-          time: event()!.date,
-          isPrivateEvent: event()!.isPrivateEvent
-        }"
-        [currentUser]="currentUser"
         (eventUpdated)="onEventUpdated($event)"
       />
 
@@ -73,7 +62,6 @@
       <app-comments-list
         [comments]="comments()"
         [event]="event()"
-        [currentUser]="currentUser"
         (commentDeleted)="deleteComment($event)"
         (commentEdited)="editComment($event)"
       />
@@ -84,7 +72,6 @@
       <app-gallery
         [mediaItems]="mediaItems()"
         [event]="event()"
-        [currentUser]="currentUser"
         (mediaAdded)="uploadMedia($event)"
         (mediaDeleted)="deleteMedia($event)"
       />

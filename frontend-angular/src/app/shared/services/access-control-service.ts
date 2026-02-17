@@ -12,13 +12,17 @@ export class AccessControlService {
 
   authService = inject(AuthService);
 
-  public isCurrentUserEventAdmin(event: Event | null, currentUser: User | null): boolean {
-    if (!event || !currentUser) {
+  public isCurrentUserEventAdmin(event: Event | null): boolean {
+    if (!event || !this.getCurrentUser()) {
       return false;
     }
 
     // console.log('event admin? = ',event.eventAdmins.contains(currentUser, LambdaFunctions.compareById));
-    return event.eventAdmins.contains(currentUser, LambdaFunctions.compareById);
+    return event.eventAdmins.contains(<User>this.getCurrentUser(), LambdaFunctions.compareById);
+  }
+
+  public getCurrentUser() {
+    return this.authService.currentUser();
   }
 
   hasAdminAccess(): boolean {

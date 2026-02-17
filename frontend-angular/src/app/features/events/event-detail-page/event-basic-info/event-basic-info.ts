@@ -13,8 +13,6 @@ import {InputText} from "primeng/inputtext";
 import {environment} from '../../../../../environments/environment';
 import {DateUtils} from '../../../../shared/utils/date/date-utils';
 import {Event} from '../../models/event';
-import {User} from '../../../auth/models/user';
-import {EventCoreInfo} from '../../models/event-core-info';
 import {EventService} from '../../services/event-service';
 import {AccessControlService} from '../../../../shared/services/access-control-service';
 import {Router} from '@angular/router';
@@ -43,13 +41,18 @@ export class EventBasicInfo implements OnInit {
   protected readonly environment = environment;
 
   // signal inputs
-  eventCoreInfo = input<EventCoreInfo | null>(null);
   event = input<Event | null>(null);
-  currentUser = input<User | null>(null);
 
   isAdminOrEventAdmin = computed(() => {
     return this.accessControlService.hasAdminAccess() ||
-      this.accessControlService.isCurrentUserEventAdmin(this.event(), this.currentUser());
+      this.accessControlService.isCurrentUserEventAdmin(this.event());
+  });
+
+  isEventInThePast = computed(() => {
+    const event = this.event();
+    if (!event?.date) return false;
+
+    return DateUtils.isDateInThePast(new Date(event.date));
   });
 
   // signal output
@@ -69,7 +72,7 @@ export class EventBasicInfo implements OnInit {
   }
 
   public ngOnInit(): void {
-    const coreInfo = this.eventCoreInfo();
+    const coreInfo = this.event();
     if (coreInfo) {
       this.editEventForm.patchValue({
         title: coreInfo.title,
@@ -131,7 +134,7 @@ export class EventBasicInfo implements OnInit {
   }
 
   public cancelEdit() {
-    const coreInfo = this.eventCoreInfo();
+    const coreInfo = this.event();
     if (!coreInfo) return;
 
     this.editEventForm.reset({

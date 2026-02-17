@@ -30,12 +30,12 @@
                 </div>
               } @else {
                   <p class="mt-2 flex-grow-1">{{ comment.text }}</p>
-                @if (accessControlService.hasAdminAccess() || currentUser()?.id === comment.authorId) {
+                @if (accessControlService.hasAdminAccess() || accessControlService.getCurrentUser()?.id === comment.authorId) {
                   <div class="comment-actions mt-3 ms-2">
                     <i class="pi pi-pen-to-square clickable" (click)="startEdit(comment)"></i>
                     <i class="pi pi-trash clickable" (click)="commentDeleted.emit(comment)"></i>
                   </div>
-                } @else if (this.accessControlService.isCurrentUserEventAdmin(this.event(), this.currentUser())) {
+                } @else if (this.accessControlService.isCurrentUserEventAdmin(this.event())) {
                   <div class="comment-actions mt-3 ms-2">
                     <i class="pi pi-trash clickable" (click)="commentDeleted.emit(comment)"></i>
                   </div>

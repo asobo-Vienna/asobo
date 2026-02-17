@@ -7,7 +7,6 @@ import {PrimeTemplate} from 'primeng/api';
 import {MediaUtilService} from '../../../shared/utils/media/media-util-service';
 import {AccessControlService} from '../../../shared/services/access-control-service';
 import {Event} from '../models/event';
-import {User} from '../../auth/models/user';
 
 @Component({
   selector: 'app-gallery',
@@ -31,7 +30,6 @@ export class Gallery {
   protected readonly MediaUtilService = MediaUtilService;
 
   event = input<Event | null>(null);
-  currentUser = input<User | null>(null);
 
   showCarousel = false;
   activeSlideIndex = 0;

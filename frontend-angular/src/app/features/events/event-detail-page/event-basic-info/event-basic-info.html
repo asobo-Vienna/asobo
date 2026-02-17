@@ -62,24 +62,26 @@
           ></textarea>
       </div>
 
-      @if (isAdminOrEventAdmin()) {
+      @if (isAdminOrEventAdmin() && !isEventInThePast()) {
         <div class="d-flex justify-content-end gap-2">
           <i class="pi pi-pen-to-square clickable" (click)="enterEdit()"></i>
           <i class="pi pi-trash clickable" (click)="onDelete()"></i>
         </div>
+
+        @if (isEditing()) {
+          <div class="form-group d-flex justify-content-center gap-2">
+            <i class="pi pi-check clickable me-1" (click)="onSubmit()"></i>
+            <i class="pi pi-times clickable" (click)="cancelEdit()"></i>
+          </div>
+          <p-toggleswitch
+            [ngModel]="event()?.isPrivateEvent"
+            [ngModelOptions]="{ standalone: true }"
+            (onChange)="onIsPrivateToggle($event)">
+          </p-toggleswitch>
+        }
       }
 
-      @if (isEditing()) {
-        <div class="form-group d-flex justify-content-center gap-2">
-          <i class="pi pi-check clickable me-1" (click)="onSubmit()"></i>
-          <i class="pi pi-times clickable" (click)="cancelEdit()"></i>
-        </div>
-        <p-toggleswitch
-          [ngModel]="event()?.isPrivateEvent"
-          [ngModelOptions]="{ standalone: true }"
-          (onChange)="onIsPrivateToggle($event)">
-        </p-toggleswitch>
-      }
+
     </div>
   </div>
   <div class="col-md-4"><!-- spacer --></div>
