@@ -8,6 +8,7 @@ public class GlobalSearchRequestDTO {
   private LocalDateTime endDate;
   private String location;
   private Boolean includePrivateEvents = false;
+  private Boolean includeUsers = false;
 
   public GlobalSearchRequestDTO() {}
 
@@ -49,5 +50,13 @@ public class GlobalSearchRequestDTO {
 
   public void setIncludePrivateEvents(Boolean includePrivateEvents) {
     this.includePrivateEvents = includePrivateEvents;
+  }
+
+  public Boolean getIncludeUsers() {
+    return this.includeUsers;
+  }
+
+  public void setIncludeUsers(Boolean includeUsers) {
+    this.includeUsers = includeUsers;
   }
 }

@@ -1,41 +1,51 @@
 <div class="search-bar d-flex align-items-center me-auto">
   <div class="search-div d-flex w-100 position-relative">
-    <p-autoComplete
-      [formControl]="searchControl"
-      [suggestions]="searchResults"
-      (completeMethod)="search($event)"
-      field="name"
-      optionLabel="name"
-      [dropdown]="false"
-      [minQueryLength]="2"
-      [showEmptyMessage]="true"
-      emptyMessage="No results found"
-      [forceSelection]="false"
-      (onSelect)="onSelect($event)"
-      placeholder="Search for events"
-      class="w-100"
-      [inputStyleClass]="'form-control search-input'"
-    >
-      <ng-template let-item pTemplate="item">
-        <div class="global-search-item-wrapper">
-          <div class="global-search-item-container">
-            <div class="image-wrapper">
-              <i [class]="item.type === 'EVENT' ? 'pi pi-calendar icon-overlay' : 'pi pi-user icon-overlay'"></i>
-              <img class="search-result-img" [src]="item.pictureURI"
-                   alt="{{ item.type === 'EVENT' ? 'Event cover picture' : 'User profile picture' }}"/>
-            </div>
-            <div class="item-text-content">
-              <div class="search-result-name">{{ item.name }}</div>
-              <div class="text-sm text-gray-500">{{ item.additionalInfo }}</div>
-              <div class="text-sm text-gray-500">{{ item.location }}</div>
+    <!-- Simple Mode: only text input -->
+    @if (searchType() === 'simple') {
+      <input
+        type="text"
+        class="form-control search-input"
+        placeholder="Search events by title, location..."
+        (input)="onSimpleSearch($event)"
+      />
+    }
+    @else {
+      <!-- Autocomplete Mode: all or events -->
+      <p-autoComplete
+        [formControl]="searchControl"
+        [suggestions]="searchResults"
+        (completeMethod)="search($event)"
+        field="name"
+        optionLabel="name"
+        [dropdown]="false"
+        [minQueryLength]="2"
+        [showEmptyMessage]="true"
+        emptyMessage="No results found"
+        [forceSelection]="false"
+        (onSelect)="onSelect($event)"
+        [placeholder]="searchType() === 'events' ? 'Search for events' : 'Search for events and users'"
+        class="w-100"
+        [inputStyleClass]="'form-control search-input'">
+        <ng-template let-item pTemplate="item">
+          <div class="global-search-item-wrapper">
+            <div class="global-search-item-container">
+              <div class="image-wrapper">
+                <i [class]="item.type === 'EVENT' ? 'pi pi-calendar icon-overlay' : 'pi pi-user icon-overlay'"></i>
+                <img class="search-result-img" [src]="item.pictureURI"
+                     [alt]="item.type === 'EVENT' ? 'Event cover picture' : 'User profile picture'"/>
+              </div>
+              <div class="item-text-content">
+                <div class="search-result-name">{{ item.name }}</div>
+                <div class="text-sm text-gray-500">{{ item.additionalInfo }}</div>
+                <div class="text-sm text-gray-500">{{ item.location }}</div>
+              </div>
             </div>
           </div>
-        </div>
-      </ng-template>
-    </p-autoComplete>
-
-    <button class="btn-search btn" type="button" (click)="triggerSearch()">
-      <img class="btn-search-img" src="images/icons/magnifying_glass_purple.png" alt="Search Button">
-    </button>
+        </ng-template>
+      </p-autoComplete>
+      <button class="btn-search btn" type="button" (click)="triggerSearch()">
+        <img class="btn-search-img" src="images/icons/magnifying_glass_purple.png" alt="Search Button">
+      </button>
+    }
   </div>
 </div>
