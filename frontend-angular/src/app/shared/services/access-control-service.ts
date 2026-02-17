@@ -17,7 +17,6 @@ export class AccessControlService {
       return false;
     }
 
-    // console.log('event admin? = ',event.eventAdmins.contains(currentUser, LambdaFunctions.compareById));
     return event.eventAdmins.contains(<User>this.getCurrentUser(), LambdaFunctions.compareById);
   }
 
@@ -28,6 +27,4 @@ export class AccessControlService {
   hasAdminAccess(): boolean {
     return this.authService.getUserRoles().some(role => [RoleEnum.ADMIN, RoleEnum.SUPERADMIN].includes(role as RoleEnum));
   }
-
-
 }
