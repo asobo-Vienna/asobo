@@ -1,7 +1,7 @@
 export class LambdaFunctions {
-  static compareById = (a: any, b: any) => a?.id === b?.id;
+  static compareById = (a: {id: string}, b: {id: string}) => a.id === b.id;
 
-  static removeById<T extends { id: any }>(items: T[], id: any): T[] {
+  static removeById<T extends { id: string }>(items: T[], id: string): T[] {
     return items.filter(item => item.id !== id);
   }
 }
