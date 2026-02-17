@@ -13,6 +13,16 @@ public class EventSpecification {
     return (root, query, cb) -> {
       List<Predicate> predicates = new ArrayList<>();
 
+      // Query filter - searches in title, description, location
+      if (filterDTO.getQuery() != null && !filterDTO.getQuery().isBlank()) {
+        String queryPattern = "%" + filterDTO.getQuery().toLowerCase() + "%";
+        predicates.add(
+            cb.or(
+                cb.like(cb.lower(root.get("title")), queryPattern),
+                cb.like(cb.lower(root.get("description")), queryPattern),
+                cb.like(cb.lower(root.get("location")), queryPattern)));
+      }
+
       if (filterDTO.getLocation() != null && !filterDTO.getLocation().isBlank()) {
         predicates.add(cb.equal(root.get("location"), filterDTO.getLocation()));
       }
