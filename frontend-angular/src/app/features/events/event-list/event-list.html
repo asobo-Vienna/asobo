@@ -9,50 +9,53 @@
   </app-global-search>
 </div>
 
-<div class="sort-container d-flex justify-content-center">
-  <div class="sort-label me-3 mt-1">Sort by</div>
-  <div class="sort-controls mb-5 d-flex gap-2">
-    <button
-      class="btn btn-sm btn-outline-secondary"
-      (click)="onSort('date')"
-      [class.active]="sortField() === 'date'">
-      Date {{ getSortIcon('date') }}
-    </button>
-
-    <button
-      class="btn btn-sm btn-outline-secondary"
-      (click)="onSort('title')"
-      [class.active]="sortField() === 'title'">
-      Title {{ getSortIcon('title') }}
-    </button>
-
-    <button
-      class="btn btn-sm btn-outline-secondary"
-      (click)="onSort('location')"
-      [class.active]="sortField() === 'location'">
-      Location {{ getSortIcon('location') }}
-    </button>
-
-    @if (authService.isLoggedIn()) {
+@if (loading()) {
+  <app-spinner size="lg" />
+} @else {
+  <div class="sort-container d-flex justify-content-center">
+    <div class="sort-label me-3 mt-1">Sort by</div>
+    <div class="sort-controls mb-5 d-flex gap-2">
       <button
         class="btn btn-sm btn-outline-secondary"
-        (click)="onSort('isPrivateEvent')"
-        [class.active]="sortField() === 'isPrivateEvent'">
-        Visibility {{ getSortIcon('isPrivateEvent') }}
+        (click)="onSort('date')"
+        [class.active]="sortField() === 'date'">
+        Date {{ getSortIcon('date') }}
       </button>
-    }
-  </div>
-</div>
 
-<ul id="event-list" class="list-unstyled">
-  @for (event of events(); track event.id) {
-    <li>
-      <app-event-card
-        [event]="event">
-      </app-event-card>
-    </li>
-  }
-  @empty {
-    <li class="text-center text-gray-500 py-4">No events found</li>
-  }
-</ul>
+      <button
+        class="btn btn-sm btn-outline-secondary"
+        (click)="onSort('title')"
+        [class.active]="sortField() === 'title'">
+        Title {{ getSortIcon('title') }}
+      </button>
+
+      <button
+        class="btn btn-sm btn-outline-secondary"
+        (click)="onSort('location')"
+        [class.active]="sortField() === 'location'">
+        Location {{ getSortIcon('location') }}
+      </button>
+
+      @if (authService.isLoggedIn()) {
+        <button
+          class="btn btn-sm btn-outline-secondary"
+          (click)="onSort('isPrivateEvent')"
+          [class.active]="sortField() === 'isPrivateEvent'">
+          Visibility {{ getSortIcon('isPrivateEvent') }}
+        </button>
+      }
+    </div>
+  </div>
+
+  <ul id="event-list" class="list-unstyled">
+    @for (event of events(); track event.id) {
+      <li>
+        <app-event-card
+          [event]="event">
+        </app-event-card>
+      </li>
+    } @empty {
+      <li class="text-center text-gray-500 py-4">No events found</li>
+    }
+  </ul>
+}

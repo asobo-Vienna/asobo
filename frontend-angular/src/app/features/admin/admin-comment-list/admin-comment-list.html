@@ -48,11 +48,6 @@
     </ng-template>
   </p-table>
   @if (loading()) {
-    <div class="loader-overlay">
-      <div class="loader-content">
-        <i class="pi pi-spin pi-spinner"></i>
-        <p>Loading comments...</p>
-      </div>
-    </div>
+    <app-spinner type="overlay" message="Loading comments..." />
   }
 </div>

@@ -1,0 +1,23 @@
+@if (type() === 'overlay') {
+  <div class="loader-overlay">
+    <div class="loader-content">
+      <i class="pi pi-spin pi-spinner"></i>
+      @if (message()) {
+        <p>{{ message() }}</p>
+      }
+    </div>
+  </div>
+} @else {
+  <div class="text-center py-5">
+    <div
+      class="spinner-border"
+      [class.spinner-sm]="size() === 'sm'"
+      [class.spinner-lg]="size() === 'lg'"
+      role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    @if (message()) {
+      <p class="text-muted mt-3">{{ message() }}</p>
+    }
+  </div>
+}

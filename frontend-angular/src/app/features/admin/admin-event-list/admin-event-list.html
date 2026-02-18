@@ -87,12 +87,7 @@
   </p-table>
 
   @if (loading()) {
-    <div class="loader-overlay">
-      <div class="loader-content">
-        <i class="pi pi-spin pi-spinner"></i>
-        <p>Loading events...</p>
-      </div>
-    </div>
+    <app-spinner type="overlay" message="Loading events..." />
   }
 </div>
 

@@ -15,6 +15,7 @@ import {Chip} from 'primeng/chip';
 import {UserRoles} from '../../../shared/entities/user-roles';
 import {LambdaFunctions} from '../../../shared/utils/lambda-functions';
 import {UserFilters} from '../../users/user-profile/models/user-filters';
+import {Spinner} from '../../../core/ui-elements/spinner/spinner';
 
 @Component({
   selector: 'app-admin-user-list',
@@ -26,6 +27,7 @@ import {UserFilters} from '../../users/user-profile/models/user-filters';
     MultiSelect,
     FormsModule,
     Chip,
+    Spinner,
   ],
   templateUrl: './admin-user-list.html',
   styleUrl: './admin-user-list.scss',

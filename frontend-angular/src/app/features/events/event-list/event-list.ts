@@ -12,12 +12,14 @@ import {EventFilters} from '../models/event-filters';
 import {GlobalSearch} from '../../search/global-search/global-search';
 import {debounceTime, Subject} from 'rxjs';
 import {environment} from '../../../../environments/environment';
+import {Spinner} from '../../../core/ui-elements/spinner/spinner';
 
 @Component({
   selector: 'app-event-list',
   imports: [
     EventCard,
     GlobalSearch,
+    Spinner,
   ],
   templateUrl: './event-list.html',
   styleUrl: './event-list.scss'
@@ -31,6 +33,7 @@ export class EventList implements OnInit {
   private fetchedEvents = signal<List<EventSummary>>(new List<EventSummary>());
   eventFilters = signal<EventFilters>({});
   searchQuery = signal<string>('');
+  loading = signal<boolean>(true);
 
   // default sort order: ascending by date
   sortField = signal<SortField>('date');
@@ -154,8 +157,12 @@ export class EventList implements OnInit {
       next: (events) => {
         console.log('Events fetched:', events);
         this.fetchedEvents.set(new List<EventSummary>(events.content));
+        this.loading.set(false);
       },
-      error: (err) => console.error('Error fetching events:', err)
+      error: (err) => {
+        console.error('Error fetching events:', err);
+        this.loading.set(false);
+      }
     });
   }
 

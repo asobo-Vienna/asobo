@@ -7,14 +7,16 @@ import {AdminService} from '../services/admin-service';
 import { RouterLink } from '@angular/router';
 import {MediaItemWithEventTitle} from '../../events/models/media-item-with-event-title';
 import {MediumFilters} from '../../events/models/medium-filters';
+import {Spinner} from '../../../core/ui-elements/spinner/spinner';
 
 @Component({
   selector: 'app-admin-media-list',
-    imports: [
-        PrimeTemplate,
-        TableModule,
-        RouterLink
-    ],
+  imports: [
+    PrimeTemplate,
+    TableModule,
+    RouterLink,
+    Spinner
+  ],
   templateUrl: './admin-media-list.html',
   styleUrl: './admin-media-list.scss',
 })

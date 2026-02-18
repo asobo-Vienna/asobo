@@ -10,6 +10,7 @@ import {Tag} from 'primeng/tag';
 import {Dialog} from 'primeng/dialog';
 import {Button} from 'primeng/button';
 import {EventSummary} from '../../events/models/event-summary';
+import {Spinner} from '../../../core/ui-elements/spinner/spinner';
 
 @Component({
   selector: 'app-admin-event-list',
@@ -19,7 +20,8 @@ import {EventSummary} from '../../events/models/event-summary';
     DatePipe,
     Tag,
     Dialog,
-    Button
+    Button,
+    Spinner
   ],
   templateUrl: './admin-event-list.html',
   styleUrl: './admin-event-list.scss',
