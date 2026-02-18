@@ -9,6 +9,7 @@ export interface User {
   aboutMe: string;
   registerDate: Date;
   isActive: boolean;
+  isDeleted?: boolean;
   pictureURI: string;
   location: string;
   country: string;

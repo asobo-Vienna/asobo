@@ -256,11 +256,7 @@ export class AdminUserList implements OnInit {
   onDelete(user: User) {
     console.log('Deleting user:', user);
     this.adminService.deleteUserById(user.id).subscribe({
-      next: () => {
-        this.users.update(currentUsers =>
-          LambdaFunctions.removeById(currentUsers, user.id)
-        );
-      },
+      next: () => console.log('Deleting user:', user),
       error: (err) => console.log('Error deleting user:', err),
     });
 
@@ -269,4 +265,10 @@ export class AdminUserList implements OnInit {
 
   protected readonly UrlUtilService = UrlUtilService;
   protected readonly environment = environment;
+
+  onReactivate(user: any) {
+    // TODO
+    // this.adminService.reactivateUser();
+    console.log('Reactivating user:', user);
+  }
 }
