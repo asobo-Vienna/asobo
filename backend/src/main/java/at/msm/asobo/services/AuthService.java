@@ -101,6 +101,7 @@ public class AuthService {
     String token = this.jwtUtil.generateToken(userPrincipal, expirationTime);
 
     User user = this.userService.getUserById(userPrincipal.getUserId());
+
     UserPublicDTO userPublicDTO = this.userDTOUserMapper.mapUserToUserPublicDTO(user);
 
     return new LoginResponseDTO(token, userPublicDTO);

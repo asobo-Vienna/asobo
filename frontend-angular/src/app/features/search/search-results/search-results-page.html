@@ -1,0 +1,78 @@
+<div class="container mt-4">
+  <h1 class="text-primary component mb-4">
+    Search Results
+    @if (searchQuery()) {
+      <div class="text-muted fs-4 mt-3"> for "<span class="search-term">{{ searchQuery() }}</span>"</div>
+    }
+  </h1>
+
+  @if (loading()) {
+    <app-spinner size="lg" />
+  } @else {
+
+    <!-- Events Section -->
+    @if (events().length > 0) {
+      <section class="mb-5">
+        <h2 class="h4 mb-3">
+          <i class="pi pi-calendar me-2"></i>Events ({{ events().length }})
+        </h2>
+        <ul id="event-list" class="list-unstyled">
+          @for (event of events(); track event.id) {
+            <li>
+              <app-event-card [event]="event"></app-event-card>
+            </li>
+          }
+        </ul>
+      </section>
+    }
+
+    <!-- Users Section -->
+    @if (users().length > 0) {
+      <section class="mb-5">
+        <h2 class="h4 mb-3">
+          <i class="pi pi-users me-2"></i>Users ({{ users().length }})
+        </h2>
+        <div class="row">
+          @for (user of users(); track user.id) {
+            <div class="col-md-6 col-lg-4 mb-3">
+              <div class="card user-card">
+                <div class="card-body d-flex align-items-center gap-3">
+                  <img
+                    [src]="user.pictureURI"
+                    [alt]="user.username"
+                    class="rounded-circle"
+                  />
+                  <div class="flex-grow-1">
+                    <h5 class="card-title mb-1">{{ user.username }}</h5>
+                    @if (user.fullName) {
+                      <p class="card-text text-muted small mb-0">{{ user.fullName }}</p>
+                    }
+                    @if (user.location) {
+                      <p class="card-text text-muted small mb-0">
+                        <i class="pi pi-map-marker me-1"></i>{{ user.location }}
+                      </p>
+                    }
+                  </div>
+                  <a
+                    [routerLink]="getUserLink(user.username)"
+                    class="btn btn-purple btn-primary btn-sm"
+                  >
+                    Profile
+                  </a>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      </section>
+    }
+
+    <!-- No Results -->
+    @if (events().length === 0 && users().length === 0 && searchQuery()) {
+      <div class="text-center py-5">
+        <i class="pi pi-search" style="font-size: 3rem; color: #ccc;"></i>
+        <p class="text-muted mt-3">No results found for "{{ searchQuery() }}"</p>
+      </div>
+    }
+  }
+</div>
