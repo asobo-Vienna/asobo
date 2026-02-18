@@ -79,7 +79,13 @@ public class User implements PictureEntity {
 
   @ValidCountryCode private String country;
 
-  private boolean isActive = true;
+  @Column(columnDefinition = "boolean default true")
+  private boolean isActive;
+
+  @Column(columnDefinition = "boolean default false")
+  private boolean isDeleted;
+
+  private Instant deletionDate;
 
   @NotBlank(message = "Salutation is mandatory")
   private String salutation;
@@ -267,6 +273,25 @@ public class User implements PictureEntity {
 
   public void setMedia(List<Medium> media) {
     this.media = media;
+  }
+
+  public boolean getIsDeleted() {
+    return this.isDeleted;
+  }
+
+  public void setIsDeleted(boolean isDeleted) {
+    this.isDeleted = isDeleted;
+    if (this.isDeleted) {
+      this.deletionDate = Instant.now();
+    }
+  }
+
+  public Instant getDeletionDate() {
+    return this.deletionDate;
+  }
+
+  public void setDeletionDate(Instant deletionDate) {
+    this.deletionDate = deletionDate;
   }
 
   @Override

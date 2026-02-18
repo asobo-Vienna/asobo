@@ -13,6 +13,7 @@ public class UserAdminSummaryDTO {
   private Instant registerDate;
   private Instant modificationDate;
   private boolean isActive;
+  private boolean isDeleted;
   private String pictureURI;
   private String location;
   private String country;
@@ -141,5 +142,13 @@ public class UserAdminSummaryDTO {
 
   public void setCommentsCount(int commentsCount) {
     this.commentsCount = commentsCount;
+  }
+
+  public boolean getIsDeleted() {
+    return this.isDeleted;
+  }
+
+  public void setIsDeleted(boolean isDeleted) {
+    this.isDeleted = isDeleted;
   }
 }

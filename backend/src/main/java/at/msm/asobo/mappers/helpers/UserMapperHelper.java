@@ -17,7 +17,7 @@ public class UserMapperHelper {
 
   @Named("uuidToUser")
   public User fromId(UUID id) {
-    return userService.getUserById(id);
+    return userService.getUserByIdIncludeDeleted(id);
   }
 
   @Named("userToUuid")

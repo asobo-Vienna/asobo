@@ -24,7 +24,7 @@ public class CustomUserDetailsService implements UserDetailsService {
   public UserDetails loadUserByUsername(String identifier) throws UsernameNotFoundException {
     User user =
         this.userRepository
-            .findByUsername(identifier)
+            .findByUsernameAndIsDeletedFalse(identifier)
             .orElseGet(
                 () ->
                     userRepository
@@ -46,7 +46,7 @@ public class CustomUserDetailsService implements UserDetailsService {
   public UserDetails loadUserById(UUID userId) throws UserNotFoundException {
     User user =
         this.userRepository
-            .findUserById(userId)
+            .findUserByIdAndIsDeletedFalse(userId)
             .orElseThrow(() -> new UserNotFoundException("User with id " + userId + " not found"));
 
     return new UserPrincipal(

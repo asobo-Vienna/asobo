@@ -1,7 +1,9 @@
 package at.msm.asobo.services;
 
 import at.msm.asobo.dto.auth.LoginResponseDTO;
-import at.msm.asobo.dto.user.*;
+import at.msm.asobo.dto.user.UserDTO;
+import at.msm.asobo.dto.user.UserPublicDTO;
+import at.msm.asobo.dto.user.UserUpdateDTO;
 import at.msm.asobo.entities.User;
 import at.msm.asobo.exceptions.users.UserNotFoundException;
 import at.msm.asobo.mappers.UserDTOUserMapper;
@@ -44,22 +46,35 @@ public class UserService {
   }
 
   public User getUserById(UUID id) {
+    return this.userRepository
+        .findUserByIdAndIsDeletedFalse(id)
+        .orElseThrow(() -> new UserNotFoundException(id));
+  }
+
+  public User getUserByIdIncludeDeleted(UUID id) {
     return this.userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
   }
 
   public Set<User> getUsersByIds(Set<UUID> ids) {
+    return this.userRepository.findAllByIdInAndIsDeletedFalse(ids);
+  }
+
+  public Set<User> getUsersByIdsIncludeDeleted(Set<UUID> ids) {
     return this.userRepository.findAllByIdIn(ids);
   }
 
   public UserPublicDTO getUserDTOById(UUID id) {
-    User user = this.userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
+    User user =
+        this.userRepository
+            .findUserByIdAndIsDeletedFalse(id)
+            .orElseThrow(() -> new UserNotFoundException(id));
     return this.userDTOUserMapper.mapUserToUserPublicDTO(user);
   }
 
   public UserPublicDTO getUserByUsername(String username) {
     User user =
         this.userRepository
-            .findByUsername(username)
+            .findByUsernameAndIsDeletedFalse(username)
             .orElseThrow(() -> new UserNotFoundException("User not found"));
     return this.userDTOUserMapper.mapUserToUserPublicDTO(user);
   }
@@ -125,13 +140,30 @@ public class UserService {
 
     this.accessControlService.assertCanUpdateOrDeleteUser(userToDeleteId, loggedInUser);
 
-    if (userToDelete.getPictureURI() != null) {
-      this.fileStorageService.delete(userToDelete.getPictureURI());
-    }
+    userToDelete.setIsDeleted(true);
+    userToDelete.setIsActive(false);
 
-    this.userRepository.delete(userToDelete);
+    this.userRepository.save(userToDelete);
+
+    //        if (userToDelete.getPictureURI() != null) {
+    //            this.fileStorageService.delete(userToDelete.getPictureURI());
+    //        }
 
     return this.userDTOUserMapper.mapUserToUserPublicDTO(userToDelete);
+  }
+
+  public UserPublicDTO reactivateUserById(UUID userToReactivateId, UserPrincipal userPrincipal) {
+    User loggedInUser = this.getUserById(userPrincipal.getUserId());
+    User userToReactivate = this.getUserByIdIncludeDeleted(userToReactivateId);
+
+    this.accessControlService.assertCanUpdateOrDeleteUser(userToReactivateId, loggedInUser);
+
+    userToReactivate.setIsDeleted(false);
+    userToReactivate.setIsActive(true);
+
+    this.userRepository.save(userToReactivate);
+
+    return this.userDTOUserMapper.mapUserToUserPublicDTO(userToReactivate);
   }
 
   public boolean isUsernameAlreadyTaken(String username) {

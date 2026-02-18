@@ -62,10 +62,14 @@ export class AdminService {
         .set('page', page.toString())
         .set('size', size.toString());
 
-    return this.http.get<PageResponse<MediaItemWithEventTitle>>(`${environment.apiBaseUrl}/admin/media`, { params});
+    return this.http.get<PageResponse<MediaItemWithEventTitle>>(`${environment.apiBaseUrl}/admin/media`, { params });
   }
 
   public deleteUserById(userId: string): Observable<User> {
     return this.http.delete<User>(`${environment.apiBaseUrl}/users/${userId}`);
+  }
+
+  public reactivateUserById(userId: string): Observable<User> {
+    return this.http.post<User>(`${environment.apiBaseUrl}/users/${userId}`, {});
   }
 }

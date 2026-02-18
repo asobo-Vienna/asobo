@@ -86,12 +86,19 @@
           </div>
         </td>
 
-        <td>
-          <i class="pi pi-user-edit clickable" title="Edit" (click)="onEdit(user)" aria-label="Edit user"></i>
-        </td>
-        <td>
-          <i class="pi pi-trash clickable" title="Delete" (click)="onDelete(user)" aria-label="Delete user"></i>
-        </td>
+        @if (!user.isDeleted) {
+          <td>
+            <i class="pi pi-user-edit clickable" title="Edit" (click)="onEdit(user)" aria-label="Edit user"></i>
+          </td>
+          <td>
+            <i class="pi pi-trash clickable" title="Delete" (click)="onDelete(user)" aria-label="Delete user"></i>
+          </td>
+        } @else {
+          <td><!-- spacer --></td>
+          <td>
+            <i class="pi pi-power-off clickable" title="Reactivate" (click)="onReactivate(user)" aria-label="Reactivate user"></i>
+          </td>
+        }
       </tr>
     </ng-template>
   </p-table>

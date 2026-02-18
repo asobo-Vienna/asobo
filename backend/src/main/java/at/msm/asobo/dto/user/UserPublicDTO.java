@@ -24,6 +24,8 @@ public class UserPublicDTO {
 
   private boolean isActive;
 
+  private boolean isDeleted;
+
   private String pictureURI;
 
   private String location;
@@ -136,6 +138,14 @@ public class UserPublicDTO {
 
   public void setModificationDate(Instant modificationDate) {
     this.modificationDate = modificationDate;
+  }
+
+  public boolean getIsDeleted() {
+    return this.isDeleted;
+  }
+
+  public void setIsDeleted(boolean isDeleted) {
+    this.isDeleted = isDeleted;
   }
 
   @Override
