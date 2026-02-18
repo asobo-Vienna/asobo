@@ -30,7 +30,7 @@
           <div id="event-date" class="date-font-color ms-1 flex-shrink-0">
             {{ event()?.date | date : 'EEE, MMMM d, y' }}
             <div id="event-time" class="date-font-color ms-1 small event-time">
-              {{ event()?.time | date : 'h:mm a' }}
+              {{ event()?.date | date : 'h:mm a' }}
             </div>
           </div>
         </div>
