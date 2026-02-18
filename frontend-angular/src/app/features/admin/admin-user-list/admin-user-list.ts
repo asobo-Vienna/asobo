@@ -16,6 +16,7 @@ import {UserRoles} from '../../../shared/entities/user-roles';
 import {LambdaFunctions} from '../../../shared/utils/lambda-functions';
 import {UserFilters} from '../../users/user-profile/models/user-filters';
 import {Spinner} from '../../../core/ui-elements/spinner/spinner';
+import {Observable} from 'rxjs';
 
 @Component({
   selector: 'app-admin-user-list',
@@ -34,6 +35,9 @@ import {Spinner} from '../../../core/ui-elements/spinner/spinner';
 })
 export class AdminUserList implements OnInit {
   private adminService = inject(AdminService);
+
+  protected readonly UrlUtilService = UrlUtilService;
+  protected readonly environment = environment;
 
   // Role hierarchy definition
   private readonly ROLE_HIERARCHY: { [key in RoleEnum]?: RoleEnum[] } = {
@@ -253,22 +257,33 @@ export class AdminUserList implements OnInit {
     this.clearCache();
   }
 
-  onDelete(user: User) {
-    console.log('Deleting user:', user);
+  onDelete(user: User): void {
     this.adminService.deleteUserById(user.id).subscribe({
-      next: () => console.log('Deleting user:', user),
+      next: (deletedUser: User) => {
+        this.users.update(users =>
+          users.map(u =>
+            u.id === deletedUser.id ? { ...u, isDeleted: deletedUser.isDeleted, isActive: deletedUser.isActive } : u
+          )
+        );
+      },
       error: (err) => console.log('Error deleting user:', err),
     });
 
     this.clearCache();
   }
 
-  protected readonly UrlUtilService = UrlUtilService;
-  protected readonly environment = environment;
+  onReactivate(user: User): void {
+    this.adminService.reactivateUserById(user.id).subscribe({
+      next: (reactivatedUser: User) => {
+        this.users.update(users =>
+          users.map(u =>
+            u.id === reactivatedUser.id ? { ...u, isDeleted: reactivatedUser.isDeleted, isActive: reactivatedUser.isActive } : u
+          )
+        );
+      },
+      error: (err) => console.log('Error reactivating user:', err),
+    });
 
-  onReactivate(user: any) {
-    // TODO
-    // this.adminService.reactivateUser();
-    console.log('Reactivating user:', user);
+    this.clearCache();
   }
 }

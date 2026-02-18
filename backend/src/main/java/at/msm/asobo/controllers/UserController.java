@@ -71,6 +71,13 @@ public class UserController {
     return this.userService.deleteUserById(userId, loggedInUser);
   }
 
+  @PreAuthorize("hasAnyRole('ADMIN', 'SUPERADMIN', 'USER')")
+  @PostMapping("/{userId}")
+  public UserPublicDTO reactivateUser(
+      @PathVariable UUID userId, @AuthenticationPrincipal UserPrincipal loggedInUser) {
+    return this.userService.reactivateUserById(userId, loggedInUser);
+  }
+
   @GetMapping("/countries")
   public List<String> getAllCountryCodes() {
     return Arrays.asList(Locale.getISOCountries());

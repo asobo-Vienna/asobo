@@ -141,6 +141,8 @@ public class UserService {
     this.accessControlService.assertCanUpdateOrDeleteUser(userToDeleteId, loggedInUser);
 
     userToDelete.setIsDeleted(true);
+    userToDelete.setIsActive(false);
+
     this.userRepository.save(userToDelete);
 
     //        if (userToDelete.getPictureURI() != null) {
@@ -148,6 +150,20 @@ public class UserService {
     //        }
 
     return this.userDTOUserMapper.mapUserToUserPublicDTO(userToDelete);
+  }
+
+  public UserPublicDTO reactivateUserById(UUID userToReactivateId, UserPrincipal userPrincipal) {
+    User loggedInUser = this.getUserById(userPrincipal.getUserId());
+    User userToReactivate = this.getUserByIdIncludeDeleted(userToReactivateId);
+
+    this.accessControlService.assertCanUpdateOrDeleteUser(userToReactivateId, loggedInUser);
+
+    userToReactivate.setIsDeleted(false);
+    userToReactivate.setIsActive(true);
+
+    this.userRepository.save(userToReactivate);
+
+    return this.userDTOUserMapper.mapUserToUserPublicDTO(userToReactivate);
   }
 
   public boolean isUsernameAlreadyTaken(String username) {
