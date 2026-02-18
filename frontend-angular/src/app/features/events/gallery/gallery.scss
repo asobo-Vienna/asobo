@@ -3,13 +3,15 @@
 .media-thumbnail-container {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5vw;
+  gap: 0.8vw;
   // flex-direction: row;
 }
 
 .single-media-container {
   width: 7vw;
   height: 7vw;
+  position: relative;
+  display: inline-block;
 }
 
 .single-media-container img {
@@ -40,12 +42,14 @@
 }
 
 .delete-media-button {
-  color: $asobo-purple;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 0.3rem auto 0 auto;
-  background: rgba(255, 255, 255, 0.9);
+  font-size: clamp(0.8rem, 1.5vw, 1.5rem);
+  position: absolute;
+  top: -0.5vw;
+  right: -0.5vw;
+  color: deeppink;
+  background-color: white;
+  border-radius: 50%;
+  z-index: 2;
 }
 
 .carousel-overlay {
