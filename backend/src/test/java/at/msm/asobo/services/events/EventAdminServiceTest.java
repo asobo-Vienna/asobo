@@ -237,7 +237,6 @@ class EventAdminServiceTest {
 
     when(eventRepository.findById(event.getId())).thenReturn(Optional.of(event));
     when(userService.getUserById(userJohn.getId())).thenReturn(userJohn);
-    when(userService.getUsersByIds(userIdsToAdd)).thenReturn(usersToAdd);
     when(accessControlService.hasAdminRole(userJohn)).thenReturn(false);
 
     assertThrows(
@@ -248,7 +247,6 @@ class EventAdminServiceTest {
 
     verify(eventRepository).findById(event.getId());
     verify(userService).getUserById(userJohn.getId());
-    verify(userService).getUsersByIds(userIdsToAdd);
     verify(accessControlService).hasAdminRole(userJohn);
     verify(eventRepository, never()).save(any());
     verify(eventDTOEventMapper, never()).mapEventToEventDTO(any());
