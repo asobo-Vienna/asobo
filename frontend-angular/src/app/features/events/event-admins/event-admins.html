@@ -1,6 +1,6 @@
 <div class="fw-bold">Event Admins</div>
 <p-multiselect
-    [options]="users()"
+    [options]="selectableUsers()"
     optionLabel="username"
     placeholder="Add/Remove Event Admins"
     [fluid]="true"
@@ -18,7 +18,7 @@
       @for (user of selectedItems; track user.id) {
         <p-chip
           [label]="user.username"
-          [removable]="!isUserEventCreator(user.id)"
+          [removable]="!isProtectedFromRemoval(user.id)"
           (onRemove)="handleChipRemove(user)">
         </p-chip>
       }

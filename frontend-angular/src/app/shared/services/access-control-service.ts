@@ -21,7 +21,6 @@ export class AccessControlService {
   }
 
   public getCurrentUser() {
-    console.log('current user: ', this.authService.currentUser());
     return this.authService.currentUser();
   }
 
