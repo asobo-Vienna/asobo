@@ -90,7 +90,7 @@ export class EventDetailPage implements OnInit {
 
 
   private populateEvent(event: Event): void {
-    this.event.set(this.eventService.convertEventAdminsToList(event));
+    this.event.set(event);
 
     if (this.authService.isLoggedIn()) {
 
@@ -209,7 +209,7 @@ export class EventDetailPage implements OnInit {
 
 
   public onEventUpdated(updatedEvent: Event) {
-    this.event.set(this.eventService.convertEventAdminsToList(updatedEvent));
+    this.event.set(updatedEvent);
   }
 }
 
