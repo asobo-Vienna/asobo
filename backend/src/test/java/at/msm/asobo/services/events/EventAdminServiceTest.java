@@ -145,7 +145,7 @@ class EventAdminServiceTest {
   }
 
   @Test
-  void addAdminsToEvent_userIsEventCreator_addsAdmins() {
+  void setAdminsToEvent_userIsEventCreator_addsAdmins() {
     User loggedInUser = creator; // User is the creator
 
     Set<UUID> userIdsToAdd = Set.of(userJohn.getId());
@@ -170,7 +170,7 @@ class EventAdminServiceTest {
   }
 
   @Test
-  void addAdminsToEvent_userIsAdmin_addsAdmins() {
+  void setAdminsToEvent_userIsAdmin_addsAdmins() {
     Set<UUID> userIdsToAdd = Set.of(userJohn.getId(), userJane.getId());
     Set<User> usersToAdd = Set.of(userJohn, userJane);
 
@@ -200,7 +200,7 @@ class EventAdminServiceTest {
   }
 
   @Test
-  void addAdminsToEvent_userIsEventAdmin_addsAdmins() {
+  void setAdminsToEvent_userIsEventAdmin_addsAdmins() {
     event.getEventAdmins().add(userJohn); // makes sure that userJohn is an event admin
 
     Set<UUID> userIdsToAdd = Set.of(userJane.getId());

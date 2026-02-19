@@ -1,15 +1,13 @@
 package at.msm.asobo.controllers;
 
 import at.msm.asobo.dto.auth.LoginResponseDTO;
+import at.msm.asobo.dto.user.UserBasicDTO;
 import at.msm.asobo.dto.user.UserPublicDTO;
 import at.msm.asobo.dto.user.UserUpdateDTO;
 import at.msm.asobo.security.UserPrincipal;
 import at.msm.asobo.services.UserService;
 import jakarta.validation.Valid;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
-import java.util.UUID;
+import java.util.*;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -24,6 +22,12 @@ public class UserController {
 
   public UserController(UserService userService) {
     this.userService = userService;
+  }
+
+  @GetMapping()
+  @PreAuthorize("hasAnyRole('ADMIN', 'SUPERADMIN', 'USER')")
+  public Set<UserBasicDTO> getAllUsersBasic() {
+    return this.userService.getAllUsersBasic();
   }
 
   // we need "/id/ before the actual id, because otherwise

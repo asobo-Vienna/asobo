@@ -4,6 +4,7 @@ import at.msm.asobo.dto.event.EventDTO;
 import at.msm.asobo.dto.user.UserPublicDTO;
 import at.msm.asobo.entities.Event;
 import at.msm.asobo.entities.User;
+import at.msm.asobo.exceptions.events.EventAdminException;
 import at.msm.asobo.exceptions.events.EventNotFoundException;
 import at.msm.asobo.exceptions.users.UserNotAuthorizedException;
 import at.msm.asobo.mappers.EventDTOEventMapper;
@@ -47,12 +48,13 @@ public class EventAdminService {
       UUID eventId, Set<UUID> userIds, UserPrincipal loggedInUserPrincipal) {
     Event event = this.getEventById(eventId);
     User loggedInUser = this.userService.getUserById(loggedInUserPrincipal.getUserId());
-    Set<User> usersToAdd = this.userService.getUsersByIds(userIds);
 
     if (!this.canManageEvent(event, loggedInUser)) {
       throw new UserNotAuthorizedException(
           "You are not authorized to add event admins to this event");
     }
+
+    Set<User> usersToAdd = this.userService.getUsersByIds(userIds);
 
     event.getEventAdmins().addAll(usersToAdd);
     Event savedEvent = this.eventRepository.save(event);
@@ -69,6 +71,14 @@ public class EventAdminService {
     if (!this.canManageEvent(event, loggedInUser)) {
       throw new UserNotAuthorizedException(
           "You are not authorized to remove event admins from this event");
+    }
+
+    if (usersToRemove.contains(event.getCreator())) {
+      throw new EventAdminException("The event creator cannot be removed from event admins");
+    }
+
+    if (usersToRemove.contains(loggedInUser)) {
+      throw new EventAdminException("You cannot remove yourself from event admins");
     }
 
     event.getEventAdmins().removeAll(usersToRemove);

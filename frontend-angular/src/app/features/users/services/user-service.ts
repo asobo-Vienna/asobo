@@ -4,6 +4,8 @@ import {environment} from '../../../../environments/environment';
 import {Observable, take, tap, throwError} from 'rxjs';
 import {LoginResponse} from '../../auth/models/login-response';
 import {AuthService} from '../../auth/services/auth-service';
+import {Role} from '../../../shared/entities/role';
+import {UserBasic} from '../../../shared/entities/user-basic';
 
 @Injectable({
   providedIn: 'root'
@@ -11,6 +13,11 @@ import {AuthService} from '../../auth/services/auth-service';
 export class UserService {
   private http = inject(HttpClient);
   private authService = inject(AuthService);
+
+
+  public getAllUsersBasic(): Observable<UserBasic[]> {
+    return this.http.get<UserBasic[]>(`${environment.usersEndpoint}`);
+  }
 
   updateProfilePicture(formData: FormData) : Observable<LoginResponse> {
     const userId = this.authService.currentUser()?.id;

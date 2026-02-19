@@ -13,10 +13,9 @@ import {Role} from '../../../shared/entities/role';
 import {RoleEnum} from '../../../shared/enums/role-enum';
 import {Chip} from 'primeng/chip';
 import {UserRoles} from '../../../shared/entities/user-roles';
-import {LambdaFunctions} from '../../../shared/utils/lambda-functions';
 import {UserFilters} from '../../users/user-profile/models/user-filters';
 import {Spinner} from '../../../core/ui-elements/spinner/spinner';
-import {Observable} from 'rxjs';
+
 
 @Component({
   selector: 'app-admin-user-list',

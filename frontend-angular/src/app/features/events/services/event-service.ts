@@ -99,6 +99,21 @@ export class EventService {
     return this.http.delete<Event>(`${environment.eventsEndpoint}/${eventId}`);
   }
 
+  public addEventAdmins(eventId: string, eventAdmins: User[]): Observable<Event> {
+    const userIds = eventAdmins.map(u => u.id);
+    return this.http.patch<Event>(
+      `${environment.eventsEndpoint}/${eventId}/admins`,
+      userIds
+    );
+  }
+
+  public removeEventAdmins(eventId: string, eventAdmins: User[]): Observable<Event> {
+    const userIds = eventAdmins.map(u => u.id);
+    return this.http.delete<Event>(`${environment.eventsEndpoint}/${eventId}/admins`, {
+      body: userIds
+    });
+  }
+
   public convertEventAdminsToList(event: Event): Event {
     return {
       ...event,

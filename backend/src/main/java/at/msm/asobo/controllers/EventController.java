@@ -162,23 +162,4 @@ public class EventController {
       @PathVariable UUID id, @AuthenticationPrincipal UserPrincipal loggedInUser) {
     return this.eventService.deleteEventById(id, loggedInUser);
   }
-
-  @PatchMapping("/{eventId}/admins")
-  @PreAuthorize("hasAnyRole('USER','ADMIN','SUPERADMIN')")
-  @ResponseStatus(HttpStatus.CREATED)
-  public EventDTO addEventAdmin(
-      @PathVariable UUID eventId,
-      @RequestBody Set<UUID> userIds,
-      @AuthenticationPrincipal UserPrincipal loggedInUser) {
-    return eventAdminService.addAdminsToEvent(eventId, userIds, loggedInUser);
-  }
-
-  @DeleteMapping("/{eventId}/admins")
-  @PreAuthorize("hasAnyRole('USER','ADMIN','SUPERADMIN')")
-  public EventDTO removeEventAdmin(
-      @PathVariable UUID eventId,
-      @RequestBody Set<UUID> userIds,
-      @AuthenticationPrincipal UserPrincipal loggedInUser) {
-    return eventAdminService.removeAdminsFromEvent(eventId, userIds, loggedInUser);
-  }
 }
