@@ -7,6 +7,7 @@ import {PageResponse} from '../../../shared/entities/page-response';
 import {EventSummary} from '../models/event-summary';
 import {EventFilters} from '../models/event-filters';
 import {User} from '../../auth/models/user';
+import {UserBasic} from '../../../shared/entities/user-basic';
 
 @Injectable({
   providedIn: 'root'
@@ -94,17 +95,17 @@ export class EventService {
     return this.http.delete<Event>(`${environment.eventsEndpoint}/${eventId}`);
   }
 
-  public addEventAdmins(eventId: string, eventAdmins: User[]): Observable<Event> {
+  public addEventAdmins(eventId: string, eventAdmins: User[]): Observable<UserBasic[]> {
     const userIds = eventAdmins.map(u => u.id);
-    return this.http.patch<Event>(
+    return this.http.patch<UserBasic[]>(
       `${environment.eventsEndpoint}/${eventId}/admins`,
       userIds
     );
   }
 
-  public removeEventAdmins(eventId: string, eventAdmins: User[]): Observable<Event> {
+  public removeEventAdmins(eventId: string, eventAdmins: User[]): Observable<UserBasic[]> {
     const userIds = eventAdmins.map(u => u.id);
-    return this.http.delete<Event>(`${environment.eventsEndpoint}/${eventId}/admins`, {
+    return this.http.delete<UserBasic[]>(`${environment.eventsEndpoint}/${eventId}/admins`, {
       body: userIds
     });
   }
