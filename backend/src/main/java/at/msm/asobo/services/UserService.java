@@ -1,6 +1,7 @@
 package at.msm.asobo.services;
 
 import at.msm.asobo.dto.auth.LoginResponseDTO;
+import at.msm.asobo.dto.user.UserBasicDTO;
 import at.msm.asobo.dto.user.UserDTO;
 import at.msm.asobo.dto.user.UserPublicDTO;
 import at.msm.asobo.dto.user.UserUpdateDTO;
@@ -43,6 +44,11 @@ public class UserService {
     this.passwordService = passwordService;
     this.jwtUtil = jwtUtil;
     this.accessControlService = accessControlService;
+  }
+
+  public Set<UserBasicDTO> getAllUsersBasic() {
+    return this.userDTOUserMapper.mapUsersToUserBasicDTOs(
+        this.userRepository.findAllByIsDeletedFalse());
   }
 
   public User getUserById(UUID id) {

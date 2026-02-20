@@ -1,0 +1,9 @@
+:host ::ng-deep .p-multiselect-label {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+:host ::ng-deep .p-multiselect {
+  height: auto;
+}
+

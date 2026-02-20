@@ -1,4 +1,4 @@
-import {Component, inject, OnInit, signal} from '@angular/core';
+import {Component, computed, inject, OnInit, signal} from '@angular/core';
 import {EventService} from '../services/event-service';
 import {Event} from '../models/event';
 import {ActivatedRoute} from '@angular/router';
@@ -27,6 +27,8 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 import {EventBasicInfo} from './event-basic-info/event-basic-info';
+import {EventAdmins} from '../event-admins/event-admins';
+import {AccessControlService} from '../../../shared/services/access-control-service';
 
 @Component({
   selector: 'app-event-detail-page',
@@ -39,6 +41,7 @@ import {EventBasicInfo} from './event-basic-info/event-basic-info';
     FormsModule,
     ReactiveFormsModule,
     EventBasicInfo,
+    EventAdmins,
   ],
   templateUrl: './event-detail-page.html',
   styleUrl: './event-detail-page.scss'
@@ -48,17 +51,23 @@ export class EventDetailPage implements OnInit {
   private eventService = inject(EventService);
   private commentService = inject(CommentService);
   private mediaService = inject(MediaService);
-  authService = inject(AuthService);
   participantService = inject(ParticipantService);
+  authService = inject(AuthService);
+  accessControlService = inject(AccessControlService);
 
   event = signal<Event | null>(null);
   comments = signal<List<Comment>>(new List<Comment>());
   participants = signal<List<Participant>>(new List<Participant>());
   mediaItems = signal<List<MediaItem>>(new List<MediaItem>());
 
+  currentUser: User | null = this.authService.currentUser();
   isUserAlreadyPartOfEvent = signal(false);
 
-  currentUser: User | null = this.authService.currentUser();
+  isCurrentUserAdmin = computed(() =>
+    this.accessControlService.hasAdminAccess());
+  isCurrentUserEventAdmin = computed(() =>
+    this.accessControlService.isCurrentUserEventAdmin(this.event())
+  );
 
   protected readonly UrlUtilService = UrlUtilService;
   protected readonly environment = environment;
@@ -82,7 +91,7 @@ export class EventDetailPage implements OnInit {
 
 
   private populateEvent(event: Event): void {
-    this.event.set(this.eventService.convertEventAdminsToList(event));
+    this.event.set(event);
 
     if (this.authService.isLoggedIn()) {
 
@@ -201,7 +210,7 @@ export class EventDetailPage implements OnInit {
 
 
   public onEventUpdated(updatedEvent: Event) {
-    this.event.set(this.eventService.convertEventAdminsToList(updatedEvent));
+    this.event.set(updatedEvent);
   }
 }
 

@@ -1,13 +1,13 @@
 import {inject, Injectable} from '@angular/core';
 import {environment} from '../../../../environments/environment';
 import {HttpClient, HttpParams} from '@angular/common/http';
-import {map, Observable} from 'rxjs';
+import {Observable} from 'rxjs';
 import {Event} from '../models/event'
 import {PageResponse} from '../../../shared/entities/page-response';
 import {EventSummary} from '../models/event-summary';
 import {EventFilters} from '../models/event-filters';
-import {List} from '../../../core/data-structures/lists/list';
 import {User} from '../../auth/models/user';
+import {UserBasic} from '../../../shared/entities/user-basic';
 
 @Injectable({
   providedIn: 'root'
@@ -76,9 +76,7 @@ export class EventService {
   }
 
   public getEventById(id: string): Observable<Event> {
-    return this.http.get<Event>(`${environment.eventsEndpoint}/${id}`)
-      .pipe(map(event => this.convertEventAdminsToList(event))
-    );
+    return this.http.get<Event>(`${environment.eventsEndpoint}/${id}`);
   }
 
   public createNewEvent(eventData: Partial<Event>): Observable<Event> {
@@ -90,19 +88,25 @@ export class EventService {
   }
 
   public updateEvent(eventId: string, eventData: Partial<Event>): Observable<Event> {
-    return this.http.patch<Event>(`${environment.eventsEndpoint}/${eventId}`, eventData)
-      .pipe(map(event => this.convertEventAdminsToList(event))
-    );
+    return this.http.patch<Event>(`${environment.eventsEndpoint}/${eventId}`, eventData);
   }
 
   public deleteEvent(eventId: string): Observable<Event> {
     return this.http.delete<Event>(`${environment.eventsEndpoint}/${eventId}`);
   }
 
-  public convertEventAdminsToList(event: Event): Event {
-    return {
-      ...event,
-      eventAdmins: new List<User>(event.eventAdmins as unknown as User[])
-    };
+  public addEventAdmins(eventId: string, eventAdmins: User[]): Observable<UserBasic[]> {
+    const userIds = eventAdmins.map(u => u.id);
+    return this.http.patch<UserBasic[]>(
+      `${environment.eventsEndpoint}/${eventId}/admins`,
+      userIds
+    );
+  }
+
+  public removeEventAdmins(eventId: string, eventAdmins: User[]): Observable<UserBasic[]> {
+    const userIds = eventAdmins.map(u => u.id);
+    return this.http.delete<UserBasic[]>(`${environment.eventsEndpoint}/${eventId}/admins`, {
+      body: userIds
+    });
   }
 }

@@ -160,36 +160,6 @@ export class RegistrationForm {
       });
   }
 
-  hasError(controlName: string, errorName: string): boolean {
-    const control = this.registerForm.get(controlName);
-    return !!(control?.hasError(errorName) && control?.touched);
-  }
-
-  getErrorMessage(controlName: string): string | null {
-    const control = this.registerForm.get(controlName);
-    if (!control?.errors || !control?.touched)
-      return null;
-
-    const errors = control.errors;
-
-    if (errors['required'])
-      return 'This field is required';
-    if (errors['minlength'])
-      return `Minimum length is ${errors['minlength'].requiredLength}`;
-    if (errors['uppercase'])
-      return 'Must contain at least one uppercase letter';
-    if (errors['lowercase'])
-      return `Must contain at least one lowercase letter`;
-    if (errors['number'])
-      return 'Must contain at least one number';
-    if (errors['specialCharacter'])
-      return 'Must contain at least one special character';
-    if (controlName === 'email' && errors['email'])
-      return 'Please enter a valid email address';
-
-    return null;
-  }
-
   toggleRequirements(): void {
     this.showPasswordRequirements = !this.showPasswordRequirements;
   }

@@ -1,0 +1,27 @@
+<div class="fw-bold">Event Admins</div>
+<p-multiselect
+    [options]="selectableUsers()"
+    optionLabel="username"
+    placeholder="Add/Remove Event Admins"
+    [fluid]="true"
+    dataKey="id"
+    [filter]="true"
+    [showToggleAll]="false"
+    [maxSelectedLabels]="users().length"
+    [selectedItemsLabel]="'Add/Remove Event Admins'"
+    [ngModel]="selectedEventAdmins()"
+    (ngModelChange)="onEventAdminsChange($event)"
+    display="chip"
+    class="mt-1">
+    <!-- Custom template for selected items -->
+    <ng-template pTemplate="selectedItems" let-selectedItems>
+      @for (user of selectedItems; track user.id) {
+        <p-chip
+          [label]="user.username"
+          [removable]="!isProtectedFromRemoval(user.id)"
+          (onRemove)="handleChipRemove(user)">
+        </p-chip>
+      }
+    </ng-template>
+  </p-multiselect>
+

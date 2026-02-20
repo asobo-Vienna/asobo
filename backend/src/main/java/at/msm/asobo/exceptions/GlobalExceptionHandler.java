@@ -1,6 +1,7 @@
 package at.msm.asobo.exceptions;
 
 import at.msm.asobo.exceptions.errorResponses.ErrorResponse;
+import at.msm.asobo.exceptions.events.EventAdminException;
 import at.msm.asobo.exceptions.events.EventNotFoundException;
 import at.msm.asobo.exceptions.files.FileDeletionException;
 import at.msm.asobo.exceptions.files.InvalidFileUploadException;
@@ -171,6 +172,14 @@ public class GlobalExceptionHandler {
     ErrorResponse error =
         new ErrorResponse("INVALID_FILENAME", ex.getMessage(), HttpStatus.BAD_REQUEST.value());
     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+  }
+
+  @ExceptionHandler(EventAdminException.class)
+  public ResponseEntity<ErrorResponse> handleEventAdminConflict(EventAdminException ex) {
+
+    ErrorResponse error =
+        new ErrorResponse("EVENT_ADMIN_CONFLICT", ex.getMessage(), HttpStatus.CONFLICT.value());
+    return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
   }
 
   @ExceptionHandler(ConstraintViolationException.class)

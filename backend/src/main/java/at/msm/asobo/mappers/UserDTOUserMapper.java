@@ -16,6 +16,14 @@ import org.springframework.data.domain.Page;
     uses = {UserMapperHelper.class, PictureMapperHelper.class})
 public interface UserDTOUserMapper {
 
+  UserBasicDTO mapUserToUserBasicDTO(User user);
+
+  User mapUserBasicDTOToUser(UserBasicDTO userBasicDTO);
+
+  Set<UserBasicDTO> mapUsersToUserBasicDTOs(Set<User> users);
+
+  Set<User> mapUserBasicDTOsToUsers(Set<UserBasicDTO> userBasicDTOs);
+
   UserDTO mapUserToUserDTO(User user);
 
   User mapUserDTOToUser(UserDTO userDTO);

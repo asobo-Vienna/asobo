@@ -71,10 +71,18 @@
     <div class="col-md-6 mt-3 text-start">
       <app-gallery
         [mediaItems]="mediaItems()"
-        [event]="event()"
+        [event]="event()!"
         (mediaAdded)="uploadMedia($event)"
         (mediaDeleted)="deleteMedia($event)"
       />
+
+      @if (isCurrentUserAdmin() || isCurrentUserEventAdmin()) {
+        <div class="mt-5">
+          <app-event-admins
+            [event]="event()!"
+          />
+        </div>
+      }
     </div>
   </div>
 }
