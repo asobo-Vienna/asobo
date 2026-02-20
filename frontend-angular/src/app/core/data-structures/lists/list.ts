@@ -57,11 +57,27 @@ export class List<T> implements Iterable<T> {
   }
 
   // Check if contains item
-  contains(item: T, compareFn?: (a: T, b: T) => boolean): boolean {
+  contains(item: T | null, compareFn?: (a: T, b: T) => boolean): boolean {
+    if (item === null) {
+      return false;
+    }
     if (compareFn) {
       return this.items.some(i => compareFn(i, item));
     }
     return this.items.includes(item);
+  }
+
+  filter(predicate: (item: T, index: number) => boolean): List<T> {
+    return new List(this.items.filter(predicate));
+  }
+
+  some(predicate: (item: T, index: number, list?: List<T>) => boolean): boolean {
+    for (let i = 0; i < this.items.length; i++) {
+      if (predicate(this.items[i], i, this)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   findIndex(item: T, compareFn?: (a: T, b: T) => boolean): number {

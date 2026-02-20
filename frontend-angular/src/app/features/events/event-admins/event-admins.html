@@ -1,13 +1,13 @@
 <div class="fw-bold">Event Admins</div>
 <p-multiselect
-    [options]="selectableUsers()"
+    [options]="selectableUsers().toArray()"
     optionLabel="username"
     placeholder="Add/Remove Event Admins"
     [fluid]="true"
     dataKey="id"
     [filter]="true"
     [showToggleAll]="false"
-    [maxSelectedLabels]="users().length"
+    [maxSelectedLabels]="users().size()"
     [selectedItemsLabel]="'Add/Remove Event Admins'"
     [ngModel]="selectedEventAdmins()"
     (ngModelChange)="onEventAdminsChange($event)"
