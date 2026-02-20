@@ -8,6 +8,7 @@ import {AboutPage} from './core/about/about-page/about-page';
 import {UserProfilePage} from './features/users/user-profile/user-profile-page/user-profile-page';
 import {CreateEventPage} from './features/events/create-event/create-event-page/create-event-page';
 import {AdminPage} from './features/admin/admin-page/admin-page';
+import {SearchResultsPage} from './features/search/search-results/search-results-page';
 
 export const routes: Routes = [
   // public routes
@@ -27,6 +28,7 @@ export const routes: Routes = [
       { path: 'events', component: EventList },
       { path: 'create-event', component: CreateEventPage },
       { path: 'admin', component: AdminPage },
+      { path: 'search', component: SearchResultsPage }
       //{ path: '', redirectTo: '/events', pathMatch: 'full' },
       //{ path: '', redirectTo: '/login', pathMatch: 'full' },
     ]

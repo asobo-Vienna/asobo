@@ -65,9 +65,8 @@ export class GlobalSearch {
       query = value.name;
     }
 
-    // TODO: adapt this to page with results for users and events
     if (query && query.trim().length >= 2) {
-      this.router.navigate(['/events'], { queryParams: { q: query } });
+      this.router.navigate(['/search'], { queryParams: { q: query } });
     }
   }
 

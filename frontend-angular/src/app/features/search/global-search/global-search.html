@@ -8,8 +8,7 @@
         placeholder="Search events by title, location..."
         (input)="onSimpleSearch($event)"
       />
-    }
-    @else {
+    } @else {
       <!-- Autocomplete Mode: all or events -->
       <p-autoComplete
         [formControl]="searchControl"
@@ -26,6 +25,16 @@
         [placeholder]="searchType() === 'events' ? 'Search for events' : 'Search for events and users'"
         class="w-100"
         [inputStyleClass]="'form-control search-input'">
+        <ng-template pTemplate="header">
+          @if (searchResults.length > 0) {
+            <div class="d-flex justify-content-center">
+              <div class="px-3 py-2 text-sm text-gray-500 search-result-count">
+                {{ searchResults.length }} results found
+              </div>
+            </div>
+          }
+        </ng-template>
+
         <ng-template let-item pTemplate="item">
           <div class="global-search-item-wrapper">
             <div class="global-search-item-container">
@@ -41,6 +50,19 @@
               </div>
             </div>
           </div>
+        </ng-template>
+
+        <ng-template pTemplate="footer">
+          @if (searchResults.length > 0) {
+            <div class="d-flex justify-content-center">
+              <button
+                class="btn btn-purple btn-sm btn-show-all-results m-3"
+                type="button"
+                (click)="triggerSearch()">
+                Show all results
+              </button>
+            </div>
+          }
         </ng-template>
       </p-autoComplete>
       <button class="btn-search btn" type="button" (click)="triggerSearch()">
