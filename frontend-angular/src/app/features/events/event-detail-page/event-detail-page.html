@@ -76,7 +76,7 @@
         (mediaDeleted)="deleteMedia($event)"
       />
 
-      @if (isCurrentUserAdmin || isCurrentUserEventAdmin()) {
+      @if (isCurrentUserAdmin() || isCurrentUserEventAdmin()) {
         <div class="mt-5">
           <app-event-admins
             [event]="event()!"
