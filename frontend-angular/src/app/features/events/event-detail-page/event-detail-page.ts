@@ -63,7 +63,8 @@ export class EventDetailPage implements OnInit {
   currentUser: User | null = this.authService.currentUser();
   isUserAlreadyPartOfEvent = signal(false);
 
-  isCurrentUserAdmin = this.accessControlService.hasAdminAccess();
+  isCurrentUserAdmin = computed(() =>
+    this.accessControlService.hasAdminAccess());
   isCurrentUserEventAdmin = computed(() =>
     this.accessControlService.isCurrentUserEventAdmin(this.event())
   );
