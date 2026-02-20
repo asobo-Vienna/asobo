@@ -9,7 +9,6 @@ import {EventService} from '../services/event-service';
 import {UserService} from '../../users/services/user-service';
 import {UserBasic} from '../../../shared/entities/user-basic';
 import {AccessControlService} from '../../../shared/services/access-control-service';
-import {ToastService} from '../../../shared/services/toast-service';
 
 @Component({
   selector: 'app-event-admins',
@@ -27,7 +26,6 @@ export class EventAdmins implements OnInit {
   private userService = inject(UserService);
   private eventService = inject(EventService);
   private accessControlService = inject(AccessControlService);
-  private toastService = inject(ToastService);
 
   users = signal<UserBasic[]>([]);
   event = input<Event>();
