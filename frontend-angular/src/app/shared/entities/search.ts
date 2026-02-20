@@ -1,3 +1,5 @@
+import {EventSummary} from '../../features/events/models/event-summary';
+
 export interface EventSearchResult {
   id: string;
   title: string;
@@ -7,6 +9,9 @@ export interface EventSearchResult {
   pictureURI?: string;
   creatorName?: string;
   participantCount?: number;
+  commentCount?: number;
+  mediaCount?: number;
+  eventAdminCount?: number;
   isPrivateEvent?: boolean;
   type: 'EVENT';
 }
@@ -27,6 +32,26 @@ export interface UserSearchResult {
 export interface GlobalSearchResponse {
   events: EventSearchResult[];
   users: UserSearchResult[];
+  totalResults: number;
+}
+
+export interface UserSearchResultBasic {
+  id: string;
+  username: string;
+  pictureURI: string;
+  fullName: string;
+  location: string;
+}
+
+export interface SearchResultsResponse {
+  events: EventSummary[];
+  users: {
+    id: string;
+    username: string;
+    pictureURI: string;
+    fullName: string;
+    location: string;
+  }[];
   totalResults: number;
 }
 

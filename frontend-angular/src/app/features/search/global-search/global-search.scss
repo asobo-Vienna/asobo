@@ -130,3 +130,12 @@
 ::ng-deep .p-inputtext:enabled:focus {
   border: 2px solid color-mix(in srgb, $asobo-purple 80%, transparent) !important;
 }
+
+.btn-show-all-results {
+  width: 30%;
+}
+
+.search-result-count {
+  color: $asobo-purple;
+  font-weight: bold;
+}
