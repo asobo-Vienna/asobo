@@ -55,6 +55,10 @@ export class EventAdmins implements OnInit {
   }
 
   ngOnInit(): void {
+    this.loadAllUsersBasic();
+  }
+
+  private loadAllUsersBasic(): void {
     this.userService.getAllUsersBasic().subscribe({
       next: (response) => {
         this.users.set(response);
@@ -65,7 +69,7 @@ export class EventAdmins implements OnInit {
     });
   }
 
-  onEventAdminsChange(newAdmins: User[]) {
+  onEventAdminsChange(newAdmins: User[]): void {
     const event = this.event();
     if (!event) return;
 
@@ -105,7 +109,7 @@ export class EventAdmins implements OnInit {
     }
   }
 
-  handleChipRemove(user: User) {
+  handleChipRemove(user: User): void {
     const updated = this.selectedEventAdmins().filter(u => u.id !== user.id);
     this.onEventAdminsChange(updated);
   }
