@@ -83,17 +83,17 @@ export class EventAdmins implements OnInit {
 
     this.selectedEventAdmins.set(newAdmins);
 
-    if (addedAdmins.length) {
+    if (addedAdmins.length > 0) {
       this.eventService.addEventAdmins(event.id, addedAdmins).subscribe({
         next: () => {
         },
         error: () => {
-          this.toastService.error('Failed to remove event admin(s)');
+          this.toastService.error('Failed to add event admin(s)');
         }
       });
     }
 
-    if (removedAdmins.length) {
+    if (removedAdmins.length > 0) {
       this.eventService.removeEventAdmins(event.id, removedAdmins).subscribe({
         next: () => {},
         error: () => {
@@ -109,9 +109,6 @@ export class EventAdmins implements OnInit {
   }
 
   isProtectedFromRemoval(userId: string): boolean {
-    const currentUserId = this.loggedInUser?.id;
-    const creatorId = this.event()?.creator.id;
-
-    return userId === currentUserId || userId === creatorId;
+    return [this.loggedInUser?.id, this.event()?.creator.id].includes(userId);
   }
 }
