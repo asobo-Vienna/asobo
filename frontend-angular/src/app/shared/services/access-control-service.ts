@@ -17,7 +17,10 @@ export class AccessControlService {
       return false;
     }
 
-    return event.eventAdmins.contains(<User>this.getCurrentUser(), LambdaFunctions.compareById);
+    const admins = event.eventAdmins;
+    if (!admins) return false;
+
+    return admins.some(a => a.id === this.getCurrentUser()?.id);
   }
 
   public getCurrentUser() {

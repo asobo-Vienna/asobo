@@ -1,11 +1,13 @@
 import {inject, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {environment} from '../../../../environments/environment';
-import {Observable, take, tap, throwError} from 'rxjs';
+import {map, Observable, take, tap, throwError} from 'rxjs';
 import {LoginResponse} from '../../auth/models/login-response';
 import {AuthService} from '../../auth/services/auth-service';
 import {Role} from '../../../shared/entities/role';
 import {UserBasic} from '../../../shared/entities/user-basic';
+import {List} from '../../../core/data-structures/lists/list';
+import {Participant} from '../../events/models/participant';
 
 @Injectable({
   providedIn: 'root'
@@ -15,8 +17,9 @@ export class UserService {
   private authService = inject(AuthService);
 
 
-  public getAllUsersBasic(): Observable<UserBasic[]> {
-    return this.http.get<UserBasic[]>(`${environment.usersEndpoint}`);
+  public getAllUsersBasic(): Observable<List<UserBasic>> {
+    return this.http.get<UserBasic[]>(`${environment.usersEndpoint}`)
+      .pipe(map(eventAdmins => new List<UserBasic>(eventAdmins)));
   }
 
   updateProfilePicture(formData: FormData) : Observable<LoginResponse> {
