@@ -9,6 +9,7 @@ import {EventService} from '../services/event-service';
 import {UserService} from '../../users/services/user-service';
 import {UserBasic} from '../../../shared/entities/user-basic';
 import {AccessControlService} from '../../../shared/services/access-control-service';
+import {ToastService} from "../../../shared/services/toast-service";
 
 @Component({
   selector: 'app-event-admins',
@@ -21,11 +22,13 @@ import {AccessControlService} from '../../../shared/services/access-control-serv
   templateUrl: './event-admins.html',
   styleUrl: './event-admins.scss',
 })
+
 export class EventAdmins implements OnInit {
 
   private userService = inject(UserService);
   private eventService = inject(EventService);
   private accessControlService = inject(AccessControlService);
+  private toastService = inject(ToastService);
 
   users = signal<UserBasic[]>([]);
   event = input<Event>();
@@ -61,8 +64,8 @@ export class EventAdmins implements OnInit {
       next: (response) => {
         this.users.set(response);
       },
-      error: (error) => {
-        console.log(error);
+      error: () => {
+        this.toastService.error('Failed to load users');
       }
     });
   }
@@ -78,21 +81,14 @@ export class EventAdmins implements OnInit {
     const addedAdmins = newAdmins.filter(u => !prevIds.has(u.id));
     const removedAdmins = previousAdmins.filter(u => !nextIds.has(u.id));
 
-    // prevent removing event creator and logged-in user
-    if (!newAdmins.some(u => u.id === event.creator?.id || u.id === this.loggedInUser?.id)) {
-      this.selectedEventAdmins.set([...newAdmins, event.creator!, this.loggedInUser!]);
-      return;
-    }
-
     this.selectedEventAdmins.set(newAdmins);
 
     if (addedAdmins.length) {
       this.eventService.addEventAdmins(event.id, addedAdmins).subscribe({
-        next: (updatedEvent) => {
-          console.log('Added event admins successfully', updatedEvent);
+        next: () => {
         },
-        error: (err) => {
-          console.error('Failed to add event admins', err);
+        error: () => {
+          this.toastService.error('Failed to remove event admin(s)');
         }
       });
     }
@@ -100,8 +96,8 @@ export class EventAdmins implements OnInit {
     if (removedAdmins.length) {
       this.eventService.removeEventAdmins(event.id, removedAdmins).subscribe({
         next: () => {},
-        error: (err) => {
-          console.error('Failed to remove event admins', err);
+        error: () => {
+          this.toastService.error('Failed to remove event admin(s)');
         }
       });
     }
@@ -113,7 +109,7 @@ export class EventAdmins implements OnInit {
   }
 
   isProtectedFromRemoval(userId: string): boolean {
-    const currentUserId = this.accessControlService.getCurrentUser()?.id;
+    const currentUserId = this.loggedInUser?.id;
     const creatorId = this.event()?.creator.id;
 
     return userId === currentUserId || userId === creatorId;
