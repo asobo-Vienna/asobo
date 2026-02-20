@@ -1,12 +1,13 @@
-import { Component, inject, input, output } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormControl } from '@angular/forms';
-import { AutoCompleteCompleteEvent, AutoCompleteModule } from 'primeng/autocomplete';
-import { Router } from '@angular/router';
-import { SearchService } from '../services/search-service';
-import { AutocompleteItem } from '../../../shared/entities/search';
+import {Component, inject, input, output} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {FormControl, ReactiveFormsModule} from '@angular/forms';
+import {AutoCompleteCompleteEvent, AutoCompleteModule} from 'primeng/autocomplete';
+import {Router} from '@angular/router';
+import {SearchService} from '../services/search-service';
+import {AutocompleteItem} from '../../../shared/entities/search';
 import {UrlUtilService} from '../../../shared/utils/url/url-util-service';
 import {AuthService} from '../../auth/services/auth-service';
+import {ToastService} from '../../../shared/services/toast-service';
 
 @Component({
   selector: 'app-global-search',
@@ -21,6 +22,7 @@ export class GlobalSearch {
 
   private searchService = inject(SearchService);
   private authService = inject(AuthService);
+  private toastService = inject(ToastService);
   private router = inject(Router);
 
   searchControl = new FormControl<string | AutocompleteItem | null>(null);
@@ -66,7 +68,9 @@ export class GlobalSearch {
     }
 
     if (query && query.trim().length >= 2) {
-      this.router.navigate(['/search'], { queryParams: { q: query } });
+      this.router.navigate(['/search'], {queryParams: {q: query}});
+    } else {
+      this.toastService.warn("Minimum of 2 characters required for search.");
     }
   }
 
