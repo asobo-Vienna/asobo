@@ -2,6 +2,7 @@ package at.msm.asobo.builders;
 
 import at.msm.asobo.dto.auth.LoginResponseDTO;
 import at.msm.asobo.dto.auth.UserRegisterDTO;
+import at.msm.asobo.dto.user.UserBasicDTO;
 import at.msm.asobo.dto.user.UserPublicDTO;
 import at.msm.asobo.dto.user.UserUpdateDTO;
 import at.msm.asobo.entities.User;
@@ -159,6 +160,14 @@ public class UserTestBuilder {
     user.setSurname(this.surname);
     user.setSalutation(this.salutation);
     user.setPassword(this.password);
+
+    return user;
+  }
+
+  public UserBasicDTO buildUserBasicDTO() {
+    UserBasicDTO user = new UserBasicDTO();
+    user.setId(this.id);
+    user.setUsername(this.username);
 
     return user;
   }

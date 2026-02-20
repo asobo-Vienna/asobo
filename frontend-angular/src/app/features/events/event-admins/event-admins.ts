@@ -78,7 +78,6 @@ export class EventAdmins implements OnInit {
 
     // prevent removing event creator and logged-in user
     if (!newAdmins.some(u => u.id === event.creator?.id || u.id === this.loggedInUser?.id)) {
-      this.toastService.error('You cannot remove the event creator or yourself!');
       this.selectedEventAdmins.set([...newAdmins, event.creator!, this.loggedInUser!]);
       return;
     }
