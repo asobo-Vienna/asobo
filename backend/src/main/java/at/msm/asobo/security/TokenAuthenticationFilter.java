@@ -20,7 +20,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
   // List of public endpoints that don't require authentication
   // BUT we still want to SET authentication if token is present
-  private static final List<String> PUBLIC_ENDPOINTS = List.of("/api/auth/", "/uploads/");
+  private static final List<String> PUBLIC_ENDPOINTS = List.of("/api/auth/", "/api/files/uploads/");
 
   public TokenAuthenticationFilter(
       JwtUtil jwtUtil, CustomUserDetailsService customUserDetailsService) {
@@ -77,6 +77,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
       }
     }
 
+    System.out.println(">>> Request allowed, public: " + isPublicEndpoint);
     filterChain.doFilter(request, response);
   }
 }

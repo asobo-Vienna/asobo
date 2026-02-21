@@ -27,7 +27,13 @@ export class UrlUtilService {
   }
 
   static getMediaUrl(relativePath: string) {
-    return `${environment.backendUrl}${relativePath}`;
+    const fileBaseUrl = environment.fileBaseUrl;
+    console.log('getMediaUrl', relativePath.startsWith('/')
+      ? `${fileBaseUrl}${relativePath}`
+      : `${fileBaseUrl}/${relativePath}`);
+    return relativePath.startsWith('/')
+      ? `${fileBaseUrl}${relativePath}`
+      : `${fileBaseUrl}/${relativePath}`;
   }
 
   static getUserRouterLink(username: string | undefined): string {

@@ -71,8 +71,14 @@ export class EventService {
     return this.http.get<PageResponse<EventSummary>>(`${environment.eventsEndpoint}/paginated`, { params });
   }
 
-  public getPublicEventsByUserId(userId: string): Observable<EventSummary[]> {
-    return this.http.get<EventSummary[]>(`${environment.eventsEndpoint}?userId=${userId}&isPrivate=${false}`)
+  public getEventsByUserIdPaginated(userId: string, params: { page: number, size: number, sort?: string }, eventFilters: EventFilters): Observable<PageResponse<EventSummary>> {
+    const queryParams = this.filtersToHttpParams(eventFilters)
+      .set('page', params.page.toString())
+      .set('size', params.size.toString())
+      .set('sort', params.sort ?? 'date,desc')
+      .set('userId', userId);
+
+    return this.http.get<PageResponse<EventSummary>>(`${environment.eventsEndpoint}/paginated`, { params: queryParams });
   }
 
   public getEventById(id: string): Observable<Event> {

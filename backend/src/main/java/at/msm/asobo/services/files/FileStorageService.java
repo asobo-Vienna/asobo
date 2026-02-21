@@ -6,14 +6,18 @@ import at.msm.asobo.config.FileStorageProperties;
 import at.msm.asobo.entities.Event;
 import at.msm.asobo.entities.User;
 import at.msm.asobo.exceptions.files.FileDeletionException;
+import at.msm.asobo.exceptions.files.FileNotFoundException;
 import at.msm.asobo.exceptions.files.InvalidFilenameException;
 import at.msm.asobo.interfaces.PictureEntity;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.util.UUID;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -84,6 +88,37 @@ public class FileStorageService {
     } catch (IOException e) {
       throw new FileDeletionException("Failed to delete file: " + filename);
     }
+  }
+
+  public Resource loadFileAsResource(String filename) {
+    try {
+      // Remove leading slash if present
+      String cleanFilename = filename.startsWith("/") ? filename.substring(1) : filename;
+
+      Path filePath = Paths.get(this.baseStoragePath).resolve(cleanFilename).normalize();
+      Resource resource = new UrlResource(filePath.toUri());
+
+      if (resource.exists() && resource.isReadable()) {
+        return resource;
+      } else {
+        throw new FileNotFoundException("File not found: " + filename);
+      }
+    } catch (MalformedURLException e) {
+      throw new FileNotFoundException("File not found: " + filename);
+    }
+  }
+
+  // Check if user has access to this file (e.g. for private events)
+  public boolean hasAccessToFile(String filepath, User user) {
+    // Extract event ID from path if it's an event picture
+    if (!filepath.contains("event-cover-pictures")) {
+      return true; // Public file (profile pictures, etc.)
+    }
+
+    // For event pictures, check if event is private
+    // You'd need to implement this based on your DB structure
+    // This is a simplified example
+    return true; // Implement proper access control
   }
 
   private void handlePictureUpdate(MultipartFile picture, PictureEntity entity, String subfolder) {

@@ -4,6 +4,7 @@ import at.msm.asobo.exceptions.errorResponses.ErrorResponse;
 import at.msm.asobo.exceptions.events.EventAdminException;
 import at.msm.asobo.exceptions.events.EventNotFoundException;
 import at.msm.asobo.exceptions.files.FileDeletionException;
+import at.msm.asobo.exceptions.files.FileNotFoundException;
 import at.msm.asobo.exceptions.files.InvalidFileUploadException;
 import at.msm.asobo.exceptions.registration.EmailAlreadyExistsException;
 import at.msm.asobo.exceptions.registration.UsernameAlreadyExistsException;
@@ -172,6 +173,13 @@ public class GlobalExceptionHandler {
     ErrorResponse error =
         new ErrorResponse("INVALID_FILENAME", ex.getMessage(), HttpStatus.BAD_REQUEST.value());
     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+  }
+
+  @ExceptionHandler(FileNotFoundException.class)
+  public ResponseEntity<ErrorResponse> handleFileNotFound(FileNotFoundException ex) {
+    ErrorResponse error =
+        new ErrorResponse("FILE_NOT_FOUND", ex.getMessage(), HttpStatus.NOT_FOUND.value());
+    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
   }
 
   @ExceptionHandler(EventAdminException.class)
