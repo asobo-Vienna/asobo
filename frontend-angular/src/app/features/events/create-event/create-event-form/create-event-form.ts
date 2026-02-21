@@ -28,7 +28,7 @@ export class CreateEventForm {
   private formBuilder = inject(FormBuilder);
   private eventService = inject(EventService);
   private authService = inject(AuthService);
-  previewUrl = signal<string | ArrayBuffer | null>(null);
+  previewUrl = signal<string | null>(null);
   selectedImage: File | null = null;
 
   constructor() {
@@ -57,7 +57,7 @@ export class CreateEventForm {
 
     const creator = this.authService.currentUser();
     if (creator) {
-      eventData.creator = { id: creator.id };
+      eventData.creator = creator;
     }
 
     this.eventService.createNewEvent(eventData).subscribe({

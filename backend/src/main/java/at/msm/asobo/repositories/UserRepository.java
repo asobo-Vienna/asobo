@@ -30,6 +30,8 @@ public interface UserRepository extends JpaRepository<User, UUID>, JpaSpecificat
 
   Set<User> findAllByIdIn(Set<UUID> ids);
 
+  boolean existsByIdAndRoles_Name(UUID id, String roleName);
+
   boolean existsByUsername(String username);
 
   boolean existsByEmail(String email);

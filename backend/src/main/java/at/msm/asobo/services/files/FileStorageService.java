@@ -25,9 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class FileStorageService {
 
   private final FileStorageProperties fileStorageProperties;
-
   private final FileValidationService fileValidationService;
-
   private final String baseStoragePath;
 
   public FileStorageService(
@@ -90,12 +88,18 @@ public class FileStorageService {
     }
   }
 
-  public Resource loadFileAsResource(String filename) {
+  public Resource loadFileAsResource(String filename, UUID userId) {
     try {
-      // Remove leading slash if present
-      String cleanFilename = filename.startsWith("/") ? filename.substring(1) : filename;
+      // Remove leading slash or /uploads/ prefix
+      String cleanFilename = filename;
+      if (cleanFilename.startsWith("/uploads/")) {
+        cleanFilename = cleanFilename.substring("/uploads/".length());
+      } else if (cleanFilename.startsWith("/")) {
+        cleanFilename = cleanFilename.substring(1);
+      }
 
       Path filePath = Paths.get(this.baseStoragePath).resolve(cleanFilename).normalize();
+      System.out.println("Loading file " + cleanFilename + " from " + filePath);
       Resource resource = new UrlResource(filePath.toUri());
 
       if (resource.exists() && resource.isReadable()) {
@@ -106,19 +110,6 @@ public class FileStorageService {
     } catch (MalformedURLException e) {
       throw new FileNotFoundException("File not found: " + filename);
     }
-  }
-
-  // Check if user has access to this file (e.g. for private events)
-  public boolean hasAccessToFile(String filepath, User user) {
-    // Extract event ID from path if it's an event picture
-    if (!filepath.contains("event-cover-pictures")) {
-      return true; // Public file (profile pictures, etc.)
-    }
-
-    // For event pictures, check if event is private
-    // You'd need to implement this based on your DB structure
-    // This is a simplified example
-    return true; // Implement proper access control
   }
 
   private void handlePictureUpdate(MultipartFile picture, PictureEntity entity, String subfolder) {

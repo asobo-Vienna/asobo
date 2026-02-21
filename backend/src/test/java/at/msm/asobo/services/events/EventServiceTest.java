@@ -887,7 +887,7 @@ class EventServiceTest {
 
     when(eventRepository.findById(publicEvent1.getId())).thenReturn(Optional.of(publicEvent1));
     when(userService.getUserById(creator.getId())).thenReturn(creator);
-    when(eventAdminService.canManageEvent(publicEvent1, creator)).thenReturn(true);
+    when(eventAdminService.canManageEvent(publicEvent1, creator.getId())).thenReturn(true);
     when(eventDTOEventMapper.mapEventToEventDTO(publicEvent1)).thenReturn(publicEventDTO1);
 
     EventDTO result = eventService.deleteEventById(publicEvent1.getId(), creatorPrincipal);
@@ -897,7 +897,7 @@ class EventServiceTest {
 
     verify(eventRepository).findById(publicEvent1.getId());
     verify(userService).getUserById(creator.getId());
-    verify(eventAdminService).canManageEvent(publicEvent1, creator);
+    verify(eventAdminService).canManageEvent(publicEvent1, creator.getId());
     verify(fileStorageService).delete(pathToPicture);
     verify(eventRepository).delete(publicEvent1);
     verify(eventDTOEventMapper).mapEventToEventDTO(publicEvent1);
@@ -910,7 +910,7 @@ class EventServiceTest {
 
     when(eventRepository.findById(publicEvent1.getId())).thenReturn(Optional.of(publicEvent1));
     when(userService.getUserById(creator.getId())).thenReturn(creator);
-    when(eventAdminService.canManageEvent(publicEvent1, creator)).thenReturn(true);
+    when(eventAdminService.canManageEvent(publicEvent1, creator.getId())).thenReturn(true);
     when(eventDTOEventMapper.mapEventToEventDTO(publicEvent1)).thenReturn(publicEventDTO1);
 
     EventDTO result = eventService.deleteEventById(publicEvent1.getId(), creatorPrincipal);
@@ -920,7 +920,7 @@ class EventServiceTest {
 
     verify(eventRepository).findById(publicEvent1.getId());
     verify(userService).getUserById(creator.getId());
-    verify(eventAdminService).canManageEvent(publicEvent1, creator);
+    verify(eventAdminService).canManageEvent(publicEvent1, creator.getId());
     verify(fileStorageService, never()).delete(any());
     verify(eventRepository).delete(publicEvent1);
     verify(eventDTOEventMapper).mapEventToEventDTO(publicEvent1);
@@ -935,7 +935,7 @@ class EventServiceTest {
 
     when(eventRepository.findById(publicEvent1.getId())).thenReturn(Optional.of(publicEvent1));
     when(userService.getUserById(eventAdmin1.getId())).thenReturn(eventAdmin1);
-    when(eventAdminService.canManageEvent(publicEvent1, eventAdmin1)).thenReturn(true);
+    when(eventAdminService.canManageEvent(publicEvent1, eventAdmin1.getId())).thenReturn(true);
     when(eventDTOEventMapper.mapEventToEventDTO(publicEvent1)).thenReturn(publicEventDTO1);
 
     EventDTO result = eventService.deleteEventById(publicEvent1.getId(), adminPrincipal);
@@ -945,7 +945,7 @@ class EventServiceTest {
 
     verify(eventRepository).findById(publicEvent1.getId());
     verify(userService).getUserById(eventAdmin1.getId());
-    verify(eventAdminService).canManageEvent(publicEvent1, eventAdmin1);
+    verify(eventAdminService).canManageEvent(publicEvent1, eventAdmin1.getId());
     verify(fileStorageService, never()).delete(any());
     verify(eventRepository).delete(publicEvent1);
     verify(eventDTOEventMapper).mapEventToEventDTO(publicEvent1);
@@ -966,7 +966,8 @@ class EventServiceTest {
 
     when(eventRepository.findById(publicEvent1.getId())).thenReturn(Optional.of(publicEvent1));
     when(userService.getUserById(unauthorizedUser.getId())).thenReturn(unauthorizedUser);
-    when(eventAdminService.canManageEvent(publicEvent1, unauthorizedUser)).thenReturn(false);
+    when(eventAdminService.canManageEvent(publicEvent1, unauthorizedUser.getId()))
+        .thenReturn(false);
 
     UserNotAuthorizedException exception =
         assertThrows(
@@ -977,7 +978,7 @@ class EventServiceTest {
 
     verify(eventRepository).findById(publicEvent1.getId());
     verify(userService).getUserById(unauthorizedUser.getId());
-    verify(eventAdminService).canManageEvent(publicEvent1, unauthorizedUser);
+    verify(eventAdminService).canManageEvent(publicEvent1, unauthorizedUser.getId());
     verify(fileStorageService, never()).delete(any());
     verify(eventRepository, never()).delete(any(Event.class));
     verify(eventDTOEventMapper, never()).mapEventToEventDTO(any());
@@ -1056,7 +1057,7 @@ class EventServiceTest {
 
     when(eventRepository.findById(publicEvent1.getId())).thenReturn(Optional.of(publicEvent1));
     when(userService.getUserById(creator.getId())).thenReturn(creator);
-    when(eventAdminService.canManageEvent(publicEvent1, creator)).thenReturn(true);
+    when(eventAdminService.canManageEvent(publicEvent1, creator.getId())).thenReturn(true);
     when(eventRepository.save(publicEvent1)).thenReturn(savedEvent);
     when(eventDTOEventMapper.mapEventToEventDTO(savedEvent)).thenReturn(savedEventDTO);
 
@@ -1068,7 +1069,7 @@ class EventServiceTest {
 
     verify(eventRepository).findById(publicEvent1.getId());
     verify(userService).getUserById(creator.getId());
-    verify(eventAdminService).canManageEvent(publicEvent1, creator);
+    verify(eventAdminService).canManageEvent(publicEvent1, creator.getId());
     verify(fileStorageService).handleEventPictureUpdate(null, publicEvent1);
     verify(eventRepository).save(publicEvent1);
     verify(eventDTOEventMapper).mapEventToEventDTO(savedEvent);
@@ -1095,7 +1096,7 @@ class EventServiceTest {
 
     when(eventRepository.findById(publicEvent1.getId())).thenReturn(Optional.of(publicEvent1));
     when(userService.getUserById(creator.getId())).thenReturn(creator);
-    when(eventAdminService.canManageEvent(publicEvent1, creator)).thenReturn(true);
+    when(eventAdminService.canManageEvent(publicEvent1, creator.getId())).thenReturn(true);
     when(eventRepository.save(publicEvent1)).thenReturn(savedEvent);
     when(eventDTOEventMapper.mapEventToEventDTO(savedEvent)).thenReturn(saveEventDTO);
 
@@ -1106,7 +1107,7 @@ class EventServiceTest {
 
     verify(eventRepository).findById(publicEvent1.getId());
     verify(userService).getUserById(creator.getId());
-    verify(eventAdminService).canManageEvent(publicEvent1, creator);
+    verify(eventAdminService).canManageEvent(publicEvent1, creator.getId());
     verify(fileStorageService).handleEventPictureUpdate(picture, publicEvent1);
     verify(eventRepository).save(publicEvent1);
     verify(eventDTOEventMapper).mapEventToEventDTO(savedEvent);
@@ -1147,7 +1148,7 @@ class EventServiceTest {
 
     when(eventRepository.findById(publicEvent1.getId())).thenReturn(Optional.of(publicEvent1));
     when(userService.getUserById(creator.getId())).thenReturn(creator);
-    when(eventAdminService.canManageEvent(publicEvent1, creator)).thenReturn(true);
+    when(eventAdminService.canManageEvent(publicEvent1, creator.getId())).thenReturn(true);
     when(userDTOUserMapper.mapUserPublicDTOsToUsers(participantDTOs)).thenReturn(participants);
     when(eventRepository.save(publicEvent1)).thenReturn(savedEvent);
     when(eventDTOEventMapper.mapEventToEventDTO(savedEvent)).thenReturn(savedEventDTO);
@@ -1159,7 +1160,7 @@ class EventServiceTest {
 
     verify(eventRepository).findById(publicEvent1.getId());
     verify(userService).getUserById(creator.getId());
-    verify(eventAdminService).canManageEvent(publicEvent1, creator);
+    verify(eventAdminService).canManageEvent(publicEvent1, creator.getId());
     verify(userDTOUserMapper).mapUserPublicDTOsToUsers(participantDTOs);
     verify(eventRepository).save(publicEvent1);
     verify(eventDTOEventMapper).mapEventToEventDTO(savedEvent);
@@ -1182,7 +1183,8 @@ class EventServiceTest {
 
     when(eventRepository.findById(publicEvent1.getId())).thenReturn(Optional.of(publicEvent1));
     when(userService.getUserById(unauthorizedUser.getId())).thenReturn(unauthorizedUser);
-    when(eventAdminService.canManageEvent(publicEvent1, unauthorizedUser)).thenReturn(false);
+    when(eventAdminService.canManageEvent(publicEvent1, unauthorizedUser.getId()))
+        .thenReturn(false);
 
     UserNotAuthorizedException exception =
         assertThrows(
@@ -1195,7 +1197,7 @@ class EventServiceTest {
 
     verify(eventRepository).findById(publicEvent1.getId());
     verify(userService).getUserById(unauthorizedUser.getId());
-    verify(eventAdminService).canManageEvent(publicEvent1, unauthorizedUser);
+    verify(eventAdminService).canManageEvent(publicEvent1, unauthorizedUser.getId());
     verify(eventRepository, never()).save(any());
   }
 
@@ -1260,7 +1262,7 @@ class EventServiceTest {
 
     when(eventRepository.findById(publicEvent1.getId())).thenReturn(Optional.of(publicEvent1));
     when(userService.getUserById(creatorPrincipal.getUserId())).thenReturn(creator);
-    when(eventAdminService.canManageEvent(publicEvent1, creator)).thenReturn(true);
+    when(eventAdminService.canManageEvent(publicEvent1, creator.getId())).thenReturn(true);
     when(eventRepository.save(publicEvent1)).thenReturn(publicEvent1);
     when(eventDTOEventMapper.mapEventToEventDTO(publicEvent1)).thenReturn(expectedDTO);
 
@@ -1274,7 +1276,7 @@ class EventServiceTest {
 
     verify(eventRepository).findById(publicEvent1.getId());
     verify(userService).getUserById(creatorPrincipal.getUserId());
-    verify(eventAdminService).canManageEvent(publicEvent1, creator);
+    verify(eventAdminService).canManageEvent(publicEvent1, creator.getId());
     verify(eventRepository).save(publicEvent1);
     verify(eventDTOEventMapper).mapEventToEventDTO(publicEvent1);
   }
@@ -1295,7 +1297,7 @@ class EventServiceTest {
 
     when(eventRepository.findById(publicEvent1.getId())).thenReturn(Optional.of(publicEvent1));
     when(userService.getUserById(creator.getId())).thenReturn(creator);
-    when(eventAdminService.canManageEvent(publicEvent1, creator)).thenReturn(true);
+    when(eventAdminService.canManageEvent(publicEvent1, creator.getId())).thenReturn(true);
     when(eventRepository.save(publicEvent1)).thenReturn(savedEvent);
     when(eventDTOEventMapper.mapEventToEventDTO(savedEvent)).thenReturn(savedEventDTO);
 
@@ -1305,7 +1307,7 @@ class EventServiceTest {
 
     verify(eventRepository).findById(publicEvent1.getId());
     verify(userService).getUserById(creator.getId());
-    verify(eventAdminService).canManageEvent(publicEvent1, creator);
+    verify(eventAdminService).canManageEvent(publicEvent1, creator.getId());
     verify(eventRepository).save(publicEvent1);
     verify(eventDTOEventMapper).mapEventToEventDTO(savedEvent);
   }

@@ -1,6 +1,7 @@
 package at.msm.asobo.dto.event;
 
 import at.msm.asobo.dto.user.UserPublicDTO;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -15,6 +16,8 @@ public class EventSummaryDTO {
   private Instant creationDate;
   private Instant modificationDate;
   private UserPublicDTO creator;
+
+  @JsonProperty("isPrivateEvent")
   private boolean isPrivateEvent;
 
   // Counts instead of full lists

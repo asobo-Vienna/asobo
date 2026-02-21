@@ -5,13 +5,18 @@ import at.msm.asobo.entities.Medium;
 import at.msm.asobo.entities.User;
 import at.msm.asobo.entities.UserComment;
 import at.msm.asobo.exceptions.users.UserNotAuthorizedException;
+import at.msm.asobo.repositories.UserRepository;
 import java.util.UUID;
 import org.springframework.stereotype.Service;
 
 @Service
 public class AccessControlService {
 
-  public AccessControlService() {}
+  private final UserRepository userRepository;
+
+  public AccessControlService(UserRepository userRepository) {
+    this.userRepository = userRepository;
+  }
 
   //    public UUID getCurrentUserId() {
   //        Authentication authentication =
@@ -35,6 +40,12 @@ public class AccessControlService {
   public boolean hasAdminRole(User user) {
     return this.hasSuperadminRole(user)
         || user.getRoles().stream().anyMatch(role -> role.getName().equals("ADMIN"));
+  }
+
+  public boolean hasAdminRole(UUID userId) {
+    if (userId == null) return false;
+    return this.userRepository.existsByIdAndRoles_Name(userId, "ADMIN")
+        || this.userRepository.existsByIdAndRoles_Name(userId, "SUPERADMIN");
   }
 
   private boolean hasSuperadminRole(User user) {

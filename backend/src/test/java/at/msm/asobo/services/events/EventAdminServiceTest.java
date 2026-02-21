@@ -327,7 +327,7 @@ class EventAdminServiceTest {
   void canManageEvent_userIsGlobalAdmin_returnsTrue() {
     when(accessControlService.hasAdminRole(userJohn)).thenReturn(true);
 
-    boolean result = eventAdminService.canManageEvent(event, userJohn);
+    boolean result = eventAdminService.canManageEvent(event, userJohn.getId());
 
     assertTrue(result);
     verify(accessControlService).hasAdminRole(userJohn);
@@ -337,7 +337,7 @@ class EventAdminServiceTest {
   void canManageEvent_userIsEventCreator_returnsTrue() {
     when(accessControlService.hasAdminRole(creator)).thenReturn(false);
 
-    boolean result = eventAdminService.canManageEvent(event, creator);
+    boolean result = eventAdminService.canManageEvent(event, creator.getId());
 
     assertTrue(result);
     verify(accessControlService).hasAdminRole(creator);
@@ -348,7 +348,7 @@ class EventAdminServiceTest {
     event.getEventAdmins().add(userJohn);
     when(accessControlService.hasAdminRole(userJohn)).thenReturn(false);
 
-    boolean result = eventAdminService.canManageEvent(event, userJohn);
+    boolean result = eventAdminService.canManageEvent(event, userJohn.getId());
 
     assertTrue(result);
     verify(accessControlService).hasAdminRole(userJohn);
@@ -358,7 +358,7 @@ class EventAdminServiceTest {
   void canManageEvent_userIsNotAuthorized_returnsFalse() {
     when(accessControlService.hasAdminRole(userJohn)).thenReturn(false);
 
-    boolean result = eventAdminService.canManageEvent(event, userJohn);
+    boolean result = eventAdminService.canManageEvent(event, userJohn.getId());
 
     assertFalse(result);
     verify(accessControlService).hasAdminRole(userJohn);

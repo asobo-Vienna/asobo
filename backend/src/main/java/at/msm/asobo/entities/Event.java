@@ -1,6 +1,7 @@
 package at.msm.asobo.entities;
 
 import at.msm.asobo.interfaces.PictureEntity;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -31,9 +32,19 @@ public class Event implements PictureEntity {
   @JoinColumn(name = "creator_id")
   private User creator;
 
-  @ManyToMany private Set<User> eventAdmins;
+  @ManyToMany
+  @JoinTable(
+      name = "event_event_admins",
+      joinColumns = @JoinColumn(name = "administered_events_id"),
+      inverseJoinColumns = @JoinColumn(name = "event_admins_id"))
+  private Set<User> eventAdmins;
 
-  @ManyToMany private Set<User> participants;
+  @ManyToMany
+  @JoinTable(
+      name = "event_participants",
+      joinColumns = @JoinColumn(name = "attended_events_id"),
+      inverseJoinColumns = @JoinColumn(name = "participants_id"))
+  private Set<User> participants;
 
   @NotBlank(message = "Title is mandatory")
   private String title;
@@ -61,7 +72,8 @@ public class Event implements PictureEntity {
   @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Medium> media;
 
-  @Column(name = "is_private", columnDefinition = "boolean default false")
+  @Column(name = "is_private", nullable = false)
+  @JsonProperty("isPrivateEvent")
   private boolean isPrivateEvent;
 
   public Event() {
@@ -173,6 +185,7 @@ public class Event implements PictureEntity {
     return this.isPrivateEvent;
   }
 
+  @JsonProperty("isPrivateEvent")
   public void setIsPrivateEvent(boolean isPrivateEvent) {
     this.isPrivateEvent = isPrivateEvent;
   }
