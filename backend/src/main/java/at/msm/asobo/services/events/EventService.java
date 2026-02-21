@@ -201,8 +201,6 @@ public class EventService {
 
     PatchUtils.copyNonNullProperties(eventUpdateDTO, existingEvent, "picture", "participants");
 
-    // this.fileStorageService.handleEventPictureUpdate(eventUpdateDTO.getPicture(), existingEvent);
-
     if (eventUpdateDTO.getParticipants() != null) {
       existingEvent.setParticipants(
           this.userDTOUserMapper.mapUserPublicDTOsToUsers(eventUpdateDTO.getParticipants()));

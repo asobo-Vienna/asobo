@@ -1069,25 +1069,19 @@ class EventServiceTest {
     verify(eventRepository).findById(publicEvent1.getId());
     verify(userService).getUserById(creator.getId());
     verify(eventAdminService).canManageEvent(publicEvent1, creator);
-    verify(fileStorageService).handleEventPictureUpdate(null, publicEvent1);
     verify(eventRepository).save(publicEvent1);
     verify(eventDTOEventMapper).mapEventToEventDTO(savedEvent);
   }
 
   @Test
-  void updateEventById_withPicture_updatesEventAndPicture() {
+  void updateEventById_withGeneralFields_updatesEventAndPicture() {
     publicEvent1.setCreator(creator);
-
-    MockMultipartFile picture =
-        new MockMultipartFile(
-            "picture", "event.jpg", "image/jpeg", "test image content".getBytes());
 
     EventUpdateDTO updateDTO =
         new EventTestBuilder()
             .withTitle("Updated Title")
             .withParticipants(null)
             .buildEventUpdateDTO();
-    updateDTO.setPicture(picture);
 
     Event savedEvent = new EventTestBuilder().fromEvent(publicEvent1).buildEventEntity();
 
@@ -1107,9 +1101,30 @@ class EventServiceTest {
     verify(eventRepository).findById(publicEvent1.getId());
     verify(userService).getUserById(creator.getId());
     verify(eventAdminService).canManageEvent(publicEvent1, creator);
-    verify(fileStorageService).handleEventPictureUpdate(picture, publicEvent1);
     verify(eventRepository).save(publicEvent1);
     verify(eventDTOEventMapper).mapEventToEventDTO(savedEvent);
+  }
+
+  @Test
+  void updateEventPicture_withValidPicture_updatesPictureOnly() {
+    publicEvent1.setCreator(creator);
+
+    MockMultipartFile picture =
+        new MockMultipartFile(
+            "eventPicture", "event.jpg", "image/jpeg", "test image content".getBytes());
+
+    when(eventRepository.findById(publicEvent1.getId())).thenReturn(Optional.of(publicEvent1));
+    when(userService.getUserById(creator.getId())).thenReturn(creator);
+    when(eventAdminService.canManageEvent(publicEvent1, creator)).thenReturn(true);
+    when(eventRepository.save(publicEvent1)).thenReturn(publicEvent1);
+
+    eventService.updateEventPicture(publicEvent1.getId(), creatorPrincipal, picture);
+
+    verify(eventRepository).findById(publicEvent1.getId());
+    verify(userService).getUserById(creator.getId());
+    verify(eventAdminService).canManageEvent(publicEvent1, creator);
+    verify(fileStorageService).handleEventPictureUpdate(picture, publicEvent1);
+    verify(eventRepository).save(publicEvent1);
   }
 
   @Test
