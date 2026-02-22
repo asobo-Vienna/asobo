@@ -22,11 +22,14 @@ $event-card-height: 50vh;
   border-radius: 15px;
   overflow: hidden;
   filter: drop-shadow(3px 3px 5px gray);
-  transition: transform .2s;
   border: none;
 }
 
-.event-card:hover {
+.event-card-container {
+  transition: transform .2s;
+}
+
+.event-card-container:hover {
   transform: scale(1.05);
 }
 
@@ -65,4 +68,20 @@ $event-card-height: 50vh;
   left: 2%;
   z-index: 10;
   filter: drop-shadow(1px 1px 2px);
+}
+
+.event-card-container {
+  position: relative;
+  display: inline-block;
+}
+
+.delete-event-from-list-button {
+  font-size: clamp(0.8rem, 1.5vw, 1.5rem);
+  position: absolute;
+  top: -0.3vw;
+  right: -0.3vw;
+  color: deeppink;
+  background-color: white;
+  border-radius: 50%;
+  z-index: 2;
 }

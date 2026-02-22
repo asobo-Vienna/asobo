@@ -1,4 +1,4 @@
-import {Component, inject, input, Input} from '@angular/core';
+import {Component, inject, input, Input, output} from '@angular/core';
 import {DatePipe} from '@angular/common';
 import {RouterLink} from '@angular/router';
 import {UrlUtilService} from '../../../shared/utils/url/url-util-service';
@@ -9,6 +9,7 @@ import {Event} from '../models/event';
 import { Tag } from 'primeng/tag';
 import {AuthService} from '../../auth/services/auth-service';
 import {EventSummary} from '../models/event-summary';
+import {AccessControlService} from '../../../shared/services/access-control-service';
 
 @Component({
   selector: 'app-event-card',
@@ -33,9 +34,13 @@ export class EventCard {
     participantCount: 0,
     commentCount: 0,
     mediaCount: 0,
+    eventAdminIds: new List<string>(),
   });
   protected readonly UrlUtilService = UrlUtilService;
   authService = inject(AuthService);
+  accessControlService = inject(AccessControlService);
+
+  eventDeleted = output<EventSummary>();
 }
 
 

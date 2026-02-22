@@ -80,7 +80,7 @@ public class FileStorageService {
     Path deletionPath = targetDir.resolve(filename.substring(1));
 
     try {
-      Files.delete(deletionPath);
+      Files.deleteIfExists(deletionPath);
     } catch (IOException e) {
       throw new FileDeletionException("Failed to delete file: " + filename);
     }

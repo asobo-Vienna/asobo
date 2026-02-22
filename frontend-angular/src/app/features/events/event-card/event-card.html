@@ -1,29 +1,37 @@
-<a [routerLink]="['/events', event().id]">
-  <div class="card event-card">
-    @if (authService.isLoggedIn()) {
-      <p-tag
-        class="event-badge"
-        [icon]="event().isPrivateEvent ? 'pi pi-lock' : 'pi pi-globe'"
-        [severity]="event().isPrivateEvent ? 'warn' : 'success'"
-        [value]="event().isPrivateEvent ? 'Private' : 'Public'"
-      />
-    }
-    <div class="card-image-container">
-      <img
-        class="card-img-top"
-        [src]="
+<div class="event-card-container">
+  <a [routerLink]="['/events', event().id]">
+    <div class="card event-card">
+      @if (authService.isLoggedIn()) {
+        <p-tag
+          class="event-badge"
+          [icon]="event().isPrivateEvent ? 'pi pi-lock' : 'pi pi-globe'"
+          [severity]="event().isPrivateEvent ? 'warn' : 'success'"
+          [value]="event().isPrivateEvent ? 'Private' : 'Public'"
+        />
+      }
+      <div class="card-image-container">
+        <img
+          class="card-img-top"
+          [src]="
           UrlUtilService.getMediaUrl(
             event().pictureURI || '/uploads/event-cover-pictures/event-cover-default.svg'
           )
         "
-        alt="{{ event().title }}"
-      />
+          alt="{{ event().title }}"
+        />
+      </div>
+      <div class="card-body">
+        <h6 class="card-title">{{ event().title }}</h6>
+        <div class="card-date date-text text-muted">{{ event().date | date : 'EEE, MMMM d, y' }}</div>
+        <div class="card-time date-text text-muted">{{ event().date | date : 'h:mm a' }}</div>
+        <div class="card-location location-text text-muted mt-2">in {{ event().location }}</div>
+      </div>
     </div>
-    <div class="card-body">
-      <h6 class="card-title">{{ event().title }}</h6>
-      <div class="card-date date-text text-muted">{{ event().date | date : 'EEE, MMMM d, y' }}</div>
-      <div class="card-time date-text text-muted">{{ event().date | date : 'h:mm a' }}</div>
-      <div class="card-location location-text text-muted mt-2">in {{ event().location }}</div>
-    </div>
-  </div>
-</a>
+  </a>
+  @if (accessControlService.hasAdminAccess() || accessControlService.getCurrentUser()?.id === event().creator?.id
+  || (this.accessControlService.isCurrentUserEventAdmin(event()))) {
+    <i class="pi pi-times-circle delete-event-from-list-button clickable" (click)="eventDeleted.emit(event());
+          $event.stopPropagation();" aria-label="Delete media">
+    </i>
+  }
+</div>

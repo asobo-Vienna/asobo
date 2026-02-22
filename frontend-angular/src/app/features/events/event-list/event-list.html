@@ -51,7 +51,9 @@
     @for (event of events(); track event.id) {
       <li>
         <app-event-card
-          [event]="event">
+          [event]="event"
+          (eventDeleted)="deleteEvent($event)"
+        >
         </app-event-card>
       </li>
     } @empty {

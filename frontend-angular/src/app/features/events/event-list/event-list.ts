@@ -13,6 +13,8 @@ import {GlobalSearch} from '../../search/global-search/global-search';
 import {debounceTime, Subject} from 'rxjs';
 import {environment} from '../../../../environments/environment';
 import {Spinner} from '../../../core/ui-elements/spinner/spinner';
+import {MediaItem} from '../models/media-item';
+import {ToastService} from '../../../shared/services/toast-service';
 
 @Component({
   selector: 'app-event-list',
@@ -26,6 +28,7 @@ import {Spinner} from '../../../core/ui-elements/spinner/spinner';
 })
 export class EventList implements OnInit {
   private eventService = inject(EventService);
+  private toastService = inject(ToastService);
   authService = inject(AuthService);
   router = inject(Router);
 
@@ -188,6 +191,16 @@ export class EventList implements OnInit {
   getSortIcon(field: SortField): string {
     if (field !== this.sortField()) return '';
     return this.sortDirection() === 'asc' ? '↑' : '↓';
+  }
+
+  public deleteEvent(item: EventSummary) {
+    this.events().remove(item);       // remove immediately
+    this.eventService.deleteEvent(item.id).subscribe({
+      error: (err) => {
+        this.toastService.error(err.message || 'Failed to delete event!');
+        this.events().add(item);     // revert if backend fails
+      }
+    });
   }
 
   protected readonly routes = routes;

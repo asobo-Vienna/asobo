@@ -11,6 +11,7 @@ import {
 import {environment} from '../../../../environments/environment';
 import {UrlUtilService} from '../../../shared/utils/url/url-util-service';
 import {EventSummary} from '../../events/models/event-summary';
+import {List} from '../../../core/data-structures/lists/list';
 
 @Injectable({
   providedIn: 'root',
@@ -77,6 +78,7 @@ fullSearch(query: string, includePrivate: boolean): Observable<SearchResultsResp
           participantCount: e.participantCount ?? 0,
           commentCount: 0,
           mediaCount: 0,
+          eventAdminIds: new List<string>(),
         })),
         users: response.users.map((u: UserSearchResult) => ({
           id: u.id,
