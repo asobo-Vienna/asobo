@@ -44,8 +44,8 @@ public class AccessControlService {
 
   public boolean hasAdminRole(UUID userId) {
     if (userId == null) return false;
-    return this.userRepository.existsByIdAndRoles_Name(userId, "ADMIN")
-        || this.userRepository.existsByIdAndRoles_Name(userId, "SUPERADMIN");
+    return this.userRepository.existsByIdAndRolesName(userId, "ADMIN")
+        || this.userRepository.existsByIdAndRolesName(userId, "SUPERADMIN");
   }
 
   private boolean hasSuperadminRole(User user) {

@@ -1,11 +1,11 @@
-import { Component, inject } from '@angular/core';
-import {RouterLink, Router} from '@angular/router';
+import {Component, inject} from '@angular/core';
+import {Router, RouterLink} from '@angular/router';
 import {AuthService} from '../../../features/auth/services/auth-service';
 import {environment} from '../../../../environments/environment';
 import {AccessControlService} from '../../../shared/services/access-control-service';
-import {UrlUtilService} from '../../../shared/utils/url/url-util-service';
-import {UserProfileService} from '../../../features/users/services/user-profile-service';
 import {GlobalSearch} from '../../../features/search/global-search/global-search';
+import {AsyncPipe} from '@angular/common';
+import {SecureImagePipe} from '../../pipes/secure-image-pipe';
 
 
 @Component({
@@ -13,6 +13,8 @@ import {GlobalSearch} from '../../../features/search/global-search/global-search
   imports: [
     RouterLink,
     GlobalSearch,
+    AsyncPipe,
+    SecureImagePipe,
   ],
   templateUrl: './header.html',
   styleUrl: './header.scss'

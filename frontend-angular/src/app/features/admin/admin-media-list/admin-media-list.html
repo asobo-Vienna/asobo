@@ -25,9 +25,9 @@
         <td>
           <img
             [src]="
-            UrlUtilService.getMediaUrl(
+            (UrlUtilService.getMediaUrl(
               mediaItem.mediumURI || environment.eventDummyCoverPicRelativeUrl
-            )
+            )  | secureImage | async) || ''
           "
             [alt]="mediaItem.caption"
             class="mediaItem-thumbnail"
@@ -60,6 +60,6 @@
   </p-table>
 
   @if (loading()) {
-    <app-spinner type="overlay" message="Loading media..." />
+    <app-spinner type="overlay" message="Loading media..."/>
   }
 </div>

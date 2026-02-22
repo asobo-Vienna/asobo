@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {environment} from '../../../../environments/environment';
 
@@ -7,7 +7,8 @@ import {environment} from '../../../../environments/environment';
 })
 export class UrlUtilService {
 
-  constructor(private route: ActivatedRoute) {}
+  constructor(private route: ActivatedRoute) {
+  }
 
   getParams(paramKeys: string[]): Map<string, string> {
     const paramMap = new Map<string, string>();
@@ -28,9 +29,6 @@ export class UrlUtilService {
 
   static getMediaUrl(relativePath: string) {
     const fileBaseUrl = environment.fileBaseUrl;
-    console.log('getMediaUrl', relativePath.startsWith('/')
-      ? `${fileBaseUrl}${relativePath}`
-      : `${fileBaseUrl}/${relativePath}`);
     return relativePath.startsWith('/')
       ? `${fileBaseUrl}${relativePath}`
       : `${fileBaseUrl}/${relativePath}`;

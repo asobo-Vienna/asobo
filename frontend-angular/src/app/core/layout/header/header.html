@@ -25,7 +25,8 @@
 
     @if (this.authService.isLoggedIn()) {
       <div class="d-flex">
-        <a routerLink="/create-event" class="btn form-control me-2 d-flex align-items-center btn-purple btn-primary" id="create-event-nav-anchor">
+        <a routerLink="/create-event" class="btn form-control me-2 d-flex align-items-center btn-purple btn-primary"
+           id="create-event-nav-anchor">
           <span class="add-event-plus">+</span>
           <span class="ms-1">Event</span>
         </a>
@@ -43,11 +44,11 @@
         @if (authService.isLoggedIn()) {
           @if (accessControlService.hasAdminAccess()) {
             <li class="nav-item">
-              <a [routerLink]="environment.adminSectionBaseUrl" class="nav-link"><i class="pi pi-cog admin-nav-icon"></i> Admin</a>
+              <a [routerLink]="environment.adminSectionBaseUrl" class="nav-link"><i
+                class="pi pi-cog admin-nav-icon"></i> Admin</a>
             </li>
           }
-        }
-        @else {
+        } @else {
           <li class="nav-item">
             <a routerLink="/register" class="nav-link">Register</a>
           </li>
@@ -56,10 +57,11 @@
         @if (authService.isLoggedIn()) {
           <li class="nav-item d-flex align-items-center user-profile-thumbnail" id="user-nav-thumbnail">
             <a [routerLink]="this.loggedInUserProfile.userProfileUrl">
-              <img [src]="this.loggedInUserProfile.pictureUrl" [alt]="this.loggedInUserProfile.pictureAlt" class="user-thumbnail me-2">
+              <img [src]="(this.loggedInUserProfile.pictureUrl | secureImage | async) || ''"
+                   [alt]="this.loggedInUserProfile.pictureAlt" class="user-thumbnail me-2">
             </a>
             <div class="d-flex flex-column justify-content-center">
-              <span class="username-thumbnail">{{ this.loggedInUserProfile.username}}</span>
+              <span class="username-thumbnail">{{ this.loggedInUserProfile.username }}</span>
               <span class="user-myprofile">
                 <a [routerLink]="this.loggedInUserProfile.userProfileUrl">My Profile</a>
               </span>
@@ -70,7 +72,8 @@
         <li class="nav-item">
           <div class="d-flex ms-2">
             @if (this.authService.isLoggedIn()) {
-              <button class="btn form-control me-2 d-flex btn-purple btn-primary" type="button" (click)="this.authService.logout()">
+              <button class="btn form-control me-2 d-flex btn-purple btn-primary" type="button"
+                      (click)="this.authService.logout()">
                 Logout
               </button>
             } @else {

@@ -182,7 +182,7 @@ class EventAdminServiceTest {
     when(eventRepository.findById(event.getId())).thenReturn(Optional.of(event));
     when(userService.getUserById(admin.getId())).thenReturn(admin);
     when(userService.getUsersByIds(userIdsToAdd)).thenReturn(usersToAdd);
-    when(accessControlService.hasAdminRole(admin)).thenReturn(true);
+    when(accessControlService.hasAdminRole(admin.getId())).thenReturn(true);
     when(eventRepository.save(event)).thenReturn(event);
     when(userDTOUserMapper.mapUsersToUserBasicDTOs(event.getEventAdmins()))
         .thenReturn(userBasicDTOs);
@@ -199,7 +199,7 @@ class EventAdminServiceTest {
     verify(eventRepository).findById(event.getId());
     verify(userService).getUserById(admin.getId());
     verify(userService).getUsersByIds(userIdsToAdd);
-    verify(accessControlService).hasAdminRole(admin);
+    verify(accessControlService).hasAdminRole(admin.getId());
     verify(eventRepository).save(event);
     verify(userDTOUserMapper).mapUsersToUserBasicDTOs(event.getEventAdmins());
   }
@@ -215,7 +215,7 @@ class EventAdminServiceTest {
     when(eventRepository.findById(event.getId())).thenReturn(Optional.of(event));
     when(userService.getUserById(userJohn.getId())).thenReturn(userJohn);
     when(userService.getUsersByIds(userIdsToAdd)).thenReturn(usersToAdd);
-    when(accessControlService.hasAdminRole(userJohn)).thenReturn(false);
+    when(accessControlService.hasAdminRole(userJohn.getId())).thenReturn(false);
     when(eventRepository.save(event)).thenReturn(event);
     when(userDTOUserMapper.mapUsersToUserBasicDTOs(event.getEventAdmins()))
         .thenReturn(userBasicDTOs);
@@ -231,7 +231,7 @@ class EventAdminServiceTest {
     verify(eventRepository).findById(event.getId());
     verify(userService).getUserById(userJohn.getId());
     verify(userService).getUsersByIds(userIdsToAdd);
-    verify(accessControlService).hasAdminRole(userJohn);
+    verify(accessControlService).hasAdminRole(userJohn.getId());
     verify(eventRepository).save(event);
     verify(userDTOUserMapper).mapUsersToUserBasicDTOs(event.getEventAdmins());
   }
@@ -242,7 +242,7 @@ class EventAdminServiceTest {
 
     when(eventRepository.findById(event.getId())).thenReturn(Optional.of(event));
     when(userService.getUserById(userJohn.getId())).thenReturn(userJohn);
-    when(accessControlService.hasAdminRole(userJohn)).thenReturn(false);
+    when(accessControlService.hasAdminRole(userJohn.getId())).thenReturn(false);
 
     assertThrows(
         UserNotAuthorizedException.class,
@@ -252,7 +252,7 @@ class EventAdminServiceTest {
 
     verify(eventRepository).findById(event.getId());
     verify(userService).getUserById(userJohn.getId());
-    verify(accessControlService).hasAdminRole(userJohn);
+    verify(accessControlService).hasAdminRole(userJohn.getId());
     verify(eventRepository, never()).save(any());
     verify(userDTOUserMapper, never()).mapUsersToUserBasicDTOs(any());
   }
@@ -282,7 +282,7 @@ class EventAdminServiceTest {
     when(eventRepository.findById(event.getId())).thenReturn(Optional.of(event));
     when(userService.getUserById(creator.getId())).thenReturn(creator);
     when(userService.getUsersByIds(userIdsToRemove)).thenReturn(usersToRemove);
-    when(accessControlService.hasAdminRole(creator)).thenReturn(false);
+    when(accessControlService.hasAdminRole(creator.getId())).thenReturn(false);
     when(eventRepository.save(event)).thenReturn(event);
     when(userDTOUserMapper.mapUsersToUserBasicDTOs(event.getEventAdmins())).thenReturn(Set.of());
 
@@ -296,7 +296,7 @@ class EventAdminServiceTest {
     verify(eventRepository).findById(event.getId());
     verify(userService).getUserById(creator.getId());
     verify(userService).getUsersByIds(userIdsToRemove);
-    verify(accessControlService).hasAdminRole(creator);
+    verify(accessControlService).hasAdminRole(creator.getId());
     verify(eventRepository).save(event);
     verify(userDTOUserMapper).mapUsersToUserBasicDTOs(event.getEventAdmins());
   }
@@ -309,7 +309,7 @@ class EventAdminServiceTest {
     when(eventRepository.findById(event.getId())).thenReturn(Optional.of(event));
     when(userService.getUserById(userJohn.getId())).thenReturn(userJohn);
     when(userService.getUsersByIds(userIdsToRemove)).thenReturn(usersToRemove);
-    when(accessControlService.hasAdminRole(userJohn)).thenReturn(false);
+    when(accessControlService.hasAdminRole(userJohn.getId())).thenReturn(false);
 
     assertThrows(
         UserNotAuthorizedException.class,
@@ -320,47 +320,48 @@ class EventAdminServiceTest {
     verify(eventRepository).findById(event.getId());
     verify(userService).getUserById(userJohn.getId());
     verify(userService).getUsersByIds(userIdsToRemove);
+    verify(accessControlService).hasAdminRole(userJohn.getId());
     verify(eventRepository, never()).save(any());
   }
 
   @Test
   void canManageEvent_userIsGlobalAdmin_returnsTrue() {
-    when(accessControlService.hasAdminRole(userJohn)).thenReturn(true);
+    when(accessControlService.hasAdminRole(userJohn.getId())).thenReturn(true);
 
     boolean result = eventAdminService.canManageEvent(event, userJohn.getId());
 
     assertTrue(result);
-    verify(accessControlService).hasAdminRole(userJohn);
+    verify(accessControlService).hasAdminRole(userJohn.getId());
   }
 
   @Test
   void canManageEvent_userIsEventCreator_returnsTrue() {
-    when(accessControlService.hasAdminRole(creator)).thenReturn(false);
+    when(accessControlService.hasAdminRole(creator.getId())).thenReturn(false);
 
     boolean result = eventAdminService.canManageEvent(event, creator.getId());
 
     assertTrue(result);
-    verify(accessControlService).hasAdminRole(creator);
+    verify(accessControlService).hasAdminRole(creator.getId());
   }
 
   @Test
   void canManageEvent_userIsEventAdmin_returnsTrue() {
     event.getEventAdmins().add(userJohn);
-    when(accessControlService.hasAdminRole(userJohn)).thenReturn(false);
+    when(accessControlService.hasAdminRole(userJohn.getId())).thenReturn(false);
 
     boolean result = eventAdminService.canManageEvent(event, userJohn.getId());
 
     assertTrue(result);
-    verify(accessControlService).hasAdminRole(userJohn);
+    verify(accessControlService).hasAdminRole(userJohn.getId());
   }
 
   @Test
   void canManageEvent_userIsNotAuthorized_returnsFalse() {
-    when(accessControlService.hasAdminRole(userJohn)).thenReturn(false);
+    when(accessControlService.hasAdminRole(userJohn.getId())).thenReturn(false);
 
     boolean result = eventAdminService.canManageEvent(event, userJohn.getId());
 
     assertFalse(result);
-    verify(accessControlService).hasAdminRole(userJohn);
+    verify(accessControlService).hasAdminRole(userJohn.getId());
   }
 }

@@ -5,7 +5,7 @@
         <div class="d-flex gap-3">
           <a [routerLink]="`${environment.userProfileBaseUrl}${comment.username}`">
             <img class="user-avatar"
-                 [src]="UrlUtilService.getMediaUrl(comment.pictureURI || '/uploads/profile-pictures/default.png')"
+                 [src]="(UrlUtilService.getMediaUrl(comment.pictureURI || '/uploads/profile-pictures/default.png')  | secureImage | async) || ''"
                  alt="{{comment.username}}'s avatar">
           </a>
           <div class="flex-grow-1">
@@ -29,7 +29,7 @@
                   <i class="pi pi-times clickable" (click)="cancelEdit()"></i>
                 </div>
               } @else {
-                  <p class="mt-2 flex-grow-1">{{ comment.text }}</p>
+                <p class="mt-2 flex-grow-1">{{ comment.text }}</p>
                 @if (accessControlService.hasAdminAccess() || accessControlService.getCurrentUser()?.id === comment.authorId) {
                   <div class="comment-actions mt-3 ms-2">
                     <i class="pi pi-pen-to-square clickable" (click)="startEdit(comment)"></i>
