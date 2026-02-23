@@ -1,7 +1,5 @@
 import {inject, Injectable} from '@angular/core';
-import {User} from '../../features/auth/models/user';
 import {Event} from '../../features/events/models/event'
-import {LambdaFunctions} from '../utils/lambda-functions';
 import {RoleEnum} from '../enums/role-enum';
 import {AuthService} from '../../features/auth/services/auth-service';
 import {EventSummary} from '../../features/events/models/event-summary';

@@ -22,15 +22,10 @@ import {environment} from '../../../../environments/environment';
 import {Tag} from 'primeng/tag';
 import {PageResponse} from '../../../shared/entities/page-response';
 
-import {
-  FormsModule,
-  ReactiveFormsModule,
-} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule,} from '@angular/forms';
 import {EventBasicInfo} from './event-basic-info/event-basic-info';
 import {EventAdmins} from '../event-admins/event-admins';
 import {AccessControlService} from '../../../shared/services/access-control-service';
-import {SecureImagePipe} from '../../../core/pipes/secure-image-pipe';
-import {AsyncPipe} from '@angular/common';
 import {PictureUpload} from '../../../core/picture-upload/picture-upload';
 import {ToastService} from '../../../shared/services/toast-service';
 
@@ -47,8 +42,6 @@ import {ToastService} from '../../../shared/services/toast-service';
     EventBasicInfo,
     EventAdmins,
     PictureUpload,
-    SecureImagePipe,
-    AsyncPipe,
   ],
   templateUrl: './event-detail-page.html',
   styleUrl: './event-detail-page.scss'
@@ -86,18 +79,18 @@ export class EventDetailPage implements OnInit {
   protected readonly environment = environment;
 
   ngOnInit(): void {
-      this.route.paramMap.pipe(
-        map(params => params.get('id')),
-        filter((id): id is string => id !== null),
-        distinctUntilChanged(),
-        switchMap(id => this.loadEvent(id))
-      ).subscribe({
-        next: event => this.populateEvent(event),
-        error: err => {
-          console.log(err);
-          this.toastService.error('Error fetching event!')
-        }
-      });
+    this.route.paramMap.pipe(
+      map(params => params.get('id')),
+      filter((id): id is string => id !== null),
+      distinctUntilChanged(),
+      switchMap(id => this.loadEvent(id))
+    ).subscribe({
+      next: event => this.populateEvent(event),
+      error: err => {
+        console.log(err);
+        this.toastService.error('Error fetching event!')
+      }
+    });
   }
 
 

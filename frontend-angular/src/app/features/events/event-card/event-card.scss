@@ -7,7 +7,7 @@ $event-card-height: 50vh;
   .event-card {
     min-width: 200px;
     min-height: 200px;
-    flex: 0 1 auto;               /* Prevent shrink below min-width */
+    flex: 0 1 auto; /* Prevent shrink below min-width */
   }
   .event-card .card-body {
     display: flex;
@@ -58,7 +58,7 @@ $event-card-height: 50vh;
   position: relative;
   height: 100%;
   width: 100%;
-  object-fit: cover;       /* ensures image fills container without distortion */
+  object-fit: cover; /* ensures image fills container without distortion */
   display: block;
 }
 
