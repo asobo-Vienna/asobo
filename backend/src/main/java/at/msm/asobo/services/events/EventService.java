@@ -262,9 +262,8 @@ public class EventService {
   public void updateEventPicture(UUID eventId, UserPrincipal userPrincipal, MultipartFile picture) {
 
     Event event = this.getEventById(eventId);
-    User user = this.userService.getUserById(userPrincipal.getUserId());
 
-    if (!this.eventAdminService.canManageEvent(event, user)) {
+    if (!this.eventAdminService.canManageEvent(event, userPrincipal.getUserId())) {
       throw new UserNotAuthorizedException("You are not allowed to update this event");
     }
 
