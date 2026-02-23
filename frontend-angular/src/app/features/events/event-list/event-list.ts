@@ -6,15 +6,14 @@ import {List} from '../../../core/data-structures/lists/list';
 import {EventSummary} from '../models/event-summary';
 import {routes} from '../../../app.routes';
 import {Router} from '@angular/router';
-
-type SortField = 'date' | 'title' | 'location' | 'isPrivateEvent';
 import {EventFilters} from '../models/event-filters';
 import {GlobalSearch} from '../../search/global-search/global-search';
 import {debounceTime, Subject} from 'rxjs';
 import {environment} from '../../../../environments/environment';
 import {Spinner} from '../../../core/ui-elements/spinner/spinner';
-import {MediaItem} from '../models/media-item';
 import {ToastService} from '../../../shared/services/toast-service';
+
+type SortField = 'date' | 'title' | 'location' | 'isPrivateEvent';
 
 @Component({
   selector: 'app-event-list',
@@ -138,7 +137,7 @@ export class EventList implements OnInit {
   }
 
   private fetchEvents(): void {
-    const filters = { ...this.eventFilters() };
+    const filters = {...this.eventFilters()};
 
     if (this.searchQuery()) {
       filters.query = this.searchQuery();
@@ -194,11 +193,12 @@ export class EventList implements OnInit {
   }
 
   public deleteEvent(item: EventSummary) {
-    this.events().remove(item);       // remove immediately
+    this.events().remove(item); // remove immediately
     this.eventService.deleteEvent(item.id).subscribe({
       error: (err) => {
-        this.toastService.error(err.message || 'Failed to delete event!');
-        this.events().add(item);     // revert if backend fails
+        console.log(err);
+        this.toastService.error('Failed to delete event!');
+        this.events().add(item); // revert if backend fails
       }
     });
   }
