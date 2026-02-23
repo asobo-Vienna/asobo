@@ -33,7 +33,6 @@ public class FileController {
 
     String fullPath = extractFilePath(request);
     UUID userId = userPrincipal != null ? userPrincipal.getUserId() : null;
-    System.out.println("File path: " + fullPath);
 
     try {
       if (!this.fileAccessService.canAccess(fullPath, userId)) {

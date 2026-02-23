@@ -77,7 +77,6 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
       }
     }
 
-    System.out.println(">>> Request allowed, public: " + isPublicEndpoint);
     filterChain.doFilter(request, response);
   }
 }

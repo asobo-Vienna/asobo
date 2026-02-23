@@ -140,7 +140,6 @@ public class EventService {
 
   @Transactional
   public EventDTO addNewEvent(EventCreationDTO eventCreationDTO) {
-    System.out.println(">>> isPrivateEvent: " + eventCreationDTO.getIsPrivateEvent());
     Event newEvent = this.eventDTOEventMapper.mapEventCreationDTOToEvent(eventCreationDTO);
     User creator =
         userRepository
@@ -228,7 +227,6 @@ public class EventService {
 
   public EventDTO updateEventById(
       UUID eventId, UserPrincipal userPrincipal, EventUpdateDTO eventUpdateDTO) {
-    System.out.println(">>> UPDATE isPrivateEvent: " + eventUpdateDTO.getIsPrivateEvent());
     Event existingEvent = this.getEventById(eventId);
 
     UUID loggedInUserId = userPrincipal.getUserId();

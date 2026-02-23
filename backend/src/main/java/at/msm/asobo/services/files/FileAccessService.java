@@ -49,7 +49,7 @@ public class FileAccessService {
         return true;
       }
 
-      return this.isParticipant(event, userId);
+      return this.isParticipantOrEventAdmin(event, userId);
     }
     return true;
   }
@@ -58,7 +58,7 @@ public class FileAccessService {
     return this.eventService.getEventByPicturePath(filepath);
   }
 
-  private boolean isParticipant(Event event, UUID userId) {
+  private boolean isParticipantOrEventAdmin(Event event, UUID userId) {
     return event.getParticipants().stream().anyMatch(p -> p.getId().equals(userId))
         || event.getCreator().getId().equals(userId)
         || event.getEventAdmins().stream().anyMatch(a -> a.getId().equals(userId));

@@ -99,7 +99,6 @@ public class FileStorageService {
       }
 
       Path filePath = Paths.get(this.baseStoragePath).resolve(cleanFilename).normalize();
-      System.out.println("Loading file " + cleanFilename + " from " + filePath);
       Resource resource = new UrlResource(filePath.toUri());
 
       if (resource.exists() && resource.isReadable()) {
