@@ -44,11 +44,11 @@ export class EventAdmins implements OnInit {
       const event = this.event();
       if (!event) return;
 
-      const admins = event.eventAdmins ?? [];
+      const eventAdmins = event.eventAdmins ?? [];
       const creator = event.creator ? [event.creator] : [];
 
       const unique = Array.from(
-        new Map([...creator, ...admins].map(u => [u.id, u])).values()
+        new Map([...creator, ...eventAdmins].map(u => [u.id, u])).values()
       );
 
       this.selectedEventAdmins.set(unique);
