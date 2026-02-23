@@ -1118,7 +1118,7 @@ class EventServiceTest {
     assertEquals(saveEventDTO, result);
 
     verify(eventRepository).findById(publicEvent1.getId());
-    verify(userService).getUserById(creator.getId());
+    verify(userRepository).findUserByIdAndIsDeletedFalse(creator.getId());
     verify(eventAdminService).canManageEvent(publicEvent1, creator.getId());
     verify(eventRepository).save(publicEvent1);
     verify(eventDTOEventMapper).mapEventToEventDTO(savedEvent);
@@ -1133,15 +1133,14 @@ class EventServiceTest {
             "eventPicture", "event.jpg", "image/jpeg", "test image content".getBytes());
 
     when(eventRepository.findById(publicEvent1.getId())).thenReturn(Optional.of(publicEvent1));
-    when(userService.getUserById(creator.getId())).thenReturn(creator);
-    when(eventAdminService.canManageEvent(publicEvent1, creator.getId())).thenReturn(true);
+    when(eventAdminService.canManageEvent(publicEvent1, creatorPrincipal.getUserId()))
+        .thenReturn(true);
     when(eventRepository.save(publicEvent1)).thenReturn(publicEvent1);
 
     eventService.updateEventPicture(publicEvent1.getId(), creatorPrincipal, picture);
 
     verify(eventRepository).findById(publicEvent1.getId());
-    verify(userRepository).findUserByIdAndIsDeletedFalse(creator.getId());
-    verify(eventAdminService).canManageEvent(publicEvent1, creator.getId());
+    verify(eventAdminService).canManageEvent(publicEvent1, creatorPrincipal.getUserId());
     verify(eventRepository).save(publicEvent1);
   }
 
