@@ -3,6 +3,7 @@ package at.msm.asobo.dto.event;
 import at.msm.asobo.dto.comment.UserCommentDTO;
 import at.msm.asobo.dto.medium.MediumDTO;
 import at.msm.asobo.dto.user.UserPublicDTO;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -24,6 +25,7 @@ public class EventCreationDTO {
   @NotBlank(message = "Location is mandatory for event creation")
   private String location;
 
+  @JsonProperty("isPrivateEvent")
   private boolean isPrivateEvent;
 
   @NotNull(message = "Date is mandatory for event creation")

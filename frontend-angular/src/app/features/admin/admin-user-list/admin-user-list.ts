@@ -2,7 +2,7 @@ import {Component, inject, OnInit, signal} from '@angular/core';
 import {TableModule} from 'primeng/table';
 import {TagModule} from 'primeng/tag';
 import {User} from '../../auth/models/user';
-import {DatePipe} from '@angular/common';
+import {AsyncPipe, DatePipe} from '@angular/common';
 import {AdminService} from '../services/admin-service';
 import {UrlUtilService} from '../../../shared/utils/url/url-util-service';
 import {RouterLink} from '@angular/router';
@@ -15,6 +15,7 @@ import {Chip} from 'primeng/chip';
 import {UserRoles} from '../../../shared/entities/user-roles';
 import {UserFilters} from '../../users/user-profile/models/user-filters';
 import {Spinner} from '../../../core/ui-elements/spinner/spinner';
+import {SecureImagePipe} from '../../../core/pipes/secure-image-pipe';
 
 
 @Component({
@@ -28,6 +29,8 @@ import {Spinner} from '../../../core/ui-elements/spinner/spinner';
     FormsModule,
     Chip,
     Spinner,
+    SecureImagePipe,
+    AsyncPipe,
   ],
   templateUrl: './admin-user-list.html',
   styleUrl: './admin-user-list.scss',
@@ -261,7 +264,7 @@ export class AdminUserList implements OnInit {
       next: (deletedUser: User) => {
         this.users.update(users =>
           users.map(u =>
-            u.id === deletedUser.id ? { ...u, isDeleted: deletedUser.isDeleted, isActive: deletedUser.isActive } : u
+            u.id === deletedUser.id ? {...u, isDeleted: deletedUser.isDeleted, isActive: deletedUser.isActive} : u
           )
         );
       },
@@ -276,7 +279,11 @@ export class AdminUserList implements OnInit {
       next: (reactivatedUser: User) => {
         this.users.update(users =>
           users.map(u =>
-            u.id === reactivatedUser.id ? { ...u, isDeleted: reactivatedUser.isDeleted, isActive: reactivatedUser.isActive } : u
+            u.id === reactivatedUser.id ? {
+              ...u,
+              isDeleted: reactivatedUser.isDeleted,
+              isActive: reactivatedUser.isActive
+            } : u
           )
         );
       },

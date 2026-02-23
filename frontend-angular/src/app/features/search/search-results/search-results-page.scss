@@ -29,6 +29,7 @@ $number-of-event-cards-per-row: 3;
 
 .user-card {
   transition: box-shadow 0.2s;
+  filter: drop-shadow(3px 3px 5px gray);
 
   img {
     width: 60px;
@@ -39,7 +40,7 @@ $number-of-event-cards-per-row: 3;
   }
 
   &:hover {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transform: scale(1.05);
   }
 }
 

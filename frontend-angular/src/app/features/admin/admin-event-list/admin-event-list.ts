@@ -5,12 +5,13 @@ import {RouterLink} from '@angular/router';
 import {UrlUtilService} from '../../../shared/utils/url/url-util-service';
 import {EventService} from '../../events/services/event-service';
 import {TableModule} from 'primeng/table';
-import {DatePipe} from '@angular/common';
+import {AsyncPipe, DatePipe} from '@angular/common';
 import {Tag} from 'primeng/tag';
 import {Dialog} from 'primeng/dialog';
 import {Button} from 'primeng/button';
 import {EventSummary} from '../../events/models/event-summary';
 import {Spinner} from '../../../core/ui-elements/spinner/spinner';
+import {SecureImagePipe} from '../../../core/pipes/secure-image-pipe';
 
 @Component({
   selector: 'app-admin-event-list',
@@ -21,7 +22,9 @@ import {Spinner} from '../../../core/ui-elements/spinner/spinner';
     Tag,
     Dialog,
     Button,
-    Spinner
+    Spinner,
+    SecureImagePipe,
+    AsyncPipe
   ],
   templateUrl: './admin-event-list.html',
   styleUrl: './admin-event-list.scss',
@@ -52,7 +55,7 @@ export class AdminEventList implements OnInit {
 
     this.loading.set(true);
 
-    this.eventService.getAllEventsPaginated({ page, size }, {}).subscribe({
+    this.eventService.getAllEventsPaginated({page, size}, {}).subscribe({
       next: (response) => {
         // Cache the page data
         this.pageCache.set(cacheKey, response.content);

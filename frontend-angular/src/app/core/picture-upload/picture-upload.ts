@@ -1,16 +1,20 @@
 import {Component, ElementRef, input, OnInit, output, signal, viewChild} from '@angular/core';
+import {SecureImagePipe} from '../pipes/secure-image-pipe';
+import {AsyncPipe} from '@angular/common';
 
 @Component({
   selector: 'app-picture-upload',
   templateUrl: './picture-upload.html',
   imports: [
+    SecureImagePipe,
+    AsyncPipe,
     //NgOptimizedImage
   ],
   styleUrl: './picture-upload.scss'
 })
 export class PictureUpload implements OnInit {
   pictureBox = viewChild<ElementRef<HTMLElement>>('pictureBox');
-  currentImage = input<string | ArrayBuffer | null>(null);
+  currentImage = input<string | null>(null);
   showPlusBeforeUpload = input<boolean>(false);
   shape = input<string>('circle');
   caption = input<string>('Add profile picture');

@@ -38,6 +38,8 @@ public interface EventRepository
 
   List<Event> findEventsByTitle(String title);
 
+  Optional<Event> findEventByPictureURI(String filepath);
+
   List<Event> findByParticipantsId(UUID userId);
 
   Page<Event> findByParticipantsId(UUID userId, Pageable pageable);

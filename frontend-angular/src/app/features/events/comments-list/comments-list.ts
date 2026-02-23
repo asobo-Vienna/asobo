@@ -1,7 +1,7 @@
 import {Component, inject, input, output, signal} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {Comment} from '../models/comment';
-import {DatePipe} from '@angular/common';
+import {AsyncPipe, DatePipe} from '@angular/common';
 import {List} from '../../../core/data-structures/lists/list';
 import {UrlUtilService} from '../../../shared/utils/url/url-util-service';
 import {environment} from '../../../../environments/environment';
@@ -9,6 +9,7 @@ import {RouterLink} from '@angular/router';
 import {Textarea} from 'primeng/textarea';
 import {AccessControlService} from '../../../shared/services/access-control-service';
 import {Event} from '../models/event';
+import {SecureImagePipe} from '../../../core/pipes/secure-image-pipe';
 
 
 @Component({
@@ -17,7 +18,9 @@ import {Event} from '../models/event';
     FormsModule,
     DatePipe,
     RouterLink,
-    Textarea
+    Textarea,
+    SecureImagePipe,
+    AsyncPipe
   ],
   templateUrl: './comments-list.html',
   styleUrl: './comments-list.scss'
@@ -43,7 +46,7 @@ export class CommentsList {
   }
 
   saveEdit(comment: Comment, text: string) {
-    this.commentEdited.emit({ ...comment, text });
+    this.commentEdited.emit({...comment, text});
     this.editingCommentId.set(null);
   }
 

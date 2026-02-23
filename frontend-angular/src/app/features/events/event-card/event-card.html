@@ -11,11 +11,7 @@
     <div class="card-image-container">
       <img
         class="card-img-top"
-        [src]="
-          UrlUtilService.getMediaUrl(
-            event().pictureURI || '/uploads/event-cover-pictures/event-cover-default.svg'
-          )
-        "
+        [src]="(UrlUtilService.getMediaUrl(event().pictureURI || environment.eventDummyCoverPicRelativeUrl) | secureImage | async) || ''"
         alt="{{ event().title }}"
       />
     </div>

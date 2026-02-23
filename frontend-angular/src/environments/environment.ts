@@ -9,6 +9,7 @@ export const environment = {
   production: false,
   backendUrl: BACKEND_URL,
   apiBaseUrl: API_BASE_URL,
+  fileBaseUrl: `${API_BASE_URL}/files`,
   eventsEndpoint: `${API_BASE_URL}/events`,
   loginEndpoint: `${API_BASE_URL}/auth/login`,
   registerEndpoint: `${API_BASE_URL}/auth/register`,

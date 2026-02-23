@@ -5,7 +5,6 @@ import {DatePipe} from "@angular/common";
 import {
   FormBuilder,
   FormGroup,
-  FormsModule,
   ReactiveFormsModule,
   Validators
 } from "@angular/forms";
@@ -24,7 +23,6 @@ import {ToggleSwitch} from 'primeng/toggleswitch';
     CdkTextareaAutosize,
     DatePicker,
     DatePipe,
-    FormsModule,
     InputText,
     ReactiveFormsModule,
     ToggleSwitch
@@ -111,22 +109,6 @@ export class EventBasicInfo implements OnInit {
         console.log('Error updating event', err);
       }
     });
-  }
-
-  public onIsPrivateToggle(event: { checked: boolean }) {
-    const currentEvent = this.event();
-    if (!currentEvent) return;
-
-    this.eventService
-      .updateEvent(currentEvent.id, { 'isPrivateEvent': event.checked })
-      .subscribe({
-        next: (updatedEvent) => {
-          this.eventUpdated.emit(updatedEvent);
-        },
-        error: (err) => {
-          console.error('Failed to update event privacy', err);
-        }
-      });
   }
 
   public enterEdit() {
