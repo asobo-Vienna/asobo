@@ -31,7 +31,7 @@ public class FileController {
   public ResponseEntity<Resource> serveFile(
       @AuthenticationPrincipal UserPrincipal userPrincipal, HttpServletRequest request) {
 
-    String fullPath = extractFilePath(request);
+    String fullPath = this.extractFilePath(request);
     UUID userId = userPrincipal != null ? userPrincipal.getUserId() : null;
 
     try {

@@ -1,14 +1,14 @@
-import { Component, inject, signal } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
-import { DatePickerModule } from 'primeng/datepicker';
-import { PictureUpload } from '../../../../core/picture-upload/picture-upload';
-import { EventService } from '../../services/event-service';
-import { AuthService } from '../../../auth/services/auth-service';
-import { Router } from '@angular/router';
-import { environment } from '../../../../../environments/environment';
-import { Textarea } from 'primeng/textarea';
-import { Checkbox } from 'primeng/checkbox';
-import { DateUtils } from '../../../../shared/utils/date/date-utils';
+import {Component, inject, signal} from '@angular/core';
+import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
+import {DatePickerModule} from 'primeng/datepicker';
+import {PictureUpload} from '../../../../core/picture-upload/picture-upload';
+import {EventService} from '../../services/event-service';
+import {AuthService} from '../../../auth/services/auth-service';
+import {Router} from '@angular/router';
+import {environment} from '../../../../../environments/environment';
+import {Textarea} from 'primeng/textarea';
+import {Checkbox} from 'primeng/checkbox';
+import {DateUtils} from '../../../../shared/utils/date/date-utils';
 
 @Component({
   selector: 'app-create-event-form',
@@ -57,7 +57,7 @@ export class CreateEventForm {
 
     const creator = this.authService.currentUser();
     if (creator) {
-      eventData.creator = creator;
+      eventData.creator = {id: creator.id};
     }
 
     this.eventService.createNewEvent(eventData).subscribe({
