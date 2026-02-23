@@ -5,8 +5,11 @@ import at.msm.asobo.dto.event.EventDTO;
 import at.msm.asobo.dto.event.EventSummaryDTO;
 import at.msm.asobo.dto.event.EventUpdateDTO;
 import at.msm.asobo.entities.Event;
+import at.msm.asobo.entities.User;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -114,6 +117,10 @@ public class EventDTOEventMapper {
     dto.setCommentCount(event.getComments().size());
     dto.setMediaCount(event.getMedia().size());
     dto.setEventAdminCount(event.getEventAdmins().size());
+
+    Set<UUID> adminIds =
+        event.getEventAdmins().stream().map(User::getId).collect(Collectors.toSet());
+    dto.setEventAdminIds(adminIds);
 
     return dto;
   }

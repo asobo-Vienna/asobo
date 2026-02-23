@@ -35,3 +35,6 @@ build/
 
 ### Mac OS Files ###
 *.DS_Store
+
+### Claude Code ###
+CLAUDE.md

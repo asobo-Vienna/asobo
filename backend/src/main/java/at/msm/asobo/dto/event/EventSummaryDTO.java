@@ -4,6 +4,7 @@ import at.msm.asobo.dto.user.UserPublicDTO;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.util.Set;
 import java.util.UUID;
 
 public class EventSummaryDTO {
@@ -25,6 +26,7 @@ public class EventSummaryDTO {
   private int commentCount;
   private int mediaCount;
   private int eventAdminCount;
+  private Set<UUID> eventAdminIds;
 
   public EventSummaryDTO() {}
 
@@ -138,5 +140,13 @@ public class EventSummaryDTO {
 
   public void setEventAdminCount(int eventAdminCount) {
     this.eventAdminCount = eventAdminCount;
+  }
+
+  public Set<UUID> getEventAdminIds() {
+    return this.eventAdminIds;
+  }
+
+  public void setEventAdminIds(Set<UUID> eventAdminIds) {
+    this.eventAdminIds = eventAdminIds;
   }
 }

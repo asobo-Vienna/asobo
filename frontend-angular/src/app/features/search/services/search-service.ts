@@ -1,16 +1,17 @@
-import {Injectable, inject} from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {map, Observable} from 'rxjs';
 import {
   AutocompleteItem,
   EventSearchResult,
   GlobalSearchResponse,
-  UserSearchResult,
-  SearchResultsResponse
+  SearchResultsResponse,
+  UserSearchResult
 } from '../../../shared/entities/search';
 import {environment} from '../../../../environments/environment';
 import {UrlUtilService} from '../../../shared/utils/url/url-util-service';
 import {EventSummary} from '../../events/models/event-summary';
+import {List} from '../../../core/data-structures/lists/list';
 
 @Injectable({
   providedIn: 'root',
@@ -53,42 +54,43 @@ export class SearchService {
       );
   }
 
-fullSearch(query: string, includePrivate: boolean): Observable<SearchResultsResponse> {
-  let params = new HttpParams()
-    .set('query', query)
-    .set('includePrivate', includePrivate.toString());
+  fullSearch(query: string, includePrivate: boolean): Observable<SearchResultsResponse> {
+    let params = new HttpParams()
+      .set('query', query)
+      .set('includePrivate', includePrivate.toString());
 
-  return this.http
-    .get<GlobalSearchResponse>(`${environment.apiBaseUrl}/search`, { params })
-    .pipe(
-      map((response) => ({
-        events: response.events.map((e: EventSearchResult): EventSummary => ({
-          id: e.id,
-          title: e.title ?? 'Untitled event',
-          description: e.description ?? '',
-          pictureURI: e.pictureURI || UrlUtilService.getMediaUrl(environment.eventDummyCoverPicRelativeUrl),
-          date: e.date ?? '',
-          time: e.date ? new Date(e.date).toLocaleTimeString('de-AT', {
-            hour: '2-digit',
-            minute: '2-digit'
-          }) : '',
-          location: e.location ?? 'Unknown location',
-          isPrivateEvent: e.isPrivateEvent ?? false,
-          participantCount: e.participantCount ?? 0,
-          commentCount: 0,
-          mediaCount: 0,
-        })),
-        users: response.users.map((u: UserSearchResult) => ({
-          id: u.id,
-          username: u.username ?? 'Unknown user',
-          pictureURI: UrlUtilService.getMediaUrl(
-            u.pictureURI || '/uploads/profile-pictures/default.png'
-          ),
-          fullName: u.fullName ?? '',
-          location: u.location ?? 'Unknown location',
-        })),
-        totalResults: response.totalResults,
-      }))
-    );
-}
+    return this.http
+      .get<GlobalSearchResponse>(`${environment.apiBaseUrl}/search`, {params})
+      .pipe(
+        map((response) => ({
+          events: response.events.map((e: EventSearchResult): EventSummary => ({
+            id: e.id,
+            title: e.title ?? 'Untitled event',
+            description: e.description ?? '',
+            pictureURI: e.pictureURI || UrlUtilService.getMediaUrl(environment.eventDummyCoverPicRelativeUrl),
+            date: e.date ?? '',
+            time: e.date ? new Date(e.date).toLocaleTimeString('de-AT', {
+              hour: '2-digit',
+              minute: '2-digit'
+            }) : '',
+            location: e.location ?? 'Unknown location',
+            isPrivateEvent: e.isPrivateEvent ?? false,
+            participantCount: e.participantCount ?? 0,
+            commentCount: 0,
+            mediaCount: 0,
+            eventAdminIds: new List<string>(),
+          })),
+          users: response.users.map((u: UserSearchResult) => ({
+            id: u.id,
+            username: u.username ?? 'Unknown user',
+            pictureURI: UrlUtilService.getMediaUrl(
+              u.pictureURI || '/uploads/profile-pictures/default.png'
+            ),
+            fullName: u.fullName ?? '',
+            location: u.location ?? 'Unknown location',
+          })),
+          totalResults: response.totalResults,
+        }))
+      );
+  }
 }
