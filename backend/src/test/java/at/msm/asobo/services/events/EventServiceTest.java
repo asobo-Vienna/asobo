@@ -20,6 +20,7 @@ import at.msm.asobo.exceptions.users.UserNotFoundException;
 import at.msm.asobo.mappers.EventDTOEventMapper;
 import at.msm.asobo.mappers.UserDTOUserMapper;
 import at.msm.asobo.repositories.EventRepository;
+import at.msm.asobo.repositories.UserRepository;
 import at.msm.asobo.security.UserPrincipal;
 import at.msm.asobo.services.UserService;
 import at.msm.asobo.services.files.FileStorageService;
@@ -30,7 +31,6 @@ import java.util.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -52,6 +52,8 @@ class EventServiceTest {
   @InjectMocks private EventService eventService;
 
   @Mock private UserService userService;
+
+  @Mock private UserRepository userRepository;
 
   @Mock private EventAdminService eventAdminService;
 
@@ -655,33 +657,32 @@ class EventServiceTest {
     Event newEvent =
         new EventTestBuilder()
             .withCreator(creator)
-            .withEventAdmins(Set.of(eventAdmin1, eventAdmin2))
+            .withEventAdmins(new HashSet<>())
             .withTitle(creationDTO.getTitle())
             .withDate(creationDTO.getDate())
             .buildEventEntity();
 
-    Event savedEvent = new EventTestBuilder().fromEvent(newEvent).buildEventEntity();
-
-    EventDTO eventDTO = new EventTestBuilder().fromEvent(savedEvent).buildEventDTO();
+    EventDTO eventDTO = new EventTestBuilder().fromEvent(newEvent).buildEventDTO();
 
     when(eventDTOEventMapper.mapEventCreationDTOToEvent(creationDTO)).thenReturn(newEvent);
-    when(eventRepository.save(newEvent)).thenReturn(savedEvent);
-    when(eventDTOEventMapper.mapEventToEventDTO(savedEvent)).thenReturn(eventDTO);
+    when(userRepository.findById(creator.getId())).thenReturn(Optional.of(creator));
+    when(userRepository.findById(eventAdmin1.getId())).thenReturn(Optional.of(eventAdmin1));
+    when(userRepository.findById(eventAdmin2.getId())).thenReturn(Optional.of(eventAdmin2));
+    when(eventRepository.save(newEvent)).thenReturn(newEvent);
+    when(eventDTOEventMapper.mapEventToEventDTO(newEvent)).thenReturn(eventDTO);
 
     EventDTO result = eventService.addNewEvent(creationDTO);
 
     assertEquals(eventDTO, result);
-    assertEquals(eventDTO.getId(), result.getId());
-
-    ArgumentCaptor<Event> eventCaptor = ArgumentCaptor.forClass(Event.class);
-    verify(eventRepository).save(eventCaptor.capture());
-
-    Event capturedEvent = eventCaptor.getValue();
-    assertThat(capturedEvent.getEventAdmins()).containsExactlyInAnyOrder(eventAdmin1, eventAdmin2);
+    assertThat(newEvent.getEventAdmins())
+        .containsExactlyInAnyOrder(creator, eventAdmin1, eventAdmin2);
 
     verify(eventDTOEventMapper).mapEventCreationDTOToEvent(creationDTO);
-    verify(eventRepository).save(newEvent);
-    verify(eventDTOEventMapper).mapEventToEventDTO(savedEvent);
+    verify(userRepository).findById(creator.getId());
+    verify(userRepository).findById(eventAdmin1.getId());
+    verify(userRepository).findById(eventAdmin2.getId());
+    verify(eventRepository, times(2)).save(newEvent);
+    verify(eventDTOEventMapper).mapEventToEventDTO(newEvent);
   }
 
   @Test
@@ -690,29 +691,33 @@ class EventServiceTest {
     creationDTO.setCreator(creatorDTO);
     creationDTO.setEventAdmins(null);
     creationDTO.setTitle("Test Event");
+    creationDTO.setDescription("Test Description");
+    creationDTO.setLocation("Vienna");
+    creationDTO.setDate(LocalDateTime.now().plusDays(1));
 
     Event newEvent =
         new EventTestBuilder()
             .withCreator(creator)
+            .withEventAdmins(new HashSet<>())
             .withTitle(creationDTO.getTitle())
             .buildEventEntity();
 
-    Event savedEvent = new EventTestBuilder().fromEvent(newEvent).buildEventEntity();
-
-    EventDTO eventDTO = new EventTestBuilder().fromEvent(savedEvent).buildEventDTO();
+    EventDTO eventDTO = new EventTestBuilder().fromEvent(newEvent).buildEventDTO();
 
     when(eventDTOEventMapper.mapEventCreationDTOToEvent(creationDTO)).thenReturn(newEvent);
-    when(eventRepository.save(newEvent)).thenReturn(savedEvent);
-    when(eventDTOEventMapper.mapEventToEventDTO(savedEvent)).thenReturn(eventDTO);
+    when(userRepository.findById(creator.getId())).thenReturn(Optional.of(creator));
+    when(eventRepository.save(newEvent)).thenReturn(newEvent);
+    when(eventDTOEventMapper.mapEventToEventDTO(newEvent)).thenReturn(eventDTO);
 
     EventDTO result = eventService.addNewEvent(creationDTO);
 
     assertEquals(eventDTO, result);
-    assertThat(creationDTO.getEventAdmins()).containsExactly(creatorDTO);
+    assertThat(newEvent.getEventAdmins()).containsExactly(creator);
 
     verify(eventDTOEventMapper).mapEventCreationDTOToEvent(creationDTO);
-    verify(eventRepository).save(newEvent);
-    verify(eventDTOEventMapper).mapEventToEventDTO(savedEvent);
+    verify(userRepository).findById(creator.getId());
+    verify(eventRepository, times(2)).save(newEvent);
+    verify(eventDTOEventMapper).mapEventToEventDTO(newEvent);
   }
 
   @Test
@@ -721,60 +726,67 @@ class EventServiceTest {
     creationDTO.setCreator(creatorDTO);
     creationDTO.setEventAdmins(new HashSet<>());
     creationDTO.setTitle("Test Event");
+    creationDTO.setDescription("Test Description");
+    creationDTO.setLocation("Vienna");
+    creationDTO.setDate(LocalDateTime.now().plusDays(1));
 
     Event newEvent =
         new EventTestBuilder()
             .withCreator(creator)
+            .withEventAdmins(new HashSet<>())
             .withTitle(creationDTO.getTitle())
             .buildEventEntity();
 
-    Event savedEvent = new EventTestBuilder().fromEvent(newEvent).buildEventEntity();
-
-    EventDTO eventDTO = new EventTestBuilder().fromEvent(savedEvent).buildEventDTO();
+    EventDTO eventDTO = new EventTestBuilder().fromEvent(newEvent).buildEventDTO();
 
     when(eventDTOEventMapper.mapEventCreationDTOToEvent(creationDTO)).thenReturn(newEvent);
-    when(eventRepository.save(newEvent)).thenReturn(savedEvent);
-    when(eventDTOEventMapper.mapEventToEventDTO(savedEvent)).thenReturn(eventDTO);
+    when(userRepository.findById(creator.getId())).thenReturn(Optional.of(creator));
+    when(eventRepository.save(newEvent)).thenReturn(newEvent);
+    when(eventDTOEventMapper.mapEventToEventDTO(newEvent)).thenReturn(eventDTO);
 
     EventDTO result = eventService.addNewEvent(creationDTO);
 
     assertEquals(eventDTO, result);
-    assertThat(creationDTO.getEventAdmins()).containsExactly(creatorDTO);
+    assertThat(newEvent.getEventAdmins()).containsExactly(creator);
 
-    verify(eventDTOEventMapper).mapEventCreationDTOToEvent(creationDTO);
-    verify(eventRepository).save(newEvent);
-    verify(eventDTOEventMapper).mapEventToEventDTO(savedEvent);
+    verify(userRepository).findById(creator.getId());
+    verify(eventRepository, times(2)).save(newEvent);
   }
 
   @Test
   void addNewEvent_creatorAlreadyInAdmins_doesNotDuplicate() {
-    EventCreationDTO creationDTO = new EventCreationDTO();
-    creationDTO.setCreator(creatorDTO);
-    creationDTO.setEventAdmins(new HashSet<>(Set.of(creatorDTO, eventAdminDTO1)));
-    creationDTO.setTitle("Test Event");
+    EventCreationDTO creationDTO =
+        new EventTestBuilder()
+            .withId(UUID.randomUUID())
+            .withCreator(creator)
+            .withEventAdmins(new HashSet<>(Set.of(creator, eventAdmin1)))
+            .withTitle("Test Event")
+            .withDate(LocalDateTime.now().plusDays(1))
+            .buildEventCreationDTO();
 
     Event newEvent =
         new EventTestBuilder()
             .withCreator(creator)
+            .withEventAdmins(new HashSet<>())
             .withTitle(creationDTO.getTitle())
             .buildEventEntity();
 
-    Event savedEvent = new EventTestBuilder().fromEvent(newEvent).buildEventEntity();
-
-    EventDTO eventDTO = new EventTestBuilder().fromEvent(savedEvent).buildEventDTO();
+    EventDTO eventDTO = new EventTestBuilder().fromEvent(newEvent).buildEventDTO();
 
     when(eventDTOEventMapper.mapEventCreationDTOToEvent(creationDTO)).thenReturn(newEvent);
-    when(eventRepository.save(newEvent)).thenReturn(savedEvent);
-    when(eventDTOEventMapper.mapEventToEventDTO(savedEvent)).thenReturn(eventDTO);
+    when(userRepository.findById(creator.getId())).thenReturn(Optional.of(creator));
+    when(userRepository.findById(eventAdmin1.getId())).thenReturn(Optional.of(eventAdmin1));
+    when(eventRepository.save(newEvent)).thenReturn(newEvent);
+    when(eventDTOEventMapper.mapEventToEventDTO(newEvent)).thenReturn(eventDTO);
 
     EventDTO result = eventService.addNewEvent(creationDTO);
 
     assertEquals(eventDTO, result);
-    assertThat(creationDTO.getEventAdmins()).containsExactlyInAnyOrder(creatorDTO, eventAdminDTO1);
+    assertThat(newEvent.getEventAdmins()).containsExactlyInAnyOrder(creator, eventAdmin1);
 
-    verify(eventDTOEventMapper).mapEventCreationDTOToEvent(creationDTO);
-    verify(eventRepository).save(newEvent);
-    verify(eventDTOEventMapper).mapEventToEventDTO(savedEvent);
+    verify(userRepository, times(2)).findById(creator.getId());
+    verify(userRepository).findById(eventAdmin1.getId());
+    verify(eventRepository, times(2)).save(newEvent);
   }
 
   @Test
@@ -886,8 +898,9 @@ class EventServiceTest {
     publicEvent1.setPictureURI(pathToPicture);
 
     when(eventRepository.findById(publicEvent1.getId())).thenReturn(Optional.of(publicEvent1));
-    when(userService.getUserById(creator.getId())).thenReturn(creator);
-    when(eventAdminService.canManageEvent(publicEvent1, creator)).thenReturn(true);
+    when(userRepository.findUserByIdAndIsDeletedFalse(creator.getId()))
+        .thenReturn(Optional.of(creator));
+    when(eventAdminService.canManageEvent(publicEvent1, creator.getId())).thenReturn(true);
     when(eventDTOEventMapper.mapEventToEventDTO(publicEvent1)).thenReturn(publicEventDTO1);
 
     EventDTO result = eventService.deleteEventById(publicEvent1.getId(), creatorPrincipal);
@@ -896,8 +909,8 @@ class EventServiceTest {
     assertEquals(publicEventDTO1.getId(), result.getId());
 
     verify(eventRepository).findById(publicEvent1.getId());
-    verify(userService).getUserById(creator.getId());
-    verify(eventAdminService).canManageEvent(publicEvent1, creator);
+    verify(userRepository).findUserByIdAndIsDeletedFalse(creator.getId());
+    verify(eventAdminService).canManageEvent(publicEvent1, creator.getId());
     verify(fileStorageService).delete(pathToPicture);
     verify(eventRepository).delete(publicEvent1);
     verify(eventDTOEventMapper).mapEventToEventDTO(publicEvent1);
@@ -909,8 +922,9 @@ class EventServiceTest {
     publicEvent1.setPictureURI(null);
 
     when(eventRepository.findById(publicEvent1.getId())).thenReturn(Optional.of(publicEvent1));
-    when(userService.getUserById(creator.getId())).thenReturn(creator);
-    when(eventAdminService.canManageEvent(publicEvent1, creator)).thenReturn(true);
+    when(userRepository.findUserByIdAndIsDeletedFalse(creator.getId()))
+        .thenReturn(Optional.of(creator));
+    when(eventAdminService.canManageEvent(publicEvent1, creator.getId())).thenReturn(true);
     when(eventDTOEventMapper.mapEventToEventDTO(publicEvent1)).thenReturn(publicEventDTO1);
 
     EventDTO result = eventService.deleteEventById(publicEvent1.getId(), creatorPrincipal);
@@ -919,8 +933,8 @@ class EventServiceTest {
     assertEquals(publicEventDTO1.getId(), result.getId());
 
     verify(eventRepository).findById(publicEvent1.getId());
-    verify(userService).getUserById(creator.getId());
-    verify(eventAdminService).canManageEvent(publicEvent1, creator);
+    verify(userRepository).findUserByIdAndIsDeletedFalse(creator.getId());
+    verify(eventAdminService).canManageEvent(publicEvent1, creator.getId());
     verify(fileStorageService, never()).delete(any());
     verify(eventRepository).delete(publicEvent1);
     verify(eventDTOEventMapper).mapEventToEventDTO(publicEvent1);
@@ -934,8 +948,9 @@ class EventServiceTest {
     UserPrincipal adminPrincipal = new UserTestBuilder().fromUser(eventAdmin1).buildUserPrincipal();
 
     when(eventRepository.findById(publicEvent1.getId())).thenReturn(Optional.of(publicEvent1));
-    when(userService.getUserById(eventAdmin1.getId())).thenReturn(eventAdmin1);
-    when(eventAdminService.canManageEvent(publicEvent1, eventAdmin1)).thenReturn(true);
+    when(userRepository.findUserByIdAndIsDeletedFalse(eventAdmin1.getId()))
+        .thenReturn(Optional.of(eventAdmin1));
+    when(eventAdminService.canManageEvent(publicEvent1, eventAdmin1.getId())).thenReturn(true);
     when(eventDTOEventMapper.mapEventToEventDTO(publicEvent1)).thenReturn(publicEventDTO1);
 
     EventDTO result = eventService.deleteEventById(publicEvent1.getId(), adminPrincipal);
@@ -944,8 +959,8 @@ class EventServiceTest {
     assertEquals(publicEventDTO1.getId(), result.getId());
 
     verify(eventRepository).findById(publicEvent1.getId());
-    verify(userService).getUserById(eventAdmin1.getId());
-    verify(eventAdminService).canManageEvent(publicEvent1, eventAdmin1);
+    verify(userRepository).findUserByIdAndIsDeletedFalse(eventAdmin1.getId());
+    verify(eventAdminService).canManageEvent(publicEvent1, eventAdmin1.getId());
     verify(fileStorageService, never()).delete(any());
     verify(eventRepository).delete(publicEvent1);
     verify(eventDTOEventMapper).mapEventToEventDTO(publicEvent1);
@@ -965,8 +980,10 @@ class EventServiceTest {
         new UserTestBuilder().fromUser(unauthorizedUser).buildUserPrincipal();
 
     when(eventRepository.findById(publicEvent1.getId())).thenReturn(Optional.of(publicEvent1));
-    when(userService.getUserById(unauthorizedUser.getId())).thenReturn(unauthorizedUser);
-    when(eventAdminService.canManageEvent(publicEvent1, unauthorizedUser)).thenReturn(false);
+    when(userRepository.findUserByIdAndIsDeletedFalse(unauthorizedUser.getId()))
+        .thenReturn(Optional.of(unauthorizedUser));
+    when(eventAdminService.canManageEvent(publicEvent1, unauthorizedUser.getId()))
+        .thenReturn(false);
 
     UserNotAuthorizedException exception =
         assertThrows(
@@ -976,8 +993,8 @@ class EventServiceTest {
     assertThat(exception.getMessage()).isEqualTo("You are not allowed to delete this event");
 
     verify(eventRepository).findById(publicEvent1.getId());
-    verify(userService).getUserById(unauthorizedUser.getId());
-    verify(eventAdminService).canManageEvent(publicEvent1, unauthorizedUser);
+    verify(userRepository).findUserByIdAndIsDeletedFalse(unauthorizedUser.getId());
+    verify(eventAdminService).canManageEvent(publicEvent1, unauthorizedUser.getId());
     verify(fileStorageService, never()).delete(any());
     verify(eventRepository, never()).delete(any(Event.class));
     verify(eventDTOEventMapper, never()).mapEventToEventDTO(any());
@@ -1014,7 +1031,7 @@ class EventServiceTest {
             .buildUserPrincipal();
 
     when(eventRepository.findById(publicEvent1.getId())).thenReturn(Optional.of(publicEvent1));
-    when(userService.getUserById(userPrincipal.getUserId()))
+    when(userRepository.findUserByIdAndIsDeletedFalse(userPrincipal.getUserId()))
         .thenThrow(new UserNotFoundException(userPrincipal.getUserId()));
 
     UserNotFoundException exception =
@@ -1025,7 +1042,7 @@ class EventServiceTest {
     assertThat(exception.getMessage()).contains(userPrincipal.getUserId().toString());
 
     verify(eventRepository).findById(publicEvent1.getId());
-    verify(userService).getUserById(userPrincipal.getUserId());
+    verify(userRepository).findUserByIdAndIsDeletedFalse(userPrincipal.getUserId());
     verify(eventAdminService, never()).canManageEvent(any(), any());
     verify(fileStorageService, never()).delete(any());
     verify(eventRepository, never()).delete(any(Event.class));
@@ -1055,8 +1072,9 @@ class EventServiceTest {
     EventDTO savedEventDTO = new EventTestBuilder().fromEvent(savedEvent).buildEventDTO();
 
     when(eventRepository.findById(publicEvent1.getId())).thenReturn(Optional.of(publicEvent1));
-    when(userService.getUserById(creator.getId())).thenReturn(creator);
-    when(eventAdminService.canManageEvent(publicEvent1, creator)).thenReturn(true);
+    when(userRepository.findUserByIdAndIsDeletedFalse(creator.getId()))
+        .thenReturn(Optional.of(creator));
+    when(eventAdminService.canManageEvent(publicEvent1, creator.getId())).thenReturn(true);
     when(eventRepository.save(publicEvent1)).thenReturn(savedEvent);
     when(eventDTOEventMapper.mapEventToEventDTO(savedEvent)).thenReturn(savedEventDTO);
 
@@ -1067,35 +1085,30 @@ class EventServiceTest {
     assertEquals(savedEventDTO.getId(), result.getId());
 
     verify(eventRepository).findById(publicEvent1.getId());
-    verify(userService).getUserById(creator.getId());
-    verify(eventAdminService).canManageEvent(publicEvent1, creator);
-    verify(fileStorageService).handleEventPictureUpdate(null, publicEvent1);
+    verify(userRepository).findUserByIdAndIsDeletedFalse(creator.getId());
+    verify(eventAdminService).canManageEvent(publicEvent1, creator.getId());
     verify(eventRepository).save(publicEvent1);
     verify(eventDTOEventMapper).mapEventToEventDTO(savedEvent);
   }
 
   @Test
-  void updateEventById_withPicture_updatesEventAndPicture() {
+  void updateEventById_withGeneralFields_updatesEvent() {
     publicEvent1.setCreator(creator);
-
-    MockMultipartFile picture =
-        new MockMultipartFile(
-            "picture", "event.jpg", "image/jpeg", "test image content".getBytes());
 
     EventUpdateDTO updateDTO =
         new EventTestBuilder()
             .withTitle("Updated Title")
             .withParticipants(null)
             .buildEventUpdateDTO();
-    updateDTO.setPicture(picture);
 
     Event savedEvent = new EventTestBuilder().fromEvent(publicEvent1).buildEventEntity();
 
     EventDTO saveEventDTO = new EventTestBuilder().fromEvent(savedEvent).buildEventDTO();
 
     when(eventRepository.findById(publicEvent1.getId())).thenReturn(Optional.of(publicEvent1));
-    when(userService.getUserById(creator.getId())).thenReturn(creator);
-    when(eventAdminService.canManageEvent(publicEvent1, creator)).thenReturn(true);
+    when(userRepository.findUserByIdAndIsDeletedFalse(creator.getId()))
+        .thenReturn(Optional.of(creator));
+    when(eventAdminService.canManageEvent(publicEvent1, creator.getId())).thenReturn(true);
     when(eventRepository.save(publicEvent1)).thenReturn(savedEvent);
     when(eventDTOEventMapper.mapEventToEventDTO(savedEvent)).thenReturn(saveEventDTO);
 
@@ -1105,11 +1118,30 @@ class EventServiceTest {
     assertEquals(saveEventDTO, result);
 
     verify(eventRepository).findById(publicEvent1.getId());
-    verify(userService).getUserById(creator.getId());
-    verify(eventAdminService).canManageEvent(publicEvent1, creator);
-    verify(fileStorageService).handleEventPictureUpdate(picture, publicEvent1);
+    verify(userRepository).findUserByIdAndIsDeletedFalse(creator.getId());
+    verify(eventAdminService).canManageEvent(publicEvent1, creator.getId());
     verify(eventRepository).save(publicEvent1);
     verify(eventDTOEventMapper).mapEventToEventDTO(savedEvent);
+  }
+
+  @Test
+  void updateEventPicture_withValidPicture_updatesPictureOnly() {
+    publicEvent1.setCreator(creator);
+
+    MockMultipartFile picture =
+        new MockMultipartFile(
+            "eventPicture", "event.jpg", "image/jpeg", "test image content".getBytes());
+
+    when(eventRepository.findById(publicEvent1.getId())).thenReturn(Optional.of(publicEvent1));
+    when(eventAdminService.canManageEvent(publicEvent1, creatorPrincipal.getUserId()))
+        .thenReturn(true);
+    when(eventRepository.save(publicEvent1)).thenReturn(publicEvent1);
+
+    eventService.updateEventPicture(publicEvent1.getId(), creatorPrincipal, picture);
+
+    verify(eventRepository).findById(publicEvent1.getId());
+    verify(eventAdminService).canManageEvent(publicEvent1, creatorPrincipal.getUserId());
+    verify(eventRepository).save(publicEvent1);
   }
 
   @Test
@@ -1146,8 +1178,9 @@ class EventServiceTest {
     EventDTO savedEventDTO = new EventTestBuilder().fromEvent(savedEvent).buildEventDTO();
 
     when(eventRepository.findById(publicEvent1.getId())).thenReturn(Optional.of(publicEvent1));
-    when(userService.getUserById(creator.getId())).thenReturn(creator);
-    when(eventAdminService.canManageEvent(publicEvent1, creator)).thenReturn(true);
+    when(userRepository.findUserByIdAndIsDeletedFalse(creator.getId()))
+        .thenReturn(Optional.of(creator));
+    when(eventAdminService.canManageEvent(publicEvent1, creator.getId())).thenReturn(true);
     when(userDTOUserMapper.mapUserPublicDTOsToUsers(participantDTOs)).thenReturn(participants);
     when(eventRepository.save(publicEvent1)).thenReturn(savedEvent);
     when(eventDTOEventMapper.mapEventToEventDTO(savedEvent)).thenReturn(savedEventDTO);
@@ -1158,8 +1191,8 @@ class EventServiceTest {
     assertEquals(savedEventDTO, result);
 
     verify(eventRepository).findById(publicEvent1.getId());
-    verify(userService).getUserById(creator.getId());
-    verify(eventAdminService).canManageEvent(publicEvent1, creator);
+    verify(userRepository).findUserByIdAndIsDeletedFalse(creator.getId());
+    verify(eventAdminService).canManageEvent(publicEvent1, creator.getId());
     verify(userDTOUserMapper).mapUserPublicDTOsToUsers(participantDTOs);
     verify(eventRepository).save(publicEvent1);
     verify(eventDTOEventMapper).mapEventToEventDTO(savedEvent);
@@ -1181,8 +1214,10 @@ class EventServiceTest {
     EventUpdateDTO updateDTO = new EventTestBuilder().withTitle("New Title").buildEventUpdateDTO();
 
     when(eventRepository.findById(publicEvent1.getId())).thenReturn(Optional.of(publicEvent1));
-    when(userService.getUserById(unauthorizedUser.getId())).thenReturn(unauthorizedUser);
-    when(eventAdminService.canManageEvent(publicEvent1, unauthorizedUser)).thenReturn(false);
+    when(userRepository.findUserByIdAndIsDeletedFalse(unauthorizedUser.getId()))
+        .thenReturn(Optional.of(unauthorizedUser));
+    when(eventAdminService.canManageEvent(publicEvent1, unauthorizedUser.getId()))
+        .thenReturn(false);
 
     UserNotAuthorizedException exception =
         assertThrows(
@@ -1194,8 +1229,8 @@ class EventServiceTest {
     assertThat(exception.getMessage()).isEqualTo("You are not allowed to update this event");
 
     verify(eventRepository).findById(publicEvent1.getId());
-    verify(userService).getUserById(unauthorizedUser.getId());
-    verify(eventAdminService).canManageEvent(publicEvent1, unauthorizedUser);
+    verify(userRepository).findUserByIdAndIsDeletedFalse(unauthorizedUser.getId());
+    verify(eventAdminService).canManageEvent(publicEvent1, unauthorizedUser.getId());
     verify(eventRepository, never()).save(any());
   }
 
@@ -1228,7 +1263,7 @@ class EventServiceTest {
     EventUpdateDTO updateDTO = new EventTestBuilder().withTitle("New Title").buildEventUpdateDTO();
 
     when(eventRepository.findById(publicEvent1.getId())).thenReturn(Optional.of(publicEvent1));
-    when(userService.getUserById(userPrincipal.getUserId()))
+    when(userRepository.findUserByIdAndIsDeletedFalse(userPrincipal.getUserId()))
         .thenThrow(new UserNotFoundException(userPrincipal.getUserId()));
 
     assertThrows(
@@ -1236,7 +1271,7 @@ class EventServiceTest {
         () -> eventService.updateEventById(publicEvent1.getId(), userPrincipal, updateDTO));
 
     verify(eventRepository).findById(publicEvent1.getId());
-    verify(userService).getUserById(userPrincipal.getUserId());
+    verify(userRepository).findUserByIdAndIsDeletedFalse(userPrincipal.getUserId());
     verify(eventRepository, never()).save(any());
   }
 
@@ -1259,8 +1294,9 @@ class EventServiceTest {
         new EventTestBuilder().fromEvent(publicEvent1).withTitle("New Title").buildEventDTO();
 
     when(eventRepository.findById(publicEvent1.getId())).thenReturn(Optional.of(publicEvent1));
-    when(userService.getUserById(creatorPrincipal.getUserId())).thenReturn(creator);
-    when(eventAdminService.canManageEvent(publicEvent1, creator)).thenReturn(true);
+    when(userRepository.findUserByIdAndIsDeletedFalse(creatorPrincipal.getUserId()))
+        .thenReturn(Optional.of(creator));
+    when(eventAdminService.canManageEvent(publicEvent1, creator.getId())).thenReturn(true);
     when(eventRepository.save(publicEvent1)).thenReturn(publicEvent1);
     when(eventDTOEventMapper.mapEventToEventDTO(publicEvent1)).thenReturn(expectedDTO);
 
@@ -1273,8 +1309,8 @@ class EventServiceTest {
     assertEquals(expectedDTO, result);
 
     verify(eventRepository).findById(publicEvent1.getId());
-    verify(userService).getUserById(creatorPrincipal.getUserId());
-    verify(eventAdminService).canManageEvent(publicEvent1, creator);
+    verify(userRepository).findUserByIdAndIsDeletedFalse(creatorPrincipal.getUserId());
+    verify(eventAdminService).canManageEvent(publicEvent1, creator.getId());
     verify(eventRepository).save(publicEvent1);
     verify(eventDTOEventMapper).mapEventToEventDTO(publicEvent1);
   }
@@ -1294,18 +1330,19 @@ class EventServiceTest {
     EventDTO savedEventDTO = new EventTestBuilder().fromEvent(savedEvent).buildEventDTO();
 
     when(eventRepository.findById(publicEvent1.getId())).thenReturn(Optional.of(publicEvent1));
-    when(userService.getUserById(creator.getId())).thenReturn(creator);
-    when(eventAdminService.canManageEvent(publicEvent1, creator)).thenReturn(true);
+    when(userRepository.findUserByIdAndIsDeletedFalse(creator.getId()))
+        .thenReturn(Optional.of(creator));
+    when(eventAdminService.canManageEvent(publicEvent1, creator.getId())).thenReturn(true);
     when(eventRepository.save(publicEvent1)).thenReturn(savedEvent);
     when(eventDTOEventMapper.mapEventToEventDTO(savedEvent)).thenReturn(savedEventDTO);
 
-    eventService.updateEventById(publicEvent1.getId(), creatorPrincipal, updateDTO);
+    this.eventService.updateEventById(publicEvent1.getId(), creatorPrincipal, updateDTO);
 
     assertThat(publicEvent1.getModificationDate()).isAfterOrEqualTo(beforeUpdate);
 
     verify(eventRepository).findById(publicEvent1.getId());
-    verify(userService).getUserById(creator.getId());
-    verify(eventAdminService).canManageEvent(publicEvent1, creator);
+    verify(userRepository).findUserByIdAndIsDeletedFalse(creator.getId());
+    verify(eventAdminService).canManageEvent(publicEvent1, creator.getId());
     verify(eventRepository).save(publicEvent1);
     verify(eventDTOEventMapper).mapEventToEventDTO(savedEvent);
   }

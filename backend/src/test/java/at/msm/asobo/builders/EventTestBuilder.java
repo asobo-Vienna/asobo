@@ -34,7 +34,7 @@ public class EventTestBuilder {
   private Instant modificationDate;
   private List<UserComment> comments;
   private List<Medium> media;
-  private boolean isPrivateEvent;
+  private Boolean isPrivateEvent;
 
   private final UserDTOUserMapper userDTOUserMapper;
   private final UserCommentDTOUserCommentMapper userCommentDTOUserCommentMapper;

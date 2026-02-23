@@ -32,7 +32,7 @@
         <td>
           <a [routerLink]="UrlUtilService.getUserRouterLink(user.username)">
             <img
-              [src]="UrlUtilService.getMediaUrl(user.pictureURI || environment.userDummyProfilePicRelativeUrl)"
+              [src]="(UrlUtilService.getMediaUrl(user.pictureURI || environment.userDummyProfilePicRelativeUrl)  | secureImage | async) || ''"
               [alt]="user.username + '\'s avatar'"
               class="user-avatar"
             />
@@ -96,7 +96,8 @@
         } @else {
           <td><!-- spacer --></td>
           <td>
-            <i class="pi pi-power-off clickable" title="Reactivate" (click)="onReactivate(user)" aria-label="Reactivate user"></i>
+            <i class="pi pi-power-off clickable" title="Reactivate" (click)="onReactivate(user)"
+               aria-label="Reactivate user"></i>
           </td>
         }
       </tr>
@@ -104,6 +105,6 @@
   </p-table>
 
   @if (loading()) {
-    <app-spinner type="overlay" message="Loading users..." />
+    <app-spinner type="overlay" message="Loading users..."/>
   }
 </div>

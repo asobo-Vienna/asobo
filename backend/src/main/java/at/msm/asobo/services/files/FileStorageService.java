@@ -1,19 +1,26 @@
 package at.msm.asobo.services.files;
 
-import static java.nio.file.Files.*;
+import static java.nio.file.Files.createDirectories;
 
 import at.msm.asobo.config.FileStorageProperties;
 import at.msm.asobo.entities.Event;
 import at.msm.asobo.entities.User;
 import at.msm.asobo.exceptions.files.FileDeletionException;
+import at.msm.asobo.exceptions.files.FileNotFoundException;
 import at.msm.asobo.exceptions.files.InvalidFilenameException;
 import at.msm.asobo.interfaces.PictureEntity;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.UUID;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -21,9 +28,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class FileStorageService {
 
   private final FileStorageProperties fileStorageProperties;
-
   private final FileValidationService fileValidationService;
-
   private final String baseStoragePath;
 
   public FileStorageService(
@@ -86,6 +91,29 @@ public class FileStorageService {
     }
   }
 
+  public Resource loadFileAsResource(String filename, UUID userId) {
+    try {
+      // Remove leading slash or /uploads/ prefix
+      String cleanFilename = filename;
+      if (cleanFilename.startsWith("/uploads/")) {
+        cleanFilename = cleanFilename.substring("/uploads/".length());
+      } else if (cleanFilename.startsWith("/")) {
+        cleanFilename = cleanFilename.substring(1);
+      }
+
+      Path filePath = Paths.get(this.baseStoragePath).resolve(cleanFilename).normalize();
+      Resource resource = new UrlResource(filePath.toUri());
+
+      if (resource.exists() && resource.isReadable()) {
+        return resource;
+      } else {
+        throw new FileNotFoundException("File not found: " + filename);
+      }
+    } catch (MalformedURLException e) {
+      throw new FileNotFoundException("File not found: " + filename);
+    }
+  }
+
   private void handlePictureUpdate(MultipartFile picture, PictureEntity entity, String subfolder) {
     if (picture == null || picture.isEmpty()) {
       return;
@@ -93,12 +121,18 @@ public class FileStorageService {
 
     this.fileValidationService.validateImage(picture);
 
-    if (entity.getPictureURI() != null) {
-      this.delete(entity.getPictureURI());
-    }
+    String oldUri = entity.getPictureURI();
+    String newUri = this.store(picture, subfolder);
 
-    String pictureURI = this.store(picture, subfolder);
-    entity.setPictureURI(pictureURI);
+    entity.setPictureURI(newUri);
+
+    if (oldUri != null) {
+      try {
+        this.delete(oldUri);
+      } catch (Exception e) {
+        System.out.printf("Failed to delete old picture with URI %s\n", oldUri);
+      }
+    }
   }
 
   public void handleProfilePictureUpdate(MultipartFile picture, User user) {

@@ -1,9 +1,11 @@
 <div class="fw-bold">Going</div>
-  <div class="mt-2">
-    @for (participant of participants; track participant.id) {
-      <a [routerLink]="`${environment.userProfileBaseUrl}${participant.username}`">
-        <img class="user-avatar" [src]="UrlUtilService.getMediaUrl(participant.pictureURI || '/uploads/profile-pictures/default.png')" alt="{{participant.username}}" />
-      </a>
-    }
-  </div>
+<div class="mt-2">
+  @for (participant of participants; track participant.id) {
+    <a [routerLink]="`${environment.userProfileBaseUrl}${participant.username}`">
+      <img class="user-avatar"
+           [src]="(UrlUtilService.getMediaUrl(participant.pictureURI || '/uploads/profile-pictures/default.png')  | secureImage | async) || ''"
+           alt="{{participant.username}}"/>
+    </a>
+  }
+</div>
 

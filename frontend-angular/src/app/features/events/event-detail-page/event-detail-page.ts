@@ -29,6 +29,10 @@ import {
 import {EventBasicInfo} from './event-basic-info/event-basic-info';
 import {EventAdmins} from '../event-admins/event-admins';
 import {AccessControlService} from '../../../shared/services/access-control-service';
+import {SecureImagePipe} from '../../../core/pipes/secure-image-pipe';
+import {AsyncPipe} from '@angular/common';
+import {PictureUpload} from '../../../core/picture-upload/picture-upload';
+import {ToastService} from '../../../shared/services/toast-service';
 
 @Component({
   selector: 'app-event-detail-page',
@@ -42,12 +46,16 @@ import {AccessControlService} from '../../../shared/services/access-control-serv
     ReactiveFormsModule,
     EventBasicInfo,
     EventAdmins,
+    PictureUpload,
+    SecureImagePipe,
+    AsyncPipe,
   ],
   templateUrl: './event-detail-page.html',
   styleUrl: './event-detail-page.scss'
 })
 export class EventDetailPage implements OnInit {
   private route = inject(ActivatedRoute);
+  private toastService = inject(ToastService);
   private eventService = inject(EventService);
   private commentService = inject(CommentService);
   private mediaService = inject(MediaService);
@@ -56,6 +64,11 @@ export class EventDetailPage implements OnInit {
   accessControlService = inject(AccessControlService);
 
   event = signal<Event | null>(null);
+
+  displayImage = computed(() => UrlUtilService.getMediaUrl(this.event()?.pictureURI || environment.eventDummyCoverPicRelativeUrl));
+  previewImage = signal<string | null>(null);
+  selectedImage: File | null = null;
+
   comments = signal<List<Comment>>(new List<Comment>());
   participants = signal<List<Participant>>(new List<Participant>());
   mediaItems = signal<List<MediaItem>>(new List<MediaItem>());
@@ -80,7 +93,10 @@ export class EventDetailPage implements OnInit {
         switchMap(id => this.loadEvent(id))
       ).subscribe({
         next: event => this.populateEvent(event),
-        error: err => console.error('Error fetching event:', err)
+        error: err => {
+          console.log(err);
+          this.toastService.error('Error fetching event!')
+        }
       });
   }
 
@@ -133,7 +149,8 @@ export class EventDetailPage implements OnInit {
         this.comments().remove(comment);
       },
       error: (err) => {
-        console.error('Failed to delete comment!', err);
+        console.log(err);
+        this.toastService.error('Failed to delete comment!');
       }
     });
   }
@@ -148,7 +165,8 @@ export class EventDetailPage implements OnInit {
         }
       },
       error: (err) => {
-        console.error('Failed to edit comment!', err);
+        console.log(err);
+        this.toastService.error('Failed to edit comment!');
       }
     });
   }
@@ -160,7 +178,10 @@ export class EventDetailPage implements OnInit {
 
     this.mediaService.upload(currentEvent.id, file).subscribe({
       next: (mediaItem) => this.mediaItems().add(mediaItem),
-      error: (err) => console.error('Failed to upload media!', err)
+      error: (err) => {
+        console.log(err);
+        this.toastService.error('Failed to upload media!');
+      }
     });
   }
 
@@ -172,7 +193,8 @@ export class EventDetailPage implements OnInit {
     this.mediaItems().remove(item);       // remove immediately
     this.mediaService.delete(currentEvent.id, item).subscribe({
       error: (err) => {
-        console.error('Failed to delete media!', err);
+        console.log(err);
+        this.toastService.error('Failed to delete media!');
         this.mediaItems().add(item);     // revert if backend fails
       }
     });
@@ -202,8 +224,8 @@ export class EventDetailPage implements OnInit {
         );
       },
       error: (err) => {
-        alert(err.error.message);
-        console.error('Error joining event:', err);
+        console.error(err);
+        this.toastService.error('Error joining event!');
       }
     });
   }
@@ -211,6 +233,47 @@ export class EventDetailPage implements OnInit {
 
   public onEventUpdated(updatedEvent: Event) {
     this.event.set(updatedEvent);
+  }
+
+
+  handleFileSelected(file: File) {
+    if (!this.isAdminOrEventAdmin()) {
+      this.toastService.error('You are not allowed to edit the event\'s picture');
+      return;
+    }
+
+    this.selectedImage = file;
+    const formData = new FormData();
+    formData.append('eventPicture', file);
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      this.previewImage.set(e.target?.result as string);
+    };
+    reader.readAsDataURL(file);
+
+    const currentEvent = this.event()!;
+
+    this.eventService.uploadEventPicture(currentEvent.id, formData).subscribe({
+      next: () => {
+        this.event.set({
+          ...currentEvent,
+          pictureURI: URL.createObjectURL(this.selectedImage!)
+        });
+
+        this.toastService.success('Event picture updated');
+        this.selectedImage = null;
+        this.previewImage.set(null);
+      },
+      error: (err) => {
+        console.error(err);
+        this.toastService.error('Failed to upload event picture');
+      }
+    });
+  }
+
+  isAdminOrEventAdmin() {
+    return this.isCurrentUserAdmin() || this.isCurrentUserEventAdmin();
   }
 }
 

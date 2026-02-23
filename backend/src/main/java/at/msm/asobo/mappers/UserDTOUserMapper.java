@@ -3,7 +3,6 @@ package at.msm.asobo.mappers;
 import at.msm.asobo.dto.auth.UserRegisterDTO;
 import at.msm.asobo.dto.user.*;
 import at.msm.asobo.entities.User;
-import at.msm.asobo.mappers.helpers.PictureMapperHelper;
 import at.msm.asobo.mappers.helpers.UserMapperHelper;
 import java.util.List;
 import java.util.Set;
@@ -13,7 +12,7 @@ import org.springframework.data.domain.Page;
 
 @Mapper(
     componentModel = "spring",
-    uses = {UserMapperHelper.class, PictureMapperHelper.class})
+    uses = {UserMapperHelper.class /*, PictureMapperHelper.class*/})
 public interface UserDTOUserMapper {
 
   UserBasicDTO mapUserToUserBasicDTO(User user);

@@ -198,9 +198,9 @@ public class EventDTOEventMapper {
     event.setDescription(dto.getDescription());
     event.setLocation(dto.getLocation());
     event.setDate(dto.getDate());
-    event.setCreator(this.userDTOUserMapper.mapUserPublicDTOToUser(dto.getCreator()));
+    // event.setCreator(this.userDTOUserMapper.mapUserPublicDTOToUser(dto.getCreator()));
     event.setIsPrivateEvent(dto.getIsPrivateEvent());
-    event.setEventAdmins(this.userDTOUserMapper.mapUserPublicDTOsToUsers(dto.getEventAdmins()));
+    // event.setEventAdmins(this.userDTOUserMapper.mapUserPublicDTOsToUsers(dto.getEventAdmins()));
     // pictureURI is ignored and handled in service layer
 
     return event;

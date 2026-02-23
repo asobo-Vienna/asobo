@@ -3,6 +3,7 @@ package at.msm.asobo.dto.event;
 import at.msm.asobo.dto.comment.UserCommentDTO;
 import at.msm.asobo.dto.medium.MediumDTO;
 import at.msm.asobo.dto.user.UserPublicDTO;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -31,6 +32,7 @@ public class EventDTO {
 
   private Set<UserPublicDTO> eventAdmins;
 
+  @JsonProperty("isPrivateEvent")
   private boolean isPrivateEvent;
 
   private Set<UserPublicDTO> participants;

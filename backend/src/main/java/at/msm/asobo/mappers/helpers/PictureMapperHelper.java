@@ -2,9 +2,7 @@ package at.msm.asobo.mappers.helpers;
 
 import at.msm.asobo.config.FileStorageProperties;
 import at.msm.asobo.services.files.FileStorageService;
-import org.mapstruct.Named;
 import org.springframework.stereotype.Component;
-import org.springframework.web.multipart.MultipartFile;
 
 @Component
 public class PictureMapperHelper {
@@ -18,7 +16,7 @@ public class PictureMapperHelper {
     this.fileStorageProperties = fileStorageProperties;
   }
 
-  @Named("mapUserPicture")
+  /*@Named("mapUserPicture")
   public String mapUserPicture(MultipartFile picture) {
     if (picture == null || picture.isEmpty()) {
       return null;
@@ -43,7 +41,7 @@ public class PictureMapperHelper {
     }
     return fileStorageService.store(
         picture, this.fileStorageProperties.getEventGalleriesSubfolder());
-  }
+  }*/
 
   /*@Named("stringToUri")
   public URI stringToUri(String value) {
