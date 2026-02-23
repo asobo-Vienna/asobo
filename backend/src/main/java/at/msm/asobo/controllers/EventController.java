@@ -130,15 +130,13 @@ public class EventController {
 
   @PatchMapping("/{id}/picture")
   @PreAuthorize("hasAnyRole('USER', 'ADMIN', 'SUPERADMIN')")
-  public EventDTO updateEventPicture(
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  public void updateEventPicture(
       @PathVariable UUID id,
       @RequestParam("eventPicture") MultipartFile eventPicture,
       @AuthenticationPrincipal UserPrincipal loggedInUser) {
 
-    EventUpdateDTO eventUpdateDTO = new EventUpdateDTO();
-    eventUpdateDTO.setPicture(eventPicture);
-
-    return this.eventService.updateEventById(id, loggedInUser, eventUpdateDTO);
+    this.eventService.updateEventPicture(id, loggedInUser, eventPicture);
   }
 
   @GetMapping("/{id}")

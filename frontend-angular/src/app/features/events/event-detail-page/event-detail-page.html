@@ -2,11 +2,21 @@
 <div class="row text-start">
   <!-- Image column -->
   <div class="col-md-6 event-image-container">
-    <img
-      class="card-img-top"
-      [src]="(UrlUtilService.getMediaUrl(event()?.pictureURI || environment.eventDummyCoverPicRelativeUrl) | secureImage | async) || ''"
-      alt="{{ event()?.title }}"
+    <app-picture-upload
+      [currentImage]="displayImage()"
+      [shape] = "'rectangle'"
+      [caption] = "'Add cover picture'"
+      [dimensions] = "[60, 22]"
+      (fileSelected)="handleFileSelected($event)"
+      [disabled]="!isAdminOrEventAdmin()"
     />
+
+<!--    <img-->
+<!--      class="card-img-top"-->
+<!--      [src]="UrlUtilService.getMediaUrl(event()?.pictureURI || environment.eventDummyCoverPicRelativeUrl)"-->
+<!--      alt="{{ event()?.title }}"-->
+<!--    />-->
+
     @if (authService.isLoggedIn()) {
       <p-tag
         class="event-badge"

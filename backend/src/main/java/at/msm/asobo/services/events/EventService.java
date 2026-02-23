@@ -27,6 +27,7 @@ import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @Transactional
@@ -248,8 +249,6 @@ public class EventService {
     PatchUtils.copyNonNullProperties(
         eventUpdateDTO, existingEvent, "picture", "participants", "eventAdmins");
 
-    this.fileStorageService.handleEventPictureUpdate(eventUpdateDTO.getPicture(), existingEvent);
-
     if (eventUpdateDTO.getParticipants() != null) {
       existingEvent.setParticipants(
           this.userDTOUserMapper.mapUserPublicDTOsToUsers(eventUpdateDTO.getParticipants()));
@@ -257,5 +256,18 @@ public class EventService {
 
     this.eventRepository.save(existingEvent);
     return this.eventDTOEventMapper.mapEventToEventDTO(existingEvent);
+  }
+
+  @Transactional
+  public void updateEventPicture(UUID eventId, UserPrincipal userPrincipal, MultipartFile picture) {
+
+    Event event = this.getEventById(eventId);
+
+    if (!this.eventAdminService.canManageEvent(event, userPrincipal.getUserId())) {
+      throw new UserNotAuthorizedException("You are not allowed to update this event");
+    }
+
+    this.fileStorageService.handleEventPictureUpdate(picture, event);
+    this.eventRepository.save(event);
   }
 }

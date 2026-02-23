@@ -44,12 +44,11 @@ export class EventAdmins implements OnInit {
       const event = this.event();
       if (!event) return;
 
-      const admins = event.eventAdmins ?? [];
+      const eventAdmins = event.eventAdmins ?? [];
       const creator = event.creator ? [event.creator] : [];
-      const currentUser = this.loggedInUser ? [this.loggedInUser] : [];
 
       const unique = Array.from(
-        new Map([...creator, ...currentUser, ...admins].map(u => [u.id, u])).values()
+        new Map([...creator, ...eventAdmins].map(u => [u.id, u])).values()
       );
 
       this.selectedEventAdmins.set(unique);
@@ -110,6 +109,11 @@ export class EventAdmins implements OnInit {
   }
 
   isProtectedFromRemoval(userId: string): boolean {
-    return [this.loggedInUser?.id, this.event()?.creator.id].includes(userId);
+    const event = this.event();
+    if (!event) return false;
+
+    if (event.creator.id === userId) return true;
+
+    return this.selectedEventAdmins().some(u => u.id === userId) && this.loggedInUser?.id === userId;
   }
 }

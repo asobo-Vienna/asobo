@@ -1,6 +1,6 @@
 package at.msm.asobo.services.files;
 
-import static java.nio.file.Files.*;
+import static java.nio.file.Files.createDirectories;
 
 import at.msm.asobo.config.FileStorageProperties;
 import at.msm.asobo.entities.Event;
@@ -14,7 +14,10 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.UUID;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -118,12 +121,18 @@ public class FileStorageService {
 
     this.fileValidationService.validateImage(picture);
 
-    if (entity.getPictureURI() != null) {
-      this.delete(entity.getPictureURI());
-    }
+    String oldUri = entity.getPictureURI();
+    String newUri = this.store(picture, subfolder);
 
-    String pictureURI = this.store(picture, subfolder);
-    entity.setPictureURI(pictureURI);
+    entity.setPictureURI(newUri);
+
+    if (oldUri != null) {
+      try {
+        this.delete(oldUri);
+      } catch (Exception e) {
+        System.out.printf("Failed to delete old picture with URI %s\n", oldUri);
+      }
+    }
   }
 
   public void handleProfilePictureUpdate(MultipartFile picture, User user) {
