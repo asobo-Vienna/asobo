@@ -19,7 +19,7 @@
   @if (preview()) {
     <img [src]="preview()" alt="Preview"/>
   } @else if (currentImage()) {
-    <img [src]="currentImage()" alt="Current"/>
+    <img [src]="(currentImage()! | secureImage | async) || ''" alt="Current"/>
   } @else if (showPlusBeforeUpload()) {
     <div class="picture-button">
       <svg class="add-picture-plus" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">

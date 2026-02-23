@@ -55,7 +55,7 @@ export class RegistrationForm {
   private userValidationService = inject(UserValidationService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
-  previewUrl = signal<string | ArrayBuffer | null>(null);
+  previewUrl = signal<string | null>(null);
   selectedImage: File | null = null;
   countryCodes: {label: string, value: string}[] = [];
 

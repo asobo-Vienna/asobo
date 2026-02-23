@@ -40,10 +40,15 @@ export class UserProfilePage implements OnInit {
       return;
     }
 
+    const params = {
+      page: 0,
+      size: 100,
+    };
+
     console.log("Fetching events for userId:", this.userId);
-    this.eventService.getPublicEventsByUserId(this.userId).subscribe({
-      next: (eventsArray) => {
-        this.events.set(new List<EventSummary>(eventsArray));
+    this.eventService.getEventsByUserIdPaginated(this.userId, params, {}).subscribe({
+      next: (response) => {
+        this.events.set(new List<EventSummary>(response.content));
       },
       error: (err) => console.error('Error fetching events:', err)
     });

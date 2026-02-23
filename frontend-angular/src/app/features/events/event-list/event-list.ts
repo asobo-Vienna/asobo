@@ -1,4 +1,4 @@
-import {Component, computed, inject, input, OnInit, signal} from '@angular/core';
+import {Component, computed, effect, inject, input, OnInit, signal} from '@angular/core';
 import {EventCard} from '../event-card/event-card';
 import {EventService} from '../services/event-service';
 import {AuthService} from '../../auth/services/auth-service';
@@ -45,6 +45,14 @@ export class EventList implements OnInit {
     const input = this.inputEvents();
     return !!input && input.size() > 0;
   });
+
+  constructor() {
+    effect(() => {
+      if (this.hasInputEvents()) {
+        this.loading.set(false);
+      }
+    });
+  }
 
   // Computed: use input if provided, otherwise use fetched
   private sourceEvents = computed(() => {

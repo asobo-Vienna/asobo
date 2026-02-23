@@ -65,7 +65,7 @@ export class UserProfileForm implements OnInit {
 
   userProfile = this.userProfileService.userProfile;
 
-  previewUrl = signal<string | ArrayBuffer | null>(null);
+  previewUrl = signal<string | null>(null);
   selectedImage: File | null = null;
   selectedImageUrl = computed(() => this.userProfile().pictureUrl);
   displayImage = computed(() => this.previewUrl() || this.selectedImageUrl());
@@ -511,7 +511,7 @@ export class UserProfileForm implements OnInit {
     // Create preview
     const reader = new FileReader();
     reader.onload = (e) => {
-      this.previewUrl.set(e.target?.result || null);
+      this.previewUrl.set(e.target?.result as string || null);
     };
     reader.readAsDataURL(file);
 

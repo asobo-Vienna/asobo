@@ -55,10 +55,10 @@ public class User implements PictureEntity {
   private List<Event> createdEvents;
 
   @ManyToMany(mappedBy = "eventAdmins")
-  private List<Event> administeredEvents;
+  private Set<Event> administeredEvents;
 
   @ManyToMany(mappedBy = "participants")
-  private List<Event> attendedEvents;
+  private Set<Event> attendedEvents;
 
   @OneToMany(mappedBy = "author")
   @JsonIgnore
@@ -99,8 +99,8 @@ public class User implements PictureEntity {
 
   public User() {
     this.createdEvents = new ArrayList<>();
-    this.attendedEvents = new ArrayList<>();
-    this.administeredEvents = new ArrayList<>();
+    this.attendedEvents = new HashSet<>();
+    this.administeredEvents = new HashSet<>();
     this.comments = new ArrayList<>();
     this.media = new ArrayList<>();
   }
@@ -235,19 +235,19 @@ public class User implements PictureEntity {
     this.comments = comments;
   }
 
-  public List<Event> getAttendedEvents() {
+  public Set<Event> getAttendedEvents() {
     return this.attendedEvents;
   }
 
-  public void setAttendedEvents(List<Event> attendedEvents) {
+  public void setAttendedEvents(Set<Event> attendedEvents) {
     this.attendedEvents = attendedEvents;
   }
 
-  public List<Event> getAdministeredEvents() {
+  public Set<Event> getAdministeredEvents() {
     return this.administeredEvents;
   }
 
-  public void setAdministeredEvents(List<Event> administeredEvents) {
+  public void setAdministeredEvents(Set<Event> administeredEvents) {
     this.administeredEvents = administeredEvents;
   }
 

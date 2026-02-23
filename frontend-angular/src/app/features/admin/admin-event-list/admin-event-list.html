@@ -33,7 +33,7 @@
         <td>
           <a [routerLink]="getEventRouterLink(event.id)">
             <img
-              [src]="UrlUtilService.getMediaUrl(event.pictureURI || environment.eventDummyCoverPicRelativeUrl)"
+              [src]="(UrlUtilService.getMediaUrl(event.pictureURI || environment.eventDummyCoverPicRelativeUrl)   | secureImage | async) || ''"
               [alt]="'Cover picture of the event ' + event.title"
               class="mediaItem-thumbnail"
             />
@@ -87,7 +87,7 @@
   </p-table>
 
   @if (loading()) {
-    <app-spinner type="overlay" message="Loading events..." />
+    <app-spinner type="overlay" message="Loading events..."/>
   }
 </div>
 
@@ -105,7 +105,7 @@
     <!-- Event image -->
     @if (selectedEvent) {
       <img
-        [src]="UrlUtilService.getMediaUrl(selectedEvent.pictureURI || environment.eventDummyCoverPicRelativeUrl)"
+        [src]="(UrlUtilService.getMediaUrl(selectedEvent.pictureURI || environment.eventDummyCoverPicRelativeUrl)  | secureImage | async) || ''"
         [alt]="'Cover picture of ' + selectedEvent.title"
         class="dialog-image"
       />

@@ -29,6 +29,8 @@ import {
 import {EventBasicInfo} from './event-basic-info/event-basic-info';
 import {EventAdmins} from '../event-admins/event-admins';
 import {AccessControlService} from '../../../shared/services/access-control-service';
+import {SecureImagePipe} from '../../../core/pipes/secure-image-pipe';
+import {AsyncPipe} from '@angular/common';
 
 @Component({
   selector: 'app-event-detail-page',
@@ -42,6 +44,8 @@ import {AccessControlService} from '../../../shared/services/access-control-serv
     ReactiveFormsModule,
     EventBasicInfo,
     EventAdmins,
+    SecureImagePipe,
+    AsyncPipe,
   ],
   templateUrl: './event-detail-page.html',
   styleUrl: './event-detail-page.scss'

@@ -1,6 +1,7 @@
 package at.msm.asobo.dto.event;
 
 import at.msm.asobo.dto.user.UserPublicDTO;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -16,7 +17,8 @@ public class EventUpdateDTO {
 
   private String location;
 
-  private boolean isPrivateEvent;
+  @JsonProperty("isPrivateEvent")
+  private Boolean isPrivateEvent;
 
   private LocalDateTime date;
 
@@ -65,11 +67,11 @@ public class EventUpdateDTO {
     return this.date;
   }
 
-  public boolean getIsPrivateEvent() {
+  public Boolean getIsPrivateEvent() {
     return this.isPrivateEvent;
   }
 
-  public void setIsPrivateEvent(boolean isPrivate) {
+  public void setIsPrivateEvent(Boolean isPrivate) {
     this.isPrivateEvent = isPrivate;
   }
 

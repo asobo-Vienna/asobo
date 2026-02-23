@@ -9,16 +9,18 @@ import at.msm.asobo.entities.Event;
 import at.msm.asobo.entities.User;
 import at.msm.asobo.exceptions.events.EventNotFoundException;
 import at.msm.asobo.exceptions.users.UserNotAuthorizedException;
+import at.msm.asobo.exceptions.users.UserNotFoundException;
 import at.msm.asobo.mappers.EventDTOEventMapper;
 import at.msm.asobo.mappers.UserDTOUserMapper;
 import at.msm.asobo.repositories.EventRepository;
+import at.msm.asobo.repositories.UserRepository;
 import at.msm.asobo.security.UserPrincipal;
-import at.msm.asobo.services.UserService;
 import at.msm.asobo.services.files.FileStorageService;
 import at.msm.asobo.specifications.EventSpecification;
 import at.msm.asobo.utils.PatchUtils;
 import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -30,7 +32,7 @@ import org.springframework.stereotype.Service;
 @Transactional
 public class EventService {
   private final EventRepository eventRepository;
-  private final UserService userService;
+  private final UserRepository userRepository;
   private final FileStorageService fileStorageService;
   private final EventAdminService eventAdminService;
   private final EventDTOEventMapper eventDTOEventMapper;
@@ -38,13 +40,13 @@ public class EventService {
 
   public EventService(
       EventRepository eventRepository,
-      UserService userService,
+      UserRepository userRepository,
       FileStorageService fileStorageService,
       EventAdminService eventAdminService,
       EventDTOEventMapper eventDTOEventMapper,
       UserDTOUserMapper userDTOUserMapper) {
     this.eventRepository = eventRepository;
-    this.userService = userService;
+    this.userRepository = userRepository;
     this.fileStorageService = fileStorageService;
     this.eventAdminService = eventAdminService;
     this.eventDTOEventMapper = eventDTOEventMapper;
@@ -136,15 +138,38 @@ public class EventService {
     return this.eventDTOEventMapper.mapEventsToEventSummaryDTOs(events);
   }
 
+  @Transactional
   public EventDTO addNewEvent(EventCreationDTO eventCreationDTO) {
-    if (eventCreationDTO.getEventAdmins() == null || eventCreationDTO.getEventAdmins().isEmpty()) {
-      eventCreationDTO.setEventAdmins(Set.of(eventCreationDTO.getCreator()));
+    Event newEvent = this.eventDTOEventMapper.mapEventCreationDTOToEvent(eventCreationDTO);
+    User creator =
+        userRepository
+            .findById(eventCreationDTO.getCreator().getId())
+            .orElseThrow(() -> new RuntimeException("Creator not found"));
+
+    newEvent.setCreator(creator);
+
+    eventRepository.save(newEvent);
+
+    Set<User> admins = new HashSet<>();
+    admins.add(creator);
+
+    if (eventCreationDTO.getEventAdmins() != null && !eventCreationDTO.getEventAdmins().isEmpty()) {
+      eventCreationDTO
+          .getEventAdmins()
+          .forEach(
+              adminDTO -> {
+                User admin =
+                    userRepository
+                        .findById(adminDTO.getId())
+                        .orElseThrow(() -> new RuntimeException("Admin not found"));
+                admins.add(admin);
+              });
     }
 
-    Event newEvent = this.eventDTOEventMapper.mapEventCreationDTOToEvent(eventCreationDTO);
+    newEvent.setEventAdmins(admins);
+    eventRepository.save(newEvent);
 
-    this.eventRepository.save(newEvent);
-    return this.eventDTOEventMapper.mapEventToEventDTO(newEvent);
+    return eventDTOEventMapper.mapEventToEventDTO(newEvent);
   }
 
   public Event getEventById(UUID id) {
@@ -171,11 +196,23 @@ public class EventService {
     return this.eventDTOEventMapper.mapEventsToEventDTOs(events);
   }
 
+  public Event getEventByPicturePath(String filepath) {
+    return this.eventRepository
+        .findEventByPictureURI(filepath)
+        .orElseThrow(() -> new EventNotFoundException(filepath));
+  }
+
   public EventDTO deleteEventById(UUID eventId, UserPrincipal userPrincipal) {
     Event eventToDelete = this.getEventById(eventId);
-    User loggedInUser = this.userService.getUserById(userPrincipal.getUserId());
 
-    boolean canDeleteEvent = this.eventAdminService.canManageEvent(eventToDelete, loggedInUser);
+    UUID loggedInUserId = userPrincipal.getUserId();
+    User loggedInUser =
+        this.userRepository
+            .findUserByIdAndIsDeletedFalse(loggedInUserId)
+            .orElseThrow(() -> new UserNotFoundException(loggedInUserId));
+
+    boolean canDeleteEvent =
+        this.eventAdminService.canManageEvent(eventToDelete, loggedInUser.getId());
     if (!canDeleteEvent) {
       throw new UserNotAuthorizedException("You are not allowed to delete this event");
     }
@@ -191,14 +228,25 @@ public class EventService {
   public EventDTO updateEventById(
       UUID eventId, UserPrincipal userPrincipal, EventUpdateDTO eventUpdateDTO) {
     Event existingEvent = this.getEventById(eventId);
-    User loggedInUser = this.userService.getUserById(userPrincipal.getUserId());
 
-    boolean canUpdateEvent = this.eventAdminService.canManageEvent(existingEvent, loggedInUser);
+    UUID loggedInUserId = userPrincipal.getUserId();
+    User loggedInUser =
+        this.userRepository
+            .findUserByIdAndIsDeletedFalse(loggedInUserId)
+            .orElseThrow(() -> new UserNotFoundException(loggedInUserId));
+
+    boolean canUpdateEvent =
+        this.eventAdminService.canManageEvent(existingEvent, loggedInUser.getId());
     if (!canUpdateEvent) {
       throw new UserNotAuthorizedException("You are not allowed to update this event");
     }
 
-    PatchUtils.copyNonNullProperties(eventUpdateDTO, existingEvent, "picture", "participants");
+    // Force lazy collections to initialize before modifying the entity
+    existingEvent.getEventAdmins().size();
+    existingEvent.getParticipants().size();
+
+    PatchUtils.copyNonNullProperties(
+        eventUpdateDTO, existingEvent, "picture", "participants", "eventAdmins");
 
     this.fileStorageService.handleEventPictureUpdate(eventUpdateDTO.getPicture(), existingEvent);
 

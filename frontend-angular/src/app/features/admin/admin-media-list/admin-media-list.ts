@@ -4,10 +4,12 @@ import {TableModule} from "primeng/table";
 import {environment} from '../../../../environments/environment';
 import {UrlUtilService} from '../../../shared/utils/url/url-util-service';
 import {AdminService} from '../services/admin-service';
-import { RouterLink } from '@angular/router';
+import {RouterLink} from '@angular/router';
 import {MediaItemWithEventTitle} from '../../events/models/media-item-with-event-title';
 import {MediumFilters} from '../../events/models/medium-filters';
 import {Spinner} from '../../../core/ui-elements/spinner/spinner';
+import {SecureImagePipe} from '../../../core/pipes/secure-image-pipe';
+import {AsyncPipe} from '@angular/common';
 
 @Component({
   selector: 'app-admin-media-list',
@@ -15,7 +17,9 @@ import {Spinner} from '../../../core/ui-elements/spinner/spinner';
     PrimeTemplate,
     TableModule,
     RouterLink,
-    Spinner
+    Spinner,
+    SecureImagePipe,
+    AsyncPipe
   ],
   templateUrl: './admin-media-list.html',
   styleUrl: './admin-media-list.scss',
