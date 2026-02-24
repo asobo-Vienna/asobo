@@ -249,11 +249,6 @@ public class EventService {
     PatchUtils.copyNonNullProperties(
         eventUpdateDTO, existingEvent, "picture", "participants", "eventAdmins");
 
-    if (eventUpdateDTO.getParticipants() != null) {
-      existingEvent.setParticipants(
-          this.userDTOUserMapper.mapUserPublicDTOsToUsers(eventUpdateDTO.getParticipants()));
-    }
-
     this.eventRepository.save(existingEvent);
     return this.eventDTOEventMapper.mapEventToEventDTO(existingEvent);
   }

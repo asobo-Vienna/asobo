@@ -31,7 +31,7 @@ export const environment = {
   usersSectionBaseUrl: '/users',
   adminSectionBaseUrl: '/admin',
   eventsSectionBaseUrl: '/events',
-  userDummyProfilePicRelativeUrl: '/uploads/profile-pictures/default.png',
+  userDummyProfilePicRelativeUrl: '/uploads/profile-pictures/profile-picture-default.png',
   eventDummyCoverPicRelativeUrl: '/uploads/event-cover-pictures/event-cover-default.svg',
   defaultDebounceTimeForFormFields: 500,
   defaultSearchDebounceTime: 300,

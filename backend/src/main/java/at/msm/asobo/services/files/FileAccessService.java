@@ -24,14 +24,22 @@ public class FileAccessService {
   }
 
   public boolean canAccess(String filepath, UUID userId) {
-    // Profile pictures → only visible for logged in users
+    // Profile pictures → only visible for logged-in users
     if (filepath.contains("profile-pictures")) {
+      if (filepath.contains("profile-picture-default")) {
+        return true;
+      }
+
       return userId != null;
     }
 
     // Event pictures
     if (filepath.contains("event-cover-pictures")) {
       if (userId != null && this.accessControlService.hasAdminRole(userId)) {
+        return true;
+      }
+
+      if (filepath.contains("event-cover-default")) {
         return true;
       }
 
