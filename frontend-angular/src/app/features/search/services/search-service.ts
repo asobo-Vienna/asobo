@@ -32,7 +32,7 @@ export class SearchService {
             ...e,
             name: e.title ?? 'Untitled event',
             pictureURI: UrlUtilService.getMediaUrl(
-              e.pictureURI || '/uploads/event-cover-pictures/event-cover-default.svg'
+              e.pictureURI || environment.eventDummyCoverPicRelativeUrl
             ),
             additionalInfo: e.date
               ? new Date(e.date).toLocaleDateString()
@@ -44,7 +44,7 @@ export class SearchService {
             ...u,
             name: u.username ?? 'Unknown user',
             pictureURI: UrlUtilService.getMediaUrl(
-              u.pictureURI || '/uploads/profile-pictures/default.png'
+              u.pictureURI || environment.userDummyProfilePicRelativeUrl
             ),
             additionalInfo: u.fullName ?? '',
             location: u.location ?? 'Unknown location',
@@ -84,7 +84,7 @@ export class SearchService {
             id: u.id,
             username: u.username ?? 'Unknown user',
             pictureURI: UrlUtilService.getMediaUrl(
-              u.pictureURI || '/uploads/profile-pictures/default.png'
+              u.pictureURI || environment.userDummyProfilePicRelativeUrl
             ),
             fullName: u.fullName ?? '',
             location: u.location ?? 'Unknown location',
