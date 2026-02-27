@@ -8,8 +8,17 @@
       [caption] = "'Add cover picture'"
       [dimensions] = "[60, 22]"
       (fileSelected)="handleFileSelected($event)"
-      [disabled]="!isAdminOrEventAdmin()"
+      [disabled]="!isAdminOrEventAdmin()">
+
+      @if (authService.isLoggedIn()) {
+    <p-tag
+      class="event-badge"
+      [icon]="event()?.isPrivateEvent ? 'pi pi-lock' : 'pi pi-globe'"
+      [severity]="event()?.isPrivateEvent ? 'warn' : 'success'"
+      [value]="event()?.isPrivateEvent ? 'Private' : 'Public'"
     />
+    }
+    </app-picture-upload>
 
 <!--    <img-->
 <!--      class="card-img-top"-->
@@ -17,14 +26,7 @@
 <!--      alt="{{ event()?.title }}"-->
 <!--    />-->
 
-    @if (authService.isLoggedIn()) {
-      <p-tag
-        class="event-badge"
-        [icon]="event()?.isPrivateEvent ? 'pi pi-lock' : 'pi pi-globe'"
-        [severity]="event()?.isPrivateEvent ? 'warn' : 'success'"
-        [value]="event()?.isPrivateEvent ? 'Private' : 'Public'"
-      />
-    }
+
   </div>
 
   <!-- Event Info Column -->

@@ -1,5 +1,11 @@
 @use '../../../styles/variables' as *;
 
+@media (max-width: 770px) {
+  .picture-box {
+    width: 100% !important;
+    height: auto !important;
+  }
+}
 .picture-box {
   cursor: pointer;
   box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.3);
@@ -75,6 +81,7 @@
 
 .rectangle-picture-box {
   border-radius: 15px;
+  aspect-ratio: 16/9;
 }
 
 .picture-box img {
