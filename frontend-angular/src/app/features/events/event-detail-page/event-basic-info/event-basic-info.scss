@@ -18,10 +18,12 @@ form.editing textarea:enabled {
 }
 
 .event-title-textarea {
+  min-width: 200px;
   border: none;
   box-shadow: none;
   resize: none;
   height: auto;
+  flex: 1;
 }
 
 .event-description-textarea {
@@ -51,6 +53,10 @@ form.editing textarea {
   color: $grayish-blue;
 }
 
-.event-time {
-  text-align: right;
+#event-date {
+  padding-left: var(--p-inputtext-padding-x);
+}
+
+#event-time {
+  text-align: left;
 }
