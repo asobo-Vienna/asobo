@@ -9,6 +9,8 @@
     [totalRecords]="totalRecords()"
     [lazy]="true"
     (onLazyLoad)="onPageChange($event)"
+    responsiveLayout="stack"
+    [breakpoint]="'992px'"
   >
     <ng-template pTemplate="header">
       <tr>
@@ -25,23 +27,25 @@
 
     <ng-template pTemplate="body" let-comment>
       <tr>
-        <td><small>{{ comment.id }}</small></td>
-        <td>{{ comment.username }}</td>
-        <td>{{ comment.text }}</td>
-        <td><a [routerLink]="getEventRouterLink(comment.eventId)"
+        <td><span class="p-column-title">ID</span><small>{{ comment.id }}</small></td>
+        <td><span class="p-column-title">Username</span>{{ comment.username }}</td>
+        <td><span class="p-column-title">Text</span>{{ comment.text }}</td>
+        <td><span class="p-column-title">Event Title</span><a [routerLink]="getEventRouterLink(comment.eventId)"
                class="a-clickable">{{ comment.eventTitle }}</a></td>
-        <td>{{ comment.creationDate | date:'yyyy-MM-dd hh:mm a' }}</td>
+        <td><span class="p-column-title">Date</span>{{ comment.creationDate | date:'yyyy-MM-dd hh:mm a' }}</td>
 
         @if (comment.modificationDate) {
-          <td>{{ comment.modificationDate | date:'yyyy-MM-dd hh:mm a' }}</td>
+          <td><span class="p-column-title">Modified</span>{{ comment.modificationDate | date:'yyyy-MM-dd hh:mm a' }}</td>
         } @else {
-          <td>–</td>
+          <td><span class="p-column-title">Modified</span>–</td>
         }
 
         <td>
+          <span class="p-column-title">Edit</span>
           <i class="pi pi-pencil clickable" title="Edit" (click)="onEdit(comment)" aria-label="Edit comment"></i>
         </td>
         <td>
+          <span class="p-column-title">Delete</span>
           <i class="pi pi-trash clickable" title="Delete" (click)="onDelete(comment)" aria-label="Delete comment"></i>
         </td>
       </tr>
