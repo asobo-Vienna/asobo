@@ -6,14 +6,14 @@
 
 #asobo-header-logo {
   height: auto;
-  max-width: 100%;     /* prevents overflow on small screens */
-  width: 80px;         /* base size for desktop */
+  max-width: 100%; /* prevents overflow on small screens */
+  width: 80px; /* base size for desktop */
   cursor: pointer;
 }
 
 @media (max-width: 768px) {
   .asobo-logo {
-    width: 60px;      /* smaller logo on mobile */
+    width: 60px; /* smaller logo on mobile */
   }
 }
 
@@ -32,7 +32,7 @@
   /*margin-left: 0;*/
 }
 
-.search-bar .search-div  {
+.search-bar .search-div {
   max-width: 37vw;
   display: flex;
 }
@@ -61,6 +61,10 @@
   flex-grow: 1;
 }
 
+.navbar .btn-nav-login-logout {
+  max-width: fit-content;
+}
+
 #user-nav-thumbnail {
   .user-thumbnail {
     width: 40px;
@@ -71,7 +75,7 @@
   }
 
   .user-thumbnail:hover {
-      transform: scale(1.05);
+    transform: scale(1.05);
   }
 }
 
@@ -89,4 +93,18 @@
 
 .admin-nav-icon {
   transform: translateY(1px);
+}
+
+@media (max-width: 992px) {
+  .nav-link {
+    margin-left: .5rem !important;
+  }
+
+  .btn-nav-login-logout {
+    margin-top: var(--bs-nav-link-padding-y);
+  }
+
+  .navbar-toggler {
+    margin-left: 20px;
+  }
 }
