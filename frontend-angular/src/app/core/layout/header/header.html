@@ -17,11 +17,7 @@
       <app-global-search class="w-100"></app-global-search>
     </div>
 
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-            data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-            aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
+    <div class="d-lg-none flex-grow-1"></div>
 
     @if (this.authService.isLoggedIn()) {
       <div class="d-flex">
@@ -32,6 +28,12 @@
         </a>
       </div>
     }
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+            data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+            aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <div class="d-sm-none mb-2 ms-2" style="--search-bar-max-width: none">
@@ -56,6 +58,8 @@
             <a routerLink="/register" class="nav-link">Register</a>
           </li>
         }
+
+        <li class="nav-flex-break d-lg-none" aria-hidden="true"></li>
 
         @if (authService.isLoggedIn()) {
           <li class="nav-item d-flex align-items-center user-profile-thumbnail" id="user-nav-thumbnail">

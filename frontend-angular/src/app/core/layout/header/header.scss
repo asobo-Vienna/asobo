@@ -81,6 +81,7 @@
 
 #create-event-nav-anchor {
   list-style: none;
+  margin-left: 15px;
 }
 
 .add-event-plus {
@@ -97,7 +98,7 @@
 
 @media (max-width: 992px) {
   .nav-link {
-    margin-left: .5rem !important;
+    margin-inline: 5px !important;
   }
 
   .btn-nav-login-logout {
@@ -105,6 +106,30 @@
   }
 
   .navbar-toggler {
-    margin-left: 20px;
+    margin-left: 0;
+  }
+
+  .navbar-nav {
+    width: 100%;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    row-gap: 6px;
+    padding-block: 4px;
+  }
+
+  .nav-flex-break {
+    flex-basis: 100%;
+    height: 0;
+  }
+
+  .nav-login-logout-button-container {
+    margin-left: 0;
+    justify-content: center;
+  }
+
+  #user-nav-thumbnail {
+    justify-content: center;
   }
 }
