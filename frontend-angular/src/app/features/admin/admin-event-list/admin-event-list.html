@@ -9,6 +9,8 @@
     [totalRecords]="totalRecords()"
     [lazy]="true"
     (onLazyLoad)="onPageChange($event)"
+    responsiveLayout="stack"
+    [breakpoint]="'992px'"
   >
     <ng-template pTemplate="header">
       <tr>
@@ -40,31 +42,35 @@
           </a>
         </td>
 
-        <td><small>{{ event.id }}</small></td>
-        <td>{{ event.title }}</td>
+        <td><span class="p-column-title">ID</span><small>{{ event.id }}</small></td>
+        <td><span class="p-column-title">Title</span>{{ event.title }}</td>
 
         <!-- Description with view more button -->
         <td class="description-cell">
-          <div class="description-preview">
-            {{ getEventDescriptionPreview(event.description) }}
+          <span class="p-column-title">Description</span>
+          <div class="description-content">
+            <div class="description-preview">
+              {{ getEventDescriptionPreview(event.description) }}
+            </div>
+            @if (shouldShowViewMore(event.description)) {
+              <button
+                type="button"
+                class="view-more-btn"
+                (click)="viewFullDescription(event)"
+                title="View full description">
+                <i class="pi pi-eye"></i>
+                View
+              </button>
+            }
           </div>
-          @if (shouldShowViewMore(event.description)) {
-            <button
-              type="button"
-              class="view-more-btn"
-              (click)="viewFullDescription(event)"
-              title="View full description">
-              <i class="pi pi-eye"></i>
-              View
-            </button>
-          }
         </td>
 
-        <td>{{ event.location }}</td>
-        <td>{{ event.date | date:'EEE, MMMM d, y' }}</td>
-        <td>{{ event.date | date:'h:mm a' }}</td>
+        <td><span class="p-column-title">Location</span>{{ event.location }}</td>
+        <td><span class="p-column-title">Date</span>{{ event.date | date:'EEE, MMMM d, y' }}</td>
+        <td><span class="p-column-title">Time</span>{{ event.date | date:'h:mm a' }}</td>
 
         <td>
+          <span class="p-column-title">Visibility</span>
           <p-tag
             [icon]="event.isPrivateEvent ? 'pi pi-lock' : 'pi pi-globe'"
             [severity]="event.isPrivateEvent ? 'warn' : 'success'"
@@ -72,14 +78,16 @@
           </p-tag>
         </td>
 
-        <td>{{ event.participantCount }}</td>
-        <td>{{ event.commentCount }}</td>
-        <td>{{ event.mediaCount }}</td>
+        <td><span class="p-column-title"># Participants</span>{{ event.participantCount }}</td>
+        <td><span class="p-column-title"># Comments</span>{{ event.commentCount }}</td>
+        <td><span class="p-column-title"># Media</span>{{ event.mediaCount }}</td>
 
         <td>
+          <span class="p-column-title">Edit</span>
           <i class="pi pi-pencil clickable" title="Edit" (click)="onEdit(event)" aria-label="Edit event"></i>
         </td>
         <td>
+          <span class="p-column-title">Delete</span>
           <i class="pi pi-trash clickable" title="Delete" (click)="onDelete(event)" aria-label="Delete event"></i>
         </td>
       </tr>

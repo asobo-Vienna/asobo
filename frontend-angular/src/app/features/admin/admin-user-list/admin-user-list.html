@@ -9,6 +9,8 @@
     [totalRecords]="totalRecords()"
     [lazy]="true"
     (onLazyLoad)="onPageChange($event)"
+    responsiveLayout="stack"
+    [breakpoint]="'992px'"
   >
     <ng-template pTemplate="header">
       <tr>
@@ -39,24 +41,26 @@
           </a>
         </td>
 
-        <td><small>{{ user.id }}</small></td>
-        <td>{{ user.username }}</td>
-        <td>{{ user.email }}</td>
-        <td>{{ user.firstName }} {{ user.surname }}</td>
-        <td>{{ user.registerDate | date:'yyyy-MM-dd' }}</td>
+        <td><span class="p-column-title">ID</span><small>{{ user.id }}</small></td>
+        <td><span class="p-column-title">Username</span>{{ user.username }}</td>
+        <td><span class="p-column-title">Email</span>{{ user.email }}</td>
+        <td><span class="p-column-title">Name</span>{{ user.firstName }} {{ user.surname }}</td>
+        <td><span class="p-column-title">Registered</span>{{ user.registerDate | date:'yyyy-MM-dd' }}</td>
 
         <td>
+          <span class="p-column-title">Active</span>
           <p-tag
             [value]="user.isActive ? 'Active' : 'Inactive'"
             [severity]="user.isActive ? 'success' : 'danger'"
           />
         </td>
 
-        <td>{{ user.location }}</td>
+        <td><span class="p-column-title">Location</span>{{ user.location }}</td>
 
-        <td>{{ user.country }}</td>
+        <td><span class="p-column-title">Country</span>{{ user.country }}</td>
 
         <td>
+          <span class="p-column-title">Roles</span>
           <div class="flex flex-col gap-1">
             <p-multiselect
               [options]="allRoles()"
@@ -71,7 +75,6 @@
               [maxSelectedLabels]="allRoles().length"
               [selectedItemsLabel]="'View/Edit Roles'"
               display="chip">
-              <!-- Custom template for selected items -->
               <ng-template pTemplate="selectedItems" let-selectedItems>
                 @for (role of selectedItems; track role) {
                   <p-chip
@@ -81,21 +84,23 @@
                   </p-chip>
                 }
               </ng-template>
-
             </p-multiselect>
           </div>
         </td>
 
         @if (!user.isDeleted) {
           <td>
+            <span class="p-column-title">Edit</span>
             <i class="pi pi-user-edit clickable" title="Edit" (click)="onEdit(user)" aria-label="Edit user"></i>
           </td>
           <td>
+            <span class="p-column-title">Delete</span>
             <i class="pi pi-trash clickable" title="Delete" (click)="onDelete(user)" aria-label="Delete user"></i>
           </td>
         } @else {
           <td><!-- spacer --></td>
           <td>
+            <span class="p-column-title">Reactivate</span>
             <i class="pi pi-power-off clickable" title="Reactivate" (click)="onReactivate(user)"
                aria-label="Reactivate user"></i>
           </td>

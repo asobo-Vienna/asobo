@@ -32,6 +32,11 @@
 .description-cell {
   max-width: 250px;
 
+  .description-content {
+    display: flex;
+    flex-direction: column;
+  }
+
   .description-preview {
     margin-bottom: 0.5rem;
     line-height: 1.4;
@@ -111,6 +116,17 @@
         color: #495057;
       }
     }
+  }
+}
+
+@media (max-width: 992px) {
+  .description-cell {
+    max-width: none;
+  }
+
+  .description-content {
+    text-align: right;
+    align-items: flex-end;
   }
 }
 
