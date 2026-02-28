@@ -369,11 +369,11 @@ p-inputicon {
         color: white;
         bottom: 0;
         font-size: 2.5rem;
-        vertical-align: center;
         font-weight: bold;
         padding: 20px;
         display: flex;
         align-items: center;
+        overflow: hidden;
       }
 
       a, img {
@@ -415,6 +415,30 @@ p-inputicon {
 @media (max-width: 768px) {
   .table-wrapper {
     @include admin-table-card-view;
+  }
+}
+
+.card-view-title {
+  display: none;
+}
+
+.card-view td[data-label=""] .card-view-title {
+  display: flex;
+}
+
+@media (max-width: 991px) {
+  .table-wrapper table tbody td[data-label=""] .card-view-title {
+    font-size: 1.5rem !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .table-wrapper td[data-label=""] .card-view-title {
+    display: flex;
+  }
+
+  .table-wrapper table tbody td[data-label=""] .card-view-title {
+    font-size: 1.5rem !important;
   }
 }
 

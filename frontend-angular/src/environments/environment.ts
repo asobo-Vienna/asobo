@@ -24,6 +24,7 @@ export const environment = {
   minEventTitleLength: 2,
   maxEventTitleLength: 100,
   eventDescriptionPreviewLength: 50,
+  adminCardViewTitlePreviewLength: 31,
   minEventDescriptionLength: 3,
   maxEventDescriptionLength: 1000,
   specialCharactersForPW: /[!@#$%^&*(),.?:;{}|<>]/,

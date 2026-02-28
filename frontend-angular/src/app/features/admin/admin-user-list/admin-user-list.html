@@ -49,7 +49,8 @@
               [alt]="user.username + '\'s avatar'"
               class="user-avatar"
             />
-            <span class="card-view-title">{{ user.username }}</span>
+            <span
+              class="card-view-title">{{ getTextPreview(user.username, environment.adminCardViewTitlePreviewLength) }}</span>
           </a>
         </td>
 

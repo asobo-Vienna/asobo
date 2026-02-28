@@ -50,7 +50,8 @@
               [alt]="'Cover picture of the event ' + event.title"
               class="mediaItem-thumbnail"
             />
-            <span class="card-view-title">{{ getTextPreview(event.title, 31) }}</span>
+            <span
+              class="card-view-title">{{ getTextPreview(event.title, environment.adminCardViewTitlePreviewLength) }}</span>
           </a>
         </td>
 
