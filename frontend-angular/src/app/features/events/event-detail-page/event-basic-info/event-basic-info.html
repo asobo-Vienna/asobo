@@ -38,19 +38,18 @@
           <input
             type="text"
             id="event-location"
-            class="date-font-color small flex-grow-1"
+            class="date-font-color small flex-grow-1 mt-3"
             formControlName="location"
             pInputText
             [readonly]="!isEditing()"
           />
         </div>
       </div>
-      <div class="col-md-4"><!-- spacer --></div>
     </div>
   </div>
 
   <div class="row">
-    <div class="col-md-8">
+    <div class="col">
       <div id="event-description-container" class="mb-3 p-3 infobox">
           <textarea
             formControlName="description"
@@ -79,5 +78,5 @@
 
     </div>
   </div>
-  <div class="col-md-4"><!-- spacer --></div>
+  <!--<div class="col-md-4"><-- spacer </div>-->
 </form>

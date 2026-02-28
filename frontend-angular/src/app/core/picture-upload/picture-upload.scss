@@ -1,9 +1,11 @@
 @use '../../../styles/variables' as *;
 
-@media (max-width: 768px) {
+@media (max-width: 992px) {
   .picture-box {
     width: 100% !important;
     height: auto !important;
+    max-width: 100% !important;
+    max-height: 100% !important;
   }
 }
 
