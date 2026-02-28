@@ -2,15 +2,14 @@
   <div class="mb-3">
     <div class="row">
       <div class="col" id="event-basic-info-container">
-        <div class="d-flex justify-content-between">
+        <div class="d-flex flex-wrap justify-content-between">
             <textarea
               type="text"
               id="event-title"
               class="event-title-textarea fw-bold"
               formControlName="title"
-              pInputText
               cdkTextareaAutosize
-              cdkAutosizeMinRows="3"
+              cdkAutosizeMinRows="1"
               [readonly]="!isEditing()"
               aria-label="Event title"
             ></textarea>
@@ -29,19 +28,21 @@
             </p-datepicker>
           }
 
-          <div id="event-date" class="date-font-color ms-1 flex-shrink-0">
-            {{ event()?.date | date : 'EEE, MMMM d, y' }}
-            <div id="event-time" class="date-font-color ms-1 small event-time">
-              {{ event()?.date | date : 'h:mm a' }}
+          @if (!isEditing()) {
+            <div id="event-date" class="date-font-color">
+              {{ event()?.date | date : 'EEE, MMMM d, y' }}
+              <div id="event-time" class="date-font-color event-time">
+                {{ event()?.date | date : 'h:mm a' }}
+              </div>
             </div>
-          </div>
+          }
         </div>
 
         <div class="d-flex justify-content-between">
           <input
             type="text"
             id="event-location"
-            class="date-font-color small flex-grow-1"
+            class="date-font-color small flex-grow-1 mt-3"
             formControlName="location"
             pInputText
             [readonly]="!isEditing()"
@@ -49,12 +50,11 @@
           />
         </div>
       </div>
-      <div class="col-md-4"><!-- spacer --></div>
     </div>
   </div>
 
   <div class="row">
-    <div class="col-md-8">
+    <div class="col">
       <div id="event-description-container" class="mb-3 p-3 infobox">
           <textarea
             formControlName="description"
@@ -67,31 +67,41 @@
       </div>
 
       @if (isAdminOrEventAdmin() && !isEventInThePast()) {
-        <div class="d-flex justify-content-end gap-2">
-          <button type="button" class="btn btn-link p-0" aria-label="Edit event" (click)="enterEdit()">
-            <i class="pi pi-pen-to-square" aria-hidden="true"></i>
-          </button>
-          <button type="button" class="btn btn-link p-0" aria-label="Delete event" (click)="onDelete()">
-            <i class="pi pi-trash" aria-hidden="true"></i>
-          </button>
-        </div>
-
-        @if (isEditing()) {
-          <div class="form-group d-flex justify-content-center gap-2">
-            <button type="button" class="btn btn-link p-0 me-1 clickable" aria-label="Save changes" (click)="onSubmit()">
-              <i class="pi pi-check" aria-hidden="true"></i>
+        <div class="d-flex align-items-center edit-button-div mb-3">
+          <!-- Left: toggle -->
+          <div class="flex-fill">
+            @if (isEditing()) {
+              <div class="d-flex align-items-center gap-2">
+                <p-toggleswitch formControlName="isPrivateEvent"/>
+                <span class="small">{{ editEventForm.get('isPrivateEvent')?.value ? 'Private' : 'Public' }}</span>
+              </div>
+            }
+          </div>
+          <!-- Center: confirm/cancel -->
+          <div class="flex-fill d-flex justify-content-center gap-2">
+            @if (isEditing()) {
+              <button type="button" class="btn btn-link p-0 me-1 clickable" aria-label="Save changes" (click)="onSubmit()">
+                <i class="pi pi-check clickable" aria-hidden="true"></i>
+              </button>
+              <button type="button" class="btn btn-link p-0 clickable" aria-label="Cancel editing" (click)="cancelEdit()">
+                 <i class="pi pi-times clickable" aria-hidden="true"></i>
+              </button>
+            }
+          </div>
+          <!-- Right: edit/delete -->
+          <div class="flex-fill d-flex justify-content-end gap-2">
+            <button type="button" class="btn btn-link p-0" aria-label="Edit event" (click)="enterEdit()">
+                <i class="pi pi-pen-to-square clickable" aria-hidden="true"></i>
             </button>
-            <button type="button" class="btn btn-link p-0 clickable" aria-label="Cancel editing" (click)="cancelEdit()">
-              <i class="pi pi-times" aria-hidden="true"></i>
+            <button type="button" class="btn btn-link p-0" aria-label="Delete event" (click)="onDelete()">
+                <i class="pi pi-trash clickable" aria-hidden="true"></i>
             </button>
           </div>
-          <p-toggleswitch formControlName="isPrivateEvent"
-                          ariaLabel="Private event"/>
-        }
+        </div>
       }
 
 
     </div>
   </div>
-  <div class="col-md-4"><!-- spacer --></div>
+  <!--<div class="col-md-4"><-- spacer </div>-->
 </form>

@@ -58,6 +58,7 @@ export class EventDetailPage implements OnInit {
   accessControlService = inject(AccessControlService);
 
   event = signal<Event | null>(null);
+  isPrivateEventPreview = signal<boolean>(false);
 
   displayImage = computed(() => UrlUtilService.getMediaUrl(this.event()?.pictureURI || environment.eventDummyCoverPicRelativeUrl));
   previewImage = signal<string | null>(null);
@@ -95,6 +96,7 @@ export class EventDetailPage implements OnInit {
 
   private populateEvent(event: Event): void {
     this.event.set(event);
+    this.isPrivateEventPreview.set(event.isPrivateEvent);
 
     if (this.authService.isLoggedIn()) {
 
