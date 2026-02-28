@@ -14,7 +14,7 @@
           class="card-img-top"
           [src]="
           (UrlUtilService.getMediaUrl(
-            event().pictureURI || '/uploads/event-cover-pictures/event-cover-default.svg'
+            event().pictureURI || environment.eventDummyCoverPicRelativeUrl
           ) | secureImage | async) || ''
         "
           alt="{{ event().title }}"

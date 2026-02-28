@@ -5,7 +5,7 @@
         <div class="d-flex gap-3">
           <a [routerLink]="`${environment.userProfileBaseUrl}${comment.username}`">
             <img class="user-avatar"
-                 [src]="(UrlUtilService.getMediaUrl(comment.pictureURI || '/uploads/profile-pictures/default.png')  | secureImage | async) || ''"
+                 [src]="(UrlUtilService.getMediaUrl(comment.pictureURI || environment.userDummyProfilePicRelativeUrl)  | secureImage | async) || ''"
                  alt="{{comment.username}}'s avatar">
           </a>
           <div class="flex-grow-1">

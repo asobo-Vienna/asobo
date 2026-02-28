@@ -8,7 +8,6 @@ import {CommentsList} from '../comments-list/comments-list';
 import {CommentService} from '../services/comment-service';
 import {Comment} from '../models/comment';
 import {Participant} from '../models/participant';
-import {distinctUntilChanged, filter, map, Observable, switchMap} from 'rxjs';
 import {Gallery} from '../gallery/gallery';
 import {MediaService} from '../services/media-service';
 import {MediaItem} from '../models/media-item';
@@ -21,6 +20,7 @@ import {LambdaFunctions} from '../../../shared/utils/lambda-functions';
 import {environment} from '../../../../environments/environment';
 import {Tag} from 'primeng/tag';
 import {PageResponse} from '../../../shared/entities/page-response';
+import {Title} from '@angular/platform-browser';
 
 import {FormsModule, ReactiveFormsModule,} from '@angular/forms';
 import {EventBasicInfo} from './event-basic-info/event-basic-info';
@@ -48,6 +48,7 @@ import {ToastService} from '../../../shared/services/toast-service';
 })
 export class EventDetailPage implements OnInit {
   private route = inject(ActivatedRoute);
+  private titleService = inject(Title);
   private toastService = inject(ToastService);
   private eventService = inject(EventService);
   private commentService = inject(CommentService);
@@ -79,23 +80,16 @@ export class EventDetailPage implements OnInit {
   protected readonly environment = environment;
 
   ngOnInit(): void {
-    this.route.paramMap.pipe(
-      map(params => params.get('id')),
-      filter((id): id is string => id !== null),
-      distinctUntilChanged(),
-      switchMap(id => this.loadEvent(id))
-    ).subscribe({
-      next: event => this.populateEvent(event),
+    this.route.data.subscribe({
+      next: ({event}) => {
+        this.populateEvent(event);
+        this.titleService.setTitle(`${event.title} – asobō`);
+      },
       error: err => {
         console.log(err);
-        this.toastService.error('Error fetching event!')
+        this.toastService.error('Error fetching event!');
       }
     });
-  }
-
-
-  public loadEvent(eventId: string): Observable<Event> {
-    return this.eventService.getEventById(eventId);
   }
 
 

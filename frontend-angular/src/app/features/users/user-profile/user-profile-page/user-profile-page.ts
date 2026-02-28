@@ -6,6 +6,7 @@ import {List} from '../../../../core/data-structures/lists/list';
 import {Event} from '../../../events/models/event';
 import {EventService} from '../../../events/services/event-service';
 import {EventSummary} from '../../../events/models/event-summary';
+import {Title} from '@angular/platform-browser';
 
 @Component({
   selector: 'app-user-profile-page',
@@ -18,14 +19,16 @@ import {EventSummary} from '../../../events/models/event-summary';
 })
 export class UserProfilePage implements OnInit {
   private route = inject(ActivatedRoute);
+  private titleService = inject(Title);
   private eventService = inject(EventService);
   profileUsername: string | undefined;
   events = signal<List<EventSummary>>(new List<EventSummary>());
   private userId: string = "";
 
   ngOnInit(): void {
-    this.route.paramMap.subscribe((params) => {
-      this.profileUsername = params.get('username')!;
+    this.route.data.subscribe(({user}) => {
+      this.profileUsername = user.username;
+      this.titleService.setTitle(`${user.username} – asobō`);
     });
   }
 

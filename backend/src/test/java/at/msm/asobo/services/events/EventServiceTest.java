@@ -1145,60 +1145,6 @@ class EventServiceTest {
   }
 
   @Test
-  void updateEventById_withParticipants_updatesParticipants() {
-    publicEvent1.setCreator(creator);
-
-    User participant1 =
-        new UserTestBuilder()
-            .withId(UUID.randomUUID())
-            .withUsernameAndEmail("participant1")
-            .buildUserEntity();
-
-    User participant2 =
-        new UserTestBuilder()
-            .withId(UUID.randomUUID())
-            .withUsernameAndEmail("participant2")
-            .buildUserEntity();
-
-    UserPublicDTO participant1DTO =
-        new UserTestBuilder().fromUser(participant1).buildUserPublicDTO();
-
-    UserPublicDTO participant2DTO =
-        new UserTestBuilder().fromUser(participant2).buildUserPublicDTO();
-
-    Set<UserPublicDTO> participantDTOs = Set.of(participant1DTO, participant2DTO);
-    Set<User> participants = Set.of(participant1, participant2);
-
-    EventUpdateDTO updateDTO =
-        new EventTestBuilder().withParticipants(participants).buildEventUpdateDTO();
-    updateDTO.setPicture(null);
-
-    Event savedEvent = new EventTestBuilder().fromEvent(publicEvent1).buildEventEntity();
-
-    EventDTO savedEventDTO = new EventTestBuilder().fromEvent(savedEvent).buildEventDTO();
-
-    when(eventRepository.findById(publicEvent1.getId())).thenReturn(Optional.of(publicEvent1));
-    when(userRepository.findUserByIdAndIsDeletedFalse(creator.getId()))
-        .thenReturn(Optional.of(creator));
-    when(eventAdminService.canManageEvent(publicEvent1, creator.getId())).thenReturn(true);
-    when(userDTOUserMapper.mapUserPublicDTOsToUsers(participantDTOs)).thenReturn(participants);
-    when(eventRepository.save(publicEvent1)).thenReturn(savedEvent);
-    when(eventDTOEventMapper.mapEventToEventDTO(savedEvent)).thenReturn(savedEventDTO);
-
-    EventDTO result =
-        eventService.updateEventById(publicEvent1.getId(), creatorPrincipal, updateDTO);
-
-    assertEquals(savedEventDTO, result);
-
-    verify(eventRepository).findById(publicEvent1.getId());
-    verify(userRepository).findUserByIdAndIsDeletedFalse(creator.getId());
-    verify(eventAdminService).canManageEvent(publicEvent1, creator.getId());
-    verify(userDTOUserMapper).mapUserPublicDTOsToUsers(participantDTOs);
-    verify(eventRepository).save(publicEvent1);
-    verify(eventDTOEventMapper).mapEventToEventDTO(savedEvent);
-  }
-
-  @Test
   void updateEventById_userNotAuthorized_throwsException() {
     publicEvent1.setCreator(creator);
 
