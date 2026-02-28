@@ -1,4 +1,5 @@
-import {Component, computed, inject, input, OnInit, output, signal} from '@angular/core';
+import {Component, computed, DestroyRef, inject, input, OnInit, output, signal} from '@angular/core';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {CdkTextareaAutosize} from "@angular/cdk/text-field";
 import {DatePicker} from "primeng/datepicker";
 import {DatePipe} from "@angular/common";
@@ -35,6 +36,7 @@ export class EventBasicInfo implements OnInit {
   private eventService = inject(EventService);
   protected accessControlService = inject(AccessControlService);
   private router = inject(Router);
+  private destroyRef = inject(DestroyRef);
 
   protected readonly environment = environment;
 
@@ -55,6 +57,7 @@ export class EventBasicInfo implements OnInit {
 
   // signal output
   eventUpdated = output<Event>();
+  isPrivateEventChange = output<boolean>();
 
   editEventForm: FormGroup;
   isEditing = signal(false);
@@ -70,6 +73,10 @@ export class EventBasicInfo implements OnInit {
   }
 
   public ngOnInit(): void {
+    this.editEventForm.get('isPrivateEvent')!.valueChanges
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(value => this.isPrivateEventChange.emit(value));
+
     const coreInfo = this.event();
     if (coreInfo) {
       this.editEventForm.patchValue({
