@@ -28,6 +28,11 @@
   position: relative;
 }
 
+.event-image-container ::ng-deep .picture-box {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
 .event-badge {
   position: absolute;
   top: 12px;
