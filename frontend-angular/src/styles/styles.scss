@@ -25,8 +25,8 @@ h2.component {
 }
 
 a {
-    text-decoration: none;
-    color: $asobo-purple;
+  text-decoration: none;
+  color: $asobo-purple;
 }
 
 .clickable:hover {
@@ -351,10 +351,47 @@ p-inputicon {
     }
 
     &[data-label=""] {
-      justify-content: center;
-      background: #f8f9fa;
-      padding: 0.75rem;
+      padding: 0;
       border-bottom: 2px solid #dee2e6;
+      height: 300px;
+      position: relative;
+
+      &:has(.card-view-title) {
+        border-bottom: none;
+      }
+
+      .card-view-title {
+        position: absolute;
+        z-index: 2;
+        background-color: $asobo-purple-transparent-85;
+        height: 80px;
+        width: 100%;
+        color: white;
+        bottom: 0;
+        font-size: 2.5rem;
+        vertical-align: center;
+        font-weight: bold;
+        padding: 20px;
+        display: flex;
+        align-items: center;
+      }
+
+      a, img {
+        display: block;
+        width: 100%;
+        height: 100%;
+      }
+
+      img {
+        object-fit: cover;
+        border-radius: 0;
+        filter: none;
+        margin: 0;
+      }
+
+      .user-avatar:hover, .mediaItem-thumbnail:hover {
+        transform: scale(1);
+      }
     }
 
     &[data-label=""]:empty {

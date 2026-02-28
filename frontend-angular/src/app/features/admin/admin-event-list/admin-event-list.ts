@@ -12,6 +12,7 @@ import {Button} from 'primeng/button';
 import {EventSummary} from '../../events/models/event-summary';
 import {Spinner} from '../../../core/ui-elements/spinner/spinner';
 import {SecureImagePipe} from '../../../core/pipes/secure-image-pipe';
+import {getTextPreview} from '../../../shared/utils/text/text-utils';
 
 @Component({
   selector: 'app-admin-event-list',
@@ -101,17 +102,12 @@ export class AdminEventList implements OnInit {
     return `${environment.eventsSectionBaseUrl}/${eventId}`;
   }
 
-  getEventDescriptionPreview(description: string): string {
-    if (description.length > environment.eventDescriptionPreviewLength) {
-      return `${description.substring(0, environment.eventDescriptionPreviewLength - 1)}...`;
-    }
-    return description;
-  }
-
   shouldShowViewMore(description: string): boolean {
     return description.length > environment.eventDescriptionPreviewLength;
   }
 
   protected readonly UrlUtilService = UrlUtilService;
   protected readonly environment = environment;
+  protected readonly getEventDescriptionPreview = getTextPreview;
+  protected readonly getTextPreview = getTextPreview;
 }

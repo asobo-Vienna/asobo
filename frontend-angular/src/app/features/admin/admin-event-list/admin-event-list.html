@@ -1,10 +1,14 @@
 <h2 class="component">All Events</h2>
 
 <div class="view-toggle" role="group" aria-label="View mode">
-  <button class="btn btn-sm" [class.btn-purple]="viewMode() === 'table'" [class.btn-outline-secondary]="viewMode() === 'card'" (click)="viewMode.set('table')" aria-label="Table view" [attr.aria-pressed]="viewMode() === 'table'">
+  <button class="btn btn-sm" [class.btn-purple]="viewMode() === 'table'"
+          [class.btn-outline-secondary]="viewMode() === 'card'" (click)="viewMode.set('table')" aria-label="Table view"
+          [attr.aria-pressed]="viewMode() === 'table'">
     <i class="pi pi-table" aria-hidden="true"></i>
   </button>
-  <button class="btn btn-sm" [class.btn-purple]="viewMode() === 'card'" [class.btn-outline-secondary]="viewMode() === 'table'" (click)="viewMode.set('card')" aria-label="Card view" [attr.aria-pressed]="viewMode() === 'card'">
+  <button class="btn btn-sm" [class.btn-purple]="viewMode() === 'card'"
+          [class.btn-outline-secondary]="viewMode() === 'table'" (click)="viewMode.set('card')" aria-label="Card view"
+          [attr.aria-pressed]="viewMode() === 'card'">
     <i class="pi pi-th-large" aria-hidden="true"></i>
   </button>
 </div>
@@ -46,6 +50,7 @@
               [alt]="'Cover picture of the event ' + event.title"
               class="mediaItem-thumbnail"
             />
+            <span class="card-view-title">{{ getTextPreview(event.title, 31) }}</span>
           </a>
         </td>
 
@@ -57,7 +62,7 @@
           <span class="p-column-title">
           <div class="description-content">
             <div class="description-preview">
-              {{ getEventDescriptionPreview(event.description) }}
+              {{ getEventDescriptionPreview(event.description, environment.eventDescriptionPreviewLength) }}
             </div>
             @if (shouldShowViewMore(event.description)) {
               <button
