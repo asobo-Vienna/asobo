@@ -73,6 +73,7 @@ export class PictureUpload implements OnInit {
         box.style.aspectRatio = '1.5/1';
         box.style.width = '100%';
         box.style.maxWidth = String(width) + 'vw';
+        box.style.maxHeight = String(height) + 'vw';
         box.style.height = String(height) + 'vw';
         box.style.minHeight = '133.33px';
       }
