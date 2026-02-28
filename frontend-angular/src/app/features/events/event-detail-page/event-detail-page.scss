@@ -28,9 +28,11 @@
   position: relative;
 }
 
-.event-image-container ::ng-deep .picture-box {
-  margin-top: 0;
-  margin-bottom: 0;
+@media (min-width: 768px) {
+  .event-image-container ::ng-deep .picture-box {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
 }
 
 .event-badge {
