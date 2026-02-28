@@ -13,9 +13,9 @@
       @if (authService.isLoggedIn()) {
         <p-tag
           class="event-badge"
-          [icon]="event()?.isPrivateEvent ? 'pi pi-lock' : 'pi pi-globe'"
-          [severity]="event()?.isPrivateEvent ? 'warn' : 'success'"
-          [value]="event()?.isPrivateEvent ? 'Private' : 'Public'"
+          [icon]="isPrivateEventPreview() ? 'pi pi-lock' : 'pi pi-globe'"
+          [severity]="isPrivateEventPreview() ? 'warn' : 'success'"
+          [value]="isPrivateEventPreview() ? 'Private' : 'Public'"
         />
       }
     </app-picture-upload>
@@ -35,6 +35,7 @@
       <app-event-basic-info
         [event]="event()"
         (eventUpdated)="onEventUpdated($event)"
+        (isPrivateEventChange)="isPrivateEventPreview.set($event)"
       />
 
       <div>

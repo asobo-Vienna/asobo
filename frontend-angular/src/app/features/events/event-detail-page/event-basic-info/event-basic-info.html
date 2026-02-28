@@ -26,12 +26,14 @@
             </p-datepicker>
           }
 
-          <div id="event-date" class="date-font-color">
-            {{ event()?.date | date : 'EEE, MMMM d, y' }}
-            <div id="event-time" class="date-font-color event-time">
-              {{ event()?.date | date : 'h:mm a' }}
+          @if (!isEditing()) {
+            <div id="event-date" class="date-font-color">
+              {{ event()?.date | date : 'EEE, MMMM d, y' }}
+              <div id="event-time" class="date-font-color event-time">
+                {{ event()?.date | date : 'h:mm a' }}
+              </div>
             </div>
-          </div>
+          }
         </div>
 
         <div class="d-flex justify-content-between">
@@ -61,18 +63,29 @@
       </div>
 
       @if (isAdminOrEventAdmin() && !isEventInThePast()) {
-        <div class="d-flex justify-content-end gap-2">
-          <i class="pi pi-pen-to-square clickable" (click)="enterEdit()"></i>
-          <i class="pi pi-trash clickable" (click)="onDelete()"></i>
-        </div>
-
-        @if (isEditing()) {
-          <div class="form-group d-flex justify-content-center gap-2">
-            <i class="pi pi-check clickable me-1" (click)="onSubmit()"></i>
-            <i class="pi pi-times clickable" (click)="cancelEdit()"></i>
+        <div class="d-flex align-items-center edit-button-div mb-3">
+          <!-- Left: toggle -->
+          <div class="flex-fill">
+            @if (isEditing()) {
+              <div class="d-flex align-items-center gap-2">
+                <p-toggleswitch formControlName="isPrivateEvent"/>
+                <span class="small">{{ editEventForm.get('isPrivateEvent')?.value ? 'Private' : 'Public' }}</span>
+              </div>
+            }
           </div>
-          <p-toggleswitch formControlName="isPrivateEvent"/>
-        }
+          <!-- Center: confirm/cancel -->
+          <div class="flex-fill d-flex justify-content-center gap-2">
+            @if (isEditing()) {
+              <i class="pi pi-check clickable" (click)="onSubmit()"></i>
+              <i class="pi pi-times clickable" (click)="cancelEdit()"></i>
+            }
+          </div>
+          <!-- Right: edit/delete -->
+          <div class="flex-fill d-flex justify-content-end gap-2">
+            <i class="pi pi-pen-to-square clickable" (click)="enterEdit()"></i>
+            <i class="pi pi-trash clickable" (click)="onDelete()"></i>
+          </div>
+        </div>
       }
 
 
