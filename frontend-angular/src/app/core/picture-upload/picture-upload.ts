@@ -51,7 +51,7 @@ export class PictureUpload implements OnInit {
     reader.readAsDataURL(file);
   }
 
-  private removePictureBoxBorder() : void {
+  private removePictureBoxBorder(): void {
     const box = this.pictureBox()?.nativeElement;
     if (box) {
       box.style.border = 'none';
@@ -59,7 +59,7 @@ export class PictureUpload implements OnInit {
     }
   }
 
-  private setFrameDimensions(width: number, height: number) : void {
+  private setFrameDimensions(width: number, height: number): void {
     const box = this.pictureBox()?.nativeElement;
     if (box) {
       if (width === height) {
@@ -72,15 +72,13 @@ export class PictureUpload implements OnInit {
         // Rectangle: set both dimensions explicitly
         box.style.aspectRatio = '1.5/1';
         box.style.width = '100%';
-        box.style.maxWidth = String(width) + 'vw';
         box.style.height = String(height) + 'vw';
-        box.style.maxHeight = String(height) + 'vw';
         box.style.minHeight = '133.33px';
       }
     }
   }
 
-  setShapeCssClass() : string {
+  setShapeCssClass(): string {
     const cssClass: string = 'picture-box';
     if (this.shape() === 'rectangle') {
       return cssClass + ' rectangle-picture-box';
