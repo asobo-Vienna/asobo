@@ -27,26 +27,28 @@
 
     <ng-template pTemplate="body" let-comment>
       <tr>
-        <td><span class="p-column-title">ID</span><small>{{ comment.id }}</small></td>
-        <td><span class="p-column-title">Username</span>{{ comment.username }}</td>
-        <td><span class="p-column-title">Text</span>{{ comment.text }}</td>
-        <td><span class="p-column-title">Event Title</span><a [routerLink]="getEventRouterLink(comment.eventId)"
-               class="a-clickable">{{ comment.eventTitle }}</a></td>
-        <td><span class="p-column-title">Date</span>{{ comment.creationDate | date:'yyyy-MM-dd hh:mm a' }}</td>
+        <td><span class="p-column-title"><small>{{ comment.id }}</small></span></td>
+        <td><span class="p-column-title">{{ comment.username }}</span></td>
+        <td><span class="p-column-title">{{ comment.text }}</span></td>
+        <td><span class="p-column-title"><a [routerLink]="getEventRouterLink(comment.eventId)"
+               class="a-clickable">{{ comment.eventTitle }}</a></span></td>
+        <td><span class="p-column-title">{{ comment.creationDate | date:'yyyy-MM-dd hh:mm a' }}</span></td>
 
         @if (comment.modificationDate) {
-          <td><span class="p-column-title">Modified</span>{{ comment.modificationDate | date:'yyyy-MM-dd hh:mm a' }}</td>
+          <td><span class="p-column-title">{{ comment.modificationDate | date:'yyyy-MM-dd hh:mm a' }}</span></td>
         } @else {
-          <td><span class="p-column-title">Modified</span>–</td>
+          <td><span class="p-column-title">–</span></td>
         }
 
         <td>
-          <span class="p-column-title">Edit</span>
-          <i class="pi pi-pencil clickable" title="Edit" (click)="onEdit(comment)" aria-label="Edit comment"></i>
+          <span class="p-column-title">
+            <i class="pi pi-pencil clickable" title="Edit" (click)="onEdit(comment)" aria-label="Edit comment"></i>
+          </span>
         </td>
         <td>
-          <span class="p-column-title">Delete</span>
-          <i class="pi pi-trash clickable" title="Delete" (click)="onDelete(comment)" aria-label="Delete comment"></i>
+          <span class="p-column-title">
+            <i class="pi pi-trash clickable" title="Delete" (click)="onDelete(comment)" aria-label="Delete comment"></i>
+          </span>
         </td>
       </tr>
     </ng-template>

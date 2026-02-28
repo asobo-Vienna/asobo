@@ -42,12 +42,12 @@
           </a>
         </td>
 
-        <td><span class="p-column-title">ID</span><small>{{ event.id }}</small></td>
-        <td><span class="p-column-title">Title</span>{{ event.title }}</td>
+        <td><span class="p-column-title"><small>{{ event.id }}</small></span></td>
+        <td><span class="p-column-title">{{ event.title }}</span></td>
 
         <!-- Description with view more button -->
         <td class="description-cell">
-          <span class="p-column-title">Description</span>
+          <span class="p-column-title">
           <div class="description-content">
             <div class="description-preview">
               {{ getEventDescriptionPreview(event.description) }}
@@ -63,24 +63,26 @@
               </button>
             }
           </div>
+            </span>
         </td>
 
-        <td><span class="p-column-title">Location</span>{{ event.location }}</td>
-        <td><span class="p-column-title">Date</span>{{ event.date | date:'EEE, MMMM d, y' }}</td>
-        <td><span class="p-column-title">Time</span>{{ event.date | date:'h:mm a' }}</td>
+        <td><span class="p-column-title">{{ event.location }}</span></td>
+        <td><span class="p-column-title">{{ event.date | date:'EEE, MMMM d, y' }}</span></td>
+        <td><span class="p-column-title">{{ event.date | date:'h:mm a' }}</span></td>
 
         <td>
-          <span class="p-column-title">Visibility</span>
-          <p-tag
-            [icon]="event.isPrivateEvent ? 'pi pi-lock' : 'pi pi-globe'"
-            [severity]="event.isPrivateEvent ? 'warn' : 'success'"
-            [value]="event.isPrivateEvent ? 'Private' : 'Public'">
-          </p-tag>
+          <span class="p-column-title">
+            <p-tag
+              [icon]="event.isPrivateEvent ? 'pi pi-lock' : 'pi pi-globe'"
+              [severity]="event.isPrivateEvent ? 'warn' : 'success'"
+              [value]="event.isPrivateEvent ? 'Private' : 'Public'">
+            </p-tag>
+          </span>
         </td>
 
-        <td><span class="p-column-title"># Participants</span>{{ event.participantCount }}</td>
-        <td><span class="p-column-title"># Comments</span>{{ event.commentCount }}</td>
-        <td><span class="p-column-title"># Media</span>{{ event.mediaCount }}</td>
+        <td><span class="p-column-title">{{ event.participantCount }}</span></td>
+        <td><span class="p-column-title">{{ event.commentCount }}</span></td>
+        <td><span class="p-column-title">{{ event.mediaCount }}</span></td>
 
         <td>
           <span class="p-column-title">Edit</span>

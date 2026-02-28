@@ -35,30 +35,33 @@
             class="mediaItem-thumbnail"
           />
         </td>
-        <td><span class="p-column-title">ID</span><small>{{ mediaItem.id }}</small></td>
+        <td><span class="p-column-title"><small>{{ mediaItem.id }}</small></span></td>
         <td>
-          <span class="p-column-title">Event Title</span>
-          <a [routerLink]="getEventRouterLink(mediaItem.eventId)"
-             class="a-clickable">{{ mediaItem.eventTitle }}</a>
+          <span class="p-column-title">
+            <a [routerLink]="getEventRouterLink(mediaItem.eventId)"
+               class="a-clickable">{{ mediaItem.eventTitle }}</a>
+          </span>
         </td>
 
         <td>
-          <span class="p-column-title">Edit</span>
-          <i
-            class="pi pi-pencil clickable"
-            title="Edit"
-            (click)="onEdit(mediaItem)"
-            aria-label="Edit medium"
-          ></i>
+          <span class="p-column-title">
+            <i
+              class="pi pi-pencil clickable"
+              title="Edit"
+              (click)="onEdit(mediaItem)"
+              aria-label="Edit medium"
+            ></i>
+          </span>
         </td>
         <td>
-          <span class="p-column-title">Delete</span>
-          <i
-            class="pi pi-trash clickable"
-            title="Delete"
-            (click)="onDelete(mediaItem)"
-            aria-label="Delete medium"
-          ></i>
+          <span class="p-column-title">
+            <i
+              class="pi pi-trash clickable"
+              title="Delete"
+              (click)="onDelete(mediaItem)"
+              aria-label="Delete medium"
+            ></i>
+          </span>
         </td>
       </tr>
     </ng-template>

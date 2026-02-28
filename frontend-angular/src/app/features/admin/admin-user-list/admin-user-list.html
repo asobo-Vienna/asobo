@@ -41,26 +41,27 @@
           </a>
         </td>
 
-        <td><span class="p-column-title">ID</span><small>{{ user.id }}</small></td>
-        <td><span class="p-column-title">Username</span>{{ user.username }}</td>
-        <td><span class="p-column-title">Email</span>{{ user.email }}</td>
-        <td><span class="p-column-title">Name</span>{{ user.firstName }} {{ user.surname }}</td>
-        <td><span class="p-column-title">Registered</span>{{ user.registerDate | date:'yyyy-MM-dd' }}</td>
+        <td><span class="p-column-title"><small>{{ user.id }}</small></span></td>
+        <td><span class="p-column-title">{{ user.username }}</span></td>
+        <td><span class="p-column-title">{{ user.email }}</span></td>
+        <td><span class="p-column-title">{{ user.firstName }} {{ user.surname }}</span></td>
+        <td><span class="p-column-title">{{ user.registerDate | date:'yyyy-MM-dd' }}</span></td>
 
         <td>
-          <span class="p-column-title">Active</span>
-          <p-tag
-            [value]="user.isActive ? 'Active' : 'Inactive'"
-            [severity]="user.isActive ? 'success' : 'danger'"
-          />
+          <span class="p-column-title">
+            <p-tag
+              [value]="user.isActive ? 'Active' : 'Inactive'"
+              [severity]="user.isActive ? 'success' : 'danger'"
+            />
+          </span>
         </td>
 
-        <td><span class="p-column-title">Location</span>{{ user.location }}</td>
+        <td><span class="p-column-title">{{ user.location }}</span></td>
 
-        <td><span class="p-column-title">Country</span>{{ user.country }}</td>
+        <td><span class="p-column-title">{{ user.country }}</span></td>
 
         <td>
-          <span class="p-column-title">Roles</span>
+          <span class="p-column-title">
           <div class="flex flex-col gap-1">
             <p-multiselect
               [options]="allRoles()"
@@ -86,23 +87,27 @@
               </ng-template>
             </p-multiselect>
           </div>
+            </span>
         </td>
 
         @if (!user.isDeleted) {
           <td>
-            <span class="p-column-title">Edit</span>
-            <i class="pi pi-user-edit clickable" title="Edit" (click)="onEdit(user)" aria-label="Edit user"></i>
+            <span class="p-column-title">
+              <i class="pi pi-user-edit clickable" title="Edit" (click)="onEdit(user)" aria-label="Edit user"></i>
+            </span>
           </td>
           <td>
-            <span class="p-column-title">Delete</span>
-            <i class="pi pi-trash clickable" title="Delete" (click)="onDelete(user)" aria-label="Delete user"></i>
+            <span class="p-column-title">
+              <i class="pi pi-trash clickable" title="Delete" (click)="onDelete(user)" aria-label="Delete user"></i>
+            </span>
           </td>
         } @else {
           <td><!-- spacer --></td>
           <td>
-            <span class="p-column-title">Reactivate</span>
-            <i class="pi pi-power-off clickable" title="Reactivate" (click)="onReactivate(user)"
-               aria-label="Reactivate user"></i>
+            <span class="p-column-title">
+              <i class="pi pi-power-off clickable" title="Reactivate" (click)="onReactivate(user)"
+                 aria-label="Reactivate user"></i>
+            </span>
           </td>
         }
       </tr>
