@@ -184,11 +184,12 @@ p-iconfield input:disabled, p-iconfield p-password-input, .p-select-dropdown:dis
   z-index: 10;
 }
 
-@media (max-width: 576px) {
+@media (max-width: 768px) {
   .error-message {
     position: static;
     transform: none;
     margin-left: 0;
+    margin-top: 10px;
     display: block;
     text-align: center;
   }
@@ -316,8 +317,8 @@ p-iconfield input:disabled, p-iconfield p-password-input, .p-select-dropdown:dis
 }
 
 p-float-label label.password-label {
-    color: #64748b !important;
-    font-weight: normal;
+  color: #64748b !important;
+  font-weight: normal;
 }
 
 ::ng-deep {
