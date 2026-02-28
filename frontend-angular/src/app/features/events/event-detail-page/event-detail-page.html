@@ -4,27 +4,27 @@
   <div class="col-md-6 event-image-container">
     <app-picture-upload
       [currentImage]="displayImage()"
-      [shape] = "'rectangle'"
-      [caption] = "'Add cover picture'"
-      [dimensions] = "[60, 22]"
+      [shape]="'rectangle'"
+      [caption]="'Add cover picture'"
+      [dimensions]="[60, 30]"
       (fileSelected)="handleFileSelected($event)"
       [disabled]="!isAdminOrEventAdmin()">
 
       @if (authService.isLoggedIn()) {
-    <p-tag
-      class="event-badge"
-      [icon]="event()?.isPrivateEvent ? 'pi pi-lock' : 'pi pi-globe'"
-      [severity]="event()?.isPrivateEvent ? 'warn' : 'success'"
-      [value]="event()?.isPrivateEvent ? 'Private' : 'Public'"
-    />
-    }
+        <p-tag
+          class="event-badge"
+          [icon]="event()?.isPrivateEvent ? 'pi pi-lock' : 'pi pi-globe'"
+          [severity]="event()?.isPrivateEvent ? 'warn' : 'success'"
+          [value]="event()?.isPrivateEvent ? 'Private' : 'Public'"
+        />
+      }
     </app-picture-upload>
 
-<!--    <img-->
-<!--      class="card-img-top"-->
-<!--      [src]="UrlUtilService.getMediaUrl(event()?.pictureURI || environment.eventDummyCoverPicRelativeUrl)"-->
-<!--      alt="{{ event()?.title }}"-->
-<!--    />-->
+    <!--    <img-->
+    <!--      class="card-img-top"-->
+    <!--      [src]="UrlUtilService.getMediaUrl(event()?.pictureURI || environment.eventDummyCoverPicRelativeUrl)"-->
+    <!--      alt="{{ event()?.title }}"-->
+    <!--    />-->
 
 
   </div>
@@ -53,7 +53,7 @@
 
 
 @if (this.authService.isLoggedIn()) {
-  <div class="row text-start mt-4 align-items-center gx-5">
+  <div class="row text-start mt-4 align-items-center gx-5 gy-4 gy-md-0">
     <!-- Comment Box for new comment -->
     <div class="col-md-6">
       <app-new-comment

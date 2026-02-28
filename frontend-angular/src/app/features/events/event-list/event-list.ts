@@ -161,11 +161,11 @@ export class EventList implements OnInit {
       sort: `${this.sortField()},${this.sortDirection()}`
     };
 
-    console.log('Fetching with filters:', filters, 'params:', params);
+    // console.log('Fetching with filters:', filters, 'params:', params);
 
     this.eventService.getAllEventsPaginated(params, filters).subscribe({
       next: (events) => {
-        console.log('Events fetched:', events);
+        // console.log('Events fetched:', events);
         this.fetchedEvents.set(new List<EventSummary>(events.content));
         this.loading.set(false);
       },
