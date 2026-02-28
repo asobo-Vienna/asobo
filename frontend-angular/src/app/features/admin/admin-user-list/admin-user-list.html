@@ -9,8 +9,6 @@
     [totalRecords]="totalRecords()"
     [lazy]="true"
     (onLazyLoad)="onPageChange($event)"
-    responsiveLayout="stack"
-    [breakpoint]="'992px'"
   >
     <ng-template pTemplate="header">
       <tr>
@@ -31,7 +29,7 @@
 
     <ng-template pTemplate="body" let-user>
       <tr>
-        <td>
+        <td data-label="">
           <a [routerLink]="UrlUtilService.getUserRouterLink(user.username)">
             <img
               [src]="(UrlUtilService.getMediaUrl(user.pictureURI || environment.userDummyProfilePicRelativeUrl)  | secureImage | async) || ''"
@@ -41,13 +39,13 @@
           </a>
         </td>
 
-        <td><span class="p-column-title"><small>{{ user.id }}</small></span></td>
-        <td><span class="p-column-title">{{ user.username }}</span></td>
-        <td><span class="p-column-title">{{ user.email }}</span></td>
-        <td><span class="p-column-title">{{ user.firstName }} {{ user.surname }}</span></td>
-        <td><span class="p-column-title">{{ user.registerDate | date:'yyyy-MM-dd' }}</span></td>
+        <td data-label="ID"><span class="p-column-title"><small>{{ user.id }}</small></span></td>
+        <td data-label="Username"><span class="p-column-title">{{ user.username }}</span></td>
+        <td data-label="Email"><span class="p-column-title">{{ user.email }}</span></td>
+        <td data-label="Name"><span class="p-column-title">{{ user.firstName }} {{ user.surname }}</span></td>
+        <td data-label="Registered"><span class="p-column-title">{{ user.registerDate | date:'yyyy-MM-dd' }}</span></td>
 
-        <td>
+        <td data-label="Active">
           <span class="p-column-title">
             <p-tag
               [value]="user.isActive ? 'Active' : 'Inactive'"
@@ -56,11 +54,11 @@
           </span>
         </td>
 
-        <td><span class="p-column-title">{{ user.location }}</span></td>
+        <td data-label="Location"><span class="p-column-title">{{ user.location }}</span></td>
 
-        <td><span class="p-column-title">{{ user.country }}</span></td>
+        <td data-label="Country"><span class="p-column-title">{{ user.country }}</span></td>
 
-        <td>
+        <td data-label="Roles">
           <span class="p-column-title">
           <div class="flex flex-col gap-1">
             <p-multiselect
@@ -91,19 +89,19 @@
         </td>
 
         @if (!user.isDeleted) {
-          <td>
+          <td data-label="Edit">
             <span class="p-column-title">
               <i class="pi pi-user-edit clickable" title="Edit" (click)="onEdit(user)" aria-label="Edit user"></i>
             </span>
           </td>
-          <td>
+          <td data-label="Delete">
             <span class="p-column-title">
               <i class="pi pi-trash clickable" title="Delete" (click)="onDelete(user)" aria-label="Delete user"></i>
             </span>
           </td>
         } @else {
-          <td><!-- spacer --></td>
-          <td>
+          <td data-label=""></td>
+          <td data-label="Reactivate">
             <span class="p-column-title">
               <i class="pi pi-power-off clickable" title="Reactivate" (click)="onReactivate(user)"
                  aria-label="Reactivate user"></i>

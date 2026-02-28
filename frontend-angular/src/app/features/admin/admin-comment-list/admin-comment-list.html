@@ -9,8 +9,6 @@
     [totalRecords]="totalRecords()"
     [lazy]="true"
     (onLazyLoad)="onPageChange($event)"
-    responsiveLayout="stack"
-    [breakpoint]="'992px'"
   >
     <ng-template pTemplate="header">
       <tr>
@@ -27,25 +25,25 @@
 
     <ng-template pTemplate="body" let-comment>
       <tr>
-        <td><span class="p-column-title"><small>{{ comment.id }}</small></span></td>
-        <td><span class="p-column-title">{{ comment.username }}</span></td>
-        <td><span class="p-column-title">{{ comment.text }}</span></td>
-        <td><span class="p-column-title"><a [routerLink]="getEventRouterLink(comment.eventId)"
+        <td data-label="ID"><span class="p-column-title"><small>{{ comment.id }}</small></span></td>
+        <td data-label="Username"><span class="p-column-title">{{ comment.username }}</span></td>
+        <td data-label="Text"><span class="p-column-title">{{ comment.text }}</span></td>
+        <td data-label="Event"><span class="p-column-title"><a [routerLink]="getEventRouterLink(comment.eventId)"
                class="a-clickable">{{ comment.eventTitle }}</a></span></td>
-        <td><span class="p-column-title">{{ comment.creationDate | date:'yyyy-MM-dd hh:mm a' }}</span></td>
+        <td data-label="Date"><span class="p-column-title">{{ comment.creationDate | date:'yyyy-MM-dd hh:mm a' }}</span></td>
 
         @if (comment.modificationDate) {
-          <td><span class="p-column-title">{{ comment.modificationDate | date:'yyyy-MM-dd hh:mm a' }}</span></td>
+          <td data-label="Modified"><span class="p-column-title">{{ comment.modificationDate | date:'yyyy-MM-dd hh:mm a' }}</span></td>
         } @else {
-          <td><span class="p-column-title">–</span></td>
+          <td data-label="Modified"><span class="p-column-title">–</span></td>
         }
 
-        <td>
+        <td data-label="Edit">
           <span class="p-column-title">
             <i class="pi pi-pencil clickable" title="Edit" (click)="onEdit(comment)" aria-label="Edit comment"></i>
           </span>
         </td>
-        <td>
+        <td data-label="Delete">
           <span class="p-column-title">
             <i class="pi pi-trash clickable" title="Delete" (click)="onDelete(comment)" aria-label="Delete comment"></i>
           </span>

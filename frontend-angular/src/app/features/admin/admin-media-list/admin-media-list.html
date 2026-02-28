@@ -9,8 +9,6 @@
     [totalRecords]="totalRecords()"
     [lazy]="true"
     (onLazyLoad)="onPageChange($event)"
-    responsiveLayout="stack"
-    [breakpoint]="'992px'"
   >
     <ng-template pTemplate="header">
       <tr>
@@ -24,7 +22,7 @@
 
     <ng-template pTemplate="body" let-mediaItem>
       <tr>
-        <td>
+        <td data-label="">
           <img
             [src]="
             (UrlUtilService.getMediaUrl(
@@ -35,15 +33,15 @@
             class="mediaItem-thumbnail"
           />
         </td>
-        <td><span class="p-column-title"><small>{{ mediaItem.id }}</small></span></td>
-        <td>
+        <td data-label="ID"><span class="p-column-title"><small>{{ mediaItem.id }}</small></span></td>
+        <td data-label="Event">
           <span class="p-column-title">
             <a [routerLink]="getEventRouterLink(mediaItem.eventId)"
                class="a-clickable">{{ mediaItem.eventTitle }}</a>
           </span>
         </td>
 
-        <td>
+        <td data-label="Edit">
           <span class="p-column-title">
             <i
               class="pi pi-pencil clickable"
@@ -53,7 +51,7 @@
             ></i>
           </span>
         </td>
-        <td>
+        <td data-label="Delete">
           <span class="p-column-title">
             <i
               class="pi pi-trash clickable"
