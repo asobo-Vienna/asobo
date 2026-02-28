@@ -29,7 +29,13 @@
           @if (searchResults.length > 0) {
             <div class="d-flex justify-content-center">
               <div class="px-3 py-2 text-sm text-gray-500 search-result-count">
-                {{ searchResults.length }} results found
+                {{ searchResults.length }}
+                @if (searchResults.length != 1) {
+                  results
+                } @else {
+                  result
+                }
+                found
               </div>
             </div>
           }

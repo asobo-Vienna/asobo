@@ -8,8 +8,8 @@
 }
 
 .single-media-container {
-  width: 7vw;
-  height: 7vw;
+  width: clamp(70px, 7vw, 150px);
+  height: clamp(70px, 7vw, 150px);
   position: relative;
   display: inline-block;
 }

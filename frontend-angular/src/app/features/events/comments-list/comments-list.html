@@ -24,12 +24,12 @@
                           pTextarea>
                 </textarea>
 
-                <div class="comment-actions mt-1">
+                <div class="comment-actions mt-1 ms-auto flex-wrap">
                   <i class="pi pi-check clickable me-1" (click)="saveEdit(comment, editTextarea.value)"></i>
                   <i class="pi pi-times clickable" (click)="cancelEdit()"></i>
                 </div>
               } @else {
-                <p class="mt-2 flex-grow-1">{{ comment.text }}</p>
+                <p class="mt-2 flex-grow-1 text-break">{{ comment.text }}</p>
                 @if (accessControlService.hasAdminAccess() || accessControlService.getCurrentUser()?.id === comment.authorId) {
                   <div class="comment-actions mt-3 ms-2">
                     <i class="pi pi-pen-to-square clickable" (click)="startEdit(comment)"></i>
