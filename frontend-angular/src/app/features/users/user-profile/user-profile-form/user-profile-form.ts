@@ -21,6 +21,7 @@ import {Select} from 'primeng/select';
 import {Textarea} from 'primeng/textarea';
 import {List} from '../../../../core/data-structures/lists/list';
 import { Event } from '../../../events/models/event';
+import {User} from '../../../auth/models/user';
 import {UserService} from '../../services/user-service';
 
 @Component({
@@ -141,13 +142,12 @@ export class UserProfileForm implements OnInit {
 
     this.loadCountries();
 
-    // Get username from route params and load profile
-    this.route.params.subscribe(params => {
-      const username = params['username'];
-      if (username) {
-        this.loadUserProfile(username);
+    // Use resolved user from route data for initial load (no extra HTTP call)
+    this.route.data.subscribe(({user}) => {
+      if (user) {
+        this.populateFormFields(user);
       } else {
-        // Fallback: if no username in route, redirect to logged-in user's profile
+        // Fallback: if no user in route data, redirect to logged-in user's profile
         const currentUsername = this.authService.currentUser()?.username;
         if (currentUsername) {
           this.router.navigate(['/user', currentUsername]);
@@ -255,86 +255,86 @@ export class UserProfileForm implements OnInit {
 
   loadUserProfile(username: string) {
     this.userProfileService.getUserByUsername(username).subscribe({
-      next: (user) => {
-        this.username.set(user.username);
-        this.userId.emit(user.id);
-
-        // Check if salutation matches predefined options
-        const isCustomSalutation = user.salutation && !this.salutations.includes(user.salutation);
-
-        // Determine if viewing another user's profile
-        const viewingOtherProfile = !this.isOwnProfile();
-
-        if (isCustomSalutation && viewingOtherProfile) {
-          // When viewing another user's custom salutation, add it to the options
-          this.salutations = [...environment.defaultSalutations.filter(salutation => salutation !== 'Other'), user.salutation];
-
-          this.updateForm.patchValue({
-            aboutMe: user.aboutMe,
-            username: user.username,
-            firstName: user.firstName,
-            surname: user.surname,
-            location: user.location || '',
-            country: user.country || '',
-            email: user.email,
-            salutation: user.salutation,
-            customSalutation: '',
-          });
-
-          this.showCustomSalutation.set(false);
-        } else if (isCustomSalutation && !viewingOtherProfile) {
-          // Viewing own profile with custom salutation - show "Other" + custom field
-          this.salutations = environment.defaultSalutations;
-
-          this.updateForm.patchValue({
-            aboutMe: user.aboutMe,
-            username: user.username,
-            firstName: user.firstName,
-            surname: user.surname,
-            location: user.location || '',
-            country: user.country || '',
-            email: user.email,
-            salutation: 'Other',
-            customSalutation: user.salutation,
-          });
-
-          this.showCustomSalutation.set(true);
-        } else {
-          this.salutations = environment.defaultSalutations;
-
-          this.updateForm.patchValue({
-            aboutMe: user.aboutMe,
-            username: user.username,
-            firstName: user.firstName,
-            surname: user.surname,
-            location: user.location || '',
-            country: user.country || '',
-            email: user.email,
-            salutation: user.salutation || '',
-            customSalutation: '',
-          });
-
-          this.showCustomSalutation.set(false);
-        }
-
-        // Disable all fields initially if viewing own profile
-        // or disable all if viewing someone else's profile
-        if (this.isOwnProfile()) {
-          // Disable all except those being edited
-          Object.keys(this.updateForm.controls).forEach(key => {
-            if (!this.editingFields().has(key)) {
-              this.updateForm.get(key)?.disable();
-            }
-          });
-        } else {
-          // Disable all fields when viewing someone else's profile
-          this.updateForm.disable();
-        }
-      },
-      error: (err) => {
-        console.error('Failed to load user profile:', err);
-      }
+      next: (user) => this.populateFormFields(user),
+      error: (err) => console.error('Failed to load user profile:', err)
     });
+  }
+
+  private populateFormFields(user: User): void {
+    this.username.set(user.username);
+    this.userId.emit(user.id);
+
+    // Check if salutation matches predefined options
+    const isCustomSalutation = user.salutation && !this.salutations.includes(user.salutation);
+
+    // Determine if viewing another user's profile
+    const viewingOtherProfile = !this.isOwnProfile();
+
+    if (isCustomSalutation && viewingOtherProfile) {
+      // When viewing another user's custom salutation, add it to the options
+      this.salutations = [...environment.defaultSalutations.filter(salutation => salutation !== 'Other'), user.salutation];
+
+      this.updateForm.patchValue({
+        aboutMe: user.aboutMe,
+        username: user.username,
+        firstName: user.firstName,
+        surname: user.surname,
+        location: user.location || '',
+        country: user.country || '',
+        email: user.email,
+        salutation: user.salutation,
+        customSalutation: '',
+      });
+
+      this.showCustomSalutation.set(false);
+    } else if (isCustomSalutation && !viewingOtherProfile) {
+      // Viewing own profile with custom salutation - show "Other" + custom field
+      this.salutations = environment.defaultSalutations;
+
+      this.updateForm.patchValue({
+        aboutMe: user.aboutMe,
+        username: user.username,
+        firstName: user.firstName,
+        surname: user.surname,
+        location: user.location || '',
+        country: user.country || '',
+        email: user.email,
+        salutation: 'Other',
+        customSalutation: user.salutation,
+      });
+
+      this.showCustomSalutation.set(true);
+    } else {
+      this.salutations = environment.defaultSalutations;
+
+      this.updateForm.patchValue({
+        aboutMe: user.aboutMe,
+        username: user.username,
+        firstName: user.firstName,
+        surname: user.surname,
+        location: user.location || '',
+        country: user.country || '',
+        email: user.email,
+        salutation: user.salutation || '',
+        customSalutation: '',
+      });
+
+      this.showCustomSalutation.set(false);
+    }
+
+    // Disable all fields initially if viewing own profile
+    // or disable all if viewing someone else's profile
+    if (this.isOwnProfile()) {
+      // Disable all except those being edited
+      Object.keys(this.updateForm.controls).forEach(key => {
+        if (!this.editingFields().has(key)) {
+          this.updateForm.get(key)?.disable();
+        }
+      });
+    } else {
+      // Disable all fields when viewing someone else's profile
+      this.updateForm.disable();
+    }
   }
 
   // Check if viewing own profile
