@@ -65,12 +65,13 @@
     left: 85%;
   }
 
-  @media (max-width: 576px) {
+  @media (max-width: 768px) {
     .error-message {
       position: static;
       transform: none;
       display: block;
       text-align: center;
+      width: 100%;
     }
   }
 }
