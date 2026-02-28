@@ -2,10 +2,18 @@
 
 @media (max-width: 992px) {
   .picture-box {
+    max-height: 100% !important;
+  }
+
+  .rectangle-picture-box {
     width: 100% !important;
     height: auto !important;
     max-width: 100% !important;
-    max-height: 100% !important;
+  }
+
+  .picture-box:not(.rectangle-picture-box) {
+    max-width: min(60vw, 300px) !important;
+    max-height: min(60vw, 300px) !important;
   }
 }
 

@@ -21,7 +21,7 @@ export class PictureUpload implements OnInit {
   disabled = input<boolean>(false);
   fileSelected = output<File>();
   preview = signal<string | null>(null);
-  dimensions = input<[number, number]>([20, 20]);
+  dimensions = input<[number, number]>([25, 25]);
 
   ngOnInit(): void {
     this.setFrameDimensions(this.dimensions()[0], this.dimensions()[1]);
@@ -65,8 +65,8 @@ export class PictureUpload implements OnInit {
       if (width === height) {
         // Square: use aspect-ratio
         box.style.aspectRatio = '1/1';
-        box.style.width = '100%';
-        box.style.maxWidth = String(width) + 'vw';
+        box.style.width = String(width) + 'vw';
+        box.style.maxWidth = '100%';
         box.style.height = 'auto';
       } else {
         // Rectangle: set both dimensions explicitly
