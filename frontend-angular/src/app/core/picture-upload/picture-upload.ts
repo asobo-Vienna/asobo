@@ -66,6 +66,7 @@ export class PictureUpload implements OnInit {
         // Square: use aspect-ratio
         box.style.aspectRatio = '1/1';
         box.style.width = '100%';
+        box.style.maxWidth = String(width) + 'vw';
         box.style.height = 'auto';
       } else {
         // Rectangle: set both dimensions explicitly
