@@ -13,6 +13,7 @@
           <p-iconfield>
             <p-floatlabel>
               <textarea
+                id="about-me"
                 rows="8"
                 cols="36"
                 pTextarea
@@ -20,7 +21,7 @@
                 (blur)="saveField('aboutMe')"
               >
               </textarea>
-              <label for="over_label">About Me</label>
+              <label for="about-me">About Me</label>
             </p-floatlabel>
             @if (isOwnProfile()) {
               <p-inputicon
