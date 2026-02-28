@@ -48,6 +48,7 @@ export class AdminUserList implements OnInit {
   };
 
   allRoles = signal<Role[]>([]);
+  viewMode = signal<'table' | 'card'>('table');
   users = signal<User[]>([]);
   totalRecords = signal<number>(0);
   loading = signal<boolean>(true);

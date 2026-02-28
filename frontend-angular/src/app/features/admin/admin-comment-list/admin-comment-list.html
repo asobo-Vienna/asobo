@@ -1,6 +1,15 @@
 <h2 class="component">All Comments</h2>
 
-<div class="table-wrapper">
+<div class="view-toggle" role="group" aria-label="View mode">
+  <button class="btn btn-sm" [class.btn-purple]="viewMode() === 'table'" [class.btn-outline-secondary]="viewMode() === 'card'" (click)="viewMode.set('table')" aria-label="Table view" [attr.aria-pressed]="viewMode() === 'table'">
+    <i class="pi pi-table" aria-hidden="true"></i>
+  </button>
+  <button class="btn btn-sm" [class.btn-purple]="viewMode() === 'card'" [class.btn-outline-secondary]="viewMode() === 'table'" (click)="viewMode.set('card')" aria-label="Card view" [attr.aria-pressed]="viewMode() === 'card'">
+    <i class="pi pi-th-large" aria-hidden="true"></i>
+  </button>
+</div>
+
+<div class="table-wrapper" [class.card-view]="viewMode() === 'card'">
   <p-table
     [value]="comments()"
     [loading]="loading()"

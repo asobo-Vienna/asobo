@@ -307,13 +307,13 @@ p-inputicon {
   color: deeppink;
 }
 
-// Admin table → card layout on small screens
-@media (max-width: 768px) {
-  .table-wrapper table thead {
+// Admin table → card layout (manual toggle or auto on small screens)
+@mixin admin-table-card-view {
+  table thead {
     display: none;
   }
 
-  .table-wrapper table tbody tr {
+  table tbody tr {
     display: flex;
     flex-direction: column;
     margin-bottom: 1rem;
@@ -324,7 +324,7 @@ p-inputicon {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   }
 
-  .table-wrapper table tbody td {
+  table tbody td {
     display: flex;
     align-items: center;
     padding: 0.5rem 0.75rem;
@@ -336,7 +336,6 @@ p-inputicon {
       border-bottom: none;
     }
 
-    // Labeled cells: show label on the left
     &[data-label]:not([data-label=""]) {
       &::before {
         content: attr(data-label);
@@ -351,7 +350,6 @@ p-inputicon {
       }
     }
 
-    // Image/icon-only cells: card header style
     &[data-label=""] {
       justify-content: center;
       background: #f8f9fa;
@@ -359,9 +357,37 @@ p-inputicon {
       border-bottom: 2px solid #dee2e6;
     }
 
-    // Empty spacer cells: hide completely
     &[data-label=""]:empty {
       display: none;
     }
+  }
+}
+
+.table-wrapper.card-view {
+  @include admin-table-card-view;
+
+  @media (min-width: 769px) {
+    table tbody tr {
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .table-wrapper {
+    @include admin-table-card-view;
+  }
+}
+
+.view-toggle {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.25rem;
+  margin-bottom: 0.5rem;
+
+  @media (max-width: 768px) {
+    display: none;
   }
 }

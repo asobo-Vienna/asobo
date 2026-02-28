@@ -25,6 +25,7 @@ import {Spinner} from '../../../core/ui-elements/spinner/spinner';
 })
 export class AdminCommentList implements OnInit {
   private adminService = inject(AdminService);
+  viewMode = signal<'table' | 'card'>('table');
   comments = signal<CommentWithEventTitle[]>([]);
   totalRecords = signal<number>(0);
   loading = signal<boolean>(true);

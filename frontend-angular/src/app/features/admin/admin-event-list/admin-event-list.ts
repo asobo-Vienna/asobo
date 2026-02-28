@@ -31,6 +31,7 @@ import {SecureImagePipe} from '../../../core/pipes/secure-image-pipe';
 })
 export class AdminEventList implements OnInit {
   private eventService = inject(EventService);
+  viewMode = signal<'table' | 'card'>('table');
   events = signal<EventSummary[]>([]);
   totalRecords = signal<number>(0);
   loading = signal<boolean>(true);
