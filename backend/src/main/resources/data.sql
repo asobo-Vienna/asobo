@@ -1,5 +1,4 @@
-INSERT INTO users (is_active, register_date, id, pictureuri, email, first_name, "location", old_password, "password",
-                   salutation, surname, username, about_me)
+INSERT INTO users (is_active, register_date, id, pictureuri, email, first_name, location, old_password, password, salutation, surname, username, about_me, modification_date, country, deletion_date, is_deleted)
 VALUES
     (true, '2025-10-17 15:47:58.174168', '0219213a-e9ce-451b-9a60-d51fa22af669', '/uploads/profile-pictures/b940fe44-f35b-4d56-93d3-2ea594faadb7_al-bundy.jpg', 'al@footlocker.com', 'Al', 'Chicago', NULL, '$2a$10$sLt2rEIC6cb/joChR3IUDutyi8nLOrb1PaxsxowuiPqa.HLcLiBM.', 'Mr.', 'Bundy', 'albundy', NULL, NULL, NULL, NULL, false),
 	(true, '2025-06-21 12:28:08.064861', '7da69d8e-55c7-4a96-ac6d-cb207e4e8a21', '/uploads/profile-pictures/4f4c9853-29e5-4d05-95c7-d85efc034fe8_harley.jpg', 'harley@haha.com', 'Harleen', 'Brooklyn, NY', NULL, '$2a$10$pPa/hEuxrOOfAOga7LBU4uXhL7n6zb/tHzuLHZzAeREBrGATRfH8i', 'Ms.', 'Quinzel', 'harley', 'Hello!', '2026-02-13 10:18:59.675799+00', NULL, NULL, false),
@@ -51,7 +50,7 @@ VALUES
 	('2026-02-05 23:06:39.411823', '2026-02-13 23:32:00', '2026-02-24 08:30:49.232275', 'e2540d46-4540-4223-b07c-78421260c91e', '434ea97e-be5a-4986-bc7c-0ff8a92c9134', '/uploads/event-cover-pictures/77f728ae-71c6-4d10-97f3-3ef3ad09ad79_dude.jpg', 'Bowling and Drinking White Russians with the Dude', 'Los Angeles, CA', 'Bowling and White Russians with the Dude', false),
 	('2026-02-24 09:16:08.610142', '2026-02-24 10:45:50.925', '2026-02-24 09:16:08.620143', 'cb0d70b4-8ac6-4045-8a77-55be2583f2a8', 'e701bd1e-8b6e-404f-923a-6d262b96bb57', NULL, 'Test no picture', 'No picture, AT', 'Test', false),
 	('2025-07-11 19:33:23.682237', '2026-02-28 16:00:00', '2026-02-27 15:28:29.428022', '7767118c-19bd-4c28-8129-c0abda74b46c', 'de32052d-645f-41d1-b43c-70621565ff7a', '/uploads/event-cover-pictures/aaf0a06d-8f4a-4dca-ae8d-7d881882abd4_franzi.jpg', 'Cosplaying as a Viennese tram with the master cosplayer Franzi a.k.a. 5er..', 'Vienna', 'Tram Cosplaying', false),
-	('2025-05-21 13:59:21.048244', '2026-06-21 20:00:00', '2026-02-27 15:27:17.854925', '7767118c-19bd-4c28-8129-c0abda74b46c', 'aaed8676-8b38-4c7a-b8b1-66dd683a1a96', '/uploads/event-cover-pictures/f40bf03b-c55b-4c6a-801b-9b764fc99262_movie_night.jpg', 'Join us for the most bestest and extravagant movie night ever! Yeah! Bring your friends and don’t forget your own popcorn, nachos and booze!', 'San Juan Capistrano, CA', 'Movie Night', false),
+	('2025-05-21 13:59:21.048244', '2026-06-21 20:00:00', '2026-02-27 15:27:17.854925', '7767118c-19bd-4c28-8129-c0abda74b46c', 'aaed8676-8b38-4c7a-b8b1-66dd683a1a96', '/uploads/event-cover-pictures/f40bf03b-c55b-4c6a-801b-9b764fc99262_movie_night.jpg', 'Join us for the most bestest and extravagant movie night ever! Yeah! Bring your friends and don''t forget your own popcorn, nachos and booze!', 'San Juan Capistrano, CA', 'Movie Night', false),
 	('2026-01-30 11:06:52.06052', '2026-03-10 19:00:00', '2026-02-23 09:50:16.337944', '7da69d8e-55c7-4a96-ac6d-cb207e4e8a21', '49ff9354-9b8c-4c97-bd27-64be6380d832', '/uploads/event-cover-pictures/e55a34fe-bbdc-4c8f-8db1-4c251c2d5e39_trash-talk.jpg', 'Holy moly, Trash Talk are playing this town. Aaaaaahhhhhh!!', 'Sacramento, CA', 'Punk Show', false),
 	('2026-02-23 09:57:04.678298', '2026-03-23 11:25:00', '2026-02-23 09:57:05.005306', 'cb0d70b4-8ac6-4045-8a77-55be2583f2a8', 'aec7084a-2177-46d1-8dcd-daeeb2e41885', '/uploads/event-cover-pictures/e2832c9d-1e10-452a-9b8b-44e5b4598981_duderanch.jpg', 'Hang out with your favorite cowboys at the Dude Ranch! All genders welcome.', 'San Diego, CA', 'Dude Ranch', true),
 	('2026-02-23 09:51:31.669113', '2026-03-23 11:20:00', '2026-02-23 09:51:32.081504', '7da69d8e-55c7-4a96-ac6d-cb207e4e8a21', 'fb2b6169-e830-4fd7-874c-2be38299779d', '/uploads/event-cover-pictures/e6bc40f7-8b9a-45df-a976-40823f6fa594_teenage-mutant-ninja-turtles-1990.jpg', 'You know what to expect from this', 'New York City, NY', 'Pizza time with your friends, the Ninja Turtles!', false),
@@ -120,7 +119,7 @@ VALUES
 	('042081b2-1b0c-4759-bed6-8f54fe056130', 'e2540d46-4540-4223-b07c-78421260c91e')
 ON CONFLICT (attended_events_id, participants_id) DO NOTHING;
 
-INSERT INTO medium (event_id, id, mediumuri, creator_id)
+INSERT INTO medium (event_id, id, mediumuri, creator_id, creation_date, modification_date)
 VALUES
 	('045fbc61-736a-4be1-baa3-070748e07f17', '88385e56-0677-4d2b-b80a-2b35069415ae', '/uploads/event-galleries/045fbc61-736a-4be1-baa3-070748e07f17/ce6bc3d4-eb47-4a6f-8982-d91b103aa9b9_snoop.jpg', '7da69d8e-55c7-4a96-ac6d-cb207e4e8a21', NULL, NULL),
 	('045fbc61-736a-4be1-baa3-070748e07f17', '42d805ac-7df3-4e96-8151-bf39cf78b684', '/uploads/event-galleries/045fbc61-736a-4be1-baa3-070748e07f17/48b49ce8-3608-4369-a5a0-816abb187b51_therock.jpg', '7da69d8e-55c7-4a96-ac6d-cb207e4e8a21', NULL, NULL),
@@ -137,14 +136,14 @@ VALUES
 	('de32052d-645f-41d1-b43c-70621565ff7a', 'ba5acd3c-0a6a-477c-8bc2-9b900e1c1c22', '/uploads/event-galleries/de32052d-645f-41d1-b43c-70621565ff7a/e329276e-4f36-4ae0-ae7c-6c9592c32cea_Allen_Iverson.jpg', '7d49e816-e52f-4f71-a63a-dc68d337d0be', '2026-02-21 01:39:18.061755+00', '2026-02-21 01:39:18.061755+00')
 ON CONFLICT (id) DO NOTHING;
 
-INSERT INTO "role" (id, "name")
-VALUES (0, 'SUPERADMIN'),
-       (1, 'ADMIN'),
-       (2, 'USER')
+INSERT INTO "role" (id, name, creation_date, modification_date)
+VALUES (0, 'SUPERADMIN', NULL, NULL),
+	(1, 'ADMIN', NULL, NULL),
+	(2, 'USER', NULL, NULL)
 ON CONFLICT (id) DO NOTHING;
 
 
-INSERT INTO user_comment (creation_date, modification_date, author_id, event_id, id, "text")
+INSERT INTO user_comment (creation_date, modification_date, author_id, event_id, id, text)
 VALUES
     ('2025-09-14 19:18:15.024199', '2025-12-05 18:10:31.05611', '7767118c-19bd-4c28-8129-c0abda74b46c', 'aaed8676-8b38-4c7a-b8b1-66dd683a1a96', '631ec747-5460-4657-b57b-84435b8ab4b3', 'hi'),
 	('2025-12-05 19:25:17.528035', NULL, 'cb0d70b4-8ac6-4045-8a77-55be2583f2a8', '045fbc61-736a-4be1-baa3-070748e07f17', '1dbea455-baed-43f5-a225-69cffe1a3f50', 'Batman loves cooking!'),

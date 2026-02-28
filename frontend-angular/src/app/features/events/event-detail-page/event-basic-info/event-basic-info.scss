@@ -24,6 +24,7 @@ form.editing textarea:enabled {
   resize: none;
   height: auto;
   flex: 1;
+  overflow: hidden;
 }
 
 .event-description-textarea {
