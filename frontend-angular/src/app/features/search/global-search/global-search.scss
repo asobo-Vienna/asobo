@@ -19,14 +19,17 @@
 }
 
 .search-bar .btn-search {
-  transform: translateX(-100%);
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
   border: none;
   padding-right: 8px;
 }
 
 .navbar .search-bar {
   flex-grow: 1;
-  max-width: 450px;
+  max-width: var(--search-bar-max-width, 450px);
 }
 
 .navbar .search-div {

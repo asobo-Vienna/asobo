@@ -2,6 +2,10 @@
 @use '@angular/material' as mat;
 @import "primeicons/primeicons.css";
 
+body {
+  min-width: 320px;
+}
+
 h1.component, h2.component {
   text-align: center;
   color: $asobo-purple !important;
