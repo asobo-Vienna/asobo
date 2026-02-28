@@ -16,6 +16,7 @@ import {EventService} from '../../services/event-service';
 import {AccessControlService} from '../../../../shared/services/access-control-service';
 import {Router} from '@angular/router';
 import {ToggleSwitch} from 'primeng/toggleswitch';
+import {ToastService} from '../../../../shared/services/toast-service';
 
 @Component({
   selector: 'app-event-basic-info',
@@ -35,6 +36,7 @@ export class EventBasicInfo implements OnInit {
   private eventService = inject(EventService);
   protected accessControlService = inject(AccessControlService);
   private router = inject(Router);
+  private toastService = inject(ToastService);
 
   protected readonly environment = environment;
 
@@ -84,7 +86,7 @@ export class EventBasicInfo implements OnInit {
 
   public onSubmit() {
     if (!this.editEventForm.valid) {
-      console.log('Form is invalid, stopping event submission');
+      this.toastService.error('Form is invalid, stopping event submission');
       return;
     }
 
@@ -95,18 +97,19 @@ export class EventBasicInfo implements OnInit {
 
     const currentEvent = this.event();
     if (!currentEvent) {
-      console.error('Event not available');
+      this.toastService.error('Event not available');
       return;
     }
 
     this.eventService.updateEvent(currentEvent.id, eventData).subscribe({
       next: (event) => {
-        console.log(`Event ${event.title} updated successfully!`);
+        this.toastService.success(`Event ${event.title} updated successfully!`);
         this.eventUpdated.emit(event);
         this.isEditing.set(false);
       },
       error: (err) => {
-        console.log('Error updating event', err);
+        this.toastService.error('Error updating event')
+        console.log(err);
       }
     });
   }
@@ -133,7 +136,7 @@ export class EventBasicInfo implements OnInit {
   public onDelete() {
     const eventId: string | undefined = this.event()?.id;
     if (!eventId) {
-      console.error('No event ID available');
+      this.toastService.error('Event with this ID not available');
       return;
     }
 
@@ -142,7 +145,8 @@ export class EventBasicInfo implements OnInit {
         this.router.navigate(['/events']);
       },
       error: (err) => {
-        console.error('Failed to delete event', err);
+        this.toastService.error('Error deleting event')
+        console.error(err);
       }
     });
   }
