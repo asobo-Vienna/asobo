@@ -7,12 +7,14 @@ import {Event} from '../../../events/models/event';
 import {EventService} from '../../../events/services/event-service';
 import {EventSummary} from '../../../events/models/event-summary';
 import {Title} from '@angular/platform-browser';
+import {Spinner} from '../../../../core/ui-elements/spinner/spinner';
 
 @Component({
   selector: 'app-user-profile-page',
   imports: [
     UserProfileForm,
-    EventList
+    EventList,
+    Spinner
   ],
   templateUrl: './user-profile-page.html',
   styleUrl: './user-profile-page.scss',
@@ -23,6 +25,7 @@ export class UserProfilePage implements OnInit {
   private eventService = inject(EventService);
   profileUsername: string | undefined;
   events = signal<List<EventSummary>>(new List<EventSummary>());
+  loading = signal<boolean>(true);
   private userId: string = "";
 
   ngOnInit(): void {
@@ -52,8 +55,12 @@ export class UserProfilePage implements OnInit {
     this.eventService.getEventsByUserIdPaginated(this.userId, params, {}).subscribe({
       next: (response) => {
         this.events.set(new List<EventSummary>(response.content));
+        this.loading.set(false);
       },
-      error: (err) => console.error('Error fetching events:', err)
+      error: (err) => {
+        console.error('Error fetching events:', err);
+        this.loading.set(false);
+      }
     });
   }
 }

@@ -2,13 +2,13 @@
 
 <app-user-profile-form (userId)="handleUserIdMessage($event)" />
 
-@if (events()) {
-  <div id="user-profile-event-list" class="mt-5">
-    <h2 class="text-body-tertiary mb-3">{{ profileUsername }}'s Events</h2>
-    @if (events().size() > 0) {
-      <app-event-list [inputEvents]="events()"/>
-    } @else {
-      <span class="ms-5">Currently not attending any events.</span>
-    }
-  </div>
-}
+<div id="user-profile-event-list" class="mt-5">
+  <h2 class="text-body-tertiary mb-3">{{ profileUsername }}'s Events</h2>
+  @if (loading()) {
+    <app-spinner size="lg"/>
+  } @else if (events().size() > 0) {
+    <app-event-list [inputEvents]="events()"/>
+  } @else {
+    <span class="ms-5">Currently not attending any events.</span>
+  }
+</div>
