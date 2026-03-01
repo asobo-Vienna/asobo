@@ -416,6 +416,10 @@ p-inputicon {
   .table-wrapper {
     @include admin-table-card-view;
   }
+
+  .view-more-btn {
+    display: none;
+  }
 }
 
 .card-view-title {
