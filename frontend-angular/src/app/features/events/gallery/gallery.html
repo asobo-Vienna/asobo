@@ -4,7 +4,7 @@
   @for (item of mediaItems; track item.id; let i = $index) {
     <div class="single-media-container" (click)="openCarousel(i)">
       @if (MediaUtilService.isVideo(item.mediumURI)) {
-        <video [src]="UrlUtilService.getMediaUrl(item.mediumURI)"></video>
+        <video [src]="UrlUtilService.getMediaUrl(item.mediumURI)" aria-label="{{ item.caption }}"></video>
       } @else {
         <img [src]="UrlUtilService.getMediaUrl(item.mediumURI)"
              alt="{{ item.caption }}">
@@ -15,8 +15,7 @@
         <button class="btn btn-link p-0 delete-media-button"
                 aria-label="Delete media"
                 (click)="mediaDeleted.emit(item); $event.stopPropagation();">
-          <i class="pi pi-times-circle clickable" aria-hidden="true">
-          </i>
+          <i class="pi pi-times-circle clickable" aria-hidden="true"></i>
         </button>
       }
     </div>

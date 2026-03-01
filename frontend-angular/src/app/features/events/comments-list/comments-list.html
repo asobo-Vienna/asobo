@@ -21,23 +21,35 @@
                 <textarea #editTextarea
                           [value]="editingCommentText()"
                           class="flex-grow-1 me-3 mt-2"
+                          aria-label="Edit comment"
                           pTextarea>
                 </textarea>
 
                 <div class="comment-actions mt-1 ms-auto flex-wrap">
-                  <i class="pi pi-check clickable me-1" (click)="saveEdit(comment, editTextarea.value)"></i>
-                  <i class="pi pi-times clickable" (click)="cancelEdit()"></i>
+                  <button class="btn btn-link p-0" aria-label="Save edit" (click)="saveEdit(comment, editTextarea.value)">
+                    <i class="pi pi-check clickable me-1" aria-hidden="true"></i>
+                  </button>
+
+                  <button class="btn btn-link p-0" aria-label="Cancel edit" (click)="cancelEdit()">
+                    <i class="pi pi-times clickable" aria-hidden="true"></i>
+                  </button>
                 </div>
               } @else {
                 <p class="mt-2 flex-grow-1 text-break">{{ comment.text }}</p>
                 @if (accessControlService.hasAdminAccess() || accessControlService.getCurrentUser()?.id === comment.authorId) {
                   <div class="comment-actions mt-3 ms-2">
-                    <i class="pi pi-pen-to-square clickable" (click)="startEdit(comment)"></i>
-                    <i class="pi pi-trash clickable" (click)="commentDeleted.emit(comment)"></i>
+                    <button class="btn btn-link p-0" aria-label="Edit comment" (click)="startEdit(comment)">
+                      <i class="pi pi-pen-to-square clickable" aria-hidden="true"></i>
+                    </button>
+                    <button class="btn btn-link p-0" aria-label="Delete comment" (click)="commentDeleted.emit(comment)">
+                      <i class="pi pi-trash clickable" aria-hidden="true"></i>
+                    </button>
                   </div>
                 } @else if (this.accessControlService.isCurrentUserEventAdmin(this.event())) {
                   <div class="comment-actions mt-3 ms-2">
-                    <i class="pi pi-trash clickable" (click)="commentDeleted.emit(comment)"></i>
+                    <button class="btn btn-link p-0" aria-label="Delete comment" (click)="commentDeleted.emit(comment)">
+                      <i class="pi pi-trash clickable" aria-hidden="true"></i>
+                    </button>
                   </div>
                 }
               }

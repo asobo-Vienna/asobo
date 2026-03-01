@@ -52,6 +52,12 @@
   border: none;
   line-height: 1;
 
+  &:hover, &:focus, &:active {
+    color: deeppink;
+    box-shadow: none;
+    border: none;
+  }
+
   i {
     background-color: white;
     border-radius: 50%;
