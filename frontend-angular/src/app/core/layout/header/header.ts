@@ -1,5 +1,5 @@
 import {Component, inject} from '@angular/core';
-import {Router, RouterLink} from '@angular/router';
+import {Router, RouterLink, RouterLinkActive} from '@angular/router';
 import {AuthService} from '../../../features/auth/services/auth-service';
 import {environment} from '../../../../environments/environment';
 import {AccessControlService} from '../../../shared/services/access-control-service';
@@ -15,6 +15,7 @@ import {SecureImagePipe} from '../../pipes/secure-image-pipe';
     GlobalSearch,
     AsyncPipe,
     SecureImagePipe,
+    RouterLinkActive,
   ],
   templateUrl: './header.html',
   styleUrl: './header.scss'
@@ -23,11 +24,6 @@ export class Header {
   private router = inject(Router);
   authService = inject(AuthService);
   accessControlService = inject(AccessControlService);
-
-  goHome() {
-    console.log('Logo clicked');
-    this.router.navigate(['/']);
-  }
 
   get loggedInUserProfile() {
     return this.authService.loggedInUserFormatted();

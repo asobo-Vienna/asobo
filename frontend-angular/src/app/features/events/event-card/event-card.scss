@@ -34,15 +34,18 @@ $event-card-height: 50vh;
 }
 
 .event-card .card-title {
+  font-size: 1rem;
   font-weight: bold;
 }
 
 .event-card .date-text {
   font-size: 1.8vh;
+  color: $asobo-gray;
 }
 
 .event-card .location-text {
   font-size: 1.5vh;
+  color: $asobo-gray;
 }
 
 .card-image-container {
@@ -81,7 +84,13 @@ $event-card-height: 50vh;
   top: -0.3vw;
   right: -0.3vw;
   color: deeppink;
-  background-color: white;
-  border-radius: 50%;
   z-index: 2;
+  padding: 0;
+  border: none;
+  line-height: 1;
+
+  i {
+    background-color: white;
+    border-radius: 50%;
+  }
 }

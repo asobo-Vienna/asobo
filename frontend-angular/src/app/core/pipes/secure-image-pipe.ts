@@ -1,49 +1,31 @@
-import { Pipe, PipeTransform, OnDestroy } from '@angular/core';
+import { Pipe, PipeTransform } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
+import { map, shareReplay } from 'rxjs/operators';
 
 @Pipe({
   name: 'secureImage',
   standalone: true,
 })
-export class SecureImagePipe implements PipeTransform, OnDestroy {
-  private currentUrl: string | null = null;
+export class SecureImagePipe implements PipeTransform {
+  private cache = new Map<string, Observable<SafeUrl>>();
 
-  constructor(
-    private http: HttpClient,
-    private sanitizer: DomSanitizer
-  ) {}
+  constructor(private http: HttpClient, private sanitizer: DomSanitizer) {}
 
   transform(url: string | null): Observable<SafeUrl> {
-    const subject = new BehaviorSubject<SafeUrl>('');
+    if (!url) return of('');
 
-    if (!url) {
-      return subject.asObservable();
+    if (this.cache.has(url)) {
+      return this.cache.get(url)!;
     }
 
-    // Revoke previous blob URL to avoid memory leaks
-    if (this.currentUrl) {
-      URL.revokeObjectURL(this.currentUrl);
-    }
+    const obs$ = this.http.get(url, { responseType: 'blob' }).pipe(
+      map(blob => this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(blob))),
+      shareReplay(1)
+    );
 
-    this.http.get(url, { responseType: 'blob' }).subscribe({
-      next: (blob) => {
-        const objectUrl = URL.createObjectURL(blob);
-        this.currentUrl = objectUrl;
-        subject.next(this.sanitizer.bypassSecurityTrustUrl(objectUrl));
-      },
-      error: () => {
-        subject.next('');
-      },
-    });
-
-    return subject.asObservable();
-  }
-
-  ngOnDestroy(): void {
-    if (this.currentUrl) {
-      URL.revokeObjectURL(this.currentUrl);
-    }
+    this.cache.set(url, obs$);
+    return obs$;
   }
 }
