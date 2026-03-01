@@ -38,7 +38,6 @@
   }
 
   .description-preview {
-    margin-bottom: 0.5rem;
     line-height: 1.4;
   }
 
@@ -53,6 +52,7 @@
     align-items: center;
     gap: 0.25rem;
     transition: color 0.2s;
+    margin-top: 0.5rem;
 
     &:hover {
       color: $asobo-purple;
@@ -125,8 +125,31 @@
   }
 
   .description-content {
-    text-align: right;
-    align-items: flex-end;
+    text-align: left;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 768px) {
+  .description-preview,
+  .description-content {
+    margin-bottom: 0;
+  }
+}
+
+::ng-deep .card-view table tbody td[data-label="Description"] {
+  max-width: none;
+
+  .p-column-title {
+    flex: 1;
+    min-width: 0;
+  }
+}
+
+
+@media (max-width: 505px) {
+  ::ng-deep .p-dialog-footer {
+    margin-top: 1rem;
   }
 }
 
@@ -140,11 +163,8 @@
     border: none;
     color: white;
 
-    /* in case we want to have different colors on hover/in active state. */
     &:enabled:hover {
       background-color: $asobo-purple;
-      transform: scale(1.05);
-      transition: ease 0.2s;
     }
 
     &:enabled:active {
@@ -158,6 +178,20 @@
     &:hover {
       color: white;
       border: none;
+    }
+
+    &.p-button-text {
+      background-color: $asobo-purple;
+      color: white;
+
+      .p-button-icon {
+        color: white;
+      }
+
+      &:enabled:hover {
+        background-color: $asobo-purple;
+        color: white;
+      }
     }
 
     &.p-button-outlined {
