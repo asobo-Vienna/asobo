@@ -130,6 +130,12 @@
   }
 }
 
+@media (max-width: 505px) {
+  ::ng-deep .p-dialog-footer {
+    margin-top: 1rem;
+  }
+}
+
 ::ng-deep .dialog-footer-buttons {
   display: flex;
   gap: 0.5rem;
@@ -140,11 +146,8 @@
     border: none;
     color: white;
 
-    /* in case we want to have different colors on hover/in active state. */
     &:enabled:hover {
       background-color: $asobo-purple;
-      transform: scale(1.05);
-      transition: ease 0.2s;
     }
 
     &:enabled:active {
@@ -158,6 +161,20 @@
     &:hover {
       color: white;
       border: none;
+    }
+
+    &.p-button-text {
+      background-color: $asobo-purple;
+      color: white;
+
+      .p-button-icon {
+        color: white;
+      }
+
+      &:enabled:hover {
+        background-color: $asobo-purple;
+        color: white;
+      }
     }
 
     &.p-button-outlined {
