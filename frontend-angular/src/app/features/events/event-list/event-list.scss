@@ -15,10 +15,9 @@ $number-of-event-cards-per-row: 3;
 #event-list {
   display: flex;
   flex-wrap: wrap;
-  justify-content: flex-start;
+  justify-content: center;
   padding: 0;
-  row-gap: $event-card-gap; /* Vertical gap between rows */
-  column-gap: 0;
+  gap: $event-card-gap;
   margin: 0 auto;
   max-width: calc(
     ($event-card-width * $number-of-event-cards-per-row) +
@@ -28,12 +27,6 @@ $number-of-event-cards-per-row: 3;
 
 #event-list li {
   list-style: none;
-  margin-right: $event-card-gap; /* horizontal gap between columns */
-}
-
-/* remove horizontal gap from last item in the row */
-#event-list li:nth-child(3n) {
-  margin-right: 0;
 }
 
 .sort-container {

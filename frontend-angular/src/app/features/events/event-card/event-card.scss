@@ -1,12 +1,14 @@
 @use 'variables' as *;
 
-$event-card-width: 15vw;
-$event-card-height: 50vh;
+$event-card-width: 18vw;
+$event-card-height: 52vh;
+$event-card-min-width: 250px;
+$event-card-min-height: 350px;
 
 @media (max-width: 768px), (max-height: 500px) {
   .event-card {
-    min-width: 200px;
-    min-height: 200px;
+    min-height: calc($event-card-min-height + 50px) !important;
+    min-width: calc($event-card-min-width + 80px) !important;
     flex: 0 1 auto; /* Prevent shrink below min-width */
   }
   .event-card .card-body {
@@ -23,6 +25,8 @@ $event-card-height: 50vh;
   overflow: hidden;
   filter: drop-shadow(3px 3px 5px gray);
   border: none;
+  min-width: $event-card-min-width;
+  min-height: $event-card-min-height;
 }
 
 .event-card-container {
@@ -34,23 +38,24 @@ $event-card-height: 50vh;
 }
 
 .event-card .card-title {
-  font-size: 1rem;
+  font-size: clamp(0.9rem, 1rem, 1.8rem);
   font-weight: bold;
 }
 
 .event-card .date-text {
-  font-size: 1.8vh;
+  font-size: clamp(0.8rem, 1.8vh, 1.5rem);
   color: $asobo-gray;
 }
 
 .event-card .location-text {
-  font-size: 1.5vh;
+  font-size: clamp(0.7rem, 1.5vh, 1.4rem);
   color: $asobo-gray;
 }
 
 .card-image-container {
   position: relative;
   height: 23vh;
+  min-height: 140px;
   width: 100%;
   overflow: hidden;
   border-top-left-radius: 15px;
