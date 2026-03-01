@@ -148,6 +148,17 @@
     background-color: transparent;
   }
 
+  @media (max-width: 768px) {
+    .error-message {
+      position: static;
+      transform: none;
+      margin-left: 0;
+      margin-top: 10px;
+      display: block;
+      text-align: center;
+    }
+  }
+
   // Password Requirements Checklist Styles
   .requirements-checklist {
     margin-top: 0.75rem;
