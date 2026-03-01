@@ -456,3 +456,25 @@ p-inputicon {
     display: none;
   }
 }
+
+app-admin-media-list .table-wrapper.card-view table tbody td[data-label=""] {
+  justify-content: center;
+
+  img {
+    width: 80%;
+    height: 80%;
+    object-fit: contain;
+  }
+}
+
+@media (max-width: 768px) {
+  app-admin-media-list .table-wrapper table tbody td[data-label=""] {
+    justify-content: center;
+
+    img {
+      width: 80%;
+      height: 80%;
+      object-fit: contain;
+    }
+  }
+}
