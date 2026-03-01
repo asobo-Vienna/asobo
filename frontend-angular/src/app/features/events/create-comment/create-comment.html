@@ -1,5 +1,6 @@
 <div class="d-flex gap-2 flex-wrap flex-sm-nowrap">
   <textarea [value]="text()" (blur)="onTextAreaLeave($event)" class="form-control" rows="3"
-            placeholder="Your new comment goes here!"></textarea>
+            placeholder="Your new comment goes here!"
+            aria-label="New comment"></textarea>
   <button class="btn btn-purple align-self-end ms-auto" (click)="submit()">Post!</button>
 </div>

@@ -1,5 +1,5 @@
 <div class="event-card-container">
-  <a [routerLink]="['/events', event().id]">
+  <a [routerLink]="['/events', event().id]" [attr.aria-label]="'View event: ' + event().title">
     <div class="card event-card">
       @if (authService.isLoggedIn()) {
         <p-tag

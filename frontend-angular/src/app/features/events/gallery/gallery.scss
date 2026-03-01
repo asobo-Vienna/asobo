@@ -12,6 +12,10 @@
   height: clamp(70px, 7vw, 150px);
   position: relative;
   display: inline-block;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
 }
 
 .single-media-container img {
