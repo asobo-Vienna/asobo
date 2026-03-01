@@ -18,21 +18,27 @@
       <button
         class="btn btn-sm btn-outline-secondary"
         (click)="onSort('date')"
-        [class.active]="sortField() === 'date'">
+        [class.active]="sortField() === 'date'"
+        [attr.aria-pressed]="sortField() === 'date'"
+        [attr.aria-label]="'Sort by date ' + getSortIcon('date')">
         Date {{ getSortIcon('date') }}
       </button>
 
       <button
         class="btn btn-sm btn-outline-secondary"
         (click)="onSort('title')"
-        [class.active]="sortField() === 'title'">
+        [class.active]="sortField() === 'title'"
+        [attr.aria-pressed]="sortField() === 'title'"
+        [attr.aria-label]="'Sort by title ' + getSortIcon('title')">
         Title {{ getSortIcon('title') }}
       </button>
 
       <button
         class="btn btn-sm btn-outline-secondary"
         (click)="onSort('location')"
-        [class.active]="sortField() === 'location'">
+        [class.active]="sortField() === 'location'"
+        [attr.aria-pressed]="sortField() === 'location'"
+        [attr.aria-label]="'Sort by location ' + getSortIcon('location')">
         Location {{ getSortIcon('location') }}
       </button>
 
@@ -40,7 +46,9 @@
         <button
           class="btn btn-sm btn-outline-secondary"
           (click)="onSort('isPrivateEvent')"
-          [class.active]="sortField() === 'isPrivateEvent'">
+          [class.active]="sortField() === 'isPrivateEvent'"
+          [attr.aria-pressed]="sortField() === 'isPrivateEvent'"
+          [attr.aria-label]="'Sort by visibility ' + getSortIcon('isPrivateEvent')">
           Visibility {{ getSortIcon('isPrivateEvent') }}
         </button>
       }

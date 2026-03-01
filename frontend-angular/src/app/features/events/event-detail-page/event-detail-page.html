@@ -40,14 +40,11 @@
 
       <div>
         @if (authService.isLoggedIn()) {
-          @if (isUserAlreadyPartOfEvent()) {
-            <a class="btn btn-purple imin-btn" (click)="joinOrLeaveEvent()">I'm out!</a>
-          } @else {
-            <a class="btn btn-purple imin-btn" (click)="joinOrLeaveEvent()">I'm in!</a>
-          }
+          <button class="btn btn-purple imin-btn" (click)="joinOrLeaveEvent()">
+            {{ isUserAlreadyPartOfEvent() ? "I'm out!" : "I'm in!" }}
+          </button>
         }
       </div>
-
     }
   </div>
 </div>

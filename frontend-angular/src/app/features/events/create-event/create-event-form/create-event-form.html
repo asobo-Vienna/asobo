@@ -12,6 +12,7 @@
   </div>
 
   <div class="form-group position-relative mt-4">
+    <label for="create-event-title" class="visually-hidden">Title</label>
     <input
       type="text"
       placeholder="Title"
@@ -41,6 +42,7 @@
   </div>
 
   <div class="form-group position-relative">
+    <label for="create-event-description" class="visually-hidden">Description</label>
     <textarea
       pTextarea
       rows="6"
@@ -70,6 +72,7 @@
   </div>
 
   <div class="form-group position-relative">
+    <label for="create-event-location" class="visually-hidden">Location</label>
     <input
       type="text"
       placeholder="Location"
@@ -94,6 +97,7 @@
       [showTime]="true"
       hourFormat="12"
       [readonlyInput]="false"
+      ariaLabel="Event date and time"
     >
     </p-datepicker>
     @if (this.getFormControls['date'].touched && this.getFormControls['date'].hasError('required')) {

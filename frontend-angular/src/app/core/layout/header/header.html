@@ -1,7 +1,7 @@
 <nav class="navbar navbar-expand-lg bg-body-tertiary border-bottom">
   <div class="container-fluid d-flex align-items-center">
-    <a class="navbar-brand me-3" (click)="goHome()">
-      <img src="images/logo.png" alt="Logo" id="asobo-header-logo">
+    <a class="navbar-brand me-3" routerLink="/">
+      <img src="images/logo.png" alt="Asobo Logo" id="asobo-header-logo">
     </a>
 
     <!--<div class="search-bar d-flex align-items-center me-auto">
@@ -41,21 +41,43 @@
       </div>
       <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
         <li class="nav-item">
-          <a routerLink="/about" class="nav-link">About</a>
+          <a routerLink="/about" class="nav-link"
+             routerLinkActive="active"
+             [routerLinkActiveOptions]="{exact: true}"
+             [attr.aria-current]="rlaAbout.isActive ? 'page' : null"
+             #rlaAbout="routerLinkActive">
+            About
+          </a>
         </li>
         <li class="nav-item">
-          <a routerLink="/events" class="nav-link active" aria-current="page">Events</a>
+          <a routerLink="/events" class="nav-link"
+             routerLinkActive="active"
+             [routerLinkActiveOptions]="{exact: true}"
+             [attr.aria-current]="rla.isActive ? 'page' : null"
+             #rla="routerLinkActive">
+            Events
+          </a>
         </li>
         @if (authService.isLoggedIn()) {
           @if (accessControlService.hasAdminAccess()) {
             <li class="nav-item">
-              <a [routerLink]="environment.adminSectionBaseUrl" class="nav-link"><i
-                class="pi pi-cog admin-nav-icon"></i> Admin</a>
+              <a [routerLink]="environment.adminSectionBaseUrl" class="nav-link"
+                 routerLinkActive="active"
+                 [attr.aria-current]="rlaAdmin.isActive ? 'page' : null"
+                 #rlaAdmin="routerLinkActive">
+                <i class="pi pi-cog admin-nav-icon" aria-hidden="true"></i> Admin
+              </a>
             </li>
           }
         } @else {
           <li class="nav-item">
-            <a routerLink="/register" class="nav-link">Register</a>
+            <a routerLink="/register" class="nav-link"
+               routerLinkActive="active"
+               [routerLinkActiveOptions]="{exact: true}"
+               [attr.aria-current]="rlaRegister.isActive ? 'page' : null"
+               #rlaRegister="routerLinkActive">
+              Register
+            </a>
           </li>
         }
 
@@ -84,9 +106,7 @@
                 Logout
               </button>
             } @else {
-              <button class="btn btn-nav-login-logout form-control me-2 d-flex btn-purple btn-primary" type="button">
-                <a routerLink="/login" class="btn-purple" id="login-nav-anchor">Login</a>
-              </button>
+              <a routerLink="/login" class="btn btn-nav-login-logout form-control me-2 d-flex btn-purple btn-primary" id="login-nav-anchor">Login</a>
             }
           </div>
         </li>

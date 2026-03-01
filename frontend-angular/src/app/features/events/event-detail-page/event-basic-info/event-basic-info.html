@@ -11,6 +11,7 @@
               cdkTextareaAutosize
               cdkAutosizeMinRows="1"
               [readonly]="!isEditing()"
+              aria-label="Event title"
             ></textarea>
 
           @if (isEditing()) {
@@ -22,6 +23,7 @@
               [showTime]="true"
               hourFormat="12"
               [readonlyInput]="!isEditing()"
+              ariaLabel="Event date and time"
             >
             </p-datepicker>
           }
@@ -44,6 +46,7 @@
             formControlName="location"
             pInputText
             [readonly]="!isEditing()"
+            aria-label="Event location"
           />
         </div>
       </div>
@@ -59,6 +62,7 @@
             cdkAutosizeMinRows="3"
             class="event-description-textarea"
             [readonly]="!isEditing()"
+            aria-label="Event description"
           ></textarea>
       </div>
 
@@ -76,20 +80,25 @@
           <!-- Center: confirm/cancel -->
           <div class="flex-fill d-flex justify-content-center gap-2">
             @if (isEditing()) {
-              <i class="pi pi-check clickable" (click)="onSubmit()"></i>
-              <i class="pi pi-times clickable" (click)="cancelEdit()"></i>
+              <button type="button" class="btn btn-link p-0 me-1 clickable" aria-label="Save changes" (click)="onSubmit()">
+                <i class="pi pi-check clickable" aria-hidden="true"></i>
+              </button>
+              <button type="button" class="btn btn-link p-0 clickable" aria-label="Cancel editing" (click)="cancelEdit()">
+                 <i class="pi pi-times clickable" aria-hidden="true"></i>
+              </button>
             }
           </div>
           <!-- Right: edit/delete -->
           <div class="flex-fill d-flex justify-content-end gap-2">
-            <i class="pi pi-pen-to-square clickable" (click)="enterEdit()"></i>
-            <i class="pi pi-trash clickable" (click)="onDelete()"></i>
+            <button type="button" class="btn btn-link p-0" aria-label="Edit event" (click)="enterEdit()">
+                <i class="pi pi-pen-to-square clickable" aria-hidden="true"></i>
+            </button>
+            <button type="button" class="btn btn-link p-0" aria-label="Delete event" (click)="onDelete()">
+                <i class="pi pi-trash clickable" aria-hidden="true"></i>
+            </button>
           </div>
         </div>
       }
-
-
     </div>
   </div>
-  <!--<div class="col-md-4"><-- spacer </div>-->
 </form>

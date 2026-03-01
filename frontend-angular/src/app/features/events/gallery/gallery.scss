@@ -12,6 +12,10 @@
   height: clamp(70px, 7vw, 150px);
   position: relative;
   display: inline-block;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
 }
 
 .single-media-container img {
@@ -47,9 +51,21 @@
   top: -0.5vw;
   right: -0.5vw;
   color: deeppink;
-  background-color: white;
-  border-radius: 50%;
   z-index: 2;
+  padding: 0;
+  border: none;
+  line-height: 1;
+
+  &:hover, &:focus, &:active {
+    color: deeppink;
+    box-shadow: none;
+    border: none;
+  }
+
+  i {
+    background-color: white;
+    border-radius: 50%;
+  }
 }
 
 .carousel-overlay {

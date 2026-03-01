@@ -2,25 +2,32 @@
 <div class="mt-2 media-thumbnail-container">
 
   @for (item of mediaItems; track item.id; let i = $index) {
-    <div class="single-media-container" (click)="openCarousel(i)">
+    <div class="single-media-container"
+         role="button"
+         tabindex="0"
+         (click)="openCarousel(i)"
+         [attr.aria-label]="'View ' + item.caption">
+
       @if (MediaUtilService.isVideo(item.mediumURI)) {
-        <video [src]="UrlUtilService.getMediaUrl(item.mediumURI)"></video>
+        <video [src]="UrlUtilService.getMediaUrl(item.mediumURI) | secureImage | async" aria-label="{{ item.caption }}"></video>
       } @else {
-        <img [src]="UrlUtilService.getMediaUrl(item.mediumURI)"
+        <img [src]="UrlUtilService.getMediaUrl(item.mediumURI) | secureImage | async"
              alt="{{ item.caption }}">
       }
 
       @if (accessControlService.hasAdminAccess() || accessControlService.getCurrentUser()?.id === item.creatorId
       || (this.accessControlService.isCurrentUserEventAdmin(this.event()))) {
-        <i class="pi pi-times-circle delete-media-button clickable" (click)="mediaDeleted.emit(item);
-          $event.stopPropagation();" aria-label="Delete media">
-        </i>
+        <button class="btn btn-link p-0 delete-media-button"
+                aria-label="Delete media"
+                (click)="mediaDeleted.emit(item); $event.stopPropagation();">
+          <i class="pi pi-times-circle clickable" aria-hidden="true"></i>
+        </button>
       }
     </div>
   }
 
   <div class="single-media-container">
-    <div class="single-media-container add-media-button" (click)="fileInput.click()">
+    <button class="single-media-container add-media-button" (click)="fileInput.click()" aria-label="Add photo or video">
       +
       <input
         #fileInput
@@ -29,7 +36,7 @@
         hidden
         (change)="onFileSelected($event)"
       />
-    </div>
+    </button>
   </div>
 </div>
 
@@ -45,9 +52,9 @@
         <ng-template let-item pTemplate="item">
           <div class="media-slide">
             @if (MediaUtilService.isVideo(item.mediumURI)) {
-              <video [src]="UrlUtilService.getMediaUrl(item.mediumURI)" controls></video>
+              <video [src]="UrlUtilService.getMediaUrl(item.mediumURI) | secureImage | async" controls aria-label="{{ item.caption }}"></video>
             } @else {
-              <img [src]="UrlUtilService.getMediaUrl(item.mediumURI)" alt="{{ item.caption }}"/>
+              <img [src]="UrlUtilService.getMediaUrl(item.mediumURI) | secureImage | async" alt="{{ item.caption }}"/>
             }
           </div>
         </ng-template>
