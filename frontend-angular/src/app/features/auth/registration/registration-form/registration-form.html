@@ -16,7 +16,7 @@
       </p-inputgroup-addon>
       <p-float-label variant="on">
         <p-select
-          id="registration-salutation"
+          inputId="registration-salutation"
           [options]="salutations"
           formControlName="salutation"
           placeholder="Select your Salutation"
@@ -231,7 +231,7 @@
           <i class="pi pi-flag"></i>
         </p-inputgroup-addon>
           <p-select
-            id="profile-country"
+            inputId="profile-country"
             [options]="countryCodes"
             formControlName="country"
             placeholder="Select a country"
@@ -264,12 +264,12 @@
             [showClear]="getFormControls['password'].value?.length > 0"
             placeholder="Password"
             formControlName="password"
-            id="register-password"
+            inputId="register-password"
             fluid
             (onFocus)="toggleRequirements()"
             (onBlur)="toggleRequirements()"
           />
-          <label for="profile-password" class="password-label">New Password</label>
+          <label for="register-password" class="password-label">New Password</label>
         </p-float-label>
       </p-inputgroup>
     </p-iconfield>
@@ -323,10 +323,10 @@
             [showClear]="getFormControls['passwordConfirmation'].value?.length > 0"
             placeholder="Confirm Password"
             formControlName="passwordConfirmation"
-            id="register-password-confirmation"
+            inputId="register-password-confirmation"
             fluid
           />
-          <label for="profile-password-confirm" class="password-label">Confirm Password</label>
+          <label for="register-password-confirmation" class="password-label">Confirm Password</label>
         </p-float-label>
       </p-inputgroup>
     </p-iconfield>
