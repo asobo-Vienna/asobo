@@ -169,7 +169,7 @@ export class EventDetailPage implements OnInit {
       next: (mediaItem) => this.mediaItems().add(mediaItem),
       error: (err) => {
         console.log(err);
-        this.toastService.error('Failed to upload media!');
+        this.toastService.error('Failed to upload media! ' + err.error.message);
       }
     });
   }
