@@ -7,6 +7,8 @@ import {PrimeTemplate} from 'primeng/api';
 import {MediaUtilService} from '../../../shared/utils/media/media-util-service';
 import {AccessControlService} from '../../../shared/services/access-control-service';
 import {Event} from '../models/event';
+import {AsyncPipe} from '@angular/common';
+import {SecureImagePipe} from '../../../core/pipes/secure-image-pipe';
 
 @Component({
   selector: 'app-gallery',
@@ -15,7 +17,9 @@ import {Event} from '../models/event';
   encapsulation: ViewEncapsulation.None,
   imports: [
     Carousel,
-    PrimeTemplate
+    PrimeTemplate,
+    AsyncPipe,
+    SecureImagePipe
   ]
 })
 

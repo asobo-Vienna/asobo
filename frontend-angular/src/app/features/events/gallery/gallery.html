@@ -9,9 +9,9 @@
          [attr.aria-label]="'View ' + item.caption">
 
       @if (MediaUtilService.isVideo(item.mediumURI)) {
-        <video [src]="UrlUtilService.getMediaUrl(item.mediumURI)" aria-label="{{ item.caption }}"></video>
+        <video [src]="UrlUtilService.getMediaUrl(item.mediumURI) | secureImage | async" aria-label="{{ item.caption }}"></video>
       } @else {
-        <img [src]="UrlUtilService.getMediaUrl(item.mediumURI)"
+        <img [src]="UrlUtilService.getMediaUrl(item.mediumURI) | secureImage | async"
              alt="{{ item.caption }}">
       }
 
@@ -52,9 +52,9 @@
         <ng-template let-item pTemplate="item">
           <div class="media-slide">
             @if (MediaUtilService.isVideo(item.mediumURI)) {
-              <video [src]="UrlUtilService.getMediaUrl(item.mediumURI)" controls aria-label="{{ item.caption }}"></video>
+              <video [src]="UrlUtilService.getMediaUrl(item.mediumURI) | secureImage | async" controls aria-label="{{ item.caption }}"></video>
             } @else {
-              <img [src]="UrlUtilService.getMediaUrl(item.mediumURI)" alt="{{ item.caption }}"/>
+              <img [src]="UrlUtilService.getMediaUrl(item.mediumURI) | secureImage | async" alt="{{ item.caption }}"/>
             }
           </div>
         </ng-template>
