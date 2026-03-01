@@ -21,7 +21,7 @@
         />
       </div>
       <div class="card-body">
-        <h6 class="card-title">{{ event().title }}</h6>
+        <h2 class="card-title">{{ event().title }}</h2>
         <div class="card-date date-text">{{ event().date | date : 'EEE, MMMM d, y' }}</div>
         <div class="card-time date-text">{{ event().date | date : 'h:mm a' }}</div>
         <div class="card-location location-text mt-2">in {{ event().location }}</div>
@@ -30,8 +30,11 @@
   </a>
   @if (accessControlService.hasAdminAccess() || accessControlService.getCurrentUser()?.id === event().creator?.id
   || (this.accessControlService.isCurrentUserEventAdmin(event()))) {
-    <i class="pi pi-times-circle delete-event-from-list-button clickable" (click)="eventDeleted.emit(event());
-          $event.stopPropagation();" aria-label="Delete media">
-    </i>
+    <button
+      class="btn btn-link p-0 delete-event-from-list-button"
+      aria-label="Delete event"
+      (click)="eventDeleted.emit(event()); $event.stopPropagation()">
+      <i class="pi pi-times-circle clickable" aria-hidden="true"></i>
+    </button>
   }
 </div>
