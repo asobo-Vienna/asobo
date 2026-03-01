@@ -144,6 +144,11 @@ app-login-page, app-registration-page, app-create-event-page {
 app-registration-page {
   width: 30%;
   min-width: 220px;
+
+  @media (max-width: 991.98px) {
+    width: min(60vw, 300px);
+    min-width: 250px;
+  }
 }
 
 app-create-event-page {
