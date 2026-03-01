@@ -92,7 +92,7 @@ a.btn-purple {
 
 .user-myprofile a {
   font-size: 0.75rem;
-  color: gray;
+  color: $asobo-gray;
   text-decoration: none;
 }
 
@@ -228,6 +228,11 @@ app-create-event-page {
 
 .solid-dropdown .p-select-option:hover {
   background: $asobo-purple-transparent !important;
+}
+
+.solid-dropdown .p-select-option.p-focus {
+  background: $asobo-purple-transparent !important;
+  outline: none;
 }
 
 .solid-dropdown .p-select-option.p-select-option-selected {
