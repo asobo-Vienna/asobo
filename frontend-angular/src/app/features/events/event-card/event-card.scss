@@ -84,10 +84,9 @@ $event-card-min-height: 350px;
 }
 
 .delete-event-from-list-button {
-  font-size: clamp(0.8rem, 1.5vw, 1.5rem);
   position: absolute;
-  top: -0.3vw;
-  right: -0.3vw;
+  top: -0.5rem;
+  right: -0.5rem;
   color: deeppink;
   z-index: 2;
   padding: 0;
@@ -97,5 +96,6 @@ $event-card-min-height: 350px;
   i {
     background-color: white;
     border-radius: 50%;
+    font-size: 1.8rem; //clamp(1.2rem, 2.5vw, 3rem);
   }
 }
