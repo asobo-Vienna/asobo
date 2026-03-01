@@ -12,9 +12,12 @@
 
       @if (accessControlService.hasAdminAccess() || accessControlService.getCurrentUser()?.id === item.creatorId
       || (this.accessControlService.isCurrentUserEventAdmin(this.event()))) {
-        <i class="pi pi-times-circle delete-media-button clickable" (click)="mediaDeleted.emit(item);
-          $event.stopPropagation();" aria-label="Delete media">
-        </i>
+        <button class="btn btn-link p-0 delete-media-button"
+                aria-label="Delete media"
+                (click)="mediaDeleted.emit(item); $event.stopPropagation();">
+          <i class="pi pi-times-circle clickable" aria-hidden="true">
+          </i>
+        </button>
       }
     </div>
   }
