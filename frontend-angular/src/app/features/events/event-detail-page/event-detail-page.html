@@ -82,6 +82,7 @@
       <app-gallery
         [mediaItems]="mediaItems()"
         [event]="event()!"
+        [canUserUploadMedia]="isCurrentUserAdmin() || isCurrentUserEventAdmin() || isUserAlreadyPartOfEvent()"
         (mediaAdded)="uploadMedia($event)"
         (mediaDeleted)="deleteMedia($event)"
       />

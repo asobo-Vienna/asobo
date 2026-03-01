@@ -34,9 +34,11 @@ export class Gallery {
   protected readonly MediaUtilService = MediaUtilService;
 
   event = input<Event | null>(null);
+  canUserUploadMedia = input<boolean>(false);
 
   showCarousel = false;
   activeSlideIndex = 0;
+
 
   openCarousel(index: number) {
     this.activeSlideIndex = index;
