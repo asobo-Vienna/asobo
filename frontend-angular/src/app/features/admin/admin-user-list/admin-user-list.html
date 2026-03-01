@@ -1,6 +1,19 @@
 <h2 class="component">All Users</h2>
 
-<div class="table-wrapper">
+<div class="view-toggle" role="group" aria-label="View mode">
+  <button class="btn btn-sm" [class.btn-purple]="viewMode() === 'table'"
+          [class.btn-outline-secondary]="viewMode() === 'card'" (click)="viewMode.set('table')" aria-label="Table view"
+          [attr.aria-pressed]="viewMode() === 'table'">
+    <i class="pi pi-table" aria-hidden="true"></i>
+  </button>
+  <button class="btn btn-sm" [class.btn-purple]="viewMode() === 'card'"
+          [class.btn-outline-secondary]="viewMode() === 'table'" (click)="viewMode.set('card')" aria-label="Card view"
+          [attr.aria-pressed]="viewMode() === 'card'">
+    <i class="pi pi-th-large" aria-hidden="true"></i>
+  </button>
+</div>
+
+<div class="table-wrapper" [class.card-view]="viewMode() === 'card'">
   <p-table
     [value]="users()"
     [loading]="loading()"
@@ -29,34 +42,39 @@
 
     <ng-template pTemplate="body" let-user>
       <tr>
-        <td>
+        <td data-label="">
           <a [routerLink]="UrlUtilService.getUserRouterLink(user.username)">
             <img
               [src]="(UrlUtilService.getMediaUrl(user.pictureURI || environment.userDummyProfilePicRelativeUrl)  | secureImage | async) || ''"
               [alt]="user.username + '\'s avatar'"
               class="user-avatar"
             />
+            <span
+              class="card-view-title">{{ getTextPreview(user.username, environment.adminCardViewTitlePreviewLength) }}</span>
           </a>
         </td>
 
-        <td><small>{{ user.id }}</small></td>
-        <td>{{ user.username }}</td>
-        <td>{{ user.email }}</td>
-        <td>{{ user.firstName }} {{ user.surname }}</td>
-        <td>{{ user.registerDate | date:'yyyy-MM-dd' }}</td>
+        <td data-label="ID"><span class="p-column-title"><small>{{ user.id }}</small></span></td>
+        <td data-label="Username"><span class="p-column-title">{{ user.username }}</span></td>
+        <td data-label="Email"><span class="p-column-title">{{ user.email }}</span></td>
+        <td data-label="Name"><span class="p-column-title">{{ user.firstName }} {{ user.surname }}</span></td>
+        <td data-label="Registered"><span class="p-column-title">{{ user.registerDate | date:'yyyy-MM-dd' }}</span></td>
 
-        <td>
-          <p-tag
-            [value]="user.isActive ? 'Active' : 'Inactive'"
-            [severity]="user.isActive ? 'success' : 'danger'"
-          />
+        <td data-label="Active">
+          <span class="p-column-title">
+            <p-tag
+              [value]="user.isActive ? 'Active' : 'Inactive'"
+              [severity]="user.isActive ? 'success' : 'danger'"
+            />
+          </span>
         </td>
 
-        <td>{{ user.location }}</td>
+        <td data-label="Location"><span class="p-column-title">{{ user.location }}</span></td>
 
-        <td>{{ user.country }}</td>
+        <td data-label="Country"><span class="p-column-title">{{ user.country }}</span></td>
 
-        <td>
+        <td data-label="Roles">
+          <span class="p-column-title">
           <div class="flex flex-col gap-1">
             <p-multiselect
               [options]="allRoles()"
@@ -71,7 +89,6 @@
               [maxSelectedLabels]="allRoles().length"
               [selectedItemsLabel]="'View/Edit Roles'"
               display="chip">
-              <!-- Custom template for selected items -->
               <ng-template pTemplate="selectedItems" let-selectedItems>
                 @for (role of selectedItems; track role) {
                   <p-chip
@@ -81,23 +98,29 @@
                   </p-chip>
                 }
               </ng-template>
-
             </p-multiselect>
           </div>
+            </span>
         </td>
 
         @if (!user.isDeleted) {
-          <td>
-            <i class="pi pi-user-edit clickable" title="Edit" (click)="onEdit(user)" aria-label="Edit user"></i>
+          <td data-label="Edit">
+            <span class="p-column-title">
+              <i class="pi pi-user-edit clickable" title="Edit" (click)="onEdit(user)" aria-label="Edit user"></i>
+            </span>
           </td>
-          <td>
-            <i class="pi pi-trash clickable" title="Delete" (click)="onDelete(user)" aria-label="Delete user"></i>
+          <td data-label="Delete">
+            <span class="p-column-title">
+              <i class="pi pi-trash clickable" title="Delete" (click)="onDelete(user)" aria-label="Delete user"></i>
+            </span>
           </td>
         } @else {
-          <td><!-- spacer --></td>
-          <td>
-            <i class="pi pi-power-off clickable" title="Reactivate" (click)="onReactivate(user)"
-               aria-label="Reactivate user"></i>
+          <td data-label=""></td>
+          <td data-label="Reactivate">
+            <span class="p-column-title">
+              <i class="pi pi-power-off clickable" title="Reactivate" (click)="onReactivate(user)"
+                 aria-label="Reactivate user"></i>
+            </span>
           </td>
         }
       </tr>
