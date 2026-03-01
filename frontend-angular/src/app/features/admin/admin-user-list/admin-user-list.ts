@@ -16,6 +16,7 @@ import {UserRoles} from '../../../shared/entities/user-roles';
 import {UserFilters} from '../../users/user-profile/models/user-filters';
 import {Spinner} from '../../../core/ui-elements/spinner/spinner';
 import {SecureImagePipe} from '../../../core/pipes/secure-image-pipe';
+import {getTextPreview} from '../../../shared/utils/text/text-utils';
 
 
 @Component({
@@ -48,6 +49,7 @@ export class AdminUserList implements OnInit {
   };
 
   allRoles = signal<Role[]>([]);
+  viewMode = signal<'table' | 'card'>('table');
   users = signal<User[]>([]);
   totalRecords = signal<number>(0);
   loading = signal<boolean>(true);
@@ -292,4 +294,6 @@ export class AdminUserList implements OnInit {
 
     this.clearCache();
   }
+
+  protected readonly getTextPreview = getTextPreview;
 }

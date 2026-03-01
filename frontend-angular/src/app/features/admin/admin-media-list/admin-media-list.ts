@@ -26,6 +26,7 @@ import {AsyncPipe} from '@angular/common';
 })
 export class AdminMediaList implements OnInit {
   private adminService = inject(AdminService);
+  viewMode = signal<'table' | 'card'>('table');
   mediaItems = signal<MediaItemWithEventTitle[]>([]);
   totalRecords = signal<number>(0);
   loading = signal<boolean>(true);

@@ -1,6 +1,15 @@
 <h2 class="component">All Comments</h2>
 
-<div class="table-wrapper">
+<div class="view-toggle" role="group" aria-label="View mode">
+  <button class="btn btn-sm" [class.btn-purple]="viewMode() === 'table'" [class.btn-outline-secondary]="viewMode() === 'card'" (click)="viewMode.set('table')" aria-label="Table view" [attr.aria-pressed]="viewMode() === 'table'">
+    <i class="pi pi-table" aria-hidden="true"></i>
+  </button>
+  <button class="btn btn-sm" [class.btn-purple]="viewMode() === 'card'" [class.btn-outline-secondary]="viewMode() === 'table'" (click)="viewMode.set('card')" aria-label="Card view" [attr.aria-pressed]="viewMode() === 'card'">
+    <i class="pi pi-th-large" aria-hidden="true"></i>
+  </button>
+</div>
+
+<div class="table-wrapper" [class.card-view]="viewMode() === 'card'">
   <p-table
     [value]="comments()"
     [loading]="loading()"
@@ -25,24 +34,28 @@
 
     <ng-template pTemplate="body" let-comment>
       <tr>
-        <td><small>{{ comment.id }}</small></td>
-        <td>{{ comment.username }}</td>
-        <td>{{ comment.text }}</td>
-        <td><a [routerLink]="getEventRouterLink(comment.eventId)"
-               class="a-clickable">{{ comment.eventTitle }}</a></td>
-        <td>{{ comment.creationDate | date:'yyyy-MM-dd hh:mm a' }}</td>
+        <td data-label="ID"><span class="p-column-title"><small>{{ comment.id }}</small></span></td>
+        <td data-label="Username"><span class="p-column-title">{{ comment.username }}</span></td>
+        <td data-label="Text"><span class="p-column-title">{{ comment.text }}</span></td>
+        <td data-label="Event"><span class="p-column-title"><a [routerLink]="getEventRouterLink(comment.eventId)"
+               class="a-clickable">{{ comment.eventTitle }}</a></span></td>
+        <td data-label="Date"><span class="p-column-title">{{ comment.creationDate | date:'yyyy-MM-dd hh:mm a' }}</span></td>
 
         @if (comment.modificationDate) {
-          <td>{{ comment.modificationDate | date:'yyyy-MM-dd hh:mm a' }}</td>
+          <td data-label="Modified"><span class="p-column-title">{{ comment.modificationDate | date:'yyyy-MM-dd hh:mm a' }}</span></td>
         } @else {
-          <td>–</td>
+          <td data-label="Modified"><span class="p-column-title">–</span></td>
         }
 
-        <td>
-          <i class="pi pi-pencil clickable" title="Edit" (click)="onEdit(comment)" aria-label="Edit comment"></i>
+        <td data-label="Edit">
+          <span class="p-column-title">
+            <i class="pi pi-pencil clickable" title="Edit" (click)="onEdit(comment)" aria-label="Edit comment"></i>
+          </span>
         </td>
-        <td>
-          <i class="pi pi-trash clickable" title="Delete" (click)="onDelete(comment)" aria-label="Delete comment"></i>
+        <td data-label="Delete">
+          <span class="p-column-title">
+            <i class="pi pi-trash clickable" title="Delete" (click)="onDelete(comment)" aria-label="Delete comment"></i>
+          </span>
         </td>
       </tr>
     </ng-template>
