@@ -1,9 +1,15 @@
 <div
   #pictureBox
+  [attr.tabindex]="disabled() ? -1 : 0"
+  [attr.aria-disabled]="disabled()"
+  aria-label="Upload profile picture"
   [class]="setShapeCssClass()"
+  role="button"
   [class.picture-loaded]="preview() || currentImage()"
   [class.disabled]="disabled()"
   (click)="!disabled() && fileInput.click()"
+  (keydown.enter)="!disabled() && fileInput.click()"
+  (keydown.space)="!disabled() && fileInput.click()"
 >
   <input
     #fileInput
