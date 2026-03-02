@@ -4,3 +4,7 @@ export function getTextPreview(text: string, length: number): string {
   }
   return text;
 }
+
+function capitalizeFirstLetter(text: string): string {
+  return text.charAt(0).toUpperCase() + text.slice(1);
+}
