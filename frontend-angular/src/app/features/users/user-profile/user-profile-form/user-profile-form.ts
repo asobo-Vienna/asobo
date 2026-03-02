@@ -389,11 +389,12 @@ export class UserProfileForm implements OnInit {
     if (fields.has(field)) {
       fields.delete(field);
       control?.disable();
-      // Cancel - reload original value
       this.loadUserProfile(this.username());
     } else {
       fields.add(field);
       control?.enable();
+      // Focus AFTER enable, needs a tick to render
+      setTimeout(() => document.getElementById(`profile-${field.toLowerCase()}`)?.focus());
     }
     this.editingFields.set(new Set(fields));
   }
