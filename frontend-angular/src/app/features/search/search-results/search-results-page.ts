@@ -1,4 +1,4 @@
-import {Component, inject, OnInit, signal} from '@angular/core';
+import {AfterViewChecked, Component, ElementRef, inject, OnInit, QueryList, signal, ViewChildren} from '@angular/core';
 import {ActivatedRoute, RouterLink} from '@angular/router';
 import {SearchService} from '../services/search-service';
 import {UrlUtilService} from '../../../shared/utils/url/url-util-service';
@@ -16,7 +16,7 @@ import {AsyncPipe} from '@angular/common';
   templateUrl: './search-results-page.html',
   styleUrl: './search-results-page.scss'
 })
-export class SearchResultsPage implements OnInit {
+export class SearchResultsPage implements OnInit, AfterViewChecked {
   private route = inject(ActivatedRoute);
   private searchService = inject(SearchService);
   private authService = inject(AuthService);
@@ -25,6 +25,8 @@ export class SearchResultsPage implements OnInit {
   events = signal<EventSummary[]>([]);
   users = signal<UserSearchResultBasic[]>([]);
   loading = signal<boolean>(false);
+
+  @ViewChildren('userCard') userCards!: QueryList<ElementRef>;
 
   ngOnInit() {
     this.route.queryParams.subscribe(params => {
@@ -50,6 +52,14 @@ export class SearchResultsPage implements OnInit {
         this.loading.set(false);
       }
     });
+  }
+
+  ngAfterViewChecked(): void {
+    const cards = this.userCards.toArray();
+    if (cards.length === 0) return;
+    cards.forEach(c => c.nativeElement.style.height = 'auto');
+    const maxHeight = Math.max(...cards.map(c => c.nativeElement.offsetHeight));
+    cards.forEach(c => c.nativeElement.style.height = maxHeight + 'px');
   }
 
   getUserLink(username: string): string {

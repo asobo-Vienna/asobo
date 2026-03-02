@@ -32,10 +32,9 @@
         <h2 class="h4 mb-3">
           <i class="pi pi-users me-2"></i>Users ({{ users().length }})
         </h2>
-        <div class="row">
+        <div class="user-cards-container">
           @for (user of users(); track user.id) {
-            <div class="col-md-6 col-lg-4 mb-3">
-              <div class="card user-card">
+            <div class="card user-card" #userCard>
                 <div class="card-body d-flex align-items-center gap-3">
                   <a
                     [routerLink]="getUserLink(user.username)"
@@ -65,10 +64,10 @@
                   </a>
                 </div>
               </div>
-            </div>
           }
         </div>
       </section>
+
     }
 
     <!-- No Results -->
