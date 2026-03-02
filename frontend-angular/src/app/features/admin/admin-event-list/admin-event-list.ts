@@ -1,4 +1,6 @@
-import {Component, inject, OnInit, signal} from '@angular/core';
+import {Component, DestroyRef, inject, OnInit, signal} from '@angular/core';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import {fromEvent} from 'rxjs';
 import {Event} from '../../events/models/event';
 import {environment} from '../../../../environments/environment';
 import {RouterLink} from '@angular/router';
@@ -32,7 +34,9 @@ import {getTextPreview} from '../../../shared/utils/text/text-utils';
 })
 export class AdminEventList implements OnInit {
   private eventService = inject(EventService);
+  private destroyRef = inject(DestroyRef);
   viewMode = signal<'table' | 'card'>('table');
+  isMobile = signal(window.innerWidth <= 768);
   events = signal<EventSummary[]>([]);
   totalRecords = signal<number>(0);
   loading = signal<boolean>(true);
@@ -44,6 +48,9 @@ export class AdminEventList implements OnInit {
 
   ngOnInit(): void {
     this.loadEvents(0, environment.defaultPageSize);
+    fromEvent(window, 'resize')
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.isMobile.set(window.innerWidth <= 768));
   }
 
   loadEvents(page: number, size: number): void {
@@ -103,7 +110,7 @@ export class AdminEventList implements OnInit {
   }
 
   shouldShowViewMore(description: string): boolean {
-    return description.length > environment.eventDescriptionPreviewLength;
+    return description.length > environment.eventDescriptionPreviewLength && !this.isMobile();
   }
 
   protected readonly UrlUtilService = UrlUtilService;
