@@ -416,6 +416,10 @@ p-inputicon {
   .table-wrapper {
     @include admin-table-card-view;
   }
+
+  .view-more-btn {
+    display: none;
+  }
 }
 
 .card-view-title {
@@ -450,5 +454,27 @@ p-inputicon {
 
   @media (max-width: 768px) {
     display: none;
+  }
+}
+
+app-admin-media-list .table-wrapper.card-view table tbody td[data-label=""] {
+  justify-content: center;
+
+  img {
+    width: 80%;
+    height: 80%;
+    object-fit: contain;
+  }
+}
+
+@media (max-width: 768px) {
+  app-admin-media-list .table-wrapper table tbody td[data-label=""] {
+    justify-content: center;
+
+    img {
+      width: 80%;
+      height: 80%;
+      object-fit: contain;
+    }
   }
 }
