@@ -19,6 +19,7 @@ export const routes: Routes = [
   {path: 'register', component: RegistrationPage, title: 'Registration – asobō'},
   {path: 'events', component: EventList, title: 'Events – asobō'},
   {path: 'events/:id', component: EventDetailPage, resolve: {event: eventDetailResolver}},
+  {path: 'search', component: SearchResultsPage, title: 'Search Results – asobō'},
   {path: '', component: LoginPage, title: 'Login – asobō'},
 
   // everything else needs authentication
@@ -29,8 +30,7 @@ export const routes: Routes = [
       {path: 'user/:username', component: UserProfilePage, resolve: {user: userProfileResolver}},
       {path: 'events', component: EventList, title: 'Events – asobō'},
       {path: 'create-event', component: CreateEventPage, title: 'Create New Event – asobō'},
-      {path: 'admin', component: AdminPage, title: 'Admin Section – asobō'},
-      {path: 'search', component: SearchResultsPage, title: 'Search Results – asobō'}
+      {path: 'admin', component: AdminPage, title: 'Admin Section – asobō'}
       //{ path: '', redirectTo: '/events', pathMatch: 'full' , title: 'Events – asobō' },
       //{ path: '', redirectTo: '/login', pathMatch: 'full', title: 'Login – asobō' },
     ]
