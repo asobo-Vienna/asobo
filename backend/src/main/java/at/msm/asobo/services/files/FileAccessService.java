@@ -57,7 +57,11 @@ public class FileAccessService {
         return true;
       }
 
-      return this.isParticipantOrEventAdmin(event, userId);
+      // TODO: change visibility as soon as we have real private events and invitations
+      if (this.isParticipantOrEventAdmin(event, userId)) {
+        return true;
+      }
+      return true;
     }
     return true;
   }
