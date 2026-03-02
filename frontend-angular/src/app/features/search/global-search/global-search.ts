@@ -8,13 +8,14 @@ import {AutocompleteItem} from '../../../shared/entities/search';
 import {UrlUtilService} from '../../../shared/utils/url/url-util-service';
 import {AuthService} from '../../auth/services/auth-service';
 import {ToastService} from '../../../shared/services/toast-service';
+import {SecureImagePipe} from '../../../core/pipes/secure-image-pipe';
 
 @Component({
   selector: 'app-global-search',
   templateUrl: './global-search.html',
   styleUrls: ['./global-search.scss'],
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, AutoCompleteModule],
+  imports: [CommonModule, ReactiveFormsModule, AutoCompleteModule, SecureImagePipe],
 })
 export class GlobalSearch {
   searchType = input<'all' | 'events' | 'simple'>('all');
