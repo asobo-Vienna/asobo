@@ -14,7 +14,7 @@
           <p-iconfield>
             <p-floatlabel>
               <textarea
-                id="about-me"
+                id="profile-aboutme"
                 rows="8"
                 cols="36"
                 pTextarea
@@ -22,7 +22,7 @@
                 (blur)="saveField('aboutMe')"
               >
               </textarea>
-              <label for="about-me">About Me</label>
+              <label for="profile-aboutme">About Me</label>
             </p-floatlabel>
             @if (isOwnProfile()) {
               <p-inputicon
@@ -86,10 +86,10 @@
                     placeholder="Other Salutation"
                     formControlName="customSalutation"
                     pInputText
-                    id="custom-salutation"
+                    id="profile-customsalutation"
                     (blur)="saveField('customSalutation')"
                   >
-                  <label for="custom-salutation">Custom Salutation</label>
+                  <label for="profile-customsalutation">Custom Salutation</label>
                 </p-floatlabel>
               </p-inputgroup>
               @if (isOwnProfile()) {
