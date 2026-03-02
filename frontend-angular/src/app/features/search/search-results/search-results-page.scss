@@ -39,6 +39,10 @@ $number-of-event-cards-per-row: 3;
   transition: box-shadow 0.2s;
   filter: drop-shadow(3px 3px 5px gray);
 
+  .min-w-0 {
+    min-width: 0;
+  }
+
   img {
     width: 60px;
     height: 60px;
