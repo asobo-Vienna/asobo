@@ -46,6 +46,17 @@
   text-align: center;
 }
 
+@media (max-width: 768px) {
+  .error-message {
+    position: static;
+    transform: none;
+    margin-left: 0;
+    margin-top: 10px;
+    display: block;
+    text-align: center;
+  }
+}
+
 .p-password {
   width: 100%;
   flex: 1;

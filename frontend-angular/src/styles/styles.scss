@@ -138,12 +138,17 @@ a.btn-purple {
 app-login-page, app-registration-page, app-create-event-page {
   width: 25%;
   margin: 0 auto;
-  min-width: 180px;
+  min-width: 250px;
 }
 
 app-registration-page {
   width: 30%;
   min-width: 220px;
+
+  @media (max-width: 991.98px) {
+    width: min(60vw, 300px);
+    min-width: 250px;
+  }
 }
 
 app-create-event-page {
@@ -421,6 +426,10 @@ p-inputicon {
   .table-wrapper {
     @include admin-table-card-view;
   }
+
+  .view-more-btn {
+    display: none;
+  }
 }
 
 .card-view-title {
@@ -455,5 +464,27 @@ p-inputicon {
 
   @media (max-width: 768px) {
     display: none;
+  }
+}
+
+app-admin-media-list .table-wrapper.card-view table tbody td[data-label=""] {
+  justify-content: center;
+
+  img {
+    width: 80%;
+    height: 80%;
+    object-fit: contain;
+  }
+}
+
+@media (max-width: 768px) {
+  app-admin-media-list .table-wrapper table tbody td[data-label=""] {
+    justify-content: center;
+
+    img {
+      width: 80%;
+      height: 80%;
+      object-fit: contain;
+    }
   }
 }

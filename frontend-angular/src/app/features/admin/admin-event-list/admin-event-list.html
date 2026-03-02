@@ -63,9 +63,9 @@
           <span class="p-column-title">
           <div class="description-content">
             <div class="description-preview">
-              {{ getEventDescriptionPreview(event.description, environment.eventDescriptionPreviewLength) }}
+              {{ viewMode() === 'card' ? event.description : getEventDescriptionPreview(event.description, environment.eventDescriptionPreviewLength) }}
             </div>
-            @if (shouldShowViewMore(event.description)) {
+            @if (shouldShowViewMore(event.description) && viewMode() !== 'card') {
               <button
                 type="button"
                 class="view-more-btn"
