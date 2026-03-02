@@ -1,16 +1,16 @@
 @use '../../../../../styles/variables' as *;
 
 .profile-section {
-  --p-floatlabel-focus-color: $asobo-purple;
-  --p-floatlabel-color: $asobo-purple;
-  --p-inputtext-focus-border-color: $asobo-purple;
+  --p-floatlabel-focus-color: #{$asobo-purple};
+  --p-floatlabel-color: #{$asobo-purple};
+  --p-inputtext-focus-border-color: #{$asobo-purple};
 
   --p-select-overlay-background: rgba(255, 255, 255, 1); // Fully opaque
   --p-select-list-background: rgba(255, 255, 255, 1);
   --p-select-option-background: rgba(255, 255, 255, 1);
-  --p-select-option-hover-background: $asobo-purple-transparent;
-  --p-select-option-selected-background: $asobo-purple;
-  --p-select-focus-border-color: $asobo-purple;
+  --p-select-option-hover-background: #{$asobo-purple-transparent};
+  --p-select-option-selected-background: #{$asobo-purple};
+  --p-select-focus-border-color: #{$asobo-purple};
   --p-select-disabled-background: transparent;
 
   --p-textarea-disabled-background: transparent;
@@ -31,6 +31,10 @@
 }
 
 .p-floatlabel:has(input.p-filled) label, p-float-label label, .profile-about-me .p-floatlabel label {
+  color: $asobo-purple;
+}
+
+::ng-deep .profile-section .p-floatlabel label {
   color: $asobo-purple;
 }
 

@@ -7,6 +7,7 @@ export interface EventFilters {
   date?: Date;
   dateFrom?: Date;
   dateTo?: Date;
+  userId?: string;
   isPrivateEvent?: boolean;
   eventAdminIds?: List<string>;
   participantIds?: List<string>;

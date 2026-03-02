@@ -8,6 +8,7 @@ import {EventSummary} from '../models/event-summary';
 import {EventFilters} from '../models/event-filters';
 import {User} from '../../auth/models/user';
 import {UserBasic} from '../../../shared/entities/user-basic';
+import {List} from '../../../core/data-structures/lists/list';
 
 @Injectable({
   providedIn: 'root'
@@ -22,7 +23,7 @@ export class EventService {
       params = this.filtersToHttpParams(eventFilters);
     }
 
-    return this.http.get<EventSummary[]>(`${environment.eventsEndpoint}`, { params });
+    return this.http.get<EventSummary[]>(`${environment.eventsEndpoint}`, {params});
   }
 
   private filtersToHttpParams(filters: EventFilters): HttpParams {
@@ -33,6 +34,10 @@ export class EventService {
       if (value !== null && value !== undefined) {
         if (value instanceof Date) {
           params = params.set(key, value.toISOString());
+        } else if (value instanceof List) {
+          value.toArray().forEach((item: any) => {
+            params = params.append(key, String(item));
+          });
         } else {
           params = params.set(key, String(value));
         }
@@ -42,13 +47,17 @@ export class EventService {
     return params;
   }
 
-  getAllEventsPaginated(params: { page: number, size: number, sort?: string }, eventFilters: EventFilters): Observable<PageResponse<EventSummary>> {
+  getAllEventsPaginated(params: {
+    page: number,
+    size: number,
+    sort?: string
+  }, eventFilters: EventFilters): Observable<PageResponse<EventSummary>> {
     const queryParams = this.filtersToHttpParams(eventFilters)
       .set('page', params.page.toString())
       .set('size', params.size.toString())
       .set('sort', params.sort ?? 'date,desc');
 
-    return this.http.get<PageResponse<EventSummary>>(`${environment.eventsEndpoint}/paginated`, { params: queryParams });
+    return this.http.get<PageResponse<EventSummary>>(`${environment.eventsEndpoint}/paginated`, {params: queryParams});
   }
 
   searchEvents(
@@ -68,17 +77,20 @@ export class EventService {
     if (dateFrom) params = params.set('dateFrom', dateFrom);
     if (dateTo) params = params.set('dateTo', dateTo);
 
-    return this.http.get<PageResponse<EventSummary>>(`${environment.eventsEndpoint}/paginated`, { params });
+    return this.http.get<PageResponse<EventSummary>>(`${environment.eventsEndpoint}/paginated`, {params});
   }
 
-  public getEventsByUserIdPaginated(userId: string, params: { page: number, size: number, sort?: string }, eventFilters: EventFilters): Observable<PageResponse<EventSummary>> {
+  public getEventsPaginated(params: {
+    page: number,
+    size: number,
+    sort?: string
+  }, eventFilters: EventFilters): Observable<PageResponse<EventSummary>> {
     const queryParams = this.filtersToHttpParams(eventFilters)
       .set('page', params.page.toString())
       .set('size', params.size.toString())
-      .set('sort', params.sort ?? 'date,desc')
-      .set('userId', userId);
+      .set('sort', params.sort ?? 'date,desc');
 
-    return this.http.get<PageResponse<EventSummary>>(`${environment.eventsEndpoint}/paginated`, { params: queryParams });
+    return this.http.get<PageResponse<EventSummary>>(`${environment.eventsEndpoint}/paginated`, {params: queryParams});
   }
 
   public getEventById(id: string): Observable<Event> {
