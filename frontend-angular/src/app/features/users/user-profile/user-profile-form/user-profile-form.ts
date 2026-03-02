@@ -1,4 +1,4 @@
-import {Component, computed, inject, signal, OnInit, output} from '@angular/core';
+import {Component, computed, inject, OnInit, output, signal} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {AuthService} from '../../../auth/services/auth-service';
@@ -14,15 +14,16 @@ import {Password} from 'primeng/password';
 import {environment} from '../../../../../environments/environment';
 import {FormUtilService} from '../../../../shared/utils/form/form-util-service';
 import {PasswordRequirement, PasswordValidationService} from '../../../auth/services/password-validation-service';
-import {debounceTime, distinctUntilChanged, filter, map, switchMap} from 'rxjs';
+import {debounceTime, distinctUntilChanged, filter, switchMap} from 'rxjs';
 import {UserValidationService} from '../../services/user-validation-service';
 import {NgClass} from '@angular/common';
 import {Select} from 'primeng/select';
 import {Textarea} from 'primeng/textarea';
 import {List} from '../../../../core/data-structures/lists/list';
-import { Event } from '../../../events/models/event';
+import {Event} from '../../../events/models/event';
 import {User} from '../../../auth/models/user';
 import {UserService} from '../../services/user-service';
+import {ToastService} from '../../../../shared/services/toast-service';
 
 @Component({
   selector: 'app-user-profile-form',
@@ -47,6 +48,7 @@ import {UserService} from '../../services/user-service';
 export class UserProfileForm implements OnInit {
   private userProfileService = inject(UserProfileService);
   private userService = inject(UserService);
+  private toastService = inject(ToastService);
   public authService = inject(AuthService);
   private userValidationService = inject(UserValidationService);
   private router = inject(Router);
@@ -59,7 +61,7 @@ export class UserProfileForm implements OnInit {
 
   updateForm: FormGroup;
   salutations: string[];
-  countryCodes: {label: string, value: string}[] = [];
+  countryCodes: { label: string, value: string }[] = [];
   showCustomSalutation = signal(false);
   usernameExists = signal(false);
   emailExists = signal(false);
@@ -172,7 +174,7 @@ export class UserProfileForm implements OnInit {
     const fields = this.editingFields();
     fields.add(fieldName);
     this.editingFields.set(new Set(fields));
-    this.updateForm.get(fieldName)?.enable({ emitEvent: true });
+    this.updateForm.get(fieldName)?.enable({emitEvent: true});
   }
 
   private checkUsernameAvailability(): void {
@@ -256,7 +258,11 @@ export class UserProfileForm implements OnInit {
   loadUserProfile(username: string) {
     this.userProfileService.getUserByUsername(username).subscribe({
       next: (user) => this.populateFormFields(user),
-      error: (err) => console.error('Failed to load user profile:', err)
+      error: (err) => {
+        const errMsg: string = 'Failed to load user profile';
+        console.error(`${errMsg}:`, err);
+        this.toastService.error(errMsg);
+      }
     });
   }
 
@@ -379,7 +385,9 @@ export class UserProfileForm implements OnInit {
 
   toggleEdit(field: 'customSalutation' | 'aboutMe' | 'username' | 'firstName' | 'surname' | 'location' | 'email' | 'password'): void {
     if (!this.isOwnProfile()) {
-      console.error('Cannot edit another user\'s profile');
+      const errMsg: string = 'Cannot edit another user\'s profile';
+      console.error(errMsg);
+      this.toastService.error(errMsg);
       return;
     }
 
@@ -401,7 +409,9 @@ export class UserProfileForm implements OnInit {
   // Save field on blur
   saveField(fieldName: string) {
     if (!this.isOwnProfile()) {
-      console.error('Cannot edit another user\'s profile');
+      const errMsg: string = 'Cannot edit another user\'s profile'
+      console.error(errMsg);
+      this.toastService.error(errMsg);
       return;
     }
 
@@ -413,38 +423,42 @@ export class UserProfileForm implements OnInit {
     const value = control?.value;
 
     if (!value || value.trim() === '') {
-      console.error(`${fieldName} cannot be empty`);
+      const errMsg: string = `${this.getPrettierFieldname(fieldName)} cannot be empty`;
+      console.error(errMsg);
+      this.toastService.error(errMsg);
       return;
     }
 
     // Check if field is valid
     if (control?.invalid) {
-      console.error(`${fieldName} is invalid`);
+      const errMsg: string = `${this.getPrettierFieldname(fieldName)} is invalid`;
+      console.error(errMsg);
+      this.toastService.error(errMsg);
       return;
     }
 
     if (fieldName === 'aboutMe' && value === this.authService.currentUser()?.aboutMe) {
-      console.warn(`${fieldName} coincides with logged in user's about me`);
+      console.warn(`${this.getPrettierFieldname(fieldName)} coincides with logged in user's about me`);
       return;
     }
 
     if (fieldName === 'username' && value === this.authService.currentUser()?.username) {
-      console.warn(`${fieldName} coincides with logged in user's username`);
+      console.warn(`${this.getPrettierFieldname(fieldName)} coincides with logged in user's username`);
       return;
     }
 
     if (fieldName === 'email' && value === this.authService.currentUser()?.email) {
-      console.warn(`${fieldName} coincides with logged in user's email address`);
+      console.warn(`${this.getPrettierFieldname(fieldName)} coincides with logged in user's email address`);
       return;
     }
 
     if (fieldName in ['salutation', 'customSalutation'] && value === this.authService.currentUser()?.salutation) {
-      console.warn(`${fieldName} coincides with logged in user's salutation`);
+      console.warn(`${this.getPrettierFieldname(fieldName)} coincides with logged in user's salutation`);
       return;
     }
 
     if (fieldName === 'country' && value === this.authService.currentUser()?.country) {
-      console.warn(`${fieldName} coincides with logged in user's country`);
+      console.warn(`${this.getPrettierFieldname(fieldName)} coincides with logged in user's country`);
       return;
     }
 
@@ -453,19 +467,21 @@ export class UserProfileForm implements OnInit {
 
     this.userProfileService.updateField(fieldName, value).subscribe({
       next: (response) => {
-        console.log(`${fieldName} updated successfully`);
+        const successMsg: string = `${this.getPrettierFieldname(fieldName)} successfully updated`;
+        console.log(successMsg);
+        this.toastService.success(successMsg);
 
         // Update the logged-in user's data in AuthService
         this.authService.currentUser.set(response.user);
 
-        this.updateForm.patchValue({ [fieldName]: value });
+        this.updateForm.patchValue({[fieldName]: value});
         const fields = this.editingFields();
         fields.delete(fieldName);
         this.editingFields.set(new Set(fields));
 
         // Navigate to new username URL
         if (fieldName === 'username') {
-          this.router.navigate(['/user', response.user.username], { replaceUrl: true });
+          this.router.navigate(['/user', response.user.username], {replaceUrl: true});
           return;
         }
 
@@ -481,7 +497,9 @@ export class UserProfileForm implements OnInit {
         }
       },
       error: (err) => {
-        console.error(`Failed to update ${fieldName}:`, err);
+        const errMsg: string = `Failed to update ${this.getPrettierFieldname(fieldName)}:`;
+        console.error(errMsg, err);
+        this.toastService.error(errMsg);
         this.loadUserProfile(this.username());
       }
     });
@@ -497,12 +515,14 @@ export class UserProfileForm implements OnInit {
   }
 
   onCountryChange(event: any) {
-      this.saveField('country');
+    this.saveField('country');
   }
 
   handleFileSelected(file: File) {
     if (!this.isOwnProfile()) {
-      console.error('Cannot edit another user\'s profile picture');
+      const errMsg: string = 'Cannot edit another user\'s profile picture';
+      console.error(errMsg);
+      this.toastService.error(errMsg);
       return;
     }
 
@@ -527,13 +547,17 @@ export class UserProfileForm implements OnInit {
 
     this.userProfileService.updateProfilePicture(formData).subscribe({
       next: () => {
-        console.log('Profile picture updated');
+        const successMsg: string = 'Profile picture updated successfully';
+        console.log(successMsg);
+        this.toastService.success(successMsg);
         this.loadUserProfile(this.username());
         this.previewUrl.set(null);
         this.selectedImage = null;
       },
       error: (err) => {
-        console.error('Failed to update profile picture:', err);
+        const errMsg: string = 'Failed to update profile picture';
+        console.error(`${errMsg}:`, err);
+        this.toastService.error(errMsg);
         this.previewUrl.set(null);
       }
     });
@@ -577,7 +601,9 @@ export class UserProfileForm implements OnInit {
 
   updatePassword() {
     if (!this.isOwnProfile()) {
-      console.error('Cannot change another user\'s password');
+      const errMsg: string = 'Cannot change another user\'s password';
+      console.error(errMsg);
+      this.toastService.error(errMsg);
       return;
     }
 
@@ -585,22 +611,30 @@ export class UserProfileForm implements OnInit {
     const confirm = this.updateForm.get('passwordConfirmation')?.value;
 
     if (!pwd || pwd.length < environment.minPWLength) {
-      console.error(`Password must be at least ${environment.minPWLength} characters`);
+      const errMsg: string = `Password must be at least ${environment.minPWLength} characters`;
+      console.error(errMsg);
+      this.toastService.error(errMsg);
       return;
     }
 
     if (pwd !== confirm) {
-      console.error('Passwords do not match');
+      const errMsg: string = 'Passwords do not match';
+      console.error(errMsg);
+      this.toastService.error(errMsg);
       return;
     }
 
     this.userProfileService.updatePassword(pwd).subscribe({
       next: () => {
-        console.log('Password updated successfully');
+        const successMsg: string = 'Password updated successfully';
+        console.log(successMsg);
+        this.toastService.success(successMsg);
         this.cancelPasswordEdit();
       },
       error: (err) => {
-        console.error('Failed to update password:', err);
+        const errMsg: string = 'Failed to update password';
+        console.error(`${errMsg}:`, err);
+        this.toastService.error(errMsg);
       }
     });
   }
@@ -641,6 +675,18 @@ export class UserProfileForm implements OnInit {
 
   get getFormControls() {
     return this.updateForm.controls;
+  }
+
+  private getPrettierFieldname(fieldName: string): string {
+    let fieldPrettierName = fieldName;
+    if (fieldName === 'aboutMe') {
+      fieldPrettierName = 'About Me';
+    } else if (fieldName === 'customSalutation') {
+      fieldPrettierName = 'Custom Salutation';
+    } else if (fieldName === 'firstName') {
+      fieldPrettierName = 'First Name';
+    }
+    return fieldPrettierName;
   }
 
   protected readonly environment = environment;
