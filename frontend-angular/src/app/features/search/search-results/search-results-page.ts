@@ -7,10 +7,12 @@ import {EventCard} from '../../events/event-card/event-card';
 import {EventSummary} from '../../events/models/event-summary';
 import {Spinner} from '../../../core/ui-elements/spinner/spinner';
 import {UserSearchResultBasic} from '../../../shared/entities/search';
+import {SecureImagePipe} from '../../../core/pipes/secure-image-pipe';
+import {AsyncPipe} from '@angular/common';
 
 @Component({
   selector: 'app-search-results-page',
-  imports: [RouterLink, Spinner, EventCard],
+  imports: [RouterLink, Spinner, EventCard, SecureImagePipe, AsyncPipe],
   templateUrl: './search-results-page.html',
   styleUrl: './search-results-page.scss'
 })
@@ -53,4 +55,6 @@ export class SearchResultsPage implements OnInit {
   getUserLink(username: string): string {
     return UrlUtilService.getUserRouterLink(username);
   }
+
+  protected readonly UrlUtilService = UrlUtilService;
 }
