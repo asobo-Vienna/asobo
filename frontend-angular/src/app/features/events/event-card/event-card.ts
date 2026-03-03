@@ -2,6 +2,7 @@ import {Component, inject, input, output} from '@angular/core';
 import {AsyncPipe, DatePipe} from '@angular/common';
 import {RouterLink} from '@angular/router';
 import {UrlUtilService} from '../../../shared/utils/url/url-util-service';
+import {DateUtils} from '../../../shared/utils/date/date-utils';
 import {Tag} from 'primeng/tag';
 import {AuthService} from '../../auth/services/auth-service';
 import {EventSummary} from '../models/event-summary';
@@ -42,6 +43,18 @@ export class EventCard {
   accessControlService = inject(AccessControlService);
 
   eventDeleted = output<EventSummary>();
+  isEventInThePast(): boolean {
+    const date = this.event().date;
+    return date ? DateUtils.isDateInThePast(new Date(date)) : false;
+  }
+
+  showDeleteButton(): boolean {
+    if (this.isEventInThePast()) return false;
+    return this.accessControlService.hasAdminAccess()
+      || this.accessControlService.getCurrentUser()?.id === this.event().creator?.id
+      || this.accessControlService.isCurrentUserEventAdmin(this.event());
+  }
+
   protected readonly environment = environment;
 }
 
