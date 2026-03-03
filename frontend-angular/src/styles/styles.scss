@@ -292,6 +292,12 @@ p-inputicon {
   border: 2px solid color-mix(in srgb, $asobo-purple 80%, transparent) !important;
 }
 
+textarea.p-textarea:focus {
+  border-color: $asobo-purple !important;
+  box-shadow: 0 0 0 0.2rem rgba($asobo-purple, 0.25) !important;
+  outline: none;
+}
+
 .p-datepicker-day-selected {
   background-color: $asobo-purple !important;
 }
