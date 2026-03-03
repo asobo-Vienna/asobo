@@ -63,8 +63,7 @@ export class LoginForm {
     }
 
     this.authService.login(this.loginForm.value).subscribe({
-      next: (response) => {
-        console.log('Login successful:', response);
+      next: () => {
         this.loginFailed = false;
         const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/dashboard';
         this.router.navigate([returnUrl]); // TODO: decide where to navigate to after login
