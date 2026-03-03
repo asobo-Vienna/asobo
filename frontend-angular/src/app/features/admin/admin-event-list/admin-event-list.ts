@@ -3,18 +3,20 @@ import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {fromEvent} from 'rxjs';
 import {Event} from '../../events/models/event';
 import {environment} from '../../../../environments/environment';
-import {RouterLink} from '@angular/router';
+import {Router, RouterLink} from '@angular/router';
 import {UrlUtilService} from '../../../shared/utils/url/url-util-service';
 import {EventService} from '../../events/services/event-service';
 import {TableModule} from 'primeng/table';
 import {AsyncPipe, DatePipe} from '@angular/common';
-import {Tag} from 'primeng/tag';
 import {Dialog} from 'primeng/dialog';
 import {Button} from 'primeng/button';
+import {ToggleSwitch} from 'primeng/toggleswitch';
+import {FormsModule} from '@angular/forms';
 import {EventSummary} from '../../events/models/event-summary';
 import {Spinner} from '../../../core/ui-elements/spinner/spinner';
 import {SecureImagePipe} from '../../../core/pipes/secure-image-pipe';
 import {getTextPreview} from '../../../shared/utils/text/text-utils';
+import {ToastService} from '../../../shared/services/toast-service';
 
 @Component({
   selector: 'app-admin-event-list',
@@ -22,18 +24,21 @@ import {getTextPreview} from '../../../shared/utils/text/text-utils';
     RouterLink,
     TableModule,
     DatePipe,
-    Tag,
     Dialog,
     Button,
     Spinner,
     SecureImagePipe,
-    AsyncPipe
+    AsyncPipe,
+    ToggleSwitch,
+    FormsModule
   ],
   templateUrl: './admin-event-list.html',
   styleUrl: './admin-event-list.scss',
 })
 export class AdminEventList implements OnInit {
   private eventService = inject(EventService);
+  private router = inject(Router);
+  private toastService = inject(ToastService);
   private destroyRef = inject(DestroyRef);
   viewMode = signal<'table' | 'card'>('table');
   isMobile = signal(window.innerWidth <= 768);
@@ -90,14 +95,35 @@ export class AdminEventList implements OnInit {
     this.pageCache.clear();
   }
 
+  onToggleVisibility(event: EventSummary): void {
+    this.eventService.updateEvent(event.id, {isPrivateEvent: !event.isPrivateEvent}).subscribe({
+      next: () => {
+        this.events.update(events =>
+          events.map(e => e.id === event.id ? {...e, isPrivateEvent: !event.isPrivateEvent} : e)
+        );
+        this.clearCache();
+      },
+      error: (err) => console.error('Error updating event visibility:', err)
+    });
+  }
+
   onEdit(event: Event) {
-    console.log('Editing event:', event);
-    this.clearCache();
+    this.router.navigate(['/events', event.id], {queryParams: {edit: true}});
   }
 
   onDelete(event: Event) {
-    console.log('Deleting event:', event);
-    this.clearCache();
+    this.eventService.deleteEvent(event.id).subscribe({
+      next: () => {
+        this.events.update(events => events.filter(e => e.id !== event.id));
+        this.totalRecords.update(total => total - 1);
+        this.clearCache();
+        this.toastService.success(`Event "${event.title}" deleted successfully`);
+      },
+      error: (err) => {
+        console.error('Error deleting event:', err);
+        this.toastService.error(`Failed to delete event "${event.title}"`);
+      }
+    });
   }
 
   viewFullDescription(event: Event): void {

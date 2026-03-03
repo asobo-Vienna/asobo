@@ -24,7 +24,6 @@
         <th scope="col"></th>
         <th scope="col" aria-label="Id">ID</th>
         <th scope="col" aria-label="Event Title">Event Title</th>
-        <th scope="col" aria-label="Edit"></th>
         <th scope="col" aria-label="Delete"></th>
       </tr>
     </ng-template>
@@ -32,15 +31,18 @@
     <ng-template pTemplate="body" let-mediaItem>
       <tr>
         <td data-label="">
-          <img
-            [src]="
-            (UrlUtilService.getMediaUrl(
-              mediaItem.mediumURI || environment.eventDummyCoverPicRelativeUrl
-            )  | secureImage | async) || ''
-          "
-            [alt]="mediaItem.caption"
-            class="mediaItem-thumbnail"
-          />
+          @if (MediaUtilService.isVideo(mediaItem.mediumURI)) {
+            <video
+              [src]="(UrlUtilService.getMediaUrl(mediaItem.mediumURI) | secureImage | async) || ''"
+              class="mediaItem-thumbnail"
+            ></video>
+          } @else {
+            <img
+              [src]="(UrlUtilService.getMediaUrl(mediaItem.mediumURI || environment.eventDummyCoverPicRelativeUrl) | secureImage | async) || ''"
+              alt=""
+              class="mediaItem-thumbnail"
+            />
+          }
         </td>
         <td data-label="ID"><span class="p-column-title"><small>{{ mediaItem.id }}</small></span></td>
         <td data-label="Event">
@@ -50,16 +52,7 @@
           </span>
         </td>
 
-        <td data-label="Edit">
-          <span class="p-column-title">
-            <i
-              class="pi pi-pencil clickable"
-              title="Edit"
-              (click)="onEdit(mediaItem)"
-              aria-label="Edit medium"
-            ></i>
-          </span>
-        </td>
+
         <td data-label="Delete">
           <span class="p-column-title">
             <i

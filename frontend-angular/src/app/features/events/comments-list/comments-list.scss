@@ -46,4 +46,10 @@
 
 .p-textarea {
   resize: none;
+
+  &:focus {
+    border-color: $asobo-purple !important;
+    box-shadow: 0 0 0 0.2rem rgba($asobo-purple, 0.25) !important;
+    outline: none;
+  }
 }

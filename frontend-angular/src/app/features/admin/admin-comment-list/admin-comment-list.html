@@ -36,7 +36,20 @@
       <tr>
         <td data-label="ID"><span class="p-column-title"><small>{{ comment.id }}</small></span></td>
         <td data-label="Username"><span class="p-column-title">{{ comment.username }}</span></td>
-        <td data-label="Text"><span class="p-column-title">{{ comment.text }}</span></td>
+        <td data-label="Text">
+          <span class="p-column-title">
+            @if (comment.id === editingCommentId()) {
+              <textarea
+                [(ngModel)]="editingCommentText"
+                class="w-100"
+                aria-label="Edit comment"
+                pTextarea>
+              </textarea>
+            } @else {
+              {{ comment.text }}
+            }
+          </span>
+        </td>
         <td data-label="Event"><span class="p-column-title"><a [routerLink]="getEventRouterLink(comment.eventId)"
                class="a-clickable">{{ comment.eventTitle }}</a></span></td>
         <td data-label="Date"><span class="p-column-title">{{ comment.creationDate | date:'yyyy-MM-dd hh:mm a' }}</span></td>
@@ -49,7 +62,12 @@
 
         <td data-label="Edit">
           <span class="p-column-title">
-            <i class="pi pi-pencil clickable" title="Edit" (click)="onEdit(comment)" aria-label="Edit comment"></i>
+            @if (comment.id === editingCommentId()) {
+              <i class="pi pi-check clickable me-2" title="Save" (click)="saveEdit(comment)" aria-label="Save comment"></i>
+              <i class="pi pi-times clickable" title="Cancel" (click)="cancelEdit()" aria-label="Cancel edit"></i>
+            } @else {
+              <i class="pi pi-pencil clickable" title="Edit" (click)="startEdit(comment)" aria-label="Edit comment"></i>
+            }
           </span>
         </td>
         <td data-label="Delete">

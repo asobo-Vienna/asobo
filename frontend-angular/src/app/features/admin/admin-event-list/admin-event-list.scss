@@ -207,6 +207,16 @@
 }
 
 ::ng-deep {
+  .p-toggleswitch.p-toggleswitch-checked .p-toggleswitch-slider {
+    background: $asobo-purple;
+  }
+
+  .p-toggleswitch.p-toggleswitch-checked:not(.p-disabled):hover .p-toggleswitch-slider {
+    background: $asobo-purple-transparent-85;
+  }
+}
+
+::ng-deep {
   .p-paginator-page {
     background-color: transparent;
   }
