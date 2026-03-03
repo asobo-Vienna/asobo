@@ -5,13 +5,14 @@ import {User} from '../../auth/models/user';
 import {AsyncPipe, DatePipe} from '@angular/common';
 import {AdminService} from '../services/admin-service';
 import {UrlUtilService} from '../../../shared/utils/url/url-util-service';
-import {RouterLink} from '@angular/router';
+import {Router, RouterLink} from '@angular/router';
 import {environment} from '../../../../environments/environment';
 import {MultiSelect} from 'primeng/multiselect';
 import {FormsModule} from '@angular/forms';
 import {Role} from '../../../shared/entities/role';
 import {RoleEnum} from '../../../shared/enums/role-enum';
 import {Chip} from 'primeng/chip';
+import {ToggleSwitch} from 'primeng/toggleswitch';
 import {UserRoles} from '../../../shared/entities/user-roles';
 import {UserFilters} from '../../users/user-profile/models/user-filters';
 import {Spinner} from '../../../core/ui-elements/spinner/spinner';
@@ -29,6 +30,7 @@ import {getTextPreview} from '../../../shared/utils/text/text-utils';
     MultiSelect,
     FormsModule,
     Chip,
+    ToggleSwitch,
     Spinner,
     SecureImagePipe,
     AsyncPipe,
@@ -38,6 +40,7 @@ import {getTextPreview} from '../../../shared/utils/text/text-utils';
 })
 export class AdminUserList implements OnInit {
   private adminService = inject(AdminService);
+  private router = inject(Router);
 
   protected readonly UrlUtilService = UrlUtilService;
   protected readonly environment = environment;
@@ -256,9 +259,16 @@ export class AdminUserList implements OnInit {
     this.pageCache.clear();
   }
 
-  onEdit(user: any) {
-    console.log('Editing user:', user);
-    this.clearCache();
+  viewProfile(user: User) {
+    this.router.navigate([UrlUtilService.getUserRouterLink(user.username)]);
+  }
+
+  onToggleActive(user: User): void {
+    if (user.isActive) {
+      this.onDelete(user);
+    } else {
+      this.onReactivate(user);
+    }
   }
 
   onDelete(user: User): void {
