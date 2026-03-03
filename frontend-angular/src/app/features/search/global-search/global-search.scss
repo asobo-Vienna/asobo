@@ -130,8 +130,11 @@
   pointer-events: none;
 }
 
-::ng-deep .p-inputtext:enabled:focus {
+::ng-deep .p-inputtext:enabled:focus,
+.search-input:focus {
   border: 2px solid color-mix(in srgb, $asobo-purple 80%, transparent) !important;
+  outline: none;
+  box-shadow: none;
 }
 
 .btn-show-all-results {

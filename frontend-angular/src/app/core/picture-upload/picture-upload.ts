@@ -22,9 +22,10 @@ export class PictureUpload implements OnInit {
   fileSelected = output<File>();
   preview = signal<string | null>(null);
   dimensions = input<[number, number]>([25, 25]);
+  minWidth = input<string>('200px');
 
   ngOnInit(): void {
-    this.setFrameDimensions(this.dimensions()[0], this.dimensions()[1]);
+    this.setFrameDimensions(this.dimensions()[0], this.dimensions()[1], this.minWidth());
     if (!this.showPlusBeforeUpload()) {
       this.removePictureBoxBorder();
     }
@@ -59,13 +60,15 @@ export class PictureUpload implements OnInit {
     }
   }
 
-  private setFrameDimensions(width: number, height: number): void {
+  private setFrameDimensions(width: number, height: number, minWidth: string = '200px'): void {
     const box = this.pictureBox()?.nativeElement;
     if (box) {
       if (width === height) {
         // Square: use aspect-ratio
         box.style.aspectRatio = '1/1';
         box.style.width = String(width) + 'vw';
+        box.style.minWidth = minWidth;
+        box.style.minHeight = minWidth;
         box.style.maxWidth = '100%';
         box.style.height = 'auto';
       } else {

@@ -203,6 +203,9 @@ export class EventList implements OnInit {
   public deleteEvent(item: EventSummary) {
     this.events().remove(item); // remove immediately
     this.eventService.deleteEvent(item.id).subscribe({
+      next: () => {
+        this.toastService.success(`Event ${item.title} deleted successfully.`);
+      },
       error: (err) => {
         console.log(err);
         this.toastService.error('Failed to delete event!');

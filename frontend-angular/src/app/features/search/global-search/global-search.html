@@ -46,7 +46,7 @@
             <div class="global-search-item-container">
               <div class="image-wrapper">
                 <i [class]="item.type === 'EVENT' ? 'pi pi-calendar icon-overlay' : 'pi pi-user icon-overlay'"></i>
-                <img class="search-result-img" [src]="item.pictureURI"
+                <img class="search-result-img" [src]="(item.pictureURI | secureImage | async) || ''"
                      [alt]="item.type === 'EVENT' ? 'Event cover picture' : 'User profile picture'"/>
               </div>
               <div class="item-text-content">
