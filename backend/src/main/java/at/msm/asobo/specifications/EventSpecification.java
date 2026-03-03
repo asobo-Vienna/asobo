@@ -2,6 +2,8 @@ package at.msm.asobo.specifications;
 
 import at.msm.asobo.dto.filter.EventFilterDTO;
 import at.msm.asobo.entities.Event;
+import at.msm.asobo.entities.User;
+import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Predicate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -30,10 +32,12 @@ public class EventSpecification {
         predicates.add(cb.equal(root.get("creator").get("id"), filterDTO.getCreatorId()));
       }
       if (filterDTO.getEventAdminIds() != null && !filterDTO.getEventAdminIds().isEmpty()) {
-        predicates.add(root.get("eventAdmins").get("id").in(filterDTO.getEventAdminIds()));
+        Join<Event, User> adminJoin = root.join("eventAdmins");
+        predicates.add(adminJoin.get("id").in(filterDTO.getEventAdminIds()));
       }
       if (filterDTO.getParticipantIds() != null && !filterDTO.getParticipantIds().isEmpty()) {
-        predicates.add(root.get("participants").get("id").in(filterDTO.getParticipantIds()));
+        Join<Event, User> participantJoin = root.join("participants");
+        predicates.add(participantJoin.get("id").in(filterDTO.getParticipantIds()));
       }
       if (filterDTO.getDate() != null) {
         LocalDateTime startOfDay = filterDTO.getDate().toLocalDate().atStartOfDay();
