@@ -22,7 +22,7 @@ export class GlobalSearch {
   searchOutput = output<string>();
 
   private searchService = inject(SearchService);
-  private authService = inject(AuthService);
+  authService = inject(AuthService);
   private toastService = inject(ToastService);
   private router = inject(Router);
 
