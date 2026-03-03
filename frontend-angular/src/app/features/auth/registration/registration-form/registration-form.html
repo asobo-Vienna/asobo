@@ -5,6 +5,7 @@
       [currentImage]="previewUrl()"
       (fileSelected)="handleFileSelected($event)"
       [showPlusBeforeUpload]="true"
+      [minWidth]="'250px'"
     />
   </div>
 
@@ -231,14 +232,14 @@
         <p-inputgroup-addon>
           <i class="pi pi-flag"></i>
         </p-inputgroup-addon>
-          <p-select
-            inputId="profile-country"
-            [options]="countryCodes"
-            formControlName="country"
-            placeholder="Select a country"
-            optionLabel="label"
-            optionValue="value">
-          </p-select>
+        <p-select
+          inputId="profile-country"
+          [options]="countryCodes"
+          formControlName="country"
+          placeholder="Select a country"
+          optionLabel="label"
+          optionValue="value">
+        </p-select>
       </p-inputgroup>
     </p-iconfield>
 
