@@ -7,9 +7,12 @@ import {environment} from '../../../../environments/environment';
 import {AdminService} from '../services/admin-service';
 import {CommentWithEventTitle} from '../../events/models/comment-with-event-title';
 import { RouterLink } from '@angular/router';
-import {UserFilters} from '../../users/user-profile/models/user-filters';
 import {CommentFilters} from '../../events/models/comment-filters';
 import {Spinner} from '../../../core/ui-elements/spinner/spinner';
+import {CommentService} from '../../events/services/comment-service';
+import {ToastService} from '../../../shared/services/toast-service';
+import {FormsModule} from '@angular/forms';
+import {Textarea} from 'primeng/textarea';
 
 @Component({
   selector: 'app-admin-comment-list',
@@ -18,18 +21,24 @@ import {Spinner} from '../../../core/ui-elements/spinner/spinner';
     TagModule,
     DatePipe,
     RouterLink,
-    Spinner
+    Spinner,
+    FormsModule,
+    Textarea
   ],
   templateUrl: './admin-comment-list.html',
   styleUrl: './admin-comment-list.scss',
 })
 export class AdminCommentList implements OnInit {
   private adminService = inject(AdminService);
+  private commentService = inject(CommentService);
+  private toastService = inject(ToastService);
   viewMode = signal<'table' | 'card'>('table');
   comments = signal<CommentWithEventTitle[]>([]);
   totalRecords = signal<number>(0);
   loading = signal<boolean>(true);
   commentFilters = signal<CommentFilters>({});
+  editingCommentId = signal<string | null>(null);
+  editingCommentText = '';
 
   private pageCache = new Map<string, CommentWithEventTitle[]>();
 
@@ -73,16 +82,46 @@ export class AdminCommentList implements OnInit {
     this.pageCache.clear();
   }
 
-  onEdit(comment: any) {
-    console.log('Editing comment:', comment);
-    this.clearCache();
+  startEdit(comment: CommentWithEventTitle): void {
+    this.editingCommentId.set(comment.id);
+    this.editingCommentText = comment.text;
   }
 
-  onDelete(comment: any) {
-    console.log('Deleting comment:', comment);
-    this.clearCache();
-    // stay on page, thus track currently loaded comments and update numbers:
-    // this.loadComments(0, 10);
+  saveEdit(comment: CommentWithEventTitle): void {
+    this.commentService.edit({...comment, text: this.editingCommentText}).subscribe({
+      next: (updated) => {
+        this.comments.update(items =>
+          items.map(c => c.id === comment.id ? {...c, text: updated.text, modificationDate: updated.modificationDate} : c)
+        );
+        this.clearCache();
+        this.editingCommentId.set(null);
+        this.toastService.success('Comment updated successfully');
+      },
+      error: (err) => {
+        console.error('Error updating comment:', err);
+        this.toastService.error('Failed to update comment');
+      }
+    });
+  }
+
+  cancelEdit(): void {
+    this.editingCommentId.set(null);
+    this.editingCommentText = '';
+  }
+
+  onDelete(comment: CommentWithEventTitle): void {
+    this.commentService.delete(comment).subscribe({
+      next: () => {
+        this.comments.update(items => items.filter(c => c.id !== comment.id));
+        this.totalRecords.update(total => total - 1);
+        this.clearCache();
+        this.toastService.success('Comment deleted successfully');
+      },
+      error: (err) => {
+        console.error('Error deleting comment:', err);
+        this.toastService.error('Failed to delete comment');
+      }
+    });
   }
 
   getEventRouterLink(eventId: string): string {

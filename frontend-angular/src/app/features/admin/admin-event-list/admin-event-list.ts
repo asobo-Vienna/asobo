@@ -8,7 +8,6 @@ import {UrlUtilService} from '../../../shared/utils/url/url-util-service';
 import {EventService} from '../../events/services/event-service';
 import {TableModule} from 'primeng/table';
 import {AsyncPipe, DatePipe} from '@angular/common';
-import {Tag} from 'primeng/tag';
 import {Dialog} from 'primeng/dialog';
 import {Button} from 'primeng/button';
 import {ToggleSwitch} from 'primeng/toggleswitch';
@@ -25,7 +24,6 @@ import {ToastService} from '../../../shared/services/toast-service';
     RouterLink,
     TableModule,
     DatePipe,
-    Tag,
     Dialog,
     Button,
     Spinner,
@@ -98,10 +96,10 @@ export class AdminEventList implements OnInit {
   }
 
   onToggleVisibility(event: EventSummary): void {
-    this.eventService.updateEvent(event.id, { isPrivateEvent: !event.isPrivateEvent }).subscribe({
+    this.eventService.updateEvent(event.id, {isPrivateEvent: !event.isPrivateEvent}).subscribe({
       next: () => {
         this.events.update(events =>
-          events.map(e => e.id === event.id ? { ...e, isPrivateEvent: !event.isPrivateEvent } : e)
+          events.map(e => e.id === event.id ? {...e, isPrivateEvent: !event.isPrivateEvent} : e)
         );
         this.clearCache();
       },
@@ -110,7 +108,7 @@ export class AdminEventList implements OnInit {
   }
 
   onEdit(event: Event) {
-    this.router.navigate(['/events', event.id], { queryParams: { edit: true } });
+    this.router.navigate(['/events', event.id], {queryParams: {edit: true}});
   }
 
   onDelete(event: Event) {
