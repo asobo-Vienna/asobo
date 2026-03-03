@@ -256,6 +256,11 @@ p-inputicon {
   z-index: 0 !important;
 }
 
+.country-dropdown p-inputicon {
+  z-index: 1 !important;
+  color: $asobo-purple !important;
+}
+
 .checkbox-wrapper {
   display: flex;
   align-items: center;
