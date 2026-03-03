@@ -3,7 +3,7 @@ import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {fromEvent} from 'rxjs';
 import {Event} from '../../events/models/event';
 import {environment} from '../../../../environments/environment';
-import {RouterLink} from '@angular/router';
+import {Router, RouterLink} from '@angular/router';
 import {UrlUtilService} from '../../../shared/utils/url/url-util-service';
 import {EventService} from '../../events/services/event-service';
 import {TableModule} from 'primeng/table';
@@ -34,6 +34,7 @@ import {getTextPreview} from '../../../shared/utils/text/text-utils';
 })
 export class AdminEventList implements OnInit {
   private eventService = inject(EventService);
+  private router = inject(Router);
   private destroyRef = inject(DestroyRef);
   viewMode = signal<'table' | 'card'>('table');
   isMobile = signal(window.innerWidth <= 768);
@@ -91,8 +92,7 @@ export class AdminEventList implements OnInit {
   }
 
   onEdit(event: Event) {
-    console.log('Editing event:', event);
-    this.clearCache();
+    this.router.navigate(['/events', event.id], { queryParams: { edit: true } });
   }
 
   onDelete(event: Event) {

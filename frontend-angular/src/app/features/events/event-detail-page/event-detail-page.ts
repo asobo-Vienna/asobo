@@ -1,4 +1,4 @@
-import {Component, computed, inject, OnInit, signal} from '@angular/core';
+import {AfterViewInit, Component, computed, inject, OnInit, signal, viewChild} from '@angular/core';
 import {EventService} from '../services/event-service';
 import {Event} from '../models/event';
 import {ActivatedRoute} from '@angular/router';
@@ -46,7 +46,7 @@ import {ToastService} from '../../../shared/services/toast-service';
   templateUrl: './event-detail-page.html',
   styleUrl: './event-detail-page.scss'
 })
-export class EventDetailPage implements OnInit {
+export class EventDetailPage implements OnInit, AfterViewInit {
   private route = inject(ActivatedRoute);
   private titleService = inject(Title);
   private toastService = inject(ToastService);
@@ -77,8 +77,17 @@ export class EventDetailPage implements OnInit {
     this.accessControlService.isCurrentUserEventAdmin(this.event())
   );
 
+  private basicInfo = viewChild(EventBasicInfo);
+
   protected readonly UrlUtilService = UrlUtilService;
   protected readonly environment = environment;
+
+  ngAfterViewInit(): void {
+    const canEdit = this.isCurrentUserAdmin() || this.isCurrentUserEventAdmin();
+    if (this.route.snapshot.queryParams['edit'] === 'true' && canEdit) {
+      this.basicInfo()?.enterEdit();
+    }
+  }
 
   ngOnInit(): void {
     this.route.data.subscribe({
