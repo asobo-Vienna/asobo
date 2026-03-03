@@ -4,6 +4,8 @@ import {TableModule} from "primeng/table";
 import {environment} from '../../../../environments/environment';
 import {UrlUtilService} from '../../../shared/utils/url/url-util-service';
 import {AdminService} from '../services/admin-service';
+import {MediaService} from '../../events/services/media-service';
+import {ToastService} from '../../../shared/services/toast-service';
 import {RouterLink} from '@angular/router';
 import {MediaItemWithEventTitle} from '../../events/models/media-item-with-event-title';
 import {MediumFilters} from '../../events/models/medium-filters';
@@ -26,6 +28,8 @@ import {AsyncPipe} from '@angular/common';
 })
 export class AdminMediaList implements OnInit {
   private adminService = inject(AdminService);
+  private mediaService = inject(MediaService);
+  private toastService = inject(ToastService);
   viewMode = signal<'table' | 'card'>('table');
   mediaItems = signal<MediaItemWithEventTitle[]>([]);
   totalRecords = signal<number>(0);
@@ -73,14 +77,19 @@ export class AdminMediaList implements OnInit {
     this.pageCache.clear();
   }
 
-  onEdit(mediaItem: any) {
-    console.log('Editing media item:', mediaItem);
-    this.clearCache();
-  }
-
-  onDelete(mediaItems: any) {
-    console.log('Deleting media item:', mediaItems);
-    this.clearCache();
+  onDelete(mediaItem: MediaItemWithEventTitle): void {
+    this.mediaService.delete(mediaItem.eventId, mediaItem).subscribe({
+      next: () => {
+        this.mediaItems.update(items => items.filter(i => i.id !== mediaItem.id));
+        this.totalRecords.update(total => total - 1);
+        this.clearCache();
+        this.toastService.success('Media item deleted successfully');
+      },
+      error: (err) => {
+        console.error('Error deleting media item:', err);
+        this.toastService.error('Failed to delete media item');
+      }
+    });
   }
 
   getEventRouterLink(eventId: string): string {

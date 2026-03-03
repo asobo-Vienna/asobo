@@ -24,7 +24,6 @@
         <th scope="col"></th>
         <th scope="col" aria-label="Id">ID</th>
         <th scope="col" aria-label="Event Title">Event Title</th>
-        <th scope="col" aria-label="Edit"></th>
         <th scope="col" aria-label="Delete"></th>
       </tr>
     </ng-template>
@@ -50,16 +49,7 @@
           </span>
         </td>
 
-        <td data-label="Edit">
-          <span class="p-column-title">
-            <i
-              class="pi pi-pencil clickable"
-              title="Edit"
-              (click)="onEdit(mediaItem)"
-              aria-label="Edit medium"
-            ></i>
-          </span>
-        </td>
+
         <td data-label="Delete">
           <span class="p-column-title">
             <i
