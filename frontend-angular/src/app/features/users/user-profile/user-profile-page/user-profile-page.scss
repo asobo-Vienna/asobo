@@ -4,3 +4,12 @@ h2.text-body-tertiary {
   color: $asobo-purple !important;
   margin-left: 3.5rem;
 }
+
+:host::ng-deep {
+  .p-tab-active {
+    color: $asobo-purple;
+    border-color: $asobo-purple;
+  }
+
+  --p-tabs-active-bar-background: $asobo-purple;
+}

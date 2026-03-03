@@ -1,14 +1,33 @@
 <h1 class="text-primary component">Profile of {{ profileUsername }}</h1>
 
-<app-user-profile-form (userId)="handleUserIdMessage($event)" />
+<app-user-profile-form (userId)="handleUserIdMessage($event)"/>
 
 <div id="user-profile-event-list" class="mt-5">
-  <h2 class="text-body-tertiary mb-3">{{ profileUsername }}'s Events</h2>
   @if (loading()) {
     <app-spinner size="lg"/>
-  } @else if (events().size() > 0) {
-    <app-event-list [inputEvents]="events()"/>
   } @else {
-    <span class="ms-5">Currently not attending any events.</span>
+    <p-tabs [(value)]="selectedTab">
+      <p-tablist>
+        <p-tab value="attended">Attended Events</p-tab>
+        <p-tab value="administered">Administered Events</p-tab>
+      </p-tablist>
+
+      <p-tabpanels>
+        <p-tabpanel value="attended">
+          @if (events().size() > 0) {
+            <app-event-list [inputEvents]="events()"/>
+          } @else {
+            <span>Currently not attending any events.</span>
+          }
+        </p-tabpanel>
+        <p-tabpanel value="administered">
+          @if (administeredEvents().size() > 0) {
+            <app-event-list [inputEvents]="administeredEvents()"/>
+          } @else {
+            <span>Currently not administering any events.</span>
+          }
+        </p-tabpanel>
+      </p-tabpanels>
+    </p-tabs>
   }
 </div>
