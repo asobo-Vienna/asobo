@@ -28,8 +28,7 @@
       </div>
     </div>
   </a>
-  @if (accessControlService.hasAdminAccess() || accessControlService.getCurrentUser()?.id === event().creator?.id
-  || (this.accessControlService.isCurrentUserEventAdmin(event()))) {
+  @if (showDeleteButton()) {
     <button
       class="btn btn-link p-0 delete-event-from-list-button"
       aria-label="Delete event"
