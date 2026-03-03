@@ -3,12 +3,7 @@ import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {CdkTextareaAutosize} from "@angular/cdk/text-field";
 import {DatePicker} from "primeng/datepicker";
 import {DatePipe} from "@angular/common";
-import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators
-} from "@angular/forms";
+import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 import {InputText} from "primeng/inputtext";
 import {environment} from '../../../../../environments/environment';
 import {DateUtils} from '../../../../shared/utils/date/date-utils';
@@ -142,6 +137,7 @@ export class EventBasicInfo implements OnInit {
 
   public onDelete() {
     const eventId: string | undefined = this.event()?.id;
+    const eventTitle: string | undefined = this.event()?.title;
     if (!eventId) {
       this.toastService.error('Event with this ID not available');
       return;
@@ -149,10 +145,11 @@ export class EventBasicInfo implements OnInit {
 
     this.eventService.deleteEvent(eventId).subscribe({
       next: () => {
+        this.toastService.success(`Event ${eventTitle} deleted successfully.`);
         this.router.navigate(['/events']);
       },
       error: (err) => {
-        this.toastService.error('Error deleting event')
+        this.toastService.error(`Error deleting event ${eventTitle}`);
         console.error(err);
       }
     });
