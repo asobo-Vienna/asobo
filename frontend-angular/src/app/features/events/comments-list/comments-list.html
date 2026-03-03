@@ -10,7 +10,6 @@
           </a>
           <div class="flex-grow-1">
             <div class="d-flex justify-content-between align-items-center">
-              <!-- replace link with userProfileService userProfile.userProfileUrl-->
               <a class="mb-0 comment-username"
                  [routerLink]="`${environment.userProfileBaseUrl}${comment.username}`">{{ comment.username }}</a>
               <span class="comment-time">{{ comment.creationDate | date:'short' }}</span>
