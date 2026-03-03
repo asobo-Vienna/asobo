@@ -4,15 +4,6 @@
       <img src="images/logo.png" alt="Asobo Logo" id="asobo-header-logo">
     </a>
 
-    <!--<div class="search-bar d-flex align-items-center me-auto">
-      <div class="search-div d-flex w-100">
-        <input class="form-control" type="search" name="query" placeholder="Search for events" aria-label="Search">
-        <button class="btn-search btn" type="submit">
-          <img class="btn-search-img" src="images/icons/magnifying_glass_purple.png" alt="Search Button">
-        </button>
-      </div>
-    </div>-->
-
     <div class="search-bar d-none d-sm-flex align-items-center ms-0 me-auto">
       <app-global-search class="w-100"></app-global-search>
     </div>
@@ -106,7 +97,8 @@
                 Logout
               </button>
             } @else {
-              <a routerLink="/login" class="btn btn-nav-login-logout form-control me-2 d-flex btn-purple btn-primary" id="login-nav-anchor">Login</a>
+              <a routerLink="/login" class="btn btn-nav-login-logout form-control me-2 d-flex btn-purple btn-primary"
+                 id="login-nav-anchor">Login</a>
             }
           </div>
         </li>
