@@ -62,7 +62,7 @@
 
         <td data-label="Active">
           <span class="p-column-title">
-            <p-toggleswitch [checked]="user.isActive" (onChange)="onToggleActive(user)" />
+            <p-toggleswitch [ngModel]="user.isActive" (onChange)="onToggleActive(user)" />
           </span>
         </td>
 
