@@ -8,6 +8,9 @@
         placeholder="Search events by title, location..."
         (input)="onSimpleSearch($event)"
       />
+      <button class="btn-search btn" type="button" tabindex="-1" aria-hidden="true">
+        <img class="btn-search-img" src="images/icons/magnifying_glass_purple.png" alt="">
+      </button>
     } @else {
       <!-- Autocomplete Mode: all or events -->
       <p-autoComplete
