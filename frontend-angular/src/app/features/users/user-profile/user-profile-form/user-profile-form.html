@@ -4,6 +4,7 @@
       [currentImage]="displayImage()"
       (fileSelected)="handleFileSelected($event)"
       [disabled]="!isOwnProfile()"
+      [minWidth]="'250px'"
       aria-label="Profile picture"
     />
 
@@ -466,9 +467,9 @@
             <!-- Password Update Buttons -->
             <div class="d-flex gap-2 mt-2 m-auto">
               <button type="button"
-                class="btn btn-purple btn-primary mb-3"
-                (click)="updatePassword()"
-                [disabled]="disablePWUpdateButton()">
+                      class="btn btn-purple btn-primary mb-3"
+                      (click)="updatePassword()"
+                      [disabled]="disablePWUpdateButton()">
                 Update Password
               </button>
               <button type="button" class="btn btn-purple btn-primary mb-3" (click)="cancelPasswordEdit()">
