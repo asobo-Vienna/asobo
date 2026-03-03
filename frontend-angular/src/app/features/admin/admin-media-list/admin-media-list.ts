@@ -3,6 +3,7 @@ import {PrimeTemplate} from "primeng/api";
 import {TableModule} from "primeng/table";
 import {environment} from '../../../../environments/environment';
 import {UrlUtilService} from '../../../shared/utils/url/url-util-service';
+import {MediaUtilService} from '../../../shared/utils/media/media-util-service';
 import {AdminService} from '../services/admin-service';
 import {MediaService} from '../../events/services/media-service';
 import {ToastService} from '../../../shared/services/toast-service';
@@ -98,4 +99,5 @@ export class AdminMediaList implements OnInit {
 
   protected readonly environment = environment;
   protected readonly UrlUtilService = UrlUtilService;
+  protected readonly MediaUtilService = MediaUtilService;
 }
