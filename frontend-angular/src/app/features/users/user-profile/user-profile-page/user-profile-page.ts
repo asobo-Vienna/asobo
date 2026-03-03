@@ -44,11 +44,11 @@ export class UserProfilePage implements OnInit {
 
   handleUserIdMessage(userId: string) {
     this.userId = userId;
-    this.fetchEvents();
-    this.fetchEvents(true)
+    this.fetchAttendingEvents();
+    this.fetchAdministeredEvents();
   }
 
-  private fetchEvents(administered: boolean = false) {
+  private fetchAttendingEvents() {
     if (!this.userId) {
       console.warn('No userId available yet!');
       return;
@@ -58,20 +58,6 @@ export class UserProfilePage implements OnInit {
       page: 0,
       size: 100,
     };
-
-    if (administered) {
-      this.eventService.getEventsPaginated(params, {eventAdminIds: new List<string>([this.userId])}).subscribe({
-        next: (response) => {
-          this.administeredEvents.set(new List<EventSummary>(response.content));
-          this.loading.set(false);
-        },
-        error: (err) => {
-          console.error('Error fetching administered events:', err);
-          this.loading.set(false);
-        }
-      })
-      return;
-    }
 
     console.log("Fetching events for userId:", this.userId);
     this.eventService.getEventsPaginated(params, {userId: this.userId}).subscribe({
@@ -84,5 +70,22 @@ export class UserProfilePage implements OnInit {
         this.loading.set(false);
       }
     });
+  }
+
+  private fetchAdministeredEvents() {
+    const params = {
+      page: 0,
+      size: 100,
+    };
+    this.eventService.getEventsPaginated(params, {eventAdminIds: new List<string>([this.userId])}).subscribe({
+      next: (response) => {
+        this.administeredEvents.set(new List<EventSummary>(response.content));
+        this.loading.set(false);
+      },
+      error: (err) => {
+        console.error('Error fetching administered events:', err);
+        this.loading.set(false);
+      }
+    })
   }
 }
