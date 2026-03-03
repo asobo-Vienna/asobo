@@ -22,7 +22,7 @@
         emptyMessage="No results found"
         [forceSelection]="false"
         (onSelect)="onSelect($event)"
-        [placeholder]="searchType() === 'events' ? 'Search for events' : 'Search for events and users'"
+        [placeholder]="searchType() === 'events' || !authService.isLoggedIn() ? 'Search for events' : 'Search for events and users'"
         class="w-100"
         [inputStyleClass]="'form-control search-input'">
         <ng-template pTemplate="header">
