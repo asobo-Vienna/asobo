@@ -85,11 +85,7 @@
 
         <td data-label="Visibility">
           <span class="p-column-title">
-            <p-tag
-              [icon]="event.isPrivateEvent ? 'pi pi-lock' : 'pi pi-globe'"
-              [severity]="event.isPrivateEvent ? 'warn' : 'success'"
-              [value]="event.isPrivateEvent ? 'Private' : 'Public'">
-            </p-tag>
+            <p-toggleswitch [ngModel]="!event.isPrivateEvent" (onChange)="onToggleVisibility(event)" />
           </span>
         </td>
 
