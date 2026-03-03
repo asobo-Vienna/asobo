@@ -1,4 +1,4 @@
-import {Component, ViewEncapsulation, inject, signal, OnInit} from '@angular/core';
+import {Component, inject, signal, ViewEncapsulation} from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {AuthService} from '../../services/auth-service';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -57,7 +57,7 @@ export class RegistrationForm {
   private route = inject(ActivatedRoute);
   previewUrl = signal<string | null>(null);
   selectedImage: File | null = null;
-  countryCodes: {label: string, value: string}[] = [];
+  countryCodes: { label: string, value: string }[] = [];
 
   constructor() {
     this.salutations = environment.defaultSalutations;
@@ -192,7 +192,6 @@ export class RegistrationForm {
     // Step 1: Register with JSON (no FormData needed)
     this.authService.register(formUserDataObj).subscribe({
       next: (response) => {
-        console.log('Registration successful:', response);
         this.usernameExists.set(false);
         this.emailExists.set(false);
 
@@ -205,6 +204,7 @@ export class RegistrationForm {
       },
       error: (err) => {
         console.error('Registration failed with status code:', err.status);
+        
         this.registerForm.patchValue({
           password: '',
           passwordConfirmation: '',
