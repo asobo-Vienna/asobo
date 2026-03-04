@@ -146,6 +146,7 @@ export class EventDetailPage implements OnInit, AfterViewInit {
     this.commentService.delete(comment).subscribe({
       next: () => {
         this.comments().remove(comment);
+        this.toastService.success('Comment successfully deleted!')
       },
       error: (err) => {
         console.log(err);
@@ -162,6 +163,7 @@ export class EventDetailPage implements OnInit, AfterViewInit {
         if (index !== -1) {
           this.comments().set(index, updatedComment);
         }
+        this.toastService.success('Comment successfully edited!');
       },
       error: (err) => {
         console.log(err);

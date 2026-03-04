@@ -90,9 +90,11 @@
           </div>
           <!-- Right: edit/delete -->
           <div class="flex-fill d-flex justify-content-end gap-2">
-            <button type="button" class="btn btn-link p-0" aria-label="Edit event" (click)="enterEdit()">
-                <i class="pi pi-pen-to-square clickable" aria-hidden="true"></i>
-            </button>
+            @if(!isEditing()) {
+              <button type="button" class="btn btn-link p-0" aria-label="Edit event" (click)="enterEdit()">
+                  <i class="pi pi-pen-to-square clickable" aria-hidden="true"></i>
+              </button>
+            }
             <button type="button" class="btn btn-link p-0" aria-label="Delete event" (click)="onDelete()">
                 <i class="pi pi-trash clickable" aria-hidden="true"></i>
             </button>
