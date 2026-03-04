@@ -17,6 +17,7 @@ import {AuthService} from '../../auth/services/auth-service';
 import {User} from '../../auth/models/user';
 import {ParticipantService} from '../services/participant-service';
 import {LambdaFunctions} from '../../../shared/utils/lambda-functions';
+import {DateUtils} from '../../../shared/utils/date/date-utils';
 import {environment} from '../../../../environments/environment';
 import {Tag} from 'primeng/tag';
 import {PageResponse} from '../../../shared/entities/page-response';
@@ -273,5 +274,10 @@ export class EventDetailPage implements OnInit, AfterViewInit {
   isAdminOrEventAdmin() {
     return this.isCurrentUserAdmin() || this.isCurrentUserEventAdmin();
   }
+
+  isEventInThePast = computed(() => {
+    const date = this.event()?.date;
+    return date ? DateUtils.isDateInThePast(new Date(date)) : false;
+  });
 }
 
