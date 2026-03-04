@@ -290,6 +290,7 @@
           }
         </div>
 
+        <!-- Country -->
         <div class="update-field">
           <p-inputgroup>
             <p-inputgroup-addon>
@@ -301,9 +302,12 @@
                 [options]="countryCodes"
                 formControlName="country"
                 placeholder="Select your country"
-                panelStyleClass="solid-dropdown"
+                panelStyleClass="solid-dropdown country-dropdown"
                 (onChange)="onCountryChange($event)"
                 [autoOptionFocus]="true"
+                [filter]="true"
+                filterPlaceholder="Search country"
+                fluid
               />
               <label>Country</label>
             </p-floatlabel>

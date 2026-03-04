@@ -352,6 +352,10 @@ p-iconfield input::placeholder {
   opacity: 1;
 }
 
+.country-dropdown .p-select-filter {
+  padding-inline-start: 12px !important;
+}
+
 // Password input - make it match regular inputs exactly
 ::ng-deep {
   p-inputgroup .p-password {

@@ -238,7 +238,11 @@
           formControlName="country"
           placeholder="Select a country"
           optionLabel="label"
-          optionValue="value">
+          optionValue="value"
+          [filter]="true"
+          filterPlaceholder="Search country"
+          panelStyleClass="country-dropdown"
+          fluid>
         </p-select>
       </p-inputgroup>
     </p-iconfield>
