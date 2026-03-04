@@ -1,5 +1,7 @@
 <h2 class="component">All Users</h2>
 
+<input pInputText type="text" placeholder="Search users..." (input)="onSearch($event)" />
+
 <div class="view-toggle" role="group" aria-label="View mode">
   <button class="btn btn-sm" [class.btn-purple]="viewMode() === 'table'"
           [class.btn-outline-secondary]="viewMode() === 'card'" (click)="viewMode.set('table')" aria-label="Table view"

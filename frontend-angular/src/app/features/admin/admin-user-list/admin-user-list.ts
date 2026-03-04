@@ -18,6 +18,7 @@ import {UserFilters} from '../../users/user-profile/models/user-filters';
 import {Spinner} from '../../../core/ui-elements/spinner/spinner';
 import {SecureImagePipe} from '../../../core/pipes/secure-image-pipe';
 import {getTextPreview} from '../../../shared/utils/text/text-utils';
+import {debounceTime, Subject} from 'rxjs';
 
 
 @Component({
@@ -67,12 +68,20 @@ export class AdminUserList implements OnInit {
   private currentPage = signal<number>(0);
   private currentSize = signal<number>(environment.defaultPageSize);
 
+  private searchSubject = new Subject<string>();
+
   ngOnInit(): void {
+    this.searchSubject.pipe(debounceTime(300)).subscribe(query => {
+      this.userFilters.set({ username: query });
+      this.clearCache();
+      this.loadUsers(0, this.currentSize());
+    });
+
     this.loadUsers(0, environment.defaultPageSize);
   }
 
   loadUsers(page: number, size: number): void {
-    const cacheKey = `${page}-${size}`;
+    const cacheKey = `${page}-${size}-${this.userFilters().username ?? ''}`;
     const rolesKey = 'allRoles';
 
     this.loading.set(true);
@@ -117,6 +126,10 @@ export class AdminUserList implements OnInit {
         this.loading.set(false);
       }
     });
+  }
+
+  onSearch(event: Event) {
+    this.searchSubject.next((event.target as HTMLInputElement).value);
   }
 
   private initializeUserRolesStore(users: User[]): void {

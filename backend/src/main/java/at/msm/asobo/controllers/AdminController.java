@@ -8,10 +8,6 @@ import at.msm.asobo.dto.medium.MediumWithEventTitleDTO;
 import at.msm.asobo.dto.user.UserAdminSummaryDTO;
 import at.msm.asobo.dto.user.UserFullDTO;
 import at.msm.asobo.services.AdminService;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -22,82 +18,91 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
+
 @RestController
 @RequestMapping("/api/admin")
 @PreAuthorize("hasAnyRole('ADMIN', 'SUPERADMIN')")
 public class AdminController {
-  private final AdminService adminService;
+    private final AdminService adminService;
 
-  public AdminController(AdminService adminService) {
-    this.adminService = adminService;
-  }
+    public AdminController(AdminService adminService) {
+        this.adminService = adminService;
+    }
 
-  @GetMapping("/users/paginated")
-  public Page<UserAdminSummaryDTO> getAllUsersPaginated(
-      @RequestParam(required = false) String firstName,
-      @RequestParam(required = false) String surname,
-      @RequestParam(required = false) String location,
-      @RequestParam(required = false) String country,
-      @RequestParam(required = false) Boolean isActive,
-      @RequestParam(required = false) Set<Long> roleIds,
-      @PageableDefault(sort = "username", direction = Sort.Direction.ASC) Pageable pageable) {
-    UserFilterDTO filterDTO =
-        new UserFilterDTO(firstName, surname, location, country, isActive, roleIds);
+    @GetMapping("/users/paginated")
+    public Page<UserAdminSummaryDTO> getAllUsersPaginated(
+            @RequestParam(required = false) String username,
+            @RequestParam(required = false) String email,
+            @RequestParam(required = false) String firstName,
+            @RequestParam(required = false) String surname,
+            @RequestParam(required = false) String location,
+            @RequestParam(required = false) String country,
+            @RequestParam(required = false) Boolean isActive,
+            @RequestParam(required = false) Set<Long> roleIds,
+            @PageableDefault(sort = "username", direction = Sort.Direction.ASC) Pageable pageable) {
+        UserFilterDTO filterDTO =
+                new UserFilterDTO(username, email, firstName, surname, location, country, isActive, roleIds);
 
-    return this.adminService.getAllUsersPaginated(filterDTO, pageable);
-  }
+        return this.adminService.getAllUsersPaginated(filterDTO, pageable);
+    }
 
-  @GetMapping("/users")
-  public List<UserFullDTO> getAllUsers(
-      @RequestParam(required = false) String firstName,
-      @RequestParam(required = false) String surname,
-      @RequestParam(required = false) String location,
-      @RequestParam(required = false) String country,
-      @RequestParam(required = false) Boolean isActive,
-      @RequestParam(required = false) Set<Long> roleIds) {
-    UserFilterDTO filterDTO =
-        new UserFilterDTO(firstName, surname, location, country, isActive, roleIds);
+    @GetMapping("/users")
+    public List<UserFullDTO> getAllUsers(
+            @RequestParam(required = false) String username,
+            @RequestParam(required = false) String email,
+            @RequestParam(required = false) String firstName,
+            @RequestParam(required = false) String surname,
+            @RequestParam(required = false) String location,
+            @RequestParam(required = false) String country,
+            @RequestParam(required = false) Boolean isActive,
+            @RequestParam(required = false) Set<Long> roleIds) {
+        UserFilterDTO filterDTO =
+                new UserFilterDTO(username, email, firstName, surname, location, country, isActive, roleIds);
 
-    return this.adminService.getAllUsers(filterDTO);
-  }
+        return this.adminService.getAllUsers(filterDTO);
+    }
 
-  // TODO?: On expand get full user details for ONE user
+    // TODO?: On expand get full user details for ONE user
   /*@GetMapping("/users/{id}/full")
   public UserFullDTO getUserWithDetails(@PathVariable UUID id);*/
 
-  @GetMapping("/comments")
-  public Page<UserCommentWithEventTitleDTO> getAllUserCommentsWithEventTitle(
-      @RequestParam(required = false) UUID authorId,
-      @RequestParam(required = false) UUID eventId,
-      @RequestParam(required = false) LocalDateTime date,
-      @RequestParam(required = false) LocalDateTime dateFrom,
-      @RequestParam(required = false) LocalDateTime dateTo,
-      @PageableDefault(sort = "creationDate", direction = Sort.Direction.DESC) Pageable pageable) {
-    UserCommentFilterDTO filterDTO =
-        new UserCommentFilterDTO(authorId, eventId, date, dateFrom, dateTo);
+    @GetMapping("/comments")
+    public Page<UserCommentWithEventTitleDTO> getAllUserCommentsWithEventTitle(
+            @RequestParam(required = false) UUID authorId,
+            @RequestParam(required = false) UUID eventId,
+            @RequestParam(required = false) LocalDateTime date,
+            @RequestParam(required = false) LocalDateTime dateFrom,
+            @RequestParam(required = false) LocalDateTime dateTo,
+            @PageableDefault(sort = "creationDate", direction = Sort.Direction.DESC) Pageable pageable) {
+        UserCommentFilterDTO filterDTO =
+                new UserCommentFilterDTO(authorId, eventId, date, dateFrom, dateTo);
 
-    return this.adminService.getAllUserCommentsWithEventTitle(filterDTO, pageable);
-  }
+        return this.adminService.getAllUserCommentsWithEventTitle(filterDTO, pageable);
+    }
 
-  @GetMapping("/media")
-  public Page<MediumWithEventTitleDTO> getAllMediaWithEventTitle(
-      @RequestParam(required = false) UUID creatorId,
-      @RequestParam(required = false) UUID eventId,
-      @RequestParam(required = false) LocalDateTime date,
-      @RequestParam(required = false) LocalDateTime dateFrom,
-      @RequestParam(required = false) LocalDateTime dateTo,
-      @PageableDefault(sort = "creationDate", direction = Sort.Direction.DESC) Pageable pageable) {
-    MediumFilterDTO filterDTO = new MediumFilterDTO(creatorId, eventId, date, dateFrom, dateTo);
+    @GetMapping("/media")
+    public Page<MediumWithEventTitleDTO> getAllMediaWithEventTitle(
+            @RequestParam(required = false) UUID creatorId,
+            @RequestParam(required = false) UUID eventId,
+            @RequestParam(required = false) LocalDateTime date,
+            @RequestParam(required = false) LocalDateTime dateFrom,
+            @RequestParam(required = false) LocalDateTime dateTo,
+            @PageableDefault(sort = "creationDate", direction = Sort.Direction.DESC) Pageable pageable) {
+        MediumFilterDTO filterDTO = new MediumFilterDTO(creatorId, eventId, date, dateFrom, dateTo);
 
-    return this.adminService.getAllMediaWithEventTitle(filterDTO, pageable);
-  }
+        return this.adminService.getAllMediaWithEventTitle(filterDTO, pageable);
+    }
 
   /*@GetMapping
   public List<UserAdminDTO> getAllUsers() {
       //return this.userService.getAllUsers();
   }*/
 
-  // @GetMapping("/{id}")
+    // @GetMapping("/{id}")
   /*public UserAdminDTO getUserById(@PathVariable UUID id) {
       User foundUser = this.userService.getUserById(id);
       return new UserAdminDTO(foundUser);
@@ -116,11 +121,11 @@ public class AdminController {
       return new UserAdminDTO(savedUser);
   }*/
 
-  // TODO create UserAdminService that returns UserAdminDTOs
-  //    @PutMapping("/{id}")
-  //    public UserAdminDTO updateUser(@PathVariable UUID id, @RequestBody @Valid UserUpdateDTO
-  // userUpdateDTO) {
-  //        User updatedUser = this.userService.updateUserById(id, userUpdateDTO);
-  //        return new UserAdminDTO(updatedUser);
-  //    }
+    // TODO create UserAdminService that returns UserAdminDTOs
+    //    @PutMapping("/{id}")
+    //    public UserAdminDTO updateUser(@PathVariable UUID id, @RequestBody @Valid UserUpdateDTO
+    // userUpdateDTO) {
+    //        User updatedUser = this.userService.updateUserById(id, userUpdateDTO);
+    //        return new UserAdminDTO(updatedUser);
+    //    }
 }
