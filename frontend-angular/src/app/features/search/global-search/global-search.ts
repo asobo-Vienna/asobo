@@ -19,6 +19,7 @@ import {SecureImagePipe} from '../../../core/pipes/secure-image-pipe';
 })
 export class GlobalSearch {
   searchType = input<'all' | 'events' | 'simple'>('all');
+  placeholder = input<string>('Search events by title, location...');
   searchOutput = output<string>();
 
   private searchService = inject(SearchService);

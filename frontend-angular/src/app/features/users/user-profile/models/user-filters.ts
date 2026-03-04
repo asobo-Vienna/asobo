@@ -1,7 +1,7 @@
 import {List} from '../../../../core/data-structures/lists/list';
 
 export interface UserFilters {
-  search?: string;
+  query?: string;
   username?: string;
   email?: string;
   firstName?: string;

@@ -35,6 +35,7 @@ public class AdminController {
 
     @GetMapping("/users/paginated")
     public Page<UserAdminSummaryDTO> getAllUsersPaginated(
+            @RequestParam(required = false) String query,
             @RequestParam(required = false) String username,
             @RequestParam(required = false) String email,
             @RequestParam(required = false) String firstName,
@@ -45,13 +46,14 @@ public class AdminController {
             @RequestParam(required = false) Set<Long> roleIds,
             @PageableDefault(sort = "username", direction = Sort.Direction.ASC) Pageable pageable) {
         UserFilterDTO filterDTO =
-                new UserFilterDTO(username, email, firstName, surname, location, country, isActive, roleIds);
+                new UserFilterDTO(query, username, email, firstName, surname, location, country, isActive, roleIds);
 
         return this.adminService.getAllUsersPaginated(filterDTO, pageable);
     }
 
     @GetMapping("/users")
     public List<UserFullDTO> getAllUsers(
+            @RequestParam(required = false) String query,
             @RequestParam(required = false) String username,
             @RequestParam(required = false) String email,
             @RequestParam(required = false) String firstName,
@@ -61,7 +63,7 @@ public class AdminController {
             @RequestParam(required = false) Boolean isActive,
             @RequestParam(required = false) Set<Long> roleIds) {
         UserFilterDTO filterDTO =
-                new UserFilterDTO(username, email, firstName, surname, location, country, isActive, roleIds);
+                new UserFilterDTO(query, username, email, firstName, surname, location, country, isActive, roleIds);
 
         return this.adminService.getAllUsers(filterDTO);
     }

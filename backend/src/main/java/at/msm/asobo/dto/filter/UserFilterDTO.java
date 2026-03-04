@@ -3,6 +3,7 @@ package at.msm.asobo.dto.filter;
 import java.util.Set;
 
 public class UserFilterDTO {
+    private String query;
     private String username;
     private String email;
     private String firstName;
@@ -13,6 +14,7 @@ public class UserFilterDTO {
     private Set<Long> roleIds;
 
     public UserFilterDTO(
+            String query,
             String username,
             String email,
             String firstName,
@@ -21,6 +23,7 @@ public class UserFilterDTO {
             String country,
             Boolean isActive,
             Set<Long> roleIds) {
+        this.query = query;
         this.username = username;
         this.email = email;
         this.firstName = firstName;
@@ -29,6 +32,14 @@ public class UserFilterDTO {
         this.country = country;
         this.isActive = isActive;
         this.roleIds = roleIds;
+    }
+
+    public String getQuery() {
+        return this.query;
+    }
+
+    public void setQuery(String query) {
+        this.query = query;
     }
 
     public String getUsername() {

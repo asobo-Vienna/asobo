@@ -18,6 +18,7 @@ import {UserFilters} from '../../users/user-profile/models/user-filters';
 import {Spinner} from '../../../core/ui-elements/spinner/spinner';
 import {SecureImagePipe} from '../../../core/pipes/secure-image-pipe';
 import {getTextPreview} from '../../../shared/utils/text/text-utils';
+import {GlobalSearch} from '../../search/global-search/global-search';
 import {debounceTime, Subject} from 'rxjs';
 
 
@@ -35,6 +36,7 @@ import {debounceTime, Subject} from 'rxjs';
     Spinner,
     SecureImagePipe,
     AsyncPipe,
+    GlobalSearch,
   ],
   templateUrl: './admin-user-list.html',
   styleUrl: './admin-user-list.scss',
@@ -58,7 +60,6 @@ export class AdminUserList implements OnInit {
   totalRecords = signal<number>(0);
   loading = signal<boolean>(true);
   userFilters = signal<UserFilters>({});
-
   // Store all user roles in a single signal array
   private userRolesStore = signal<UserRoles[]>([]);
 
@@ -67,13 +68,12 @@ export class AdminUserList implements OnInit {
   private sortedRolesCache = new Map<string, Role[]>();
   private currentPage = signal<number>(0);
   private currentSize = signal<number>(environment.defaultPageSize);
-
   private searchSubject = new Subject<string>();
 
   ngOnInit(): void {
-    this.searchSubject.pipe(debounceTime(300)).subscribe(query => {
-      this.userFilters.set({ search: query });
-      // this.clearCache();
+    this.searchSubject.pipe(debounceTime(environment.defaultSearchDebounceTime)).subscribe(query => {
+      this.userFilters.update(f => ({...f, query}));
+      this.clearCache();
       this.loadUsers(0, this.currentSize());
     });
 
@@ -81,7 +81,7 @@ export class AdminUserList implements OnInit {
   }
 
   loadUsers(page: number, size: number): void {
-    const cacheKey = `${page}-${size}-${this.userFilters().username ?? ''}`;
+    const cacheKey = `${page}-${size}`;
     const rolesKey = 'allRoles';
 
     this.loading.set(true);
@@ -128,8 +128,8 @@ export class AdminUserList implements OnInit {
     });
   }
 
-  onSearch(event: Event) {
-    this.searchSubject.next((event.target as HTMLInputElement).value);
+  onSearch(query: string): void {
+    this.searchSubject.next(query);
   }
 
   private initializeUserRolesStore(users: User[]): void {

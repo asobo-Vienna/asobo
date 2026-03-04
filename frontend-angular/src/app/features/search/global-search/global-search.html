@@ -5,7 +5,7 @@
       <input
         type="text"
         class="form-control search-input"
-        placeholder="Search events by title, location..."
+        [placeholder]="placeholder()"
         (input)="onSimpleSearch($event)"
       />
       <button class="btn-search btn" type="button" tabindex="-1" aria-hidden="true">
