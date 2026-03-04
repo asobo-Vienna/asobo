@@ -18,6 +18,8 @@ import {UserFilters} from '../../users/user-profile/models/user-filters';
 import {Spinner} from '../../../core/ui-elements/spinner/spinner';
 import {SecureImagePipe} from '../../../core/pipes/secure-image-pipe';
 import {getTextPreview} from '../../../shared/utils/text/text-utils';
+import {GlobalSearch} from '../../search/global-search/global-search';
+import {debounceTime, Subject} from 'rxjs';
 
 
 @Component({
@@ -34,6 +36,7 @@ import {getTextPreview} from '../../../shared/utils/text/text-utils';
     Spinner,
     SecureImagePipe,
     AsyncPipe,
+    GlobalSearch,
   ],
   templateUrl: './admin-user-list.html',
   styleUrl: './admin-user-list.scss',
@@ -57,7 +60,6 @@ export class AdminUserList implements OnInit {
   totalRecords = signal<number>(0);
   loading = signal<boolean>(true);
   userFilters = signal<UserFilters>({});
-
   // Store all user roles in a single signal array
   private userRolesStore = signal<UserRoles[]>([]);
 
@@ -66,8 +68,15 @@ export class AdminUserList implements OnInit {
   private sortedRolesCache = new Map<string, Role[]>();
   private currentPage = signal<number>(0);
   private currentSize = signal<number>(environment.defaultPageSize);
+  private searchSubject = new Subject<string>();
 
   ngOnInit(): void {
+    this.searchSubject.pipe(debounceTime(environment.defaultSearchDebounceTime)).subscribe(query => {
+      this.userFilters.update(filter => ({...filter, query}));
+      this.clearCache();
+      this.loadUsers(0, this.currentSize());
+    });
+
     this.loadUsers(0, environment.defaultPageSize);
   }
 
@@ -119,6 +128,10 @@ export class AdminUserList implements OnInit {
     });
   }
 
+  onSearch(query: string): void {
+    this.searchSubject.next(query);
+  }
+
   private initializeUserRolesStore(users: User[]): void {
     this.sortedRolesCache.clear();
     const userRolesList: UserRoles[] = users.map(user => ({
@@ -129,10 +142,10 @@ export class AdminUserList implements OnInit {
   }
 
   getUserRoles(user: User): Role[] {
-    const userRoles = this.userRolesStore().find(ur => ur.userId === user.id);
+    const userRoles = this.userRolesStore().find(userRole => userRole.userId === user.id);
     const roles = userRoles?.roles || [];
 
-    const cacheKey = `${user.id}-${roles.map(r => r.id).join(',')}`;
+    const cacheKey = `${user.id}-${roles.map(role => role.id).join(',')}`;
 
     if (this.sortedRolesCache.has(cacheKey)) {
       return this.sortedRolesCache.get(cacheKey)!;
@@ -150,8 +163,8 @@ export class AdminUserList implements OnInit {
   }
 
   private applyRoleHierarchy(newSelection: Role[], currentRoles: Role[]): Role[] {
-    const currentNames = new Set(currentRoles.map(r => r.name));
-    const newNames = new Set(newSelection.map(r => r.name));
+    const currentNames = new Set(currentRoles.map(role => role.name));
+    const newNames = new Set(newSelection.map(role => role.name));
 
     let changedRole: RoleEnum | undefined;
     let wasAdded = false;
@@ -242,10 +255,10 @@ export class AdminUserList implements OnInit {
   }
 
   private updateUserRolesStore(user: User, roles: Role[]) {
-    const updatedStore = this.userRolesStore().map(ur =>
-      ur.userId === user.id
-        ? {userId: ur.userId, roles: [...roles]}
-        : ur
+    const updatedStore = this.userRolesStore().map(userRole =>
+      userRole.userId === user.id
+        ? {userId: userRole.userId, roles: [...roles]}
+        : userRole
     );
     this.userRolesStore.set(updatedStore);
   }

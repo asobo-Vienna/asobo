@@ -1,5 +1,24 @@
 @use 'variables' as *;
 
+.search-and-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  margin-bottom: 1rem;
+
+  app-global-search {
+    display: block;
+    width: 50%;
+    min-width: 300px;
+  }
+
+  .view-toggle {
+    position: absolute;
+    right: 0;
+  }
+}
+
 .loader-overlay {
   position: absolute;
   inset: 0;

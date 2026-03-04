@@ -1,6 +1,9 @@
 <h2 class="component">All Users</h2>
 
-<div class="view-toggle" role="group" aria-label="View mode">
+<div class="search-and-toggle">
+  <app-global-search searchType="simple" placeholder="Search users by name, location..." (searchOutput)="onSearch($event)" />
+
+  <div class="view-toggle" role="group" aria-label="View mode">
   <button class="btn btn-sm" [class.btn-purple]="viewMode() === 'table'"
           [class.btn-outline-secondary]="viewMode() === 'card'" (click)="viewMode.set('table')" aria-label="Table view"
           [attr.aria-pressed]="viewMode() === 'table'">
@@ -11,6 +14,7 @@
           [attr.aria-pressed]="viewMode() === 'card'">
     <i class="pi pi-th-large" aria-hidden="true"></i>
   </button>
+</div>
 </div>
 
 <div class="table-wrapper" [class.card-view]="viewMode() === 'card'">
