@@ -1,13 +1,19 @@
 @if (comments() && comments().size() > 0) {
   <div class="comments-list">
+
     @for (comment of comments(); track comment.id) {
+
       <div class="comment-box">
         <div class="d-flex gap-3">
+
+          <!--USER AVATAR-->
           <a [routerLink]="`${environment.userProfileBaseUrl}${comment.username}`">
             <img class="user-avatar"
                  [src]="(UrlUtilService.getMediaUrl(comment.pictureURI || environment.userDummyProfilePicRelativeUrl)  | secureImage | async) || ''"
                  alt="{{comment.username}}'s avatar">
           </a>
+
+          <!--USERNAME-->
           <div class="flex-grow-1">
             <div class="d-flex justify-content-between align-items-center">
               <a class="mb-0 comment-username"
@@ -16,6 +22,7 @@
             </div>
 
             <div class="d-flex align-items-start">
+              <!--TEXTBOX & EDIT BUTTON-->
               @if (comment.id === editingCommentId()) {
                 <textarea #editTextarea
                           [value]="editingCommentText()"
@@ -25,28 +32,35 @@
                 </textarea>
 
                 <div class="comment-actions mt-1 ms-auto flex-wrap">
+                  <!--SAVE EDIT BUTTON-->
                   <button class="btn btn-link p-0" aria-label="Save edit" (click)="saveEdit(comment, editTextarea.value)">
                     <i class="pi pi-check clickable me-1" aria-hidden="true"></i>
                   </button>
 
+                  <!--CANCEL EDIT BUTTON-->
                   <button class="btn btn-link p-0" aria-label="Cancel edit" (click)="cancelEdit()">
                     <i class="pi pi-times clickable" aria-hidden="true"></i>
                   </button>
                 </div>
               } @else {
+
+                <!--COMMENT TEXT-->
                 <p class="mt-2 flex-grow-1 text-break">{{ comment.text }}</p>
                 @if (accessControlService.hasAdminAccess() || accessControlService.getCurrentUser()?.id === comment.authorId) {
                   <div class="comment-actions mt-3 ms-2">
+                    <!--EDIT COMMENT BUTTON-->
                     <button class="btn btn-link p-0" aria-label="Edit comment" (click)="startEdit(comment)">
                       <i class="pi pi-pen-to-square clickable" aria-hidden="true"></i>
                     </button>
-                    <button class="btn btn-link p-0" aria-label="Delete comment" (click)="commentDeleted.emit(comment)">
+
+                    <!--DELETE COMMENT BUTTON-->
+                    <button class="btn btn-link p-0" aria-label="Delete comment" (click)="deleteComment(comment)">
                       <i class="pi pi-trash clickable" aria-hidden="true"></i>
                     </button>
                   </div>
                 } @else if (this.accessControlService.isCurrentUserEventAdmin(this.event())) {
                   <div class="comment-actions mt-3 ms-2">
-                    <button class="btn btn-link p-0" aria-label="Delete comment" (click)="commentDeleted.emit(comment)">
+                    <button class="btn btn-link p-0" aria-label="Delete comment" (click)="deleteComment(comment)">
                       <i class="pi pi-trash clickable" aria-hidden="true"></i>
                     </button>
                   </div>

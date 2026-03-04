@@ -54,4 +54,8 @@ export class CommentsList {
     this.editingCommentId.set(null);
     this.editingCommentText.set('');
   }
+
+  deleteComment(comment: Comment) {
+    this.commentDeleted.emit(comment);
+  }
 }
