@@ -8,7 +8,7 @@ import {routes} from '../../../app.routes';
 import {Router} from '@angular/router';
 import {EventFilters} from '../models/event-filters';
 import {GlobalSearch} from '../../search/global-search/global-search';
-import {debounceTime, Subject} from 'rxjs';
+import {debounceTime, of, Subject, switchMap} from 'rxjs';
 import {environment} from '../../../../environments/environment';
 import {Spinner} from '../../../core/ui-elements/spinner/spinner';
 import {ToastService} from '../../../shared/services/toast-service';
@@ -130,11 +130,25 @@ export class EventList implements OnInit {
   ngOnInit(): void {
     this.searchSubject.pipe(
       debounceTime(environment.defaultSearchDebounceTime),
-    ).subscribe((query) => {
-      this.searchQuery.set(query);
-      // Only fetch if we're using fetched events (not input events)
-      if (!this.hasInputEvents()) {
-        this.fetchEvents();
+      switchMap((query) => {
+        this.searchQuery.set(query);
+        if (this.hasInputEvents()) {
+          return of(null);
+        }
+        const filters = {...this.eventFilters()};
+        if (query) {
+          filters.query = query;
+        }
+        if (!this.authService.isLoggedIn()) {
+          filters.isPrivateEvent = false;
+        }
+        const params = {page: 0, size: 100, sort: `${this.sortField()},${this.sortDirection()}`};
+        return this.eventService.getAllEventsPaginated(params, filters);
+      })
+    ).subscribe((result) => {
+      if (result) {
+        this.fetchedEvents.set(new List<EventSummary>(result.content));
+        this.loading.set(false);
       }
     });
 

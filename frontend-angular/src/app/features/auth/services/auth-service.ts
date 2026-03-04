@@ -105,7 +105,7 @@ export class AuthService {
     const token = this.getToken();
 
     if (!token) {
-      this.currentUser.set(null);
+      this.logout();
       return;
     }
 
