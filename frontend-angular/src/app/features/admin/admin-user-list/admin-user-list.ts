@@ -72,8 +72,8 @@ export class AdminUserList implements OnInit {
 
   ngOnInit(): void {
     this.searchSubject.pipe(debounceTime(300)).subscribe(query => {
-      this.userFilters.set({ username: query });
-      this.clearCache();
+      this.userFilters.set({ search: query });
+      // this.clearCache();
       this.loadUsers(0, this.currentSize());
     });
 
