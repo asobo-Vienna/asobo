@@ -43,12 +43,14 @@ export class EventCard {
   accessControlService = inject(AccessControlService);
 
   eventDeleted = output<EventSummary>();
+
   isEventInThePast(): boolean {
     const date = this.event().date;
     return date ? DateUtils.isDateInThePast(new Date(date)) : false;
   }
 
   showDeleteButton(): boolean {
+    if (!this.authService.isLoggedIn()) return false;
     if (this.isEventInThePast()) return false;
     return this.accessControlService.hasAdminAccess()
       || this.accessControlService.getCurrentUser()?.id === this.event().creator?.id
