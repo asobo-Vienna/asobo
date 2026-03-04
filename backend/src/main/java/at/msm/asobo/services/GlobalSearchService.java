@@ -93,6 +93,12 @@ public class GlobalSearchService {
 
     if (event.getCreator() != null) {
       result.setCreatorName(event.getCreator().getUsername());
+      result.setCreatorId(event.getCreator().getId());
+    }
+
+    if (event.getEventAdmins() != null) {
+      result.setEventAdminIds(
+          event.getEventAdmins().stream().map(User::getId).collect(Collectors.toList()));
     }
 
     if (event.getParticipants() != null) {
