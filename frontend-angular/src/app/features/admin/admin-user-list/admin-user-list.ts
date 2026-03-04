@@ -72,7 +72,7 @@ export class AdminUserList implements OnInit {
 
   ngOnInit(): void {
     this.searchSubject.pipe(debounceTime(environment.defaultSearchDebounceTime)).subscribe(query => {
-      this.userFilters.update(f => ({...f, query}));
+      this.userFilters.update(filter => ({...filter, query}));
       this.clearCache();
       this.loadUsers(0, this.currentSize());
     });
@@ -142,10 +142,10 @@ export class AdminUserList implements OnInit {
   }
 
   getUserRoles(user: User): Role[] {
-    const userRoles = this.userRolesStore().find(ur => ur.userId === user.id);
+    const userRoles = this.userRolesStore().find(userRole => userRole.userId === user.id);
     const roles = userRoles?.roles || [];
 
-    const cacheKey = `${user.id}-${roles.map(r => r.id).join(',')}`;
+    const cacheKey = `${user.id}-${roles.map(role => role.id).join(',')}`;
 
     if (this.sortedRolesCache.has(cacheKey)) {
       return this.sortedRolesCache.get(cacheKey)!;
@@ -163,8 +163,8 @@ export class AdminUserList implements OnInit {
   }
 
   private applyRoleHierarchy(newSelection: Role[], currentRoles: Role[]): Role[] {
-    const currentNames = new Set(currentRoles.map(r => r.name));
-    const newNames = new Set(newSelection.map(r => r.name));
+    const currentNames = new Set(currentRoles.map(role => role.name));
+    const newNames = new Set(newSelection.map(role => role.name));
 
     let changedRole: RoleEnum | undefined;
     let wasAdded = false;
@@ -255,10 +255,10 @@ export class AdminUserList implements OnInit {
   }
 
   private updateUserRolesStore(user: User, roles: Role[]) {
-    const updatedStore = this.userRolesStore().map(ur =>
-      ur.userId === user.id
-        ? {userId: ur.userId, roles: [...roles]}
-        : ur
+    const updatedStore = this.userRolesStore().map(userRole =>
+      userRole.userId === user.id
+        ? {userId: userRole.userId, roles: [...roles]}
+        : userRole
     );
     this.userRolesStore.set(updatedStore);
   }
