@@ -1,7 +1,5 @@
 import {Injectable} from '@angular/core';
-import {UserFilters} from '../../users/user-profile/models/user-filters';
 import {HttpParams} from '@angular/common/http';
-import {CommentFilters} from '../../events/models/comment-filters';
 
 @Injectable({
   providedIn: 'root',

@@ -2,8 +2,8 @@ import {Component, inject, input, output, signal} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {CommentService} from '../services/comment-service';
 import {ActivatedRoute} from '@angular/router';
-import {Comment} from '../models/comment';
-import {User} from '../../auth/models/user';
+import {Comment} from '../../../shared/entities/comments/comment';
+import {User} from '../../../shared/entities/users/user';
 
 @Component({
   selector: 'app-new-comment',

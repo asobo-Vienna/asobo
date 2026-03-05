@@ -2,12 +2,10 @@ import {inject, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {environment} from '../../../../environments/environment';
 import {map, Observable, take, tap, throwError} from 'rxjs';
-import {LoginResponse} from '../../auth/models/login-response';
+import {LoginResponse} from '../../../shared/entities/auth/login-response';
 import {AuthService} from '../../auth/services/auth-service';
-import {Role} from '../../../shared/entities/role';
-import {UserBasic} from '../../../shared/entities/user-basic';
+import {UserBasic} from '../../../shared/entities/users/user-basic';
 import {List} from '../../../core/data-structures/lists/list';
-import {Participant} from '../../events/models/participant';
 
 @Injectable({
   providedIn: 'root'
@@ -22,7 +20,7 @@ export class UserService {
       .pipe(map(eventAdmins => new List<UserBasic>(eventAdmins)));
   }
 
-  updateProfilePicture(formData: FormData) : Observable<LoginResponse> {
+  updateProfilePicture(formData: FormData): Observable<LoginResponse> {
     const userId = this.authService.currentUser()?.id;
     if (!userId) {
       return throwError(() => new Error('User must be logged in'));
@@ -39,7 +37,7 @@ export class UserService {
 
   // TODO: still needs to be implemented correctly
   updatePassword(password: string): Observable<LoginResponse> {
-    return this.http.patch<LoginResponse>(`${environment.apiBaseUrl}/users/${this.authService.currentUser()?.id}`, { password })
+    return this.http.patch<LoginResponse>(`${environment.apiBaseUrl}/users/${this.authService.currentUser()?.id}`, {password})
       .pipe(take(1));
   }
 

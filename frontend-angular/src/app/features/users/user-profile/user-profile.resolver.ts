@@ -1,8 +1,8 @@
 import {inject} from '@angular/core';
 import {ResolveFn, Router} from '@angular/router';
-import {EMPTY, catchError} from 'rxjs';
+import {catchError, EMPTY} from 'rxjs';
 import {UserProfileService} from '../services/user-profile-service';
-import {User} from '../../auth/models/user';
+import {User} from '../../../shared/entities/users/user';
 
 export const userProfileResolver: ResolveFn<User> = (route) => {
   const router = inject(Router);

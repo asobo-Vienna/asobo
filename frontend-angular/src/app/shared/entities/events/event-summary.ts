@@ -1,6 +1,6 @@
 import {EventCoreInfo} from './event-core-info';
 import {List} from '../../../core/data-structures/lists/list';
-import {User} from '../../auth/models/user';
+import {User} from '../users/user';
 
 export interface EventSummary extends EventCoreInfo {
   participantCount: number;
@@ -8,4 +8,5 @@ export interface EventSummary extends EventCoreInfo {
   mediaCount: number;
   eventAdminIds: List<string>;
   creator?: User;
+  creatorId?: string;
 }

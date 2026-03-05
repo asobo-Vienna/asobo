@@ -4,7 +4,7 @@ import {SearchService} from '../services/search-service';
 import {UrlUtilService} from '../../../shared/utils/url/url-util-service';
 import {AuthService} from '../../auth/services/auth-service';
 import {EventCard} from '../../events/event-card/event-card';
-import {EventSummary} from '../../events/models/event-summary';
+import {EventSummary} from '../../../shared/entities/events/event-summary';
 import {Spinner} from '../../../core/ui-elements/spinner/spinner';
 import {UserSearchResultBasic} from '../../../shared/entities/search';
 import {SecureImagePipe} from '../../../core/pipes/secure-image-pipe';

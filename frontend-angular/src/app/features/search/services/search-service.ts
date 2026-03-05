@@ -10,7 +10,7 @@ import {
 } from '../../../shared/entities/search';
 import {environment} from '../../../../environments/environment';
 import {UrlUtilService} from '../../../shared/utils/url/url-util-service';
-import {EventSummary} from '../../events/models/event-summary';
+import {EventSummary} from '../../../shared/entities/events/event-summary';
 import {List} from '../../../core/data-structures/lists/list';
 
 @Injectable({
@@ -25,7 +25,7 @@ export class SearchService {
       .set('includePrivate', includePrivate.toString());
 
     return this.http
-      .get<GlobalSearchResponse>(`${environment.apiBaseUrl}/search`, { params })
+      .get<GlobalSearchResponse>(`${environment.apiBaseUrl}/search`, {params})
       .pipe(
         map((response) => [
           ...response.events.map((e: EventSearchResult) => ({
@@ -78,7 +78,8 @@ export class SearchService {
             participantCount: e.participantCount ?? 0,
             commentCount: 0,
             mediaCount: 0,
-            eventAdminIds: new List<string>(),
+            eventAdminIds: new List<string>(e.eventAdminIds ?? []),
+            creatorId: e.creatorId,
           })),
           users: response.users.map((u: UserSearchResult) => ({
             id: u.id,
