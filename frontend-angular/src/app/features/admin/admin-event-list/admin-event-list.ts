@@ -1,7 +1,7 @@
 import {Component, DestroyRef, inject, OnInit, signal} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {fromEvent} from 'rxjs';
-import {Event} from '../../events/models/event';
+import {Event} from '../../../shared/entities/events/event';
 import {environment} from '../../../../environments/environment';
 import {Router, RouterLink} from '@angular/router';
 import {UrlUtilService} from '../../../shared/utils/url/url-util-service';
@@ -12,7 +12,7 @@ import {Dialog} from 'primeng/dialog';
 import {Button} from 'primeng/button';
 import {ToggleSwitch} from 'primeng/toggleswitch';
 import {FormsModule} from '@angular/forms';
-import {EventSummary} from '../../events/models/event-summary';
+import {EventSummary} from '../../../shared/entities/events/event-summary';
 import {Spinner} from '../../../core/ui-elements/spinner/spinner';
 import {SecureImagePipe} from '../../../core/pipes/secure-image-pipe';
 import {getTextPreview} from '../../../shared/utils/text/text-utils';

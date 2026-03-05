@@ -1,4 +1,4 @@
-import {EventSummary} from '../../features/events/models/event-summary';
+import {EventSummary} from './events/event-summary';
 
 export interface EventSearchResult {
   id: string;
@@ -8,6 +8,8 @@ export interface EventSearchResult {
   location?: string;
   pictureURI?: string;
   creatorName?: string;
+  creatorId?: string;
+  eventAdminIds?: string[];
   participantCount?: number;
   commentCount?: number;
   mediaCount?: number;
