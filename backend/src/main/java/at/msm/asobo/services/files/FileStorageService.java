@@ -51,36 +51,7 @@ public class FileStorageService {
     createDirectories(Path.of(baseStoragePath));
   }
 
-  public String store(MultipartFile file, String subFolderName, String filePrefix) {
-    String filename = this.generateAndSanitizeFilename(file, filePrefix);
-
-    String destinationPath = this.baseStoragePath;
-    if (subFolderName != null && !subFolderName.isBlank()) {
-      destinationPath = destinationPath + "/" + subFolderName;
-      try {
-        Files.createDirectories(Path.of(destinationPath)); // Ensure subdirectory exists
-      } catch (IOException e) {
-        throw new RuntimeException("Could not create subfolder: " + subFolderName, e);
-      }
-    }
-
-    Path targetDir = Paths.get(destinationPath).toAbsolutePath();
-    Path targetFile = targetDir.resolve(filename);
-    System.out.println("Storing file " + filename + " to " + targetFile);
-    System.out.println("basePath: " + baseStoragePath);
-
-    try (InputStream in = file.getInputStream()) {
-      Files.copy(in, targetFile, StandardCopyOption.REPLACE_EXISTING);
-
-      String encodedFilename =
-          URLEncoder.encode(filename, StandardCharsets.UTF_8).replace("+", "%20");
-
-      return "/uploads/" + subFolderName + "/" + encodedFilename;
-    } catch (IOException e) {
-      throw new RuntimeException("Failed to save file", e);
-    }
-  }
-
+  // TODO: delete file in bucket!!!
   public void delete(String filename) {
     if (filename == null) {
       throw new InvalidFilenameException("Filename must not be null");
@@ -104,11 +75,7 @@ public class FileStorageService {
     String fileUrl = this.bucketBasePath + "/" + cleanFilename;
 
     try {
-      HttpRequest request =
-          HttpRequest.newBuilder()
-              .uri(URI.create(fileUrl))
-              .GET()
-              .build();
+      HttpRequest request = HttpRequest.newBuilder().uri(URI.create(fileUrl)).GET().build();
 
       HttpClient client = HttpClient.newHttpClient();
       HttpResponse<byte[]> response = client.send(request, HttpResponse.BodyHandlers.ofByteArray());
@@ -123,24 +90,6 @@ public class FileStorageService {
 
     } catch (IOException | InterruptedException e) {
       throw new RuntimeException("File retrieval failed", e);
-    }
-  }
-
-  public Resource loadFileAsResource(String filename, UUID userId) {
-    try {
-      // Remove leading slash or /uploads/ prefix
-      String cleanFilename = this.cleanFilename(filename);
-
-      Path filePath = Paths.get(this.baseStoragePath).resolve(cleanFilename).normalize();
-      Resource resource = new UrlResource(filePath.toUri());
-
-      if (resource.exists() && resource.isReadable()) {
-        return resource;
-      } else {
-        throw new FileNotFoundException("File not found: " + filename);
-      }
-    } catch (MalformedURLException e) {
-      throw new FileNotFoundException("File not found: " + filename);
     }
   }
 
@@ -235,5 +184,54 @@ public class FileStorageService {
       return filename.substring(1);
     }
     return filename;
+  }
+
+  // METHODS FOR OFFLINE FILE STORAGE
+  public Resource loadFileAsResource(String filename, UUID userId) {
+    try {
+      // Remove leading slash or /uploads/ prefix
+      String cleanFilename = this.cleanFilename(filename);
+
+      Path filePath = Paths.get(this.baseStoragePath).resolve(cleanFilename).normalize();
+      Resource resource = new UrlResource(filePath.toUri());
+
+      if (resource.exists() && resource.isReadable()) {
+        return resource;
+      } else {
+        throw new FileNotFoundException("File not found: " + filename);
+      }
+    } catch (MalformedURLException e) {
+      throw new FileNotFoundException("File not found: " + filename);
+    }
+  }
+
+  public String store(MultipartFile file, String subFolderName, String filePrefix) {
+    String filename = this.generateAndSanitizeFilename(file, filePrefix);
+
+    String destinationPath = this.baseStoragePath;
+    if (subFolderName != null && !subFolderName.isBlank()) {
+      destinationPath = destinationPath + "/" + subFolderName;
+      try {
+        Files.createDirectories(Path.of(destinationPath)); // Ensure subdirectory exists
+      } catch (IOException e) {
+        throw new RuntimeException("Could not create subfolder: " + subFolderName, e);
+      }
+    }
+
+    Path targetDir = Paths.get(destinationPath).toAbsolutePath();
+    Path targetFile = targetDir.resolve(filename);
+    System.out.println("Storing file " + filename + " to " + targetFile);
+    System.out.println("basePath: " + baseStoragePath);
+
+    try (InputStream in = file.getInputStream()) {
+      Files.copy(in, targetFile, StandardCopyOption.REPLACE_EXISTING);
+
+      String encodedFilename =
+          URLEncoder.encode(filename, StandardCharsets.UTF_8).replace("+", "%20");
+
+      return "/uploads/" + subFolderName + "/" + encodedFilename;
+    } catch (IOException e) {
+      throw new RuntimeException("Failed to save file", e);
+    }
   }
 }

@@ -1,12 +1,10 @@
 package at.msm.asobo.controllers;
 
-import at.msm.asobo.exceptions.files.FileNotFoundException;
 import at.msm.asobo.exceptions.users.UserNotAuthorizedException;
 import at.msm.asobo.security.UserPrincipal;
 import at.msm.asobo.services.files.FileAccessService;
 import at.msm.asobo.services.files.FileStorageService;
 import jakarta.servlet.http.HttpServletRequest;
-import java.io.IOException;
 import java.net.URLConnection;
 import java.util.UUID;
 import org.springframework.core.io.Resource;
