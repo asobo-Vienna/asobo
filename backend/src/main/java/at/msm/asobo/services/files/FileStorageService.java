@@ -12,13 +12,19 @@ import at.msm.asobo.interfaces.PictureEntity;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URLEncoder;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.UUID;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
@@ -30,6 +36,10 @@ public class FileStorageService {
   private final FileStorageProperties fileStorageProperties;
   private final FileValidationService fileValidationService;
   private final String baseStoragePath;
+  private final String bucketBasePath;
+
+  @Value("${app.file-storage.bucket-secret-key}")
+  private String bucketSecretKey;
 
   public FileStorageService(
       FileStorageProperties fileStorageProperties, FileValidationService fileValidationService)
@@ -37,16 +47,12 @@ public class FileStorageService {
     this.fileStorageProperties = fileStorageProperties;
     this.fileValidationService = fileValidationService;
     this.baseStoragePath = fileStorageProperties.getBasePath();
+    this.bucketBasePath = fileStorageProperties.getBucketBasePath();
     createDirectories(Path.of(baseStoragePath));
   }
 
-  public String store(MultipartFile file) {
-    return store(file, "misc");
-  }
-
-  public String store(MultipartFile file, String subFolderName) {
-    String sanitizedFilename = file.getOriginalFilename().replaceAll("[^a-zA-Z0-9\\.\\-]", "_");
-    String filename = UUID.randomUUID() + "_" + sanitizedFilename;
+  public String store(MultipartFile file, String subFolderName, String filePrefix) {
+    String filename = this.generateAndSanitizeFilename(file, filePrefix);
 
     String destinationPath = this.baseStoragePath;
     if (subFolderName != null && !subFolderName.isBlank()) {
@@ -91,15 +97,39 @@ public class FileStorageService {
     }
   }
 
+  public Resource loadFileFromBucket(String filename) {
+    // Remove leading slash or /uploads/ prefix
+    String cleanFilename = this.cleanFilename(filename);
+
+    String fileUrl = this.bucketBasePath + "/" + cleanFilename;
+
+    try {
+      HttpRequest request =
+          HttpRequest.newBuilder()
+              .uri(URI.create(fileUrl))
+              .GET()
+              .build();
+
+      HttpClient client = HttpClient.newHttpClient();
+      HttpResponse<byte[]> response = client.send(request, HttpResponse.BodyHandlers.ofByteArray());
+
+      if (response.statusCode() == 200) {
+        return this.bytesToResource(response.body(), cleanFilename);
+      } else if (response.statusCode() == 404) {
+        throw new FileNotFoundException("File not found in bucket: " + fileUrl);
+      } else {
+        throw new RuntimeException("Failed to fetch file: " + response.statusCode());
+      }
+
+    } catch (IOException | InterruptedException e) {
+      throw new RuntimeException("File retrieval failed", e);
+    }
+  }
+
   public Resource loadFileAsResource(String filename, UUID userId) {
     try {
       // Remove leading slash or /uploads/ prefix
-      String cleanFilename = filename;
-      if (cleanFilename.startsWith("/uploads/")) {
-        cleanFilename = cleanFilename.substring("/uploads/".length());
-      } else if (cleanFilename.startsWith("/")) {
-        cleanFilename = cleanFilename.substring(1);
-      }
+      String cleanFilename = this.cleanFilename(filename);
 
       Path filePath = Paths.get(this.baseStoragePath).resolve(cleanFilename).normalize();
       Resource resource = new UrlResource(filePath.toUri());
@@ -122,7 +152,7 @@ public class FileStorageService {
     this.fileValidationService.validateImage(picture);
 
     String oldUri = entity.getPictureURI();
-    String newUri = this.store(picture, subfolder);
+    String newUri = this.storeFileInBucket(picture, subfolder, UUID.randomUUID().toString());
 
     entity.setPictureURI(newUri);
 
@@ -141,5 +171,69 @@ public class FileStorageService {
 
   public void handleEventPictureUpdate(MultipartFile picture, Event event) {
     handlePictureUpdate(picture, event, this.fileStorageProperties.getEventCoverPictureSubfolder());
+  }
+
+  private String generateAndSanitizeFilename(MultipartFile file, String filePrefix) {
+    String sanitizedFilename = file.getOriginalFilename().replaceAll("[^a-zA-Z0-9\\.\\-]", "_");
+    String filename = filePrefix + "_" + sanitizedFilename;
+    return filename;
+  }
+
+  public String storeFileInBucket(MultipartFile file, String subFolderName, String filePrefix) {
+    String filename = this.generateAndSanitizeFilename(file, filePrefix);
+    String destinationPath = this.bucketBasePath;
+
+    // TODO: thumbnailator resize & compress images (maven dependency)
+    if (subFolderName != null && !subFolderName.isBlank()) {
+      destinationPath += "/" + subFolderName;
+    }
+    destinationPath += "/" + filename;
+
+    try {
+      HttpRequest request =
+          HttpRequest.newBuilder()
+              .uri(URI.create(destinationPath))
+              .header("Content-Type", file.getContentType())
+              .header("apikey", this.bucketSecretKey)
+              .header("Authorization", "Bearer " + this.bucketSecretKey)
+              .POST(HttpRequest.BodyPublishers.ofByteArray(file.getBytes()))
+              .build();
+
+      HttpClient client = HttpClient.newHttpClient();
+      HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+      if (response.statusCode() != 200 && response.statusCode() != 201) {
+        throw new RuntimeException("Upload failed: " + response.body());
+      }
+
+    } catch (IOException | InterruptedException e) {
+      throw new RuntimeException("File upload failed", e);
+    }
+
+    String encodedFilename =
+        URLEncoder.encode(filename, StandardCharsets.UTF_8).replace("+", "%20");
+
+    return "/uploads/" + subFolderName + "/" + encodedFilename;
+  }
+
+  private Resource bytesToResource(byte[] fileBytes, String path) {
+    String filename = Paths.get(path).getFileName().toString();
+
+    return new ByteArrayResource(fileBytes) {
+      @Override
+      public String getFilename() {
+        return filename;
+      }
+    };
+  }
+
+  private String cleanFilename(String filename) {
+    if (filename.startsWith("/uploads/")) {
+      return filename.substring("/uploads/".length());
+    }
+    if (filename.startsWith("/")) {
+      return filename.substring(1);
+    }
+    return filename;
   }
 }

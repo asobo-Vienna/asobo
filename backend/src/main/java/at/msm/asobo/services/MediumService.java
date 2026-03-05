@@ -75,8 +75,10 @@ public class MediumService {
 
     if (creationDTO.getMediumFile() != null && !creationDTO.getMediumFile().isEmpty()) {
       String fileURI =
-          fileStorageService.store(
-              creationDTO.getMediumFile(), this.eventMediaSubfolder + "/" + eventId);
+          fileStorageService.storeFileInBucket(
+              creationDTO.getMediumFile(),
+              this.eventMediaSubfolder + "/" + eventId,
+              UUID.randomUUID().toString());
       newMedium.setMediumURI(fileURI);
     }
 

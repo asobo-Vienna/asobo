@@ -14,6 +14,8 @@ public class FileStorageProperties {
   private String eventCoverPictureSubfolder;
   // application properties: app.file-storage.event-galleries-subfolder=event-galleries
   private String eventGalleriesSubfolder;
+  // application properties: app.file-storage.bucket-base-path
+  private String bucketBasePath;
 
   public String getBasePath() {
     return this.basePath;
@@ -21,6 +23,14 @@ public class FileStorageProperties {
 
   public void setBasePath(String basePath) {
     this.basePath = basePath;
+  }
+
+  public String getBucketBasePath() {
+    return this.bucketBasePath;
+  }
+
+  public void setBucketBasePath(String bucketBasePath) {
+    this.bucketBasePath = bucketBasePath;
   }
 
   public String getProfilePictureSubfolder() {

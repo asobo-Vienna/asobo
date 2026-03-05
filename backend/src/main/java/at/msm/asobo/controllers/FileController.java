@@ -7,6 +7,7 @@ import at.msm.asobo.services.files.FileAccessService;
 import at.msm.asobo.services.files.FileStorageService;
 import jakarta.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.net.URLConnection;
 import java.util.UUID;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -34,27 +35,36 @@ public class FileController {
     String fullPath = this.extractFilePath(request);
     UUID userId = userPrincipal != null ? userPrincipal.getUserId() : null;
 
-    try {
-      if (!this.fileAccessService.canAccess(fullPath, userId)) {
-        throw new UserNotAuthorizedException("User is not authorized to access file");
-      }
-
-      Resource file = fileStorageService.loadFileAsResource(fullPath, userId);
-      String contentType = this.determineContentType(request, file);
-      return buildFileResponse(file, contentType);
-    } catch (IOException e) {
-      throw new FileNotFoundException("File not found: " + fullPath);
+    if (!this.fileAccessService.canAccess(fullPath, userId)) {
+      throw new UserNotAuthorizedException("User is not authorized to access file");
     }
+
+    Resource file = fileStorageService.loadFileFromBucket(fullPath);
+    String contentType = this.determineContentType(request, file);
+    return buildFileResponse(file, contentType);
   }
+
+  //  @PostMapping()
+  //  @PreAuthorize("hasAnyRole('USER', 'ADMIN', 'SUPERADMIN')")
+  //  @ResponseStatus(HttpStatus.NO_CONTENT)
+  //  public void uploadFile(@RequestParam("file") MultipartFile file,
+  //                         @AuthenticationPrincipal UserPrincipal loggedInUser) {
+  //    this.fileStorageService.storeFileInBucket(file);
+  //  }
 
   private String extractFilePath(HttpServletRequest request) {
     return request.getRequestURI().substring("/api/files".length());
   }
 
-  private String determineContentType(HttpServletRequest request, Resource file)
-      throws IOException {
-    String contentType = request.getServletContext().getMimeType(file.getFile().getAbsolutePath());
-    return contentType != null ? contentType : "application/octet-stream";
+  private String determineContentType(HttpServletRequest request, Resource file) {
+    String contentType = null;
+    if (file.getFilename() != null) {
+      contentType = URLConnection.guessContentTypeFromName(file.getFilename());
+    }
+    if (contentType == null) {
+      contentType = "application/octet-stream";
+    }
+    return contentType;
   }
 
   private ResponseEntity<Resource> buildFileResponse(Resource file, String contentType) {
