@@ -1,6 +1,6 @@
-import {User} from '../../auth/models/user';
+import {User} from '../../../shared/entities/users/user';
 import {map, Observable} from 'rxjs';
-import {Participant} from '../models/participant';
+import {Participant} from '../../../shared/entities/events/participant';
 import {environment} from '../../../../environments/environment';
 import {inject, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';

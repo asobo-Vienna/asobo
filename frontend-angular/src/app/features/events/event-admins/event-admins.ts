@@ -2,12 +2,12 @@ import {Component, computed, effect, inject, input, OnInit, signal} from '@angul
 import {Chip} from "primeng/chip";
 import {MultiSelect} from "primeng/multiselect";
 import {PrimeTemplate} from "primeng/api";
-import {User} from '../../auth/models/user';
-import {Event} from '../models/event';
+import {User} from '../../../shared/entities/users/user';
+import {Event} from '../../../shared/entities/events/event';
 import {FormsModule} from '@angular/forms';
 import {EventService} from '../services/event-service';
 import {UserService} from '../../users/services/user-service';
-import {UserBasic} from '../../../shared/entities/user-basic';
+import {UserBasic} from '../../../shared/entities/users/user-basic';
 import {AccessControlService} from '../../../shared/services/access-control-service';
 import {ToastService} from "../../../shared/services/toast-service";
 import {List} from "../../../core/data-structures/lists/list";
@@ -95,7 +95,8 @@ export class EventAdmins implements OnInit {
 
     if (removedAdmins.length > 0) {
       this.eventService.removeEventAdmins(event.id, removedAdmins).subscribe({
-        next: () => {},
+        next: () => {
+        },
         error: () => {
           this.toastService.error('Failed to remove event admin(s)');
         }

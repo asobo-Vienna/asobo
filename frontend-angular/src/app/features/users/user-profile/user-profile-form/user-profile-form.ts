@@ -20,8 +20,8 @@ import {NgClass} from '@angular/common';
 import {Select} from 'primeng/select';
 import {Textarea} from 'primeng/textarea';
 import {List} from '../../../../core/data-structures/lists/list';
-import {Event} from '../../../events/models/event';
-import {User} from '../../../auth/models/user';
+import {Event} from '../../../../shared/entities/events/event';
+import {User} from '../../../../shared/entities/users/user';
 import {UserService} from '../../services/user-service';
 import {ToastService} from '../../../../shared/services/toast-service';
 

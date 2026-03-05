@@ -1,5 +1,3 @@
-import {User} from '../../auth/models/user';
-
 export interface EventCoreInfo {
   id: string;
   title: string;

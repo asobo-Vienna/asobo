@@ -7,7 +7,7 @@ import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/
 import {InputText} from "primeng/inputtext";
 import {environment} from '../../../../../environments/environment';
 import {DateUtils} from '../../../../shared/utils/date/date-utils';
-import {Event} from '../../models/event';
+import {Event} from '../../../../shared/entities/events/event';
 import {EventService} from '../../services/event-service';
 import {AccessControlService} from '../../../../shared/services/access-control-service';
 import {Router} from '@angular/router';
