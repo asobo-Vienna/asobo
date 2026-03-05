@@ -5,6 +5,8 @@
       (fileSelected)="handleFileSelected($event)"
       [disabled]="!isOwnProfile()"
       [minWidth]="'250px'"
+      [showRemoveButton]="isOwnProfile()"
+      (removePicture)="handleRemoveProfilePicture()"
       aria-label="Profile picture"
     />
 

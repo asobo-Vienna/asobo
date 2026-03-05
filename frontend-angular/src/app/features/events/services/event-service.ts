@@ -105,6 +105,10 @@ export class EventService {
     return this.http.patch<Event>(`${environment.eventsEndpoint}/${eventId}/picture`, formData);
   }
 
+  public removeEventPicture(eventId: string): Observable<void> {
+    return this.http.delete<void>(`${environment.eventsEndpoint}/${eventId}/picture`);
+  }
+
   public updateEvent(eventId: string, eventData: Partial<Event>): Observable<Event> {
     return this.http.patch<Event>(`${environment.eventsEndpoint}/${eventId}`, eventData);
   }

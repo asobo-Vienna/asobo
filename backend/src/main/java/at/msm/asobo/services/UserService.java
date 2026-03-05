@@ -172,6 +172,18 @@ public class UserService {
     return this.userDTOUserMapper.mapUserToUserPublicDTO(userToReactivate);
   }
 
+  public LoginResponseDTO removeProfilePicture(UUID targetUserId, UserPrincipal loggedInPrincipal) {
+    User loggedInUser = this.getUserById(loggedInPrincipal.getUserId());
+    User targetUser = this.getUserById(targetUserId);
+
+    this.accessControlService.assertCanUpdateOrDeleteUser(targetUserId, loggedInUser);
+
+    this.fileStorageService.clearPicture(targetUser);
+    User updatedUser = this.userRepository.save(targetUser);
+
+    return new LoginResponseDTO(null, this.userDTOUserMapper.mapUserToUserPublicDTO(updatedUser));
+  }
+
   public boolean isUsernameAlreadyTaken(String username) {
     return this.userRepository.existsByUsername(username);
   }

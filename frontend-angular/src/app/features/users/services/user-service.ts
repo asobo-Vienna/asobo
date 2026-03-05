@@ -37,6 +37,21 @@ export class UserService {
       );
   }
 
+  removeProfilePicture(): Observable<LoginResponse> {
+    const userId = this.authService.currentUser()?.id;
+    if (!userId) {
+      return throwError(() => new Error('User must be logged in'));
+    }
+
+    return this.http.delete<LoginResponse>(`${environment.apiBaseUrl}/users/${userId}/profile-picture`)
+      .pipe(take(1))
+      .pipe(
+        tap(response => {
+          this.authService.updateUserInStorage(response.user);
+        })
+      );
+  }
+
   // TODO: still needs to be implemented correctly
   updatePassword(password: string): Observable<LoginResponse> {
     return this.http.patch<LoginResponse>(`${environment.apiBaseUrl}/users/${this.authService.currentUser()?.id}`, { password })

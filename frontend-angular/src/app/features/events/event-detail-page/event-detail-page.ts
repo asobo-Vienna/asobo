@@ -273,6 +273,27 @@ export class EventDetailPage implements OnInit, AfterViewInit {
     });
   }
 
+  handleRemoveEventPicture() {
+    if (!this.isAdminOrEventAdmin()) {
+      this.toastService.error('You are not allowed to edit the event\'s picture');
+      return;
+    }
+
+    const currentEvent = this.event()!;
+
+    this.eventService.removeEventPicture(currentEvent.id).subscribe({
+      next: () => {
+        this.event.set({...currentEvent, pictureURI: null});
+        this.previewImage.set(null);
+        this.toastService.success('Event picture removed');
+      },
+      error: (err) => {
+        console.error(err);
+        this.toastService.error('Failed to remove event picture');
+      }
+    });
+  }
+
   isAdminOrEventAdmin() {
     return this.isCurrentUserAdmin() || this.isCurrentUserEventAdmin();
   }

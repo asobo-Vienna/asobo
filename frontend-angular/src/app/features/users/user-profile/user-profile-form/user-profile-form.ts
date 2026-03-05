@@ -564,6 +564,26 @@ export class UserProfileForm implements OnInit {
     });
   }
 
+  handleRemoveProfilePicture() {
+    if (!this.isOwnProfile()) {
+      this.toastService.error('Cannot edit another user\'s profile picture');
+      return;
+    }
+
+    this.userProfileService.removeProfilePicture().subscribe({
+      next: () => {
+        this.toastService.success('Profile picture removed');
+        this.loadUserProfile(this.username());
+        this.previewUrl.set(null);
+        this.selectedImage = null;
+      },
+      error: (err) => {
+        console.error('Failed to remove profile picture:', err);
+        this.toastService.error('Failed to remove profile picture');
+      }
+    });
+  }
+
   onPasswordFocus(): void {
     const passwordControl = this.updateForm.get('password');
     const confirmControl = this.updateForm.get('passwordConfirmation');
