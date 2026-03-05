@@ -219,7 +219,7 @@ public class EventService {
     }
 
     if (eventToDelete.getPictureURI() != null) {
-      this.fileStorageService.delete(eventToDelete.getPictureURI());
+      this.fileStorageService.deleteFileFromBucket(eventToDelete.getPictureURI());
     }
 
     this.eventRepository.delete(eventToDelete);

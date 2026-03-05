@@ -70,6 +70,7 @@ public class MediumService {
     this.accessControlService.assertCanUploadMedia(event, loggedInUser);
 
     Medium newMedium = this.mediumDTOMediumMapper.mapMediumCreationDTOToMedium(creationDTO);
+    newMedium.setId(UUID.randomUUID());
     newMedium.setEvent(event);
     newMedium.setCreator(loggedInUser);
 
@@ -78,7 +79,7 @@ public class MediumService {
           fileStorageService.storeFileInBucket(
               creationDTO.getMediumFile(),
               this.eventMediaSubfolder + "/" + eventId,
-              UUID.randomUUID().toString());
+              newMedium.getId().toString());
       newMedium.setMediumURI(fileURI);
     }
 
@@ -93,7 +94,7 @@ public class MediumService {
 
     this.accessControlService.assertCanDeleteMedium(mediumToDelete, loggedInUser);
 
-    this.fileStorageService.delete(mediumToDelete.getMediumURI());
+    this.fileStorageService.deleteFileFromBucket(mediumToDelete.getMediumURI());
     mediumRepository.delete(mediumToDelete);
     return this.mediumDTOMediumMapper.mapMediumToMediumDTO(mediumToDelete);
   }

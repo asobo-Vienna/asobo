@@ -51,21 +51,70 @@ public class FileStorageService {
     createDirectories(Path.of(baseStoragePath));
   }
 
-  // TODO: delete file in bucket!!!
-  public void delete(String filename) {
+  public void deleteFileFromBucket(String filename) {
     if (filename == null) {
       throw new InvalidFilenameException("Filename must not be null");
     }
-    // get current directory
-    Path targetDir = Paths.get(".").toAbsolutePath().normalize();
-    // get rid of "/" at the beginning
-    Path deletionPath = targetDir.resolve(filename.substring(1));
+
+    String cleanFilename = this.cleanFilename(filename);
+    String fileUrl = this.bucketBasePath + "/" + cleanFilename;
 
     try {
-      Files.deleteIfExists(deletionPath);
-    } catch (IOException e) {
+      HttpRequest request =
+          HttpRequest.newBuilder()
+              .uri(URI.create(fileUrl))
+              .header("apikey", bucketSecretKey)
+              .header("Authorization", "Bearer " + bucketSecretKey)
+              .DELETE()
+              .build();
+
+      HttpResponse<String> response =
+          HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+
+      if (response.statusCode() != 200 && response.statusCode() != 204) {
+        throw new FileDeletionException("Failed to delete file: " + response.body());
+      }
+    } catch (IOException | InterruptedException e) {
       throw new FileDeletionException("Failed to delete file: " + filename);
     }
+  }
+
+  public String storeFileInBucket(MultipartFile file, String subFolderName, String filePrefix) {
+    String filename = this.generateAndSanitizeFilename(file, filePrefix);
+    String destinationPath = this.bucketBasePath;
+
+    if (subFolderName != null && !subFolderName.isBlank()) {
+      destinationPath += "/" + subFolderName;
+    }
+    destinationPath += "/" + filename;
+
+    // TODO: thumbnailator resize & compress images
+
+    try {
+      HttpRequest request =
+          HttpRequest.newBuilder()
+              .uri(URI.create(destinationPath))
+              .header("Content-Type", file.getContentType())
+              .header("apikey", this.bucketSecretKey)
+              .header("Authorization", "Bearer " + this.bucketSecretKey)
+              .POST(HttpRequest.BodyPublishers.ofByteArray(file.getBytes()))
+              .build();
+
+      HttpClient client = HttpClient.newHttpClient();
+      HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+      if (response.statusCode() != 200 && response.statusCode() != 201) {
+        throw new RuntimeException("Upload failed: " + response.body());
+      }
+
+    } catch (IOException | InterruptedException e) {
+      throw new RuntimeException("File upload failed", e);
+    }
+
+    String encodedFilename =
+        URLEncoder.encode(filename, StandardCharsets.UTF_8).replace("+", "%20");
+
+    return "/uploads/" + subFolderName + "/" + encodedFilename;
   }
 
   public Resource loadFileFromBucket(String filename) {
@@ -101,17 +150,17 @@ public class FileStorageService {
     this.fileValidationService.validateImage(picture);
 
     String oldUri = entity.getPictureURI();
-    String newUri = this.storeFileInBucket(picture, subfolder, UUID.randomUUID().toString());
-
-    entity.setPictureURI(newUri);
 
     if (oldUri != null) {
       try {
-        this.delete(oldUri);
+        this.deleteFileFromBucket(oldUri);
       } catch (Exception e) {
         System.out.printf("Failed to delete old picture with URI %s\n", oldUri);
       }
     }
+
+    String newUri = this.storeFileInBucket(picture, subfolder, entity.getId().toString());
+    entity.setPictureURI(newUri);
   }
 
   public void handleProfilePictureUpdate(MultipartFile picture, User user) {
@@ -126,43 +175,6 @@ public class FileStorageService {
     String sanitizedFilename = file.getOriginalFilename().replaceAll("[^a-zA-Z0-9\\.\\-]", "_");
     String filename = filePrefix + "_" + sanitizedFilename;
     return filename;
-  }
-
-  public String storeFileInBucket(MultipartFile file, String subFolderName, String filePrefix) {
-    String filename = this.generateAndSanitizeFilename(file, filePrefix);
-    String destinationPath = this.bucketBasePath;
-
-    // TODO: thumbnailator resize & compress images (maven dependency)
-    if (subFolderName != null && !subFolderName.isBlank()) {
-      destinationPath += "/" + subFolderName;
-    }
-    destinationPath += "/" + filename;
-
-    try {
-      HttpRequest request =
-          HttpRequest.newBuilder()
-              .uri(URI.create(destinationPath))
-              .header("Content-Type", file.getContentType())
-              .header("apikey", this.bucketSecretKey)
-              .header("Authorization", "Bearer " + this.bucketSecretKey)
-              .POST(HttpRequest.BodyPublishers.ofByteArray(file.getBytes()))
-              .build();
-
-      HttpClient client = HttpClient.newHttpClient();
-      HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-
-      if (response.statusCode() != 200 && response.statusCode() != 201) {
-        throw new RuntimeException("Upload failed: " + response.body());
-      }
-
-    } catch (IOException | InterruptedException e) {
-      throw new RuntimeException("File upload failed", e);
-    }
-
-    String encodedFilename =
-        URLEncoder.encode(filename, StandardCharsets.UTF_8).replace("+", "%20");
-
-    return "/uploads/" + subFolderName + "/" + encodedFilename;
   }
 
   private Resource bytesToResource(byte[] fileBytes, String path) {
@@ -232,6 +244,22 @@ public class FileStorageService {
       return "/uploads/" + subFolderName + "/" + encodedFilename;
     } catch (IOException e) {
       throw new RuntimeException("Failed to save file", e);
+    }
+  }
+
+  public void delete(String filename) {
+    if (filename == null) {
+      throw new InvalidFilenameException("Filename must not be null");
+    }
+    // get current directory
+    Path targetDir = Paths.get(".").toAbsolutePath().normalize();
+    // get rid of "/" at the beginning
+    Path deletionPath = targetDir.resolve(filename.substring(1));
+
+    try {
+      Files.deleteIfExists(deletionPath);
+    } catch (IOException e) {
+      throw new FileDeletionException("Failed to delete file: " + filename);
     }
   }
 }
