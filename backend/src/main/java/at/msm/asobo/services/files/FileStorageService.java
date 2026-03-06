@@ -119,7 +119,6 @@ public class FileStorageService {
   }
 
   public Resource loadFileFromBucket(String filename) {
-    // Remove leading slash or /uploads/ prefix
     String cleanFilename = this.cleanFilename(filename);
 
     String fileUrl = this.bucketBasePath + "/" + cleanFilename;
@@ -215,7 +214,6 @@ public class FileStorageService {
   // METHODS FOR OFFLINE FILE STORAGE
   public Resource loadFileAsResource(String filename, UUID userId) {
     try {
-      // Remove leading slash or /uploads/ prefix
       String cleanFilename = this.cleanFilename(filename);
 
       Path filePath = Paths.get(this.baseStoragePath).resolve(cleanFilename).normalize();
