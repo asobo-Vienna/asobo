@@ -265,4 +265,16 @@ public class EventService {
     this.fileStorageService.handleEventPictureUpdate(picture, event);
     this.eventRepository.save(event);
   }
+
+  @Transactional
+  public void removeEventPicture(UUID eventId, UserPrincipal userPrincipal) {
+    Event event = this.getEventById(eventId);
+
+    if (!this.eventAdminService.canManageEvent(event, userPrincipal.getUserId())) {
+      throw new UserNotAuthorizedException("You are not allowed to update this event");
+    }
+
+    this.fileStorageService.clearPicture(event);
+    this.eventRepository.save(event);
+  }
 }

@@ -188,6 +188,19 @@ public class FileStorageService {
     };
   }
 
+  public void clearPicture(PictureEntity entity) {
+    String uri = entity.getPictureURI();
+    if (uri == null) {
+      return;
+    }
+    try {
+      this.deleteFileFromBucket(uri);
+    } catch (Exception e) {
+      System.out.printf("Failed to delete picture with URI %s\n", uri);
+    }
+    entity.setPictureURI(null);
+  }
+
   private String cleanFilename(String filename) {
     if (filename.startsWith("/uploads/")) {
       return filename.substring("/uploads/".length());

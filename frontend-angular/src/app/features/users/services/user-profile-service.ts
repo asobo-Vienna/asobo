@@ -91,4 +91,18 @@ export class UserProfileService {
         })
       );
   }
+
+  removeProfilePicture(): Observable<LoginResponse> {
+    return this.userService.removeProfilePicture()
+      .pipe(
+        tap(response => {
+          this.authService.updateUserInStorage(response.user);
+
+          const loggedInUser = this.authService.currentUser();
+          if (loggedInUser?.username === response.user.username) {
+            this.viewedUserSignal.set(response.user);
+          }
+        })
+      );
+  }
 }

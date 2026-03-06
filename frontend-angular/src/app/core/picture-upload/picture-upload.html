@@ -42,5 +42,18 @@
       <span>Change Picture</span>
     </div>
   }
+
   <ng-content />
 </div>
+
+@if (showRemoveButton() && hasImage() && !disabled()) {
+  <button
+    type="button"
+    class="remove-picture-btn"
+    (click)="onRemoveClicked($event)"
+    title="Remove picture"
+  >
+    <i class="pi pi-trash"></i>
+    Remove picture
+  </button>
+}

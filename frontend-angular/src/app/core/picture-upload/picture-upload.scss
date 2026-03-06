@@ -135,5 +135,25 @@
     font-weight: 600;
     font-size: 1.1rem;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    text-align: center;
+  }
+}
+
+.remove-picture-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0.5rem auto 0;
+  background: none;
+  border: none;
+  color: #dc3545;
+  font-size: 0.85rem;
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: rgba(220, 53, 69, 0.1);
   }
 }

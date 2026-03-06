@@ -69,6 +69,13 @@ public class UserController {
   }
 
   @PreAuthorize("hasAnyRole('ADMIN', 'SUPERADMIN', 'USER')")
+  @DeleteMapping("/{id}/profile-picture")
+  public LoginResponseDTO removeProfilePicture(
+      @PathVariable UUID id, @AuthenticationPrincipal UserPrincipal loggedInUser) {
+    return this.userService.removeProfilePicture(id, loggedInUser);
+  }
+
+  @PreAuthorize("hasAnyRole('ADMIN', 'SUPERADMIN', 'USER')")
   @DeleteMapping("/{userId}")
   public UserPublicDTO deleteUser(
       @PathVariable UUID userId, @AuthenticationPrincipal UserPrincipal loggedInUser) {
