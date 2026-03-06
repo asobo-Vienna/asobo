@@ -1,7 +1,7 @@
 import {inject, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {environment} from '../../../../environments/environment';
-import {map, Observable, take, tap, throwError} from 'rxjs';
+import {map, Observable, tap, throwError} from 'rxjs';
 import {LoginResponse} from '../../../shared/entities/auth/login-response';
 import {AuthService} from '../../auth/services/auth-service';
 import {UserBasic} from '../../../shared/entities/users/user-basic';
@@ -27,7 +27,6 @@ export class UserService {
     }
 
     return this.http.patch<LoginResponse>(`${environment.apiBaseUrl}/users/${userId}/profile-picture`, formData)
-      .pipe(take(1))
       .pipe(
         tap(response => {
           this.authService.updateUserInStorage(response.user);
@@ -42,7 +41,6 @@ export class UserService {
     }
 
     return this.http.delete<LoginResponse>(`${environment.apiBaseUrl}/users/${userId}/profile-picture`)
-      .pipe(take(1))
       .pipe(
         tap(response => {
           this.authService.updateUserInStorage(response.user);
@@ -52,8 +50,7 @@ export class UserService {
 
   // TODO: still needs to be implemented correctly
   updatePassword(password: string): Observable<LoginResponse> {
-    return this.http.patch<LoginResponse>(`${environment.apiBaseUrl}/users/${this.authService.currentUser()?.id}`, {password})
-      .pipe(take(1));
+    return this.http.patch<LoginResponse>(`${environment.apiBaseUrl}/users/${this.authService.currentUser()?.id}`, {password});
   }
 
   public getCountryCodes(): Observable<string[]> {
