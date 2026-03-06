@@ -1,13 +1,13 @@
 import {Component, inject, OnInit, signal} from '@angular/core';
-import { TableModule } from 'primeng/table';
-import { TagModule } from 'primeng/tag';
-import { DatePipe } from '@angular/common';
+import {TableModule} from 'primeng/table';
+import {TagModule} from 'primeng/tag';
+import {DatePipe} from '@angular/common';
 import {UrlUtilService} from '../../../shared/utils/url/url-util-service';
 import {environment} from '../../../../environments/environment';
 import {AdminService} from '../services/admin-service';
-import {CommentWithEventTitle} from '../../events/models/comment-with-event-title';
-import { RouterLink } from '@angular/router';
-import {CommentFilters} from '../../events/models/comment-filters';
+import {CommentWithEventTitle} from '../../../shared/entities/comments/comment-with-event-title';
+import {RouterLink} from '@angular/router';
+import {CommentFilters} from '../../../shared/entities/filters/comment-filters';
 import {Spinner} from '../../../core/ui-elements/spinner/spinner';
 import {CommentService} from '../../events/services/comment-service';
 import {ToastService} from '../../../shared/services/toast-service';
@@ -91,7 +91,11 @@ export class AdminCommentList implements OnInit {
     this.commentService.edit({...comment, text: this.editingCommentText}).subscribe({
       next: (updated) => {
         this.comments.update(items =>
-          items.map(c => c.id === comment.id ? {...c, text: updated.text, modificationDate: updated.modificationDate} : c)
+          items.map(c => c.id === comment.id ? {
+            ...c,
+            text: updated.text,
+            modificationDate: updated.modificationDate
+          } : c)
         );
         this.clearCache();
         this.editingCommentId.set(null);

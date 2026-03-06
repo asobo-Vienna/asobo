@@ -1,8 +1,8 @@
 import {Participant} from './participant';
-import {Comment} from './comment';
+import {Comment} from '../comments/comment';
 import {List} from '../../../core/data-structures/lists/list';
 import {EventCoreInfo} from './event-core-info';
-import {User} from '../../auth/models/user';
+import {User} from '../users/user';
 
 export interface Event extends EventCoreInfo {
   creator: User;

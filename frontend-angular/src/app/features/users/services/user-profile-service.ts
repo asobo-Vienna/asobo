@@ -1,12 +1,12 @@
-import { Injectable, inject, computed, signal } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import {computed, inject, Injectable, signal} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
 import {Observable, of, tap} from 'rxjs';
-import { AuthService } from '../../auth/services/auth-service';
-import { UrlUtilService } from '../../../shared/utils/url/url-util-service';
-import { environment } from '../../../../environments/environment';
-import { UserProfile } from '../user-profile/models/user-profile-model';
-import { User } from '../../auth/models/user';
-import {LoginResponse} from '../../auth/models/login-response';
+import {AuthService} from '../../auth/services/auth-service';
+import {UrlUtilService} from '../../../shared/utils/url/url-util-service';
+import {environment} from '../../../../environments/environment';
+import {UserProfile} from '../../../shared/entities/users/user-profile-model';
+import {User} from '../../../shared/entities/users/user';
+import {LoginResponse} from '../../../shared/entities/auth/login-response';
 import {UserService} from './user-service';
 
 @Injectable({
@@ -58,7 +58,7 @@ export class UserProfileService {
   updateField(fieldName: string, value: any): Observable<LoginResponse> {
     const loggedInUser = this.authService.currentUser();
     console.log("username: ", loggedInUser?.username)
-    return this.http.patch<LoginResponse>(`${environment.apiBaseUrl}/users/${loggedInUser?.id}`, { [fieldName]: value })
+    return this.http.patch<LoginResponse>(`${environment.apiBaseUrl}/users/${loggedInUser?.id}`, {[fieldName]: value})
       .pipe(
         tap(response => {
           // Update localStorage to keep AuthService in sync

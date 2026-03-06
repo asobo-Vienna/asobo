@@ -5,7 +5,7 @@ import {UrlUtilService} from '../../../shared/utils/url/url-util-service';
 import {DateUtils} from '../../../shared/utils/date/date-utils';
 import {Tag} from 'primeng/tag';
 import {AuthService} from '../../auth/services/auth-service';
-import {EventSummary} from '../models/event-summary';
+import {EventSummary} from '../../../shared/entities/events/event-summary';
 import {SecureImagePipe} from '../../../core/pipes/secure-image-pipe';
 import {environment} from '../../../../environments/environment';
 import {AccessControlService} from '../../../shared/services/access-control-service';
@@ -52,9 +52,12 @@ export class EventCard {
   showDeleteButton(): boolean {
     if (!this.authService.isLoggedIn()) return false;
     if (this.isEventInThePast()) return false;
+    const currentUserId = this.accessControlService.getCurrentUser()?.id;
+    const event = this.event();
     return this.accessControlService.hasAdminAccess()
-      || this.accessControlService.getCurrentUser()?.id === this.event().creator?.id
-      || this.accessControlService.isCurrentUserEventAdmin(this.event());
+      || currentUserId === event.creator?.id
+      || currentUserId === event.creatorId
+      || this.accessControlService.isCurrentUserEventAdmin(event);
   }
 
   protected readonly environment = environment;

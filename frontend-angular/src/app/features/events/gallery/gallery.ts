@@ -1,12 +1,12 @@
 import {Component, EventEmitter, inject, input, Input, Output, ViewEncapsulation} from '@angular/core';
-import {MediaItem} from '../models/media-item';
+import {MediaItem} from '../../../shared/entities/media/media-item';
 import {List} from "../../../core/data-structures/lists/list";
 import {UrlUtilService} from '../../../shared/utils/url/url-util-service';
 import {Carousel} from 'primeng/carousel';
 import {PrimeTemplate} from 'primeng/api';
 import {MediaUtilService} from '../../../shared/utils/media/media-util-service';
 import {AccessControlService} from '../../../shared/services/access-control-service';
-import {Event} from '../models/event';
+import {Event} from '../../../shared/entities/events/event';
 import {AsyncPipe} from '@angular/common';
 import {SecureImagePipe} from '../../../core/pipes/secure-image-pipe';
 

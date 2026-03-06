@@ -1,7 +1,7 @@
 import {inject, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {environment} from '../../../../environments/environment';
-import {MediaItem} from '../models/media-item';
+import {MediaItem} from '../../../shared/entities/media/media-item';
 import {map, Observable} from 'rxjs';
 import {List} from '../../../core/data-structures/lists/list';
 

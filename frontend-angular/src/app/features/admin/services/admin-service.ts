@@ -1,17 +1,17 @@
-import {inject, Injectable, signal} from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {environment} from '../../../../environments/environment';
 import {HttpClient, HttpParams} from '@angular/common/http';
-import {User} from '../../auth/models/user';
-import {CommentWithEventTitle} from '../../events/models/comment-with-event-title';
+import {User} from '../../../shared/entities/users/user';
+import {CommentWithEventTitle} from '../../../shared/entities/comments/comment-with-event-title';
 import {PageResponse} from '../../../shared/entities/page-response';
-import {MediaItemWithEventTitle} from '../../events/models/media-item-with-event-title';
+import {MediaItemWithEventTitle} from '../../../shared/entities/media/media-item-with-event-title';
 import {Role} from '../../../shared/entities/role';
-import {UserRoles} from '../../../shared/entities/user-roles';
-import {UserFilters} from '../../users/user-profile/models/user-filters';
-import {CommentFilters} from '../../events/models/comment-filters';
+import {UserRoles} from '../../../shared/entities/users/user-roles';
+import {UserFilters} from '../../../shared/entities/filters/user-filters';
+import {CommentFilters} from '../../../shared/entities/filters/comment-filters';
 import {EntityFilterService} from './entity-filter-service';
-import {MediumFilters} from '../../events/models/medium-filters';
+import {MediumFilters} from '../../../shared/entities/filters/medium-filters';
 
 @Injectable({
   providedIn: 'root',
@@ -40,9 +40,8 @@ export class AdminService {
       .set('page', page.toString())
       .set('size', size.toString());
 
-    return this.http.get<PageResponse<User>>(`${environment.apiBaseUrl}/admin/users/paginated`, { params });
+    return this.http.get<PageResponse<User>>(`${environment.apiBaseUrl}/admin/users/paginated`, {params});
   }
-
 
 
   public getAllCommentsWithEventTitle(page: number, size: number, commentFilters?: CommentFilters): Observable<PageResponse<CommentWithEventTitle>> {
@@ -52,17 +51,17 @@ export class AdminService {
       .set('page', page.toString())
       .set('size', size.toString());
 
-    return this.http.get<PageResponse<CommentWithEventTitle>>(`${environment.apiBaseUrl}/admin/comments`, { params });
+    return this.http.get<PageResponse<CommentWithEventTitle>>(`${environment.apiBaseUrl}/admin/comments`, {params});
   }
 
   public getAllMediaWithEventTitle(page: number, size: number, mediumFilters?: MediumFilters): Observable<PageResponse<MediaItemWithEventTitle>> {
     let params = mediumFilters ? this.entityFilterService.filtersToHttpParams(mediumFilters) : new HttpParams()
 
-      params = params
-        .set('page', page.toString())
-        .set('size', size.toString());
+    params = params
+      .set('page', page.toString())
+      .set('size', size.toString());
 
-    return this.http.get<PageResponse<MediaItemWithEventTitle>>(`${environment.apiBaseUrl}/admin/media`, { params });
+    return this.http.get<PageResponse<MediaItemWithEventTitle>>(`${environment.apiBaseUrl}/admin/media`, {params});
   }
 
   public deleteUserById(userId: string): Observable<User> {

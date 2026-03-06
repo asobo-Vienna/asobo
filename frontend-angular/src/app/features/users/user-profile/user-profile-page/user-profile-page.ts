@@ -4,7 +4,7 @@ import {ActivatedRoute} from '@angular/router';
 import {EventList} from '../../../events/event-list/event-list';
 import {List} from '../../../../core/data-structures/lists/list';
 import {EventService} from '../../../events/services/event-service';
-import {EventSummary} from '../../../events/models/event-summary';
+import {EventSummary} from '../../../../shared/entities/events/event-summary';
 import {Title} from '@angular/platform-browser';
 import {Spinner} from '../../../../core/ui-elements/spinner/spinner';
 import {Tab, TabList, TabPanel, TabPanels, Tabs} from 'primeng/tabs';

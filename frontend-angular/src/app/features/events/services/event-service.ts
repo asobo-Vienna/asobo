@@ -2,12 +2,12 @@ import {inject, Injectable} from '@angular/core';
 import {environment} from '../../../../environments/environment';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {Observable} from 'rxjs';
-import {Event} from '../models/event'
+import {Event} from '../../../shared/entities/events/event'
 import {PageResponse} from '../../../shared/entities/page-response';
-import {EventSummary} from '../models/event-summary';
-import {EventFilters} from '../models/event-filters';
-import {User} from '../../auth/models/user';
-import {UserBasic} from '../../../shared/entities/user-basic';
+import {EventSummary} from '../../../shared/entities/events/event-summary';
+import {EventFilters} from '../../../shared/entities/filters/event-filters';
+import {User} from '../../../shared/entities/users/user';
+import {UserBasic} from '../../../shared/entities/users/user-basic';
 import {List} from '../../../core/data-structures/lists/list';
 
 @Injectable({

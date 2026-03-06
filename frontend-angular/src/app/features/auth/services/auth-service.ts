@@ -1,17 +1,17 @@
-import {computed, Injectable, signal, inject} from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import {computed, inject, Injectable, signal} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
 import {Observable, take, tap} from 'rxjs';
 import {Router} from '@angular/router';
-import {User} from '../models/user';
-import {LoginResponse} from '../models/login-response';
+import {User} from '../../../shared/entities/users/user';
+import {LoginResponse} from '../../../shared/entities/auth/login-response';
 import {environment} from '../../../../environments/environment';
 import {jwtDecode} from 'jwt-decode';
-import {UserProfile} from '../../users/user-profile/models/user-profile-model';
+import {UserProfile} from '../../../shared/entities/users/user-profile-model';
 import {UrlUtilService} from '../../../shared/utils/url/url-util-service';
 import {RoleEnum} from '../../../shared/enums/role-enum';
-import {UserRegistrationData} from '../models/user-registration-data';
+import {UserRegistrationData} from '../../../shared/entities/auth/user-registration-data';
 
-@Injectable({ providedIn: 'root' })
+@Injectable({providedIn: 'root'})
 export class AuthService {
   private readonly TOKEN_KEY = environment.JWT_TOKEN_STORAGE_KEY;
   private readonly USER_KEY = environment.USER_STORAGE_KEY;

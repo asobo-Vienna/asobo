@@ -1,8 +1,8 @@
 import {inject, Injectable} from '@angular/core';
-import {Event} from '../../features/events/models/event'
+import {Event} from '../entities/events/event'
 import {RoleEnum} from '../enums/role-enum';
 import {AuthService} from '../../features/auth/services/auth-service';
-import {EventSummary} from '../../features/events/models/event-summary';
+import {EventSummary} from '../entities/events/event-summary';
 
 @Injectable({
   providedIn: 'root',
@@ -17,7 +17,7 @@ export class AccessControlService {
     }
 
     if ('eventAdmins' in event) {
-      return event.eventAdmins.some(a => a.id === this.getCurrentUser()?.id);
+      return event.eventAdmins.some(user => user.id === this.getCurrentUser()?.id);
     }
 
     if ('eventAdminIds' in event) {

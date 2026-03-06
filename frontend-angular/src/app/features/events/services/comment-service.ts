@@ -1,10 +1,9 @@
 import {inject, Injectable} from '@angular/core';
 import {environment} from '../../../../environments/environment';
-import {Comment} from '../models/comment';
+import {Comment} from '../../../shared/entities/comments/comment';
 import {HttpClient, HttpParams} from '@angular/common/http';
-import {map, Observable} from 'rxjs';
-import {List} from '../../../core/data-structures/lists/list';
-import {NewComment} from '../models/new-comment';
+import {Observable} from 'rxjs';
+import {NewComment} from '../../../shared/entities/comments/new-comment';
 import {PageResponse} from '../../../shared/entities/page-response';
 
 @Injectable({
@@ -18,10 +17,10 @@ export class CommentService {
 
     let params = new HttpParams();
     params.set('page', 0)
-          .set('size', environment.commentDefaultPageSize);
+      .set('size', environment.commentDefaultPageSize);
 
     return this.http
-      .get<PageResponse<Comment>>(`${this.getCommentsUrl(eventId)}/paginated`, { params });
+      .get<PageResponse<Comment>>(`${this.getCommentsUrl(eventId)}/paginated`, {params});
   }
 
 

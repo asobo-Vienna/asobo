@@ -1,5 +1,5 @@
 import {Component, Input} from '@angular/core';
-import {Participant} from '../models/participant';
+import {Participant} from '../../../shared/entities/events/participant';
 import {List} from '../../../core/data-structures/lists/list';
 import {UrlUtilService} from '../../../shared/utils/url/url-util-service';
 import {environment} from "../../../../environments/environment";
