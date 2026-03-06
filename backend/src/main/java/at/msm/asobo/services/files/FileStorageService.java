@@ -12,13 +12,20 @@ import at.msm.asobo.interfaces.PictureEntity;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URLEncoder;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.Set;
 import java.util.UUID;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
@@ -30,6 +37,10 @@ public class FileStorageService {
   private final FileStorageProperties fileStorageProperties;
   private final FileValidationService fileValidationService;
   private final String baseStoragePath;
+  private final String bucketBasePath;
+
+  @Value("${app.file-storage.bucket-secret-key}")
+  private String bucketSecretKey;
 
   public FileStorageService(
       FileStorageProperties fileStorageProperties, FileValidationService fileValidationService)
@@ -37,16 +48,189 @@ public class FileStorageService {
     this.fileStorageProperties = fileStorageProperties;
     this.fileValidationService = fileValidationService;
     this.baseStoragePath = fileStorageProperties.getBasePath();
+    this.bucketBasePath = fileStorageProperties.getBucketBasePath();
     createDirectories(Path.of(baseStoragePath));
   }
 
-  public String store(MultipartFile file) {
-    return store(file, "misc");
+  public void deleteFileFromBucket(String filename) {
+    if (filename == null) {
+      throw new InvalidFilenameException("Filename must not be null");
+    }
+
+    String cleanFilename = this.cleanFilename(filename);
+    String fileUrl = this.bucketBasePath + "/" + cleanFilename;
+
+    try {
+      HttpRequest request =
+          HttpRequest.newBuilder()
+              .uri(URI.create(fileUrl))
+              .header("apikey", bucketSecretKey)
+              .header("Authorization", "Bearer " + bucketSecretKey)
+              .DELETE()
+              .build();
+
+      HttpResponse<String> response =
+          HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+
+      if (!Set.of(200, 204).contains(response.statusCode())) {
+        throw new FileDeletionException("Failed to delete file: " + response.body());
+      }
+    } catch (IOException | InterruptedException e) {
+      throw new FileDeletionException("Failed to delete file: " + filename);
+    }
   }
 
-  public String store(MultipartFile file, String subFolderName) {
+  public String storeFileInBucket(MultipartFile file, String subFolderName, String filePrefix) {
+    String filename = this.generateAndSanitizeFilename(file, filePrefix);
+    String destinationPath = this.bucketBasePath;
+
+    if (subFolderName != null && !subFolderName.isBlank()) {
+      destinationPath += "/" + subFolderName;
+    }
+    destinationPath += "/" + filename;
+
+    // TODO: thumbnailator resize & compress images
+
+    try {
+      HttpRequest request =
+          HttpRequest.newBuilder()
+              .uri(URI.create(destinationPath))
+              .header("Content-Type", file.getContentType())
+              .header("apikey", this.bucketSecretKey)
+              .header("Authorization", "Bearer " + this.bucketSecretKey)
+              .POST(HttpRequest.BodyPublishers.ofByteArray(file.getBytes()))
+              .build();
+
+      HttpClient client = HttpClient.newHttpClient();
+      HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+      if (!Set.of(200, 201).contains(response.statusCode())) {
+        throw new RuntimeException("Upload failed: " + response.body());
+      }
+
+    } catch (IOException | InterruptedException e) {
+      throw new RuntimeException("File upload failed", e);
+    }
+
+    String encodedFilename =
+        URLEncoder.encode(filename, StandardCharsets.UTF_8).replace("+", "%20");
+
+    return "/uploads/" + subFolderName + "/" + encodedFilename;
+  }
+
+  public Resource loadFileFromBucket(String filename) {
+    String cleanFilename = this.cleanFilename(filename);
+
+    String fileUrl = this.bucketBasePath + "/" + cleanFilename;
+
+    try {
+      HttpRequest request = HttpRequest.newBuilder().uri(URI.create(fileUrl)).GET().build();
+
+      HttpClient client = HttpClient.newHttpClient();
+      HttpResponse<byte[]> response = client.send(request, HttpResponse.BodyHandlers.ofByteArray());
+
+      if (response.statusCode() == 200) {
+        return this.bytesToResource(response.body(), cleanFilename);
+      } else if (response.statusCode() == 404) {
+        throw new FileNotFoundException("File not found in bucket: " + fileUrl);
+      } else {
+        throw new RuntimeException("Failed to fetch file: " + response.statusCode());
+      }
+
+    } catch (IOException | InterruptedException e) {
+      throw new RuntimeException("File retrieval failed", e);
+    }
+  }
+
+  private void handlePictureUpdate(MultipartFile picture, PictureEntity entity, String subfolder) {
+    if (picture == null || picture.isEmpty()) {
+      return;
+    }
+
+    this.fileValidationService.validateImage(picture);
+
+    String oldUri = entity.getPictureURI();
+
+    if (oldUri != null) {
+      try {
+        this.deleteFileFromBucket(oldUri);
+      } catch (Exception e) {
+        System.out.printf("Failed to delete old picture with URI %s\n", oldUri);
+      }
+    }
+
+    String newUri = this.storeFileInBucket(picture, subfolder, entity.getId().toString());
+    entity.setPictureURI(newUri);
+  }
+
+  public void handleProfilePictureUpdate(MultipartFile picture, User user) {
+    handlePictureUpdate(picture, user, this.fileStorageProperties.getProfilePictureSubfolder());
+  }
+
+  public void handleEventPictureUpdate(MultipartFile picture, Event event) {
+    handlePictureUpdate(picture, event, this.fileStorageProperties.getEventCoverPictureSubfolder());
+  }
+
+  private String generateAndSanitizeFilename(MultipartFile file, String filePrefix) {
     String sanitizedFilename = file.getOriginalFilename().replaceAll("[^a-zA-Z0-9\\.\\-]", "_");
-    String filename = UUID.randomUUID() + "_" + sanitizedFilename;
+    String filename = filePrefix + "_" + sanitizedFilename;
+    return filename;
+  }
+
+  private Resource bytesToResource(byte[] fileBytes, String path) {
+    String filename = Paths.get(path).getFileName().toString();
+
+    return new ByteArrayResource(fileBytes) {
+      @Override
+      public String getFilename() {
+        return filename;
+      }
+    };
+  }
+
+  public void clearPicture(PictureEntity entity) {
+    String uri = entity.getPictureURI();
+    if (uri == null) {
+      return;
+    }
+    try {
+      this.deleteFileFromBucket(uri);
+    } catch (Exception e) {
+      System.out.printf("Failed to delete picture with URI %s\n", uri);
+    }
+    entity.setPictureURI(null);
+  }
+
+  private String cleanFilename(String filename) {
+    if (filename.startsWith("/uploads/")) {
+      return filename.substring("/uploads/".length());
+    }
+    if (filename.startsWith("/")) {
+      return filename.substring(1);
+    }
+    return filename;
+  }
+
+  // METHODS FOR OFFLINE FILE STORAGE
+  public Resource loadFileAsResource(String filename, UUID userId) {
+    try {
+      String cleanFilename = this.cleanFilename(filename);
+
+      Path filePath = Paths.get(this.baseStoragePath).resolve(cleanFilename).normalize();
+      Resource resource = new UrlResource(filePath.toUri());
+
+      if (resource.exists() && resource.isReadable()) {
+        return resource;
+      } else {
+        throw new FileNotFoundException("File not found: " + filename);
+      }
+    } catch (MalformedURLException e) {
+      throw new FileNotFoundException("File not found: " + filename);
+    }
+  }
+
+  public String store(MultipartFile file, String subFolderName, String filePrefix) {
+    String filename = this.generateAndSanitizeFilename(file, filePrefix);
 
     String destinationPath = this.baseStoragePath;
     if (subFolderName != null && !subFolderName.isBlank()) {
@@ -89,70 +273,5 @@ public class FileStorageService {
     } catch (IOException e) {
       throw new FileDeletionException("Failed to delete file: " + filename);
     }
-  }
-
-  public Resource loadFileAsResource(String filename, UUID userId) {
-    try {
-      // Remove leading slash or /uploads/ prefix
-      String cleanFilename = filename;
-      if (cleanFilename.startsWith("/uploads/")) {
-        cleanFilename = cleanFilename.substring("/uploads/".length());
-      } else if (cleanFilename.startsWith("/")) {
-        cleanFilename = cleanFilename.substring(1);
-      }
-
-      Path filePath = Paths.get(this.baseStoragePath).resolve(cleanFilename).normalize();
-      Resource resource = new UrlResource(filePath.toUri());
-
-      if (resource.exists() && resource.isReadable()) {
-        return resource;
-      } else {
-        throw new FileNotFoundException("File not found: " + filename);
-      }
-    } catch (MalformedURLException e) {
-      throw new FileNotFoundException("File not found: " + filename);
-    }
-  }
-
-  private void handlePictureUpdate(MultipartFile picture, PictureEntity entity, String subfolder) {
-    if (picture == null || picture.isEmpty()) {
-      return;
-    }
-
-    this.fileValidationService.validateImage(picture);
-
-    String oldUri = entity.getPictureURI();
-    String newUri = this.store(picture, subfolder);
-
-    entity.setPictureURI(newUri);
-
-    if (oldUri != null) {
-      try {
-        this.delete(oldUri);
-      } catch (Exception e) {
-        System.out.printf("Failed to delete old picture with URI %s\n", oldUri);
-      }
-    }
-  }
-
-  public void handleProfilePictureUpdate(MultipartFile picture, User user) {
-    handlePictureUpdate(picture, user, this.fileStorageProperties.getProfilePictureSubfolder());
-  }
-
-  public void handleEventPictureUpdate(MultipartFile picture, Event event) {
-    handlePictureUpdate(picture, event, this.fileStorageProperties.getEventCoverPictureSubfolder());
-  }
-
-  public void clearPicture(PictureEntity entity) {
-    String uri = entity.getPictureURI();
-    if (uri == null) {
-      return;
-    }
-    try {
-      this.delete(uri);
-    } catch (Exception e) {
-      System.out.printf("Failed to delete picture with URI %s\n", uri);
-    }
-    entity.setPictureURI(null);
   }
 }

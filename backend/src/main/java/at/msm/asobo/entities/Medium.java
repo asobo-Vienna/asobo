@@ -13,9 +13,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @EntityListeners(AuditingEntityListener.class)
 public class Medium {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.UUID)
-  private UUID id;
+  @Id @NotNull private UUID id;
 
   @NotNull(message = "URI is mandatory for media")
   @Column(length = 4096)
