@@ -139,6 +139,14 @@ public class EventController {
     this.eventService.updateEventPicture(id, loggedInUser, eventPicture);
   }
 
+  @DeleteMapping("/{id}/picture")
+  @PreAuthorize("hasAnyRole('USER', 'ADMIN', 'SUPERADMIN')")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  public void removeEventPicture(
+      @PathVariable UUID id, @AuthenticationPrincipal UserPrincipal loggedInUser) {
+    this.eventService.removeEventPicture(id, loggedInUser);
+  }
+
   @GetMapping("/{id}")
   public EventDTO getEventById(@PathVariable UUID id, Authentication authentication) {
     boolean isAuthenticated = authentication != null && authentication.isAuthenticated();

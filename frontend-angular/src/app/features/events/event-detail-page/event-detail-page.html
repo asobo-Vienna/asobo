@@ -8,7 +8,9 @@
       [caption]="'Add cover picture'"
       [dimensions]="[60, 30]"
       (fileSelected)="handleFileSelected($event)"
-      [disabled]="!isAdminOrEventAdmin() || isEventInThePast()">
+      [disabled]="!isAdminOrEventAdmin() || isEventInThePast()"
+      [showRemoveButton]="isAdminOrEventAdmin() && !isEventInThePast() && !!event()?.pictureURI"
+      (removePicture)="handleRemoveEventPicture()">
 
       @if (authService.isLoggedIn()) {
         <p-tag

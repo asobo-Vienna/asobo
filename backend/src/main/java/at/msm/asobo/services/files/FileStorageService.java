@@ -142,4 +142,17 @@ public class FileStorageService {
   public void handleEventPictureUpdate(MultipartFile picture, Event event) {
     handlePictureUpdate(picture, event, this.fileStorageProperties.getEventCoverPictureSubfolder());
   }
+
+  public void clearPicture(PictureEntity entity) {
+    String uri = entity.getPictureURI();
+    if (uri == null) {
+      return;
+    }
+    try {
+      this.delete(uri);
+    } catch (Exception e) {
+      System.out.printf("Failed to delete picture with URI %s\n", uri);
+    }
+    entity.setPictureURI(null);
+  }
 }

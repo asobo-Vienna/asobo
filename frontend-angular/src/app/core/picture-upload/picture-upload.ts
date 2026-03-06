@@ -16,10 +16,12 @@ export class PictureUpload implements OnInit {
   pictureBox = viewChild<ElementRef<HTMLElement>>('pictureBox');
   currentImage = input<string | null>(null);
   showPlusBeforeUpload = input<boolean>(false);
+  showRemoveButton = input<boolean>(false);
   shape = input<string>('circle');
   caption = input<string>('Add profile picture');
   disabled = input<boolean>(false);
   fileSelected = output<File>();
+  removePicture = output<void>();
   preview = signal<string | null>(null);
   dimensions = input<[number, number]>([25, 25]);
   minWidth = input<string>('200px');
@@ -50,6 +52,16 @@ export class PictureUpload implements OnInit {
       this.removePictureBoxBorder();
     };
     reader.readAsDataURL(file);
+  }
+
+  onRemoveClicked(event: MouseEvent): void {
+    event.stopPropagation();
+    this.preview.set(null);
+    this.removePicture.emit();
+  }
+
+  hasImage(): boolean {
+    return !!(this.preview() || this.currentImage());
   }
 
   private removePictureBoxBorder(): void {
