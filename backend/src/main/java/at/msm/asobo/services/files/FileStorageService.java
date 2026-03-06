@@ -22,6 +22,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.Set;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
@@ -71,7 +72,7 @@ public class FileStorageService {
       HttpResponse<String> response =
           HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
 
-      if (response.statusCode() != 200 && response.statusCode() != 204) {
+      if (!Set.of(200, 204).contains(response.statusCode())) {
         throw new FileDeletionException("Failed to delete file: " + response.body());
       }
     } catch (IOException | InterruptedException e) {
@@ -103,7 +104,7 @@ public class FileStorageService {
       HttpClient client = HttpClient.newHttpClient();
       HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-      if (response.statusCode() != 200 && response.statusCode() != 201) {
+      if (!Set.of(200, 201).contains(response.statusCode())) {
         throw new RuntimeException("Upload failed: " + response.body());
       }
 
