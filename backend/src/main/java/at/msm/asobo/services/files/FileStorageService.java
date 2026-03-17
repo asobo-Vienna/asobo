@@ -220,7 +220,7 @@ public class FileStorageService {
     try {
       this.deleteFileFromBucket(uri);
     } catch (Exception e) {
-      LOGGER.warn("Failed to delete picture with URI {}}", uri, e);
+      LOGGER.warn("Failed to delete picture with URI {}", uri, e);
     }
     entity.setPictureURI(null);
   }
