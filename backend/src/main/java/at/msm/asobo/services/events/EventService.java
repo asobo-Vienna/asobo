@@ -11,7 +11,6 @@ import at.msm.asobo.exceptions.events.EventNotFoundException;
 import at.msm.asobo.exceptions.users.UserNotAuthorizedException;
 import at.msm.asobo.exceptions.users.UserNotFoundException;
 import at.msm.asobo.mappers.EventDTOEventMapper;
-import at.msm.asobo.mappers.UserDTOUserMapper;
 import at.msm.asobo.repositories.EventRepository;
 import at.msm.asobo.repositories.UserRepository;
 import at.msm.asobo.security.UserPrincipal;
@@ -37,21 +36,18 @@ public class EventService {
   private final FileStorageService fileStorageService;
   private final EventAdminService eventAdminService;
   private final EventDTOEventMapper eventDTOEventMapper;
-  private final UserDTOUserMapper userDTOUserMapper;
 
   public EventService(
       EventRepository eventRepository,
       UserRepository userRepository,
       FileStorageService fileStorageService,
       EventAdminService eventAdminService,
-      EventDTOEventMapper eventDTOEventMapper,
-      UserDTOUserMapper userDTOUserMapper) {
+      EventDTOEventMapper eventDTOEventMapper) {
     this.eventRepository = eventRepository;
     this.userRepository = userRepository;
     this.fileStorageService = fileStorageService;
     this.eventAdminService = eventAdminService;
     this.eventDTOEventMapper = eventDTOEventMapper;
-    this.userDTOUserMapper = userDTOUserMapper;
   }
 
   public List<EventSummaryDTO> getAllEvents(EventFilterDTO filterDTO) {

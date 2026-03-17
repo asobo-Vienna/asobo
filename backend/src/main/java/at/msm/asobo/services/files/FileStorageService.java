@@ -9,6 +9,9 @@ import at.msm.asobo.exceptions.files.FileDeletionException;
 import at.msm.asobo.exceptions.files.FileNotFoundException;
 import at.msm.asobo.exceptions.files.InvalidFilenameException;
 import at.msm.asobo.interfaces.PictureEntity;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -24,6 +27,10 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Set;
 import java.util.UUID;
+
+import net.coobird.thumbnailator.Thumbnails;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
@@ -39,8 +46,12 @@ public class FileStorageService {
   private final String baseStoragePath;
   private final String bucketBasePath;
 
+  private final HttpClient httpClient;
+
   @Value("${app.file-storage.bucket-secret-key}")
   private String bucketSecretKey;
+
+  private static final Logger logger = LoggerFactory.getLogger(FileStorageService.class);
 
   public FileStorageService(
       FileStorageProperties fileStorageProperties, FileValidationService fileValidationService)
@@ -50,6 +61,7 @@ public class FileStorageService {
     this.baseStoragePath = fileStorageProperties.getBasePath();
     this.bucketBasePath = fileStorageProperties.getBucketBasePath();
     createDirectories(Path.of(baseStoragePath));
+    this.httpClient = HttpClient.newHttpClient();
   }
 
   public void deleteFileFromBucket(String filename) {
@@ -69,8 +81,7 @@ public class FileStorageService {
               .DELETE()
               .build();
 
-      HttpResponse<String> response =
-          HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+      HttpResponse<String> response = this.httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
       if (!Set.of(200, 204).contains(response.statusCode())) {
         throw new FileDeletionException("Failed to delete file: " + response.body());
@@ -89,20 +100,20 @@ public class FileStorageService {
     }
     destinationPath += "/" + filename;
 
-    // TODO: thumbnailator resize & compress images
-
     try {
+
+      byte[] optimizedImage = this.resizeAndCompressImage(file);
+
       HttpRequest request =
           HttpRequest.newBuilder()
               .uri(URI.create(destinationPath))
               .header("Content-Type", file.getContentType())
               .header("apikey", this.bucketSecretKey)
               .header("Authorization", "Bearer " + this.bucketSecretKey)
-              .POST(HttpRequest.BodyPublishers.ofByteArray(file.getBytes()))
+              .POST(HttpRequest.BodyPublishers.ofByteArray(optimizedImage))
               .build();
 
-      HttpClient client = HttpClient.newHttpClient();
-      HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+      HttpResponse<String> response = this.httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
       if (!Set.of(200, 201).contains(response.statusCode())) {
         throw new RuntimeException("Upload failed: " + response.body());
@@ -126,8 +137,7 @@ public class FileStorageService {
     try {
       HttpRequest request = HttpRequest.newBuilder().uri(URI.create(fileUrl)).GET().build();
 
-      HttpClient client = HttpClient.newHttpClient();
-      HttpResponse<byte[]> response = client.send(request, HttpResponse.BodyHandlers.ofByteArray());
+      HttpResponse<byte[]> response = this.httpClient.send(request, HttpResponse.BodyHandlers.ofByteArray());
 
       if (response.statusCode() == 200) {
         return this.bytesToResource(response.body(), cleanFilename);
@@ -155,7 +165,7 @@ public class FileStorageService {
       try {
         this.deleteFileFromBucket(oldUri);
       } catch (Exception e) {
-        System.out.printf("Failed to delete old picture with URI %s\n", oldUri);
+        logger.warn("Failed to delete old picture with URI {}", oldUri, e);
       }
     }
 
@@ -188,6 +198,19 @@ public class FileStorageService {
     };
   }
 
+  private byte[] resizeAndCompressImage(MultipartFile file) throws IOException {
+    if (file.getContentType() != null && file.getContentType().startsWith("image/")) {
+      ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+      Thumbnails.of(new ByteArrayInputStream(file.getBytes()))
+              .size(1200, 1200)
+              .outputFormat("JPEG")
+              .outputQuality(0.8)
+              .toOutputStream(outputStream);
+      return outputStream.toByteArray();
+    }
+    return file.getBytes();
+  }
+
   public void clearPicture(PictureEntity entity) {
     String uri = entity.getPictureURI();
     if (uri == null) {
@@ -196,7 +219,7 @@ public class FileStorageService {
     try {
       this.deleteFileFromBucket(uri);
     } catch (Exception e) {
-      System.out.printf("Failed to delete picture with URI %s\n", uri);
+      logger.warn("Failed to delete picture with URI {}}", uri, e);
     }
     entity.setPictureURI(null);
   }
