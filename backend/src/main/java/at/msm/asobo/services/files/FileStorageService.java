@@ -203,9 +203,11 @@ public class FileStorageService {
     if (file.getContentType() != null && file.getContentType().startsWith("image/")) {
       ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
       Thumbnails.of(new ByteArrayInputStream(file.getBytes()))
-          .size(1200, 1200)
-          .outputFormat("JPEG")
-          .outputQuality(0.8)
+          .size(
+              fileStorageProperties.getPictureMaxWidth(),
+              fileStorageProperties.getPictureMaxHeight())
+          .outputFormat(fileStorageProperties.getPictureFormat())
+          .outputQuality(fileStorageProperties.getPictureQuality())
           .toOutputStream(outputStream);
       return outputStream.toByteArray();
     }
