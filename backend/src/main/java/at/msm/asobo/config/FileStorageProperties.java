@@ -17,6 +17,11 @@ public class FileStorageProperties {
   // application properties: app.file-storage.bucket-base-path
   private String bucketBasePath;
 
+  private int pictureMaxWidth;
+  private int pictureMaxHeight;
+  private double pictureQuality;
+  private String pictureFormat;
+
   public String getBasePath() {
     return this.basePath;
   }
@@ -55,5 +60,37 @@ public class FileStorageProperties {
 
   public void setEventGalleriesSubfolder(String eventGalleriesSubfolder) {
     this.eventGalleriesSubfolder = eventGalleriesSubfolder;
+  }
+
+  public int getPictureMaxWidth() {
+    return this.pictureMaxWidth;
+  }
+
+  public void setPictureMaxWidth(int pictureMaxWidth) {
+    this.pictureMaxWidth = pictureMaxWidth;
+  }
+
+  public int getPictureMaxHeight() {
+    return this.pictureMaxHeight;
+  }
+
+  public void setPictureMaxHeight(int pictureMaxHeight) {
+    this.pictureMaxHeight = pictureMaxHeight;
+  }
+
+  public double getPictureQuality() {
+    return this.pictureQuality;
+  }
+
+  public void setPictureQuality(double pictureQuality) {
+    this.pictureQuality = pictureQuality;
+  }
+
+  public String getPictureFormat() {
+    return this.pictureFormat;
+  }
+
+  public void setPictureFormat(String pictureFormat) {
+    this.pictureFormat = pictureFormat;
   }
 }
