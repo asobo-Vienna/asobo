@@ -12,6 +12,7 @@ import {debounceTime, of, Subject, switchMap} from 'rxjs';
 import {environment} from '../../../../environments/environment';
 import {Spinner} from '../../../core/ui-elements/spinner/spinner';
 import {ToastService} from '../../../shared/services/toast-service';
+import {ConfirmDialogService} from '../../../shared/services/confirm-dialog-service';
 
 type SortField = 'date' | 'title' | 'location' | 'isPrivateEvent';
 
@@ -28,6 +29,7 @@ type SortField = 'date' | 'title' | 'location' | 'isPrivateEvent';
 export class EventList implements OnInit {
   private eventService = inject(EventService);
   private toastService = inject(ToastService);
+  private confirmDialogService = inject(ConfirmDialogService);
   authService = inject(AuthService);
   router = inject(Router);
 
@@ -215,17 +217,23 @@ export class EventList implements OnInit {
   }
 
   public deleteEvent(item: EventSummary) {
-    this.events().remove(item); // remove immediately
-    this.eventService.deleteEvent(item.id).subscribe({
-      next: () => {
-        this.toastService.success(`Event ${item.title} deleted successfully.`);
-      },
-      error: (err) => {
-        console.log(err);
-        this.toastService.error('Failed to delete event!');
-        this.events().add(item); // revert if backend fails
-      }
-    });
+    this.confirmDialogService
+      .confirmDelete('event', item.title)
+      .then(confirmed => {
+        if (!confirmed) return;
+
+        this.events().remove(item);
+        this.eventService.deleteEvent(item.id).subscribe({
+          next: () => {
+            this.toastService.success(`Event ${item.title} deleted successfully.`);
+          },
+          error: (err) => {
+            console.log(err);
+            this.toastService.error('Failed to delete event!');
+            this.events().add(item); // revert if backend fails
+          }
+        });
+      });
   }
 
   protected readonly routes = routes;
