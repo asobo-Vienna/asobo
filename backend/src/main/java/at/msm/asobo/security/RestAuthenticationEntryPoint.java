@@ -26,9 +26,7 @@ public class RestAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
     ErrorResponse error =
         new ErrorResponse(
-            "UNAUTHORIZED",
-            "Invalid credentials or authentication required",
-            HttpStatus.UNAUTHORIZED.value());
+            "UNAUTHORIZED", authException.getMessage(), HttpStatus.UNAUTHORIZED.value());
 
     response.getWriter().write(objectMapper.writeValueAsString(error));
   }

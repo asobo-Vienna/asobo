@@ -13,6 +13,7 @@ import {CommentService} from '../../events/services/comment-service';
 import {ToastService} from '../../../shared/services/toast-service';
 import {FormsModule} from '@angular/forms';
 import {Textarea} from 'primeng/textarea';
+import {ConfirmDialogService} from '../../../shared/services/confirm-dialog-service';
 
 @Component({
   selector: 'app-admin-comment-list',
@@ -32,6 +33,7 @@ export class AdminCommentList implements OnInit {
   private adminService = inject(AdminService);
   private commentService = inject(CommentService);
   private toastService = inject(ToastService);
+  private confirmDialogService = inject(ConfirmDialogService);
   viewMode = signal<'table' | 'card'>('table');
   comments = signal<CommentWithEventTitle[]>([]);
   totalRecords = signal<number>(0);
@@ -88,24 +90,30 @@ export class AdminCommentList implements OnInit {
   }
 
   saveEdit(comment: CommentWithEventTitle): void {
-    this.commentService.edit({...comment, text: this.editingCommentText}).subscribe({
-      next: (updated) => {
-        this.comments.update(items =>
-          items.map(c => c.id === comment.id ? {
-            ...c,
-            text: updated.text,
-            modificationDate: updated.modificationDate
-          } : c)
-        );
-        this.clearCache();
-        this.editingCommentId.set(null);
-        this.toastService.success('Comment updated successfully');
-      },
-      error: (err) => {
-        console.error('Error updating comment:', err);
-        this.toastService.error('Failed to update comment');
-      }
-    });
+    this.confirmDialogService
+      .confirmSave()
+      .then(confirmed => {
+        if (!confirmed) return;
+
+        this.commentService.edit({...comment, text: this.editingCommentText}).subscribe({
+          next: (updated) => {
+            this.comments.update(items =>
+              items.map(c => c.id === comment.id ? {
+                ...c,
+                text: updated.text,
+                modificationDate: updated.modificationDate
+              } : c)
+            );
+            this.clearCache();
+            this.editingCommentId.set(null);
+            this.toastService.success('Comment updated successfully');
+          },
+          error: (err) => {
+            console.error('Error updating comment:', err);
+            this.toastService.error('Failed to update comment');
+          }
+        });
+      });
   }
 
   cancelEdit(): void {
@@ -114,18 +122,24 @@ export class AdminCommentList implements OnInit {
   }
 
   onDelete(comment: CommentWithEventTitle): void {
-    this.commentService.delete(comment).subscribe({
-      next: () => {
-        this.comments.update(items => items.filter(c => c.id !== comment.id));
-        this.totalRecords.update(total => total - 1);
-        this.clearCache();
-        this.toastService.success('Comment deleted successfully');
-      },
-      error: (err) => {
-        console.error('Error deleting comment:', err);
-        this.toastService.error('Failed to delete comment');
-      }
-    });
+    this.confirmDialogService
+      .confirmDelete('comment', comment.text)
+      .then(confirmed => {
+        if (!confirmed) return;
+
+        this.commentService.delete(comment).subscribe({
+          next: () => {
+            this.comments.update(items => items.filter(c => c.id !== comment.id));
+            this.totalRecords.update(total => total - 1);
+            this.clearCache();
+            this.toastService.success('Comment deleted successfully');
+          },
+          error: (err) => {
+            console.error('Error deleting comment:', err);
+            this.toastService.error('Failed to delete comment');
+          }
+        });
+      });
   }
 
   getEventRouterLink(eventId: string): string {

@@ -13,6 +13,7 @@ import {MediumFilters} from '../../../shared/entities/filters/medium-filters';
 import {Spinner} from '../../../core/ui-elements/spinner/spinner';
 import {SecureImagePipe} from '../../../core/pipes/secure-image-pipe';
 import {AsyncPipe} from '@angular/common';
+import {ConfirmDialogService} from '../../../shared/services/confirm-dialog-service';
 
 @Component({
   selector: 'app-admin-media-list',
@@ -31,6 +32,7 @@ export class AdminMediaList implements OnInit {
   private adminService = inject(AdminService);
   private mediaService = inject(MediaService);
   private toastService = inject(ToastService);
+  private confirmDialogService = inject(ConfirmDialogService);
   viewMode = signal<'table' | 'card'>('table');
   mediaItems = signal<MediaItemWithEventTitle[]>([]);
   totalRecords = signal<number>(0);
@@ -79,18 +81,24 @@ export class AdminMediaList implements OnInit {
   }
 
   onDelete(mediaItem: MediaItemWithEventTitle): void {
-    this.mediaService.delete(mediaItem.eventId, mediaItem).subscribe({
-      next: () => {
-        this.mediaItems.update(items => items.filter(i => i.id !== mediaItem.id));
-        this.totalRecords.update(total => total - 1);
-        this.clearCache();
-        this.toastService.success('Media item deleted successfully');
-      },
-      error: (err) => {
-        console.error('Error deleting media item:', err);
-        this.toastService.error('Failed to delete media item');
-      }
-    });
+    this.confirmDialogService
+      .confirmDelete('medium', '')
+      .then(confirmed => {
+        if (!confirmed) return;
+
+        this.mediaService.delete(mediaItem.eventId, mediaItem).subscribe({
+          next: () => {
+            this.mediaItems.update(items => items.filter(i => i.id !== mediaItem.id));
+            this.totalRecords.update(total => total - 1);
+            this.clearCache();
+            this.toastService.success('Media item deleted successfully');
+          },
+          error: (err) => {
+            console.error('Error deleting media item:', err);
+            this.toastService.error('Failed to delete media item');
+          }
+        });
+      });
   }
 
   getEventRouterLink(eventId: string): string {

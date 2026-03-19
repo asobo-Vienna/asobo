@@ -1,7 +1,7 @@
-import { Injectable, inject } from '@angular/core';
-import { HttpInterceptor, HttpRequest, HttpHandler, HttpErrorResponse } from '@angular/common/http';
-import { Router } from '@angular/router';
-import { catchError, throwError } from 'rxjs';
+import {inject, Injectable} from '@angular/core';
+import {HttpErrorResponse, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
+import {Router} from '@angular/router';
+import {catchError, throwError} from 'rxjs';
 import {environment} from '../../../environments/environment';
 
 @Injectable()
@@ -13,46 +13,62 @@ export class AuthInterceptor implements HttpInterceptor {
 
     const publicEndpoints = ['/api/auth/login', '/api/auth/register'];
 
-    // Extract pathname to ignore host/port/query
-    const urlPath = new URL(req.url, window.location.origin).pathname;
+    const urlPath = this.getPath(req.url);
 
-    // Skip JWT for public endpoints
+    // 1. Skip auth for public endpoints
     if (publicEndpoints.includes(urlPath)) {
       return next.handle(req);
     }
 
-    // If token exists, add it (even for /api/search)
-    if (token) {
-      const cloned = req.clone({
-        headers: req.headers.set('Authorization', `Bearer ${token}`)
-      });
+    // 2. Clone request safely
+    let modifiedReq = req;
 
-      return next.handle(cloned).pipe(
-        catchError((error: HttpErrorResponse) => {
-          if (error.status === 401) {
-            localStorage.removeItem(environment.JWT_TOKEN_STORAGE_KEY);
-            console.log('Session expired. Please login again.');
-            this.router.navigate(['/login'], {
-              queryParams: { returnUrl: this.router.url, expired: true }
-            });
-          } else if (error.status === 403) {
-            console.warn('Access denied to', req.url);
-          }
-          return throwError(() => error);
-        })
-      );
+    const isFormData = req.body instanceof FormData;
+
+    if (token) {
+      modifiedReq = req.clone({
+        setHeaders: {
+          Authorization: `Bearer ${token}`
+        }
+      });
     }
 
-    // No token: send request without Authorization header
-    // (Backend will treat as unauthenticated → no private events)
-    return next.handle(req).pipe(
+    // IMPORTANT: NEVER touch Content-Type for FormData
+    // Angular/browser must set boundary automatically
+
+    return next.handle(modifiedReq).pipe(
       catchError((error: HttpErrorResponse) => {
-        // Don't redirect to login for 401 on search
-        if (error.status === 401 && !urlPath.startsWith('/api/search')) {
-          this.router.navigate(['/login']);
+        if (error.status === 401) {
+          localStorage.removeItem(environment.JWT_TOKEN_STORAGE_KEY);
+
+          this.router.navigate(['/login'], {
+            queryParams: {
+              returnUrl: this.router.url,
+              expired: true
+            }
+          });
         }
+
+        if (error.status === 403) {
+          console.warn('Access denied:', req.url);
+        }
+
         return throwError(() => error);
       })
     );
+  }
+
+  private getPath(url: string): string {
+    try {
+      // absolute URL
+      if (url.startsWith('http')) {
+        return new URL(url).pathname;
+      }
+
+      // relative URL
+      return url;
+    } catch {
+      return url;
+    }
   }
 }
