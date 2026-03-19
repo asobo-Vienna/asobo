@@ -9,6 +9,9 @@ import {Spinner} from '../../../core/ui-elements/spinner/spinner';
 import {UserSearchResultBasic} from '../../../shared/entities/search';
 import {SecureImagePipe} from '../../../core/pipes/secure-image-pipe';
 import {AsyncPipe} from '@angular/common';
+import {EventService} from '../../events/services/event-service';
+import {ToastService} from '../../../shared/services/toast-service';
+import {ConfirmDialogService} from '../../../shared/services/confirm-dialog-service';
 
 @Component({
   selector: 'app-search-results-page',
@@ -19,7 +22,10 @@ import {AsyncPipe} from '@angular/common';
 export class SearchResultsPage implements OnInit, AfterViewChecked {
   private route = inject(ActivatedRoute);
   private searchService = inject(SearchService);
+  private eventService = inject(EventService);
   private authService = inject(AuthService);
+  private toastService = inject(ToastService);
+  private confirmDialogService = inject(ConfirmDialogService);
 
   searchQuery = signal<string>('');
   events = signal<EventSummary[]>([]);
@@ -64,6 +70,27 @@ export class SearchResultsPage implements OnInit, AfterViewChecked {
 
   getUserLink(username: string): string {
     return UrlUtilService.getUserRouterLink(username);
+  }
+
+  onEventDeleted(event: EventSummary) {
+    this.confirmDialogService
+      .confirmDelete('event', event.title)
+      .then(confirmed => {
+        if (!confirmed) return;
+
+        this.eventService.deleteEvent(event.id).subscribe({
+          next: () => {
+            this.events.set(
+              this.events().filter(e => e.id !== event.id)
+            );
+            this.toastService.success(`Event ${event.title} deleted successfully.`);
+          },
+          error: (err) => {
+            console.log(err);
+            this.toastService.error('Failed to delete event!');
+          }
+        });
+      });
   }
 
   protected readonly UrlUtilService = UrlUtilService;

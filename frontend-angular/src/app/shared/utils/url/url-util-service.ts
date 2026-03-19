@@ -34,6 +34,21 @@ export class UrlUtilService {
       : `${fileBaseUrl}/${relativePath}`;
   }
 
+  static normalizePath(path: string): string {
+    if (!path) return '';
+
+    // remove full URLs
+    if (path.startsWith('http')) {
+      const index = path.indexOf('/uploads/');
+      if (index !== -1) {
+        return path.substring(index);
+      }
+    }
+
+    // remove duplicate uploads
+    return path.replace('/uploads/uploads/', '/uploads/');
+  }
+
   static getUserRouterLink(username: string | undefined): string {
     if (!username) {
       return "";

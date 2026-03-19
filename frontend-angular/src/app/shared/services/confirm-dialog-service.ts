@@ -44,7 +44,11 @@ const ENTITY_CONFIG = {
     label: 'Comment',
     icon: 'pi pi-comment',
     deleteMessage: (name) =>
-      name ? `Delete comment ${name.slice(0, 30)}...?` : 'Delete this comment?'
+      name
+        ? name.length > 30
+          ? `Delete comment ${name.slice(0, 30)}...?`
+          : `Delete comment ${name}?`
+        : 'Delete this comment?'
   },
 
   medium: {
@@ -57,14 +61,14 @@ const ENTITY_CONFIG = {
     label: 'Profile Picture',
     icon: 'pi pi-user',
     deleteMessage: (name) =>
-      name ? `Delete profile picture ${name}?` : 'Delete this profile picture?'
+      name ? `Delete profile picture of ${name}?` : 'Delete this profile picture?'
   },
 
   coverPicture: {
     label: 'Cover Picture',
     icon: 'pi pi-image',
     deleteMessage: (name) =>
-      name ? `Delete cover picture ${name}?` : 'Delete this cover picture?'
+      name ? `Delete cover picture of event ${name}?` : 'Delete this cover picture?'
   }
 } satisfies Record<EntityType, EntityConfig>;
 
