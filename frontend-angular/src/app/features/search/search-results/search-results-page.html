@@ -19,7 +19,10 @@
         <ul id="event-list" class="list-unstyled">
           @for (event of events(); track event.id) {
             <li>
-              <app-event-card [event]="event"></app-event-card>
+              <app-event-card
+                [event]="event"
+                (eventDeleted)="onEventDeleted($event)"
+              />
             </li>
           }
         </ul>
@@ -35,40 +38,40 @@
         <ul class="user-cards-container list-unstyled">
           @for (user of users(); track user.id) {
             <li class="card user-card" #userCard>
-                <div class="card-body d-flex align-items-center gap-3">
-                  <a
-                    [routerLink]="getUserLink(user.username)" aria-hidden="true" tabindex="-1"
-                  >
-                    <img
-                      [src]="(user.pictureURI | secureImage | async) || ''"
-                      alt=""
-                      class="rounded-circle"
-                    />
-                  </a>
-                  <div class="flex-grow-1">
-                    <h5 class="card-title mb-1">{{ user.username }}</h5>
-                    <div class="d-flex justify-content-between align-items-end">
-                      <div class="min-w-0">
-                        @if (user.fullName) {
-                          <p class="card-text text-muted small mb-0 text-truncate">{{ user.fullName }}</p>
-                        }
-                        @if (user.location) {
-                          <p class="card-text text-muted small mb-0">
-                            <i class="pi pi-map-marker me-1" aria-hidden="true"></i>{{ user.location }}
-                          </p>
-                        }
-                      </div>
-                      <a
-                        [routerLink]="getUserLink(user.username)"
-                        class="btn btn-purple btn-primary btn-sm"
-                        aria-label="View profile of {{ user.username }}"
-                      >
-                        Profile
-                      </a>
+              <div class="card-body d-flex align-items-center gap-3">
+                <a
+                  [routerLink]="getUserLink(user.username)" aria-hidden="true" tabindex="-1"
+                >
+                  <img
+                    [src]="(user.pictureURI | secureImage | async) || ''"
+                    alt=""
+                    class="rounded-circle"
+                  />
+                </a>
+                <div class="flex-grow-1">
+                  <h5 class="card-title mb-1">{{ user.username }}</h5>
+                  <div class="d-flex justify-content-between align-items-end">
+                    <div class="min-w-0">
+                      @if (user.fullName) {
+                        <p class="card-text text-muted small mb-0 text-truncate">{{ user.fullName }}</p>
+                      }
+                      @if (user.location) {
+                        <p class="card-text text-muted small mb-0">
+                          <i class="pi pi-map-marker me-1" aria-hidden="true"></i>{{ user.location }}
+                        </p>
+                      }
                     </div>
+                    <a
+                      [routerLink]="getUserLink(user.username)"
+                      class="btn btn-purple btn-primary btn-sm"
+                      aria-label="View profile of {{ user.username }}"
+                    >
+                      Profile
+                    </a>
                   </div>
                 </div>
-              </li>
+              </div>
+            </li>
           }
         </ul>
       </section>

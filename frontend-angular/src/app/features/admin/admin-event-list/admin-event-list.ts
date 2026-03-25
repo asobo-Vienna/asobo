@@ -17,6 +17,7 @@ import {Spinner} from '../../../core/ui-elements/spinner/spinner';
 import {SecureImagePipe} from '../../../core/pipes/secure-image-pipe';
 import {getTextPreview} from '../../../shared/utils/text/text-utils';
 import {ToastService} from '../../../shared/services/toast-service';
+import {ConfirmDialogService} from '../../../shared/services/confirm-dialog-service';
 
 @Component({
   selector: 'app-admin-event-list',
@@ -39,6 +40,7 @@ export class AdminEventList implements OnInit {
   private eventService = inject(EventService);
   private router = inject(Router);
   private toastService = inject(ToastService);
+  private confirmDialogService = inject(ConfirmDialogService);
   private destroyRef = inject(DestroyRef);
   viewMode = signal<'table' | 'card'>('table');
   isMobile = signal(window.innerWidth <= 768);
@@ -112,18 +114,24 @@ export class AdminEventList implements OnInit {
   }
 
   onDelete(event: Event) {
-    this.eventService.deleteEvent(event.id).subscribe({
-      next: () => {
-        this.events.update(events => events.filter(e => e.id !== event.id));
-        this.totalRecords.update(total => total - 1);
-        this.clearCache();
-        this.toastService.success(`Event "${event.title}" deleted successfully`);
-      },
-      error: (err) => {
-        console.error('Error deleting event:', err);
-        this.toastService.error(`Failed to delete event "${event.title}"`);
-      }
-    });
+    this.confirmDialogService
+      .confirmDelete('event', event.title)
+      .then(confirmed => {
+        if (!confirmed) return;
+
+        this.eventService.deleteEvent(event.id).subscribe({
+          next: () => {
+            this.events.update(events => events.filter(e => e.id !== event.id));
+            this.totalRecords.update(total => total - 1);
+            this.clearCache();
+            this.toastService.success(`Event "${event.title}" deleted successfully`);
+          },
+          error: (err) => {
+            console.error('Error deleting event:', err);
+            this.toastService.error(`Failed to delete event "${event.title}"`);
+          }
+        });
+      });
   }
 
   viewFullDescription(event: Event): void {

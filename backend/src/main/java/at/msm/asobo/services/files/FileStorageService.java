@@ -74,8 +74,8 @@ public class FileStorageService {
       HttpRequest request =
           HttpRequest.newBuilder()
               .uri(URI.create(fileUrl))
-              .header("apikey", bucketSecretKey)
-              .header("Authorization", "Bearer " + bucketSecretKey)
+              .header("apikey", this.bucketSecretKey)
+              .header("Authorization", "Bearer " + this.bucketSecretKey)
               .DELETE()
               .build();
 

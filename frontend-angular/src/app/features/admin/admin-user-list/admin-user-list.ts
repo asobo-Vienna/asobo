@@ -20,6 +20,7 @@ import {SecureImagePipe} from '../../../core/pipes/secure-image-pipe';
 import {getTextPreview} from '../../../shared/utils/text/text-utils';
 import {GlobalSearch} from '../../search/global-search/global-search';
 import {debounceTime, Subject} from 'rxjs';
+import {ConfirmDialogService} from '../../../shared/services/confirm-dialog-service';
 
 
 @Component({
@@ -43,6 +44,7 @@ import {debounceTime, Subject} from 'rxjs';
 })
 export class AdminUserList implements OnInit {
   private adminService = inject(AdminService);
+  private confirmDialogService = inject(ConfirmDialogService);
   private router = inject(Router);
 
   protected readonly UrlUtilService = UrlUtilService;
@@ -285,37 +287,49 @@ export class AdminUserList implements OnInit {
   }
 
   onDelete(user: User): void {
-    this.adminService.deleteUserById(user.id).subscribe({
-      next: (deletedUser: User) => {
-        this.users.update(users =>
-          users.map(u =>
-            u.id === deletedUser.id ? {...u, isDeleted: deletedUser.isDeleted, isActive: deletedUser.isActive} : u
-          )
-        );
-      },
-      error: (err) => console.log('Error deleting user:', err),
-    });
+    this.confirmDialogService
+      .confirmDelete('user', user.username)
+      .then(confirmed => {
+        if (!confirmed) return;
 
-    this.clearCache();
+        this.adminService.deleteUserById(user.id).subscribe({
+          next: (deletedUser: User) => {
+            this.users.update(users =>
+              users.map(u =>
+                u.id === deletedUser.id ? {...u, isDeleted: deletedUser.isDeleted, isActive: deletedUser.isActive} : u
+              )
+            );
+          },
+          error: (err) => console.log('Error deleting user:', err),
+        });
+
+        this.clearCache();
+      });
   }
 
   onReactivate(user: User): void {
-    this.adminService.reactivateUserById(user.id).subscribe({
-      next: (reactivatedUser: User) => {
-        this.users.update(users =>
-          users.map(u =>
-            u.id === reactivatedUser.id ? {
-              ...u,
-              isDeleted: reactivatedUser.isDeleted,
-              isActive: reactivatedUser.isActive
-            } : u
-          )
-        );
-      },
-      error: (err) => console.log('Error reactivating user:', err),
-    });
+    this.confirmDialogService
+      .confirmReactivate('user', user.username)
+      .then(confirmed => {
+        if (!confirmed) return;
 
-    this.clearCache();
+        this.adminService.reactivateUserById(user.id).subscribe({
+          next: (reactivatedUser: User) => {
+            this.users.update(users =>
+              users.map(u =>
+                u.id === reactivatedUser.id ? {
+                  ...u,
+                  isDeleted: reactivatedUser.isDeleted,
+                  isActive: reactivatedUser.isActive
+                } : u
+              )
+            );
+          },
+          error: (err) => console.log('Error reactivating user:', err),
+        });
+
+        this.clearCache();
+      });
   }
 
   protected readonly getTextPreview = getTextPreview;

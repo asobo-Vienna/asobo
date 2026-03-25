@@ -13,6 +13,7 @@ import {AccessControlService} from '../../../../shared/services/access-control-s
 import {Router} from '@angular/router';
 import {ToggleSwitch} from 'primeng/toggleswitch';
 import {ToastService} from '../../../../shared/services/toast-service';
+import {ConfirmDialogService} from '../../../../shared/services/confirm-dialog-service';
 
 @Component({
   selector: 'app-event-basic-info',
@@ -33,6 +34,7 @@ export class EventBasicInfo implements OnInit {
   protected accessControlService = inject(AccessControlService);
   private router = inject(Router);
   private toastService = inject(ToastService);
+  private confirmDialogService = inject(ConfirmDialogService);
   private destroyRef = inject(DestroyRef);
 
   protected readonly environment = environment;
@@ -103,17 +105,23 @@ export class EventBasicInfo implements OnInit {
       return;
     }
 
-    this.eventService.updateEvent(currentEvent.id, eventData).subscribe({
-      next: (event) => {
-        this.toastService.success(`Event ${event.title} updated successfully!`);
-        this.eventUpdated.emit(event);
-        this.isEditing.set(false);
-      },
-      error: (err) => {
-        this.toastService.error('Error updating event')
-        console.log(err);
-      }
-    });
+    this.confirmDialogService
+      .confirmSave()
+      .then(confirmed => {
+        if (!confirmed) return;
+
+        this.eventService.updateEvent(currentEvent.id, eventData).subscribe({
+          next: (event) => {
+            this.toastService.success(`Event ${event.title} updated successfully!`);
+            this.eventUpdated.emit(event);
+            this.isEditing.set(false);
+          },
+          error: (err) => {
+            this.toastService.error('Error updating event')
+            console.log(err);
+          }
+        });
+      });
   }
 
   public enterEdit() {
@@ -143,15 +151,21 @@ export class EventBasicInfo implements OnInit {
       return;
     }
 
-    this.eventService.deleteEvent(eventId).subscribe({
-      next: () => {
-        this.toastService.success(`Event ${eventTitle} deleted successfully.`);
-        this.router.navigate(['/events']);
-      },
-      error: (err) => {
-        this.toastService.error(`Error deleting event ${eventTitle}`);
-        console.error(err);
-      }
-    });
+    this.confirmDialogService
+      .confirmDelete('event', eventTitle)
+      .then(confirmed => {
+        if (!confirmed) return;
+
+        this.eventService.deleteEvent(eventId).subscribe({
+          next: () => {
+            this.toastService.success(`Event ${eventTitle} deleted successfully.`);
+            this.router.navigate(['/events']);
+          },
+          error: (err) => {
+            this.toastService.error(`Error deleting event ${eventTitle}`);
+            console.error(err);
+          }
+        });
+      });
   }
 }

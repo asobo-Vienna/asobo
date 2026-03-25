@@ -24,6 +24,7 @@ import {Event} from '../../../../shared/entities/events/event';
 import {User} from '../../../../shared/entities/users/user';
 import {UserService} from '../../services/user-service';
 import {ToastService} from '../../../../shared/services/toast-service';
+import {ConfirmDialogService} from '../../../../shared/services/confirm-dialog-service';
 
 @Component({
   selector: 'app-user-profile-form',
@@ -49,6 +50,7 @@ export class UserProfileForm implements OnInit {
   private userProfileService = inject(UserProfileService);
   private userService = inject(UserService);
   private toastService = inject(ToastService);
+  private confirmDialogService = inject(ConfirmDialogService);
   public authService = inject(AuthService);
   private userValidationService = inject(UserValidationService);
   private router = inject(Router);
@@ -570,18 +572,24 @@ export class UserProfileForm implements OnInit {
       return;
     }
 
-    this.userProfileService.removeProfilePicture().subscribe({
-      next: () => {
-        this.toastService.success('Profile picture removed');
-        this.loadUserProfile(this.username());
-        this.previewUrl.set(null);
-        this.selectedImage = null;
-      },
-      error: (err) => {
-        console.error('Failed to remove profile picture:', err);
-        this.toastService.error('Failed to remove profile picture');
-      }
-    });
+    this.confirmDialogService
+      .confirmDelete('profilePicture', this.username())
+      .then(confirmed => {
+        if (!confirmed) return;
+
+        this.userProfileService.removeProfilePicture().subscribe({
+          next: () => {
+            this.toastService.success('Profile picture removed');
+            this.loadUserProfile(this.username());
+            this.previewUrl.set(null);
+            this.selectedImage = null;
+          },
+          error: (err) => {
+            console.error('Failed to remove profile picture:', err);
+            this.toastService.error('Failed to remove profile picture');
+          }
+        });
+      });
   }
 
   onPasswordFocus(): void {

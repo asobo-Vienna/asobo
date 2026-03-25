@@ -29,6 +29,7 @@ import {EventAdmins} from '../event-admins/event-admins';
 import {AccessControlService} from '../../../shared/services/access-control-service';
 import {PictureUpload} from '../../../core/picture-upload/picture-upload';
 import {ToastService} from '../../../shared/services/toast-service';
+import {ConfirmDialogService} from '../../../shared/services/confirm-dialog-service';
 
 @Component({
   selector: 'app-event-detail-page',
@@ -51,6 +52,7 @@ export class EventDetailPage implements OnInit, AfterViewInit {
   private route = inject(ActivatedRoute);
   private titleService = inject(Title);
   private toastService = inject(ToastService);
+  private confirmDialogService = inject(ConfirmDialogService);
   private eventService = inject(EventService);
   private commentService = inject(CommentService);
   private mediaService = inject(MediaService);
@@ -141,18 +143,23 @@ export class EventDetailPage implements OnInit, AfterViewInit {
     this.comments().add(comment);
   }
 
-
   public deleteComment(comment: Comment) {
-    this.commentService.delete(comment).subscribe({
-      next: () => {
-        this.comments().remove(comment);
-        this.toastService.success('Comment successfully deleted!')
-      },
-      error: (err) => {
-        console.log(err);
-        this.toastService.error('Failed to delete comment!');
-      }
-    });
+    this.confirmDialogService
+      .confirmDelete('comment', comment.text)
+      .then(confirmed => {
+        if (!confirmed) return;
+
+        this.commentService.delete(comment).subscribe({
+          next: () => {
+            this.comments().remove(comment);
+            this.toastService.success('Comment successfully deleted!')
+          },
+          error: (err) => {
+            console.log(err);
+            this.toastService.error('Failed to delete comment!');
+          }
+        });
+      });
   }
 
 
@@ -191,14 +198,20 @@ export class EventDetailPage implements OnInit, AfterViewInit {
     const currentEvent = this.event();
     if (!currentEvent) return;
 
-    this.mediaItems().remove(item);       // remove immediately
-    this.mediaService.delete(currentEvent.id, item).subscribe({
-      error: (err) => {
-        console.log(err);
-        this.toastService.error('Failed to delete media!');
-        this.mediaItems().add(item);     // revert if backend fails
-      }
-    });
+    this.confirmDialogService
+      .confirmDelete('medium', '')
+      .then(confirmed => {
+        if (!confirmed) return;
+
+        this.mediaItems().remove(item);       // remove immediately
+        this.mediaService.delete(currentEvent.id, item).subscribe({
+          error: (err) => {
+            console.log(err);
+            this.toastService.error('Failed to delete media!');
+            this.mediaItems().add(item);     // revert if backend fails
+          }
+        });
+      });
   }
 
 
@@ -281,17 +294,23 @@ export class EventDetailPage implements OnInit, AfterViewInit {
 
     const currentEvent = this.event()!;
 
-    this.eventService.removeEventPicture(currentEvent.id).subscribe({
-      next: () => {
-        this.event.set({...currentEvent, pictureURI: null});
-        this.previewImage.set(null);
-        this.toastService.success('Event picture removed');
-      },
-      error: (err) => {
-        console.error(err);
-        this.toastService.error('Failed to remove event picture');
-      }
-    });
+    this.confirmDialogService
+      .confirmDelete('coverPicture', currentEvent.title)
+      .then(confirmed => {
+        if (!confirmed) return;
+
+        this.eventService.removeEventPicture(currentEvent.id).subscribe({
+          next: () => {
+            this.event.set({...currentEvent, pictureURI: null});
+            this.previewImage.set(null);
+            this.toastService.success('Event picture removed');
+          },
+          error: (err) => {
+            console.error(err);
+            this.toastService.error('Failed to remove event picture');
+          }
+        });
+      });
   }
 
   isAdminOrEventAdmin() {
