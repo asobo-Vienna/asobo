@@ -1,13 +1,6 @@
 import {inject, Injectable} from '@angular/core';
 import {ConfirmationService} from 'primeng/api';
-
-export type EntityType =
-  | 'user'
-  | 'event'
-  | 'comment'
-  | 'medium'
-  | 'profilePicture'
-  | 'coverPicture';
+import {EntityType} from '../types/entity-type';
 
 type Severity = 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contrast';
 
