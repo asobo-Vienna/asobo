@@ -1053,6 +1053,7 @@ class EventServiceTest {
     publicEvent1.setCreator(creator);
     publicEvent1.setTitle("Old Title");
     publicEvent1.setDescription("Old Description");
+    publicEvent1.setDate(LocalDateTime.now().plusMinutes(15));
 
     EventUpdateDTO updateDTO =
         new EventTestBuilder()
@@ -1094,6 +1095,7 @@ class EventServiceTest {
   @Test
   void updateEventById_withGeneralFields_updatesEvent() {
     publicEvent1.setCreator(creator);
+    publicEvent1.setDate(LocalDateTime.now().plusMinutes(15));
 
     EventUpdateDTO updateDTO =
         new EventTestBuilder()
@@ -1127,6 +1129,7 @@ class EventServiceTest {
   @Test
   void updateEventPicture_withValidPicture_updatesPictureOnly() {
     publicEvent1.setCreator(creator);
+    publicEvent1.setDate(LocalDateTime.now().plusMinutes(15));
 
     MockMultipartFile picture =
         new MockMultipartFile(
@@ -1227,6 +1230,7 @@ class EventServiceTest {
     publicEvent1.setTitle("Old Title");
     publicEvent1.setDescription("Old Description");
     publicEvent1.setLocation("Old Location");
+    publicEvent1.setDate(LocalDateTime.now().plusMinutes(15));
 
     EventUpdateDTO updateDTO =
         new EventTestBuilder()
@@ -1264,6 +1268,7 @@ class EventServiceTest {
   @Test
   void updateEventById_setsModificationDate() {
     publicEvent1.setCreator(creator);
+    publicEvent1.setDate(LocalDateTime.now().plusMinutes(15));
     Instant beforeUpdate = Instant.now();
     publicEvent1.setModificationDate(beforeUpdate.plus(Duration.ofHours(1)));
 

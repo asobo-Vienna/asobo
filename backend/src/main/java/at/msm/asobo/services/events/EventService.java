@@ -243,12 +243,13 @@ public class EventService {
     existingEvent.getEventAdmins().size();
     existingEvent.getParticipants().size();
 
-    // if event is in the past, only allow updating comments and media (handled in their separate endpoints/services)
+    // if event is in the past, only allow updating comments and media (handled in their separate
+    // endpoints/services)
     if (existingEvent.getDate().isBefore(LocalDateTime.now())) {
       throw new EventInThePastException("You cannot update a past event");
     } else {
       PatchUtils.copyNonNullProperties(
-              eventUpdateDTO, existingEvent, "picture", "participants", "eventAdmins");
+          eventUpdateDTO, existingEvent, "picture", "participants", "eventAdmins");
     }
 
     this.eventRepository.save(existingEvent);

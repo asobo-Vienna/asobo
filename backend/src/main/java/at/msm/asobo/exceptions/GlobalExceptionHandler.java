@@ -195,7 +195,8 @@ public class GlobalExceptionHandler {
   public ResponseEntity<ErrorResponse> handleEventInThePastConflict(EventInThePastException ex) {
 
     ErrorResponse error =
-            new ErrorResponse("EVENT_IN_THE_PAST_CONFLICT", ex.getMessage(), HttpStatus.CONFLICT.value());
+        new ErrorResponse(
+            "EVENT_IN_THE_PAST_CONFLICT", ex.getMessage(), HttpStatus.CONFLICT.value());
     return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
   }
 

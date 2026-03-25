@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(HttpStatus.FORBIDDEN)
 public class EventInThePastException extends RuntimeException {
-    public EventInThePastException(String message) {
-        super(message);
-    }
+  public EventInThePastException(String message) {
+    super(message);
+  }
 }
