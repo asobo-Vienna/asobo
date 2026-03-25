@@ -1,5 +1,6 @@
 package at.msm.asobo.entities;
 
+import at.msm.asobo.enums.EventCategory;
 import at.msm.asobo.interfaces.PictureEntity;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
@@ -52,6 +53,10 @@ public class Event implements PictureEntity {
   @NotBlank(message = "Description is mandatory")
   @Column(length = 2000)
   private String description;
+
+  @Enumerated(EnumType.STRING)
+  @NotNull(message = "Category is mandatory")
+  private EventCategory category;
 
   @NotNull(message = "Date must be specified")
   private LocalDateTime date;
@@ -137,6 +142,14 @@ public class Event implements PictureEntity {
 
   public void setLocation(String location) {
     this.location = location;
+  }
+
+  public EventCategory getCategory() {
+    return this.category;
+  }
+
+  public void setCategory(EventCategory category) {
+    this.category = category;
   }
 
   @Override

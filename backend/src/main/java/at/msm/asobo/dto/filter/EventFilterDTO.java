@@ -1,5 +1,7 @@
 package at.msm.asobo.dto.filter;
 
+import at.msm.asobo.enums.EventCategory;
+
 import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.UUID;
@@ -7,6 +9,7 @@ import java.util.UUID;
 public class EventFilterDTO {
   private String query;
   private String location;
+  private EventCategory category;
   private UUID creatorId;
   private LocalDateTime date;
   private LocalDateTime dateFrom;
@@ -18,6 +21,7 @@ public class EventFilterDTO {
   public EventFilterDTO(
       String query,
       String location,
+      EventCategory category,
       UUID creatorId,
       LocalDateTime date,
       LocalDateTime dateFrom,
@@ -27,6 +31,7 @@ public class EventFilterDTO {
       Set<UUID> participantIds) {
     this.query = query;
     this.location = location;
+    this.category = category;
     this.creatorId = creatorId;
     this.date = date;
     this.dateFrom = dateFrom;
@@ -50,6 +55,14 @@ public class EventFilterDTO {
 
   public void setLocation(String location) {
     this.location = location;
+  }
+
+  public EventCategory getCategory() {
+    return this.category;
+  }
+
+  public void setCategory(EventCategory category) {
+    this.category = category;
   }
 
   public LocalDateTime getDate() {

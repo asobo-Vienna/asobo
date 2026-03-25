@@ -7,6 +7,7 @@ import at.msm.asobo.dto.event.EventUpdateDTO;
 import at.msm.asobo.dto.filter.EventFilterDTO;
 import at.msm.asobo.entities.Event;
 import at.msm.asobo.entities.User;
+import at.msm.asobo.enums.EventCategory;
 import at.msm.asobo.exceptions.events.EventNotFoundException;
 import at.msm.asobo.exceptions.users.UserNotAuthorizedException;
 import at.msm.asobo.exceptions.users.UserNotFoundException;
@@ -137,7 +138,11 @@ public class EventService {
 
   @Transactional
   public EventDTO addNewEvent(EventCreationDTO eventCreationDTO) {
+    // TODO remove that line as soon as frontend supports sending the category
+    eventCreationDTO.setCategory(EventCategory.OTHER);
+
     Event newEvent = this.eventDTOEventMapper.mapEventCreationDTOToEvent(eventCreationDTO);
+
     User creator =
         userRepository
             .findById(eventCreationDTO.getCreator().getId())

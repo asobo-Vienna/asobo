@@ -1,15 +1,14 @@
 package at.msm.asobo.dto.event;
 
-import at.msm.asobo.dto.comment.UserCommentDTO;
-import at.msm.asobo.dto.medium.MediumDTO;
 import at.msm.asobo.dto.user.UserPublicDTO;
+import at.msm.asobo.enums.EventCategory;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.util.List;
+
 import java.util.Set;
 import java.util.UUID;
 
@@ -24,6 +23,10 @@ public class EventCreationDTO {
 
   @NotBlank(message = "Location is mandatory for event creation")
   private String location;
+
+  //TODO add this here again as soon as frontend supports category
+  //@NotNull(message = "Category is mandatory for event creation")
+  private EventCategory category;
 
   @JsonProperty("isPrivateEvent")
   private boolean isPrivateEvent;
@@ -44,12 +47,6 @@ public class EventCreationDTO {
 
   private Set<UserPublicDTO> eventAdmins;
 
-  private Set<UserPublicDTO> participants;
-
-  private List<UserCommentDTO> comments;
-
-  private List<MediumDTO> media;
-
   public EventCreationDTO() {}
 
   public UUID getId() {
@@ -68,6 +65,14 @@ public class EventCreationDTO {
     return this.location;
   }
 
+  public EventCategory getCategory() {
+    return this.category;
+  }
+
+  public void setCategory(EventCategory category) {
+    this.category = category;
+  }
+
   public LocalDateTime getDate() {
     return this.date;
   }
@@ -82,18 +87,6 @@ public class EventCreationDTO {
 
   public UserPublicDTO getCreator() {
     return this.creator;
-  }
-
-  public Set<UserPublicDTO> getParticipants() {
-    return this.participants;
-  }
-
-  public List<UserCommentDTO> getComments() {
-    return this.comments;
-  }
-
-  public List<MediumDTO> getMedia() {
-    return this.media;
   }
 
   public void setId(UUID id) {
@@ -134,18 +127,6 @@ public class EventCreationDTO {
 
   public void setIsPrivateEvent(boolean isPrivateEvent) {
     this.isPrivateEvent = isPrivateEvent;
-  }
-
-  public void setParticipants(Set<UserPublicDTO> participants) {
-    this.participants = participants;
-  }
-
-  public void setComments(List<UserCommentDTO> comments) {
-    this.comments = comments;
-  }
-
-  public void setMedia(List<MediumDTO> media) {
-    this.media = media;
   }
 
   public Set<UserPublicDTO> getEventAdmins() {
