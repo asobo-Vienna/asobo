@@ -247,10 +247,11 @@ public class EventService {
     // endpoints/services)
     if (existingEvent.getDate().isBefore(LocalDateTime.now())) {
       throw new EventInThePastException("You cannot update a past event");
-    } else {
-      PatchUtils.copyNonNullProperties(
-          eventUpdateDTO, existingEvent, "picture", "participants", "eventAdmins");
     }
+
+    PatchUtils.copyNonNullProperties(
+          eventUpdateDTO, existingEvent, "picture", "participants", "eventAdmins");
+
 
     this.eventRepository.save(existingEvent);
     return this.eventDTOEventMapper.mapEventToEventDTO(existingEvent);
