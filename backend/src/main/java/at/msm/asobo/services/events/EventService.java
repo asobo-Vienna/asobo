@@ -8,6 +8,7 @@ import at.msm.asobo.dto.filter.EventFilterDTO;
 import at.msm.asobo.entities.Event;
 import at.msm.asobo.entities.User;
 import at.msm.asobo.enums.EventCategory;
+import at.msm.asobo.exceptions.events.EventInThePastException;
 import at.msm.asobo.exceptions.events.EventNotFoundException;
 import at.msm.asobo.exceptions.users.UserNotAuthorizedException;
 import at.msm.asobo.exceptions.users.UserNotFoundException;
@@ -247,6 +248,12 @@ public class EventService {
     existingEvent.getEventAdmins().size();
     existingEvent.getParticipants().size();
 
+    // if event is in the past, only allow updating comments and media (handled in their separate
+    // endpoints/services)
+    if (existingEvent.getDate().isBefore(LocalDateTime.now())) {
+      throw new EventInThePastException("You cannot update a past event");
+    }
+
     PatchUtils.copyNonNullProperties(
         eventUpdateDTO, existingEvent, "picture", "participants", "eventAdmins");
 
@@ -259,6 +266,10 @@ public class EventService {
 
     Event event = this.getEventById(eventId);
 
+    if (event.getDate().isBefore(LocalDateTime.now())) {
+      throw new EventInThePastException("You cannot update a past event");
+    }
+
     if (!this.eventAdminService.canManageEvent(event, userPrincipal.getUserId())) {
       throw new UserNotAuthorizedException("You are not allowed to update this event");
     }
@@ -270,6 +281,10 @@ public class EventService {
   @Transactional
   public void removeEventPicture(UUID eventId, UserPrincipal userPrincipal) {
     Event event = this.getEventById(eventId);
+
+    if (event.getDate().isBefore(LocalDateTime.now())) {
+      throw new EventInThePastException("You cannot update a past event");
+    }
 
     if (!this.eventAdminService.canManageEvent(event, userPrincipal.getUserId())) {
       throw new UserNotAuthorizedException("You are not allowed to update this event");

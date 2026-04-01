@@ -2,6 +2,7 @@ package at.msm.asobo.exceptions;
 
 import at.msm.asobo.exceptions.errorResponses.ErrorResponse;
 import at.msm.asobo.exceptions.events.EventAdminException;
+import at.msm.asobo.exceptions.events.EventInThePastException;
 import at.msm.asobo.exceptions.events.EventNotFoundException;
 import at.msm.asobo.exceptions.files.FileDeletionException;
 import at.msm.asobo.exceptions.files.FileNotFoundException;
@@ -187,6 +188,15 @@ public class GlobalExceptionHandler {
 
     ErrorResponse error =
         new ErrorResponse("EVENT_ADMIN_CONFLICT", ex.getMessage(), HttpStatus.CONFLICT.value());
+    return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+  }
+
+  @ExceptionHandler(EventInThePastException.class)
+  public ResponseEntity<ErrorResponse> handleEventInThePastConflict(EventInThePastException ex) {
+
+    ErrorResponse error =
+        new ErrorResponse(
+            "EVENT_IN_THE_PAST_CONFLICT", ex.getMessage(), HttpStatus.CONFLICT.value());
     return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
   }
 
