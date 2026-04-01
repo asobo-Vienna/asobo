@@ -8,7 +8,6 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import java.time.Instant;
 import java.time.LocalDateTime;
-
 import java.util.Set;
 import java.util.UUID;
 
@@ -24,8 +23,8 @@ public class EventCreationDTO {
   @NotBlank(message = "Location is mandatory for event creation")
   private String location;
 
-  //TODO add this here again as soon as frontend supports category
-  //@NotNull(message = "Category is mandatory for event creation")
+  // TODO add this here again as soon as frontend supports category
+  // @NotNull(message = "Category is mandatory for event creation")
   private EventCategory category;
 
   @JsonProperty("isPrivateEvent")

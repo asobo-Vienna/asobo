@@ -1,7 +1,6 @@
 package at.msm.asobo.dto.search;
 
 import at.msm.asobo.enums.EventCategory;
-
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
