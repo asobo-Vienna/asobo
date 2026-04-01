@@ -5,6 +5,7 @@ import at.msm.asobo.dto.event.EventDTO;
 import at.msm.asobo.dto.event.EventSummaryDTO;
 import at.msm.asobo.dto.event.EventUpdateDTO;
 import at.msm.asobo.dto.filter.EventFilterDTO;
+import at.msm.asobo.enums.EventCategory;
 import at.msm.asobo.security.UserPrincipal;
 import at.msm.asobo.services.events.EventAdminService;
 import at.msm.asobo.services.events.EventService;
@@ -40,6 +41,7 @@ public class EventController {
       @RequestParam(required = false) String query,
       @RequestParam(required = false) UUID userId,
       @RequestParam(required = false) String location,
+      @RequestParam(required = false) EventCategory category,
       @RequestParam(required = false) UUID creatorId,
       @RequestParam(required = false) LocalDateTime date,
       @RequestParam(required = false) LocalDateTime dateFrom,
@@ -55,6 +57,7 @@ public class EventController {
         new EventFilterDTO(
             query,
             location,
+            category,
             creatorId,
             date,
             dateFrom,
@@ -82,6 +85,7 @@ public class EventController {
       @RequestParam(required = false) String query,
       @RequestParam(required = false) UUID userId,
       @RequestParam(required = false) String location,
+      @RequestParam(required = false) EventCategory category,
       @RequestParam(required = false) UUID creatorId,
       @RequestParam(required = false) LocalDateTime date,
       @RequestParam(required = false) LocalDateTime dateFrom,
@@ -98,6 +102,7 @@ public class EventController {
         new EventFilterDTO(
             query,
             location,
+            category,
             creatorId,
             date,
             dateFrom,
