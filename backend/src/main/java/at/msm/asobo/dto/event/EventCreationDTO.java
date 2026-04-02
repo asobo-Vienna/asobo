@@ -23,8 +23,7 @@ public class EventCreationDTO {
   @NotBlank(message = "Location is mandatory for event creation")
   private String location;
 
-  // TODO add this here again as soon as frontend supports category
-  // @NotNull(message = "Category is mandatory for event creation")
+  @NotNull(message = "Category is mandatory for event creation")
   private EventCategory category;
 
   @JsonProperty("isPrivateEvent")
@@ -38,10 +37,9 @@ public class EventCreationDTO {
 
   private Instant modificationDate;
 
-  // add this again as soon as we have logged-in users
-  // @NotNull(message = "Event creator is mandatory for event creation")
   // TODO change this to EventCreatorDTO when we have factory instead of mapper ticket #37
   // private EventCreatorDTO creator;
+  @NotNull(message = "Event creator is mandatory for event creation")
   private UserPublicDTO creator;
 
   private Set<UserPublicDTO> eventAdmins;

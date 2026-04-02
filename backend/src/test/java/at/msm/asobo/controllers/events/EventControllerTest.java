@@ -17,6 +17,8 @@ import at.msm.asobo.dto.event.EventDTO;
 import at.msm.asobo.dto.event.EventSummaryDTO;
 import at.msm.asobo.dto.event.EventUpdateDTO;
 import at.msm.asobo.dto.filter.EventFilterDTO;
+import at.msm.asobo.dto.user.UserPublicDTO;
+import at.msm.asobo.enums.EventCategory;
 import at.msm.asobo.exceptions.users.UserNotAuthorizedException;
 import at.msm.asobo.security.CustomUserDetailsService;
 import at.msm.asobo.security.JwtUtil;
@@ -107,7 +109,9 @@ class EventControllerTest {
     eventCreationDTO.setTitle("Test Event");
     eventCreationDTO.setDescription("Test Event");
     eventCreationDTO.setLocation("Test Location");
+    eventCreationDTO.setCategory(EventCategory.OTHER);
     eventCreationDTO.setDate(LocalDateTime.now().plusMinutes(30));
+    eventCreationDTO.setCreator(new UserPublicDTO());
   }
 
   @Test
