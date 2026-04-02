@@ -7,7 +7,6 @@ import at.msm.asobo.dto.event.EventUpdateDTO;
 import at.msm.asobo.dto.filter.EventFilterDTO;
 import at.msm.asobo.entities.Event;
 import at.msm.asobo.entities.User;
-import at.msm.asobo.enums.EventCategory;
 import at.msm.asobo.exceptions.events.EventInThePastException;
 import at.msm.asobo.exceptions.events.EventNotFoundException;
 import at.msm.asobo.exceptions.users.UserNotAuthorizedException;
