@@ -43,6 +43,46 @@ form.editing textarea:enabled {
   pointer-events: none;
 }
 
+:host ::ng-deep p-datepicker {
+  display: flex;
+  flex-direction: row-reverse;
+
+  --p-inputtext-focus-border-color: color-mix(in srgb, $asobo-purple 80%, transparent);
+
+  input {
+    flex: 1;
+
+    &:focus {
+      border: 2px solid color-mix(in srgb, $asobo-purple 80%, transparent) !important;
+    }
+  }
+
+  .p-datepicker-dropdown {
+    border-radius: 0;
+    border-end-start-radius: var(--p-datepicker-dropdown-border-radius);
+    border-start-start-radius: var(--p-datepicker-dropdown-border-radius);
+    border: 1px solid var(--p-datepicker-dropdown-border-color);
+    background-color: var(--p-datepicker-dropdown-background);
+
+    &:hover {
+      cursor: default;
+    }
+  }
+}
+
+:host ::ng-deep .p-datepicker:has(.p-datepicker-dropdown) .p-datepicker-input {
+  border-end-start-radius: 0;
+  border-start-start-radius: 0;
+  border-start-end-radius: var(--p-inputtext-border-radius);
+  border-end-end-radius: var(--p-inputtext-border-radius);
+  border-left: none;
+}
+
+::ng-deep .category-badge .p-badge {
+  background-color: lightslategray;
+  color: white;
+}
+
 form.editing input,
 form.editing textarea:not(.event-title-textarea) {
   background-color: var(--bs-body-bg);

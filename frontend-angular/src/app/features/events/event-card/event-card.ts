@@ -11,6 +11,7 @@ import {environment} from '../../../../environments/environment';
 import {AccessControlService} from '../../../shared/services/access-control-service';
 import {List} from '../../../core/data-structures/lists/list';
 import {EventCategory} from '../../../shared/enums/event-category';
+import {Badge} from 'primeng/badge';
 
 @Component({
   selector: 'app-event-card',
@@ -20,7 +21,8 @@ import {EventCategory} from '../../../shared/enums/event-category';
     RouterLink,
     Tag,
     AsyncPipe,
-    SecureImagePipe
+    SecureImagePipe,
+    Badge
   ],
   styleUrl: './event-card.scss'
 })

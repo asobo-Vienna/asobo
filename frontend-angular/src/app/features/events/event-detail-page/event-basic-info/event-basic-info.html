@@ -3,10 +3,6 @@
     <div class="row">
       <div class="col" id="event-basic-info-container">
         <div class="d-flex flex-wrap justify-content-between">
-          {{ event()?.category }}
-        </div>
-
-        <div class="d-flex flex-wrap justify-content-between">
             <textarea
               type="text"
               id="event-title"
@@ -52,6 +48,27 @@
             [readonly]="!isEditing()"
             aria-label="Event location"
           />
+
+          <div class="category-badge d-flex flex-wrap justify-content-between mt-3">
+            @if (isEditing()) {
+              <p-inputgroup>
+                <p-inputgroup-addon>
+                  <i class="pi pi-tag"></i>
+                </p-inputgroup-addon>
+                  <p-select
+                    inputId="event-category"
+                    [options]="eventCategories"
+                    formControlName="category"
+                    placeholder="Select Category"
+                    panelStyleClass="solid-dropdown"
+                    [autoOptionFocus]="true"
+                  />
+              </p-inputgroup>
+            } @else {
+              <p-badge [value] = event()?.category></p-badge>
+            }
+          </div>
+
         </div>
       </div>
     </div>

@@ -14,6 +14,11 @@ import {Router} from '@angular/router';
 import {ToggleSwitch} from 'primeng/toggleswitch';
 import {ToastService} from '../../../../shared/services/toast-service';
 import {ConfirmDialogService} from '../../../../shared/services/confirm-dialog-service';
+import {Badge} from 'primeng/badge';
+import {InputGroup} from 'primeng/inputgroup';
+import {InputGroupAddon} from 'primeng/inputgroupaddon';
+import {Select} from 'primeng/select';
+import {EventCategory} from '../../../../shared/enums/event-category';
 
 @Component({
   selector: 'app-event-basic-info',
@@ -23,7 +28,11 @@ import {ConfirmDialogService} from '../../../../shared/services/confirm-dialog-s
     DatePipe,
     InputText,
     ReactiveFormsModule,
-    ToggleSwitch
+    ToggleSwitch,
+    Badge,
+    InputGroup,
+    InputGroupAddon,
+    Select
   ],
   templateUrl: './event-basic-info.html',
   styleUrl: './event-basic-info.scss',
@@ -36,6 +45,8 @@ export class EventBasicInfo implements OnInit {
   private toastService = inject(ToastService);
   private confirmDialogService = inject(ConfirmDialogService);
   private destroyRef = inject(DestroyRef);
+
+  protected eventCategories = Object.values(EventCategory);
 
   protected readonly environment = environment;
 
@@ -66,6 +77,7 @@ export class EventBasicInfo implements OnInit {
       title: ['', [Validators.required, Validators.minLength(environment.minEventTitleLength), Validators.maxLength(environment.maxEventTitleLength)]],
       description: ['', [Validators.required, Validators.minLength(environment.minEventDescriptionLength), Validators.maxLength(environment.maxEventDescriptionLength)]],
       location: ['', [Validators.required]],
+      category: ['', [Validators.required]],
       date: ['', [Validators.required, DateUtils.validateDate]],
       isPrivateEvent: [false, [Validators.required]],
     });
@@ -82,6 +94,7 @@ export class EventBasicInfo implements OnInit {
         title: coreInfo.title,
         description: coreInfo.description,
         location: coreInfo.location,
+        category: coreInfo.category,
         date: coreInfo.date ? new Date(coreInfo.date) : null,
         isPrivateEvent: coreInfo.isPrivateEvent
       });
@@ -136,6 +149,7 @@ export class EventBasicInfo implements OnInit {
       title: coreInfo.title,
       description: coreInfo.description,
       location: coreInfo.location,
+      category: coreInfo.category,
       date: coreInfo.date ? new Date(coreInfo.date) : null,
       isPrivateEvent: coreInfo.isPrivateEvent
     });
