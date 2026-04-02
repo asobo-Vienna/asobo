@@ -27,7 +27,7 @@
     width: 100% !important;
   }
 
-  input[type="text"], ::ng-deep .p-datepicker, textarea {
+  input[type="text"], ::ng-deep .p-datepicker, textarea, p-select {
     min-width: 250px;
   }
 
@@ -58,8 +58,10 @@
     color: var(--bs-secondary-color);
   }
 
-  .p-select {
-    width: 100%;
+  p-select {
+    width: 70%;
+    display: flex;
+    margin: 0 auto;
   }
 
   .error-message {

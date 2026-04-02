@@ -139,9 +139,6 @@ public class EventService {
 
   @Transactional
   public EventDTO addNewEvent(EventCreationDTO eventCreationDTO) {
-    // TODO remove that line as soon as frontend supports sending the category
-    eventCreationDTO.setCategory(EventCategory.OTHER);
-
     Event newEvent = this.eventDTOEventMapper.mapEventCreationDTOToEvent(eventCreationDTO);
 
     User creator =

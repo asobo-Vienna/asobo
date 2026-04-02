@@ -10,6 +10,8 @@ import {Textarea} from 'primeng/textarea';
 import {Checkbox} from 'primeng/checkbox';
 import {DateUtils} from '../../../../shared/utils/date/date-utils';
 import {ToastService} from '../../../../shared/services/toast-service';
+import {Select} from 'primeng/select';
+import {EventCategory} from '../../../../shared/enums/event-category';
 
 @Component({
   selector: 'app-create-event-form',
@@ -19,6 +21,7 @@ import {ToastService} from '../../../../shared/services/toast-service';
     PictureUpload,
     Textarea,
     Checkbox,
+    Select,
   ],
   templateUrl: './create-event-form.html',
   styleUrl: './create-event-form.scss',
@@ -33,6 +36,10 @@ export class CreateEventForm {
   previewUrl = signal<string | null>(null);
   selectedImage: File | null = null;
 
+  eventCategories = Object.values(EventCategory);
+
+  protected readonly environment = environment;
+
   constructor() {
     const today = new Date();
     today.setMinutes(today.getMinutes() + 30);
@@ -41,6 +48,7 @@ export class CreateEventForm {
       title: ['', [Validators.required, Validators.minLength(environment.minEventTitleLength), Validators.maxLength(environment.maxEventTitleLength)]],
       description: ['', [Validators.required, Validators.minLength(environment.minEventDescriptionLength), Validators.maxLength(environment.maxEventDescriptionLength)]],
       location: ['', [Validators.required]],
+      category: ['', [Validators.required]],
       date: [today, [Validators.required, DateUtils.validateDate]],
       isPrivateEvent: [false]
     });
@@ -108,6 +116,4 @@ export class CreateEventForm {
   get getFormControls() {
     return this.createEventForm.controls;
   }
-
-  protected readonly environment = environment;
 }
