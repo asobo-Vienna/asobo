@@ -17,6 +17,8 @@ import at.msm.asobo.dto.event.EventDTO;
 import at.msm.asobo.dto.event.EventSummaryDTO;
 import at.msm.asobo.dto.event.EventUpdateDTO;
 import at.msm.asobo.dto.filter.EventFilterDTO;
+import at.msm.asobo.dto.user.UserPublicDTO;
+import at.msm.asobo.entities.EventCategory;
 import at.msm.asobo.exceptions.users.UserNotAuthorizedException;
 import at.msm.asobo.security.CustomUserDetailsService;
 import at.msm.asobo.security.JwtUtil;
@@ -29,6 +31,7 @@ import at.msm.asobo.utils.MockAuthenticationFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -107,7 +110,9 @@ class EventControllerTest {
     eventCreationDTO.setTitle("Test Event");
     eventCreationDTO.setDescription("Test Event");
     eventCreationDTO.setLocation("Test Location");
+    eventCreationDTO.setCategories(Set.of(new EventCategory()));
     eventCreationDTO.setDate(LocalDateTime.now().plusMinutes(30));
+    eventCreationDTO.setCreator(new UserPublicDTO());
   }
 
   @Test

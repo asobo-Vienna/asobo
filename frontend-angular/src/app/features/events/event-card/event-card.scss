@@ -78,6 +78,16 @@ $event-card-min-height: 350px;
   filter: drop-shadow(1px 1px 2px);
 }
 
+.category-badge-container {
+  position: absolute;
+  top: 80%;
+}
+
+::ng-deep .category-badge-container .p-badge {
+  background-color: lightslategray;
+  color: white;
+}
+
 .event-card-container {
   position: relative;
   display: inline-block;

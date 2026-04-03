@@ -93,6 +93,8 @@ public class SecurityConfig {
                 .permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/events/**")
                 .permitAll()
+                .requestMatchers("/api/event-categories/**")
+                .permitAll()
                 .requestMatchers("/api/users/countries")
                 .permitAll()
                 .requestMatchers("/api/users/**")

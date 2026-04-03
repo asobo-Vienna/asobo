@@ -53,6 +53,13 @@ public class Event implements PictureEntity {
   @Column(length = 2000)
   private String description;
 
+  @ManyToMany
+  @JoinTable(
+      name = "events_categories",
+      joinColumns = @JoinColumn(name = "event_id"),
+      inverseJoinColumns = @JoinColumn(name = "category_id"))
+  private Set<EventCategory> categories;
+
   @NotNull(message = "Date must be specified")
   private LocalDateTime date;
 
@@ -81,6 +88,7 @@ public class Event implements PictureEntity {
     this.participants = new HashSet<>();
     this.comments = new ArrayList<>();
     this.media = new ArrayList<>();
+    this.categories = new HashSet<>();
   }
 
   public User getCreator() {
@@ -137,6 +145,14 @@ public class Event implements PictureEntity {
 
   public void setLocation(String location) {
     this.location = location;
+  }
+
+  public Set<EventCategory> getCategories() {
+    return this.categories;
+  }
+
+  public void setCategories(Set<EventCategory> categories) {
+    this.categories = categories;
   }
 
   @Override

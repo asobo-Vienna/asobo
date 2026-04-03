@@ -48,6 +48,28 @@
             [readonly]="!isEditing()"
             aria-label="Event location"
           />
+
+          <div class="category-badge d-flex flex-wrap justify-content-between mt-3">
+            @if (isEditing()) {
+              <p-inputgroup>
+                <p-inputgroup-addon>
+                  <i class="pi pi-tag"></i>
+                </p-inputgroup-addon>
+                  <p-multi-select
+                    inputId="categories"
+                    [options]="categories()"
+                    formControlName="categories"
+                    optionLabel="name"
+                    placeholder="Select Categories"
+                    panelStyleClass="solid-dropdown"></p-multi-select>
+              </p-inputgroup>
+            } @else {
+              @for (category of event()?.categories; track category.id) {
+                <p-badge class="me-1 mt-1" [value] = category.name></p-badge>
+              }
+            }
+          </div>
+
         </div>
       </div>
     </div>

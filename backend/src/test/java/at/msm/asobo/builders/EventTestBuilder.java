@@ -243,11 +243,6 @@ public class EventTestBuilder {
     eventCreationDTO.setCreator(this.userDTOUserMapper.mapUserToUserPublicDTO(this.creator));
     eventCreationDTO.setEventAdmins(
         this.userDTOUserMapper.mapUsersToUserPublicDTOs(this.eventAdmins));
-    eventCreationDTO.setParticipants(
-        this.userDTOUserMapper.mapUsersToUserPublicDTOs(this.participants));
-    eventCreationDTO.setComments(
-        this.userCommentDTOUserCommentMapper.mapUserCommentsToUserCommentDTOs(this.comments));
-    eventCreationDTO.setMedia(this.mediumDTOMediumMapper.mapMediaToMediaDTOList(this.media));
 
     return eventCreationDTO;
   }

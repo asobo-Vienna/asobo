@@ -1,5 +1,5 @@
 import {Component, computed, DestroyRef, inject, input, OnInit, output, signal} from '@angular/core';
-import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import {takeUntilDestroyed, toSignal} from '@angular/core/rxjs-interop';
 import {CdkTextareaAutosize} from "@angular/cdk/text-field";
 import {DatePicker} from "primeng/datepicker";
 import {DatePipe} from "@angular/common";
@@ -14,6 +14,11 @@ import {Router} from '@angular/router';
 import {ToggleSwitch} from 'primeng/toggleswitch';
 import {ToastService} from '../../../../shared/services/toast-service';
 import {ConfirmDialogService} from '../../../../shared/services/confirm-dialog-service';
+import {Badge} from 'primeng/badge';
+import {InputGroup} from 'primeng/inputgroup';
+import {InputGroupAddon} from 'primeng/inputgroupaddon';
+import {EventCategoryService} from '../../services/event-category-service';
+import {MultiSelect} from 'primeng/multiselect';
 
 @Component({
   selector: 'app-event-basic-info',
@@ -23,7 +28,11 @@ import {ConfirmDialogService} from '../../../../shared/services/confirm-dialog-s
     DatePipe,
     InputText,
     ReactiveFormsModule,
-    ToggleSwitch
+    ToggleSwitch,
+    Badge,
+    InputGroup,
+    InputGroupAddon,
+    MultiSelect
   ],
   templateUrl: './event-basic-info.html',
   styleUrl: './event-basic-info.scss',
@@ -31,11 +40,14 @@ import {ConfirmDialogService} from '../../../../shared/services/confirm-dialog-s
 export class EventBasicInfo implements OnInit {
   private formBuilder = inject(FormBuilder);
   private eventService = inject(EventService);
+  private eventCategoryService = inject(EventCategoryService);
   protected accessControlService = inject(AccessControlService);
   private router = inject(Router);
   private toastService = inject(ToastService);
   private confirmDialogService = inject(ConfirmDialogService);
   private destroyRef = inject(DestroyRef);
+
+  protected categories = toSignal(this.eventCategoryService.getAllCategories(), { initialValue: [] });
 
   protected readonly environment = environment;
 
@@ -66,6 +78,7 @@ export class EventBasicInfo implements OnInit {
       title: ['', [Validators.required, Validators.minLength(environment.minEventTitleLength), Validators.maxLength(environment.maxEventTitleLength)]],
       description: ['', [Validators.required, Validators.minLength(environment.minEventDescriptionLength), Validators.maxLength(environment.maxEventDescriptionLength)]],
       location: ['', [Validators.required]],
+      categories: ['', [Validators.required]],
       date: ['', [Validators.required, DateUtils.validateDate]],
       isPrivateEvent: [false, [Validators.required]],
     });
@@ -82,6 +95,7 @@ export class EventBasicInfo implements OnInit {
         title: coreInfo.title,
         description: coreInfo.description,
         location: coreInfo.location,
+        categories: coreInfo.categories,
         date: coreInfo.date ? new Date(coreInfo.date) : null,
         isPrivateEvent: coreInfo.isPrivateEvent
       });
@@ -136,6 +150,7 @@ export class EventBasicInfo implements OnInit {
       title: coreInfo.title,
       description: coreInfo.description,
       location: coreInfo.location,
+      categories: coreInfo.categories,
       date: coreInfo.date ? new Date(coreInfo.date) : null,
       isPrivateEvent: coreInfo.isPrivateEvent
     });

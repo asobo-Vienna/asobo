@@ -1,25 +1,9 @@
 package at.msm.asobo.dto.event;
 
-import at.msm.asobo.dto.user.UserPublicDTO;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.UUID;
 
-public class EventSummaryDTO {
-  private UUID id;
-  private String title;
-  private String description;
-  private String pictureURI;
-  private String location;
-  private LocalDateTime date;
-  private Instant creationDate;
-  private Instant modificationDate;
-  private UserPublicDTO creator;
-
-  @JsonProperty("isPrivateEvent")
-  private boolean isPrivateEvent;
+public class EventSummaryDTO extends EventBaseDTO {
 
   // Counts instead of full lists
   private int participantCount;
@@ -29,86 +13,6 @@ public class EventSummaryDTO {
   private Set<UUID> eventAdminIds;
 
   public EventSummaryDTO() {}
-
-  public UUID getId() {
-    return this.id;
-  }
-
-  public void setId(UUID id) {
-    this.id = id;
-  }
-
-  public String getTitle() {
-    return this.title;
-  }
-
-  public void setTitle(String title) {
-    this.title = title;
-  }
-
-  public String getDescription() {
-    return this.description;
-  }
-
-  public void setDescription(String description) {
-    this.description = description;
-  }
-
-  public String getPictureURI() {
-    return this.pictureURI;
-  }
-
-  public void setPictureURI(String pictureURI) {
-    this.pictureURI = pictureURI;
-  }
-
-  public String getLocation() {
-    return this.location;
-  }
-
-  public void setLocation(String location) {
-    this.location = location;
-  }
-
-  public LocalDateTime getDate() {
-    return this.date;
-  }
-
-  public void setDate(LocalDateTime date) {
-    this.date = date;
-  }
-
-  public Instant getCreationDate() {
-    return this.creationDate;
-  }
-
-  public void setCreationDate(Instant creationDate) {
-    this.creationDate = creationDate;
-  }
-
-  public Instant getModificationDate() {
-    return this.modificationDate;
-  }
-
-  public void setModificationDate(Instant modificationDate) {
-    this.modificationDate = modificationDate;
-  }
-
-  public UserPublicDTO getCreator() {
-    return this.creator;
-  }
-
-  public void setCreator(UserPublicDTO creator) {
-    this.creator = creator;
-  }
-
-  public boolean getIsPrivateEvent() {
-    return this.isPrivateEvent;
-  }
-
-  public void setIsPrivateEvent(boolean isPrivateEvent) {
-    this.isPrivateEvent = isPrivateEvent;
-  }
 
   public int getParticipantCount() {
     return this.participantCount;
