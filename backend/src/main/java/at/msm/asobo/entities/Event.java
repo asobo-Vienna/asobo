@@ -1,6 +1,5 @@
 package at.msm.asobo.entities;
 
-import at.msm.asobo.enums.EventCategory;
 import at.msm.asobo.interfaces.PictureEntity;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
@@ -54,9 +53,12 @@ public class Event implements PictureEntity {
   @Column(length = 2000)
   private String description;
 
-  @Enumerated(EnumType.STRING)
-  @NotNull(message = "Category is mandatory")
-  private EventCategory category;
+  @ManyToMany
+  @JoinTable(
+      name = "events_categories",
+      joinColumns = @JoinColumn(name = "event_id"),
+      inverseJoinColumns = @JoinColumn(name = "category_id"))
+  private Set<EventCategory> categories;
 
   @NotNull(message = "Date must be specified")
   private LocalDateTime date;
@@ -86,6 +88,7 @@ public class Event implements PictureEntity {
     this.participants = new HashSet<>();
     this.comments = new ArrayList<>();
     this.media = new ArrayList<>();
+    this.categories = new HashSet<>();
   }
 
   public User getCreator() {
@@ -144,12 +147,12 @@ public class Event implements PictureEntity {
     this.location = location;
   }
 
-  public EventCategory getCategory() {
-    return this.category;
+  public Set<EventCategory> getCategories() {
+    return this.categories;
   }
 
-  public void setCategory(EventCategory category) {
-    this.category = category;
+  public void setCategories(Set<EventCategory> categories) {
+    this.categories = categories;
   }
 
   @Override

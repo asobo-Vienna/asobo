@@ -1,4 +1,5 @@
-import {EventCategory} from '../../enums/event-category';
+import {EventCategory} from './event-category';
+import {List} from '../../../core/data-structures/lists/list';
 
 export interface EventCoreInfo {
   id: string;
@@ -7,7 +8,7 @@ export interface EventCoreInfo {
   date: string;
   time: string;
   location: string;
-  category: EventCategory;
+  categories: List<EventCategory>;
   description: string;
   isPrivateEvent: boolean;
 }

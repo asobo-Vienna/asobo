@@ -1,8 +1,9 @@
 package at.msm.asobo.dto.search;
 
-import at.msm.asobo.enums.EventCategory;
+import at.msm.asobo.entities.EventCategory;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 public class EventSearchResultDTO {
@@ -11,7 +12,6 @@ public class EventSearchResultDTO {
   private String description;
   private LocalDateTime date;
   private String location;
-  private EventCategory category;
   private String pictureURI;
   private String creatorName;
   private UUID creatorId;
@@ -19,6 +19,7 @@ public class EventSearchResultDTO {
   private int participantCount;
   private boolean isPrivateEvent;
   private String type = "EVENT";
+  private Set<EventCategory> categories;
 
   public EventSearchResultDTO() {}
 
@@ -62,12 +63,12 @@ public class EventSearchResultDTO {
     this.location = location;
   }
 
-  public EventCategory getCategory() {
-    return this.category;
+  public Set<EventCategory> getCategories() {
+    return this.categories;
   }
 
-  public void setCategory(EventCategory category) {
-    this.category = category;
+  public void setCategories(Set<EventCategory> categories) {
+    this.categories = categories;
   }
 
   public String getPictureURI() {

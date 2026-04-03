@@ -1,7 +1,7 @@
 package at.msm.asobo.dto.event;
 
 import at.msm.asobo.dto.user.UserPublicDTO;
-import at.msm.asobo.enums.EventCategory;
+import at.msm.asobo.entities.EventCategory;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotBlank;
@@ -23,8 +23,7 @@ public class EventCreationDTO {
   @NotBlank(message = "Location is mandatory for event creation")
   private String location;
 
-  @NotNull(message = "Category is mandatory for event creation")
-  private EventCategory category;
+  private Set<EventCategory> categories;
 
   @JsonProperty("isPrivateEvent")
   private boolean isPrivateEvent;
@@ -62,12 +61,12 @@ public class EventCreationDTO {
     return this.location;
   }
 
-  public EventCategory getCategory() {
-    return this.category;
+  public Set<EventCategory> getCategories() {
+    return this.categories;
   }
 
-  public void setCategory(EventCategory category) {
-    this.category = category;
+  public void setCategories(Set<EventCategory> categories) {
+    this.categories = categories;
   }
 
   public LocalDateTime getDate() {

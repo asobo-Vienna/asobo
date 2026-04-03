@@ -1,6 +1,6 @@
 package at.msm.asobo.dto.filter;
 
-import at.msm.asobo.enums.EventCategory;
+import at.msm.asobo.entities.EventCategory;
 import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.UUID;
@@ -8,7 +8,6 @@ import java.util.UUID;
 public class EventFilterDTO {
   private String query;
   private String location;
-  private EventCategory category;
   private UUID creatorId;
   private LocalDateTime date;
   private LocalDateTime dateFrom;
@@ -16,21 +15,21 @@ public class EventFilterDTO {
   private Boolean isPrivateEvent;
   private Set<UUID> eventAdminIds;
   private Set<UUID> participantIds;
+  private Set<EventCategory> categories;
 
   public EventFilterDTO(
       String query,
       String location,
-      EventCategory category,
       UUID creatorId,
       LocalDateTime date,
       LocalDateTime dateFrom,
       LocalDateTime dateTo,
       Boolean isPrivateEvent,
       Set<UUID> eventAdminsIds,
-      Set<UUID> participantIds) {
+      Set<UUID> participantIds,
+      Set<EventCategory> categories) {
     this.query = query;
     this.location = location;
-    this.category = category;
     this.creatorId = creatorId;
     this.date = date;
     this.dateFrom = dateFrom;
@@ -38,6 +37,7 @@ public class EventFilterDTO {
     this.isPrivateEvent = isPrivateEvent;
     this.eventAdminIds = eventAdminsIds;
     this.participantIds = participantIds;
+    this.categories = categories;
   }
 
   public String getQuery() {
@@ -54,14 +54,6 @@ public class EventFilterDTO {
 
   public void setLocation(String location) {
     this.location = location;
-  }
-
-  public EventCategory getCategory() {
-    return this.category;
-  }
-
-  public void setCategory(EventCategory category) {
-    this.category = category;
   }
 
   public LocalDateTime getDate() {
@@ -118,5 +110,13 @@ public class EventFilterDTO {
 
   public void setParticipantIds(Set<UUID> participantIds) {
     this.participantIds = participantIds;
+  }
+
+  public Set<EventCategory> getCategories() {
+    return this.categories;
+  }
+
+  public void setCategories(Set<EventCategory> categories) {
+    this.categories = categories;
   }
 }

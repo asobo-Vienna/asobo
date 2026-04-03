@@ -1,10 +1,11 @@
 package at.msm.asobo.dto.event;
 
 import at.msm.asobo.dto.user.UserPublicDTO;
-import at.msm.asobo.enums.EventCategory;
+import at.msm.asobo.entities.EventCategory;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.util.Set;
 import java.util.UUID;
 
 public class EventBaseDTO {
@@ -15,7 +16,7 @@ public class EventBaseDTO {
   private LocalDateTime date;
   private Instant creationDate;
   private Instant modificationDate;
-  private EventCategory category;
+  private Set<EventCategory> categories;
 
   @JsonProperty("isPrivateEvent")
   private boolean isPrivateEvent;
@@ -81,12 +82,12 @@ public class EventBaseDTO {
     this.modificationDate = modificationDate;
   }
 
-  public EventCategory getCategory() {
-    return this.category;
+  public Set<EventCategory> getCategories() {
+    return this.categories;
   }
 
-  public void setCategory(EventCategory category) {
-    this.category = category;
+  public void setCategories(Set<EventCategory> categories) {
+    this.categories = categories;
   }
 
   public boolean getIsPrivateEvent() {

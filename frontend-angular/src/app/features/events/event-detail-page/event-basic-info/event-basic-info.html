@@ -55,17 +55,18 @@
                 <p-inputgroup-addon>
                   <i class="pi pi-tag"></i>
                 </p-inputgroup-addon>
-                  <p-select
-                    inputId="event-category"
-                    [options]="eventCategories"
-                    formControlName="category"
-                    placeholder="Select Category"
-                    panelStyleClass="solid-dropdown"
-                    [autoOptionFocus]="true"
-                  />
+                  <p-multi-select
+                    inputId="categories"
+                    [options]="categories()"
+                    formControlName="categories"
+                    optionLabel="name"
+                    placeholder="Select Categories"
+                    panelStyleClass="solid-dropdown"></p-multi-select>
               </p-inputgroup>
             } @else {
-              <p-badge [value] = event()?.category></p-badge>
+              @for (category of event()?.categories; track category.id) {
+                <p-badge class="me-1" [value] = category.name></p-badge>
+              }
             }
           </div>
 

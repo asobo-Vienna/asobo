@@ -5,7 +5,7 @@ import at.msm.asobo.dto.event.EventDTO;
 import at.msm.asobo.dto.event.EventSummaryDTO;
 import at.msm.asobo.dto.event.EventUpdateDTO;
 import at.msm.asobo.dto.filter.EventFilterDTO;
-import at.msm.asobo.enums.EventCategory;
+import at.msm.asobo.entities.EventCategory;
 import at.msm.asobo.security.UserPrincipal;
 import at.msm.asobo.services.events.EventAdminService;
 import at.msm.asobo.services.events.EventService;
@@ -41,7 +41,6 @@ public class EventController {
       @RequestParam(required = false) String query,
       @RequestParam(required = false) UUID userId,
       @RequestParam(required = false) String location,
-      @RequestParam(required = false) EventCategory category,
       @RequestParam(required = false) UUID creatorId,
       @RequestParam(required = false) LocalDateTime date,
       @RequestParam(required = false) LocalDateTime dateFrom,
@@ -49,6 +48,7 @@ public class EventController {
       @RequestParam(required = false) Boolean isPrivateEvent,
       @RequestParam(required = false) Set<UUID> eventAdminIds,
       @RequestParam(required = false) Set<UUID> participantIds,
+      @RequestParam(required = false) Set<EventCategory> categories,
       Authentication authentication) {
 
     boolean isAuthenticated = authentication != null && authentication.isAuthenticated();
@@ -57,14 +57,14 @@ public class EventController {
         new EventFilterDTO(
             query,
             location,
-            category,
             creatorId,
             date,
             dateFrom,
             dateTo,
             isPrivateEvent,
             eventAdminIds,
-            participantIds);
+            participantIds,
+            categories);
 
     // private events only visible for authenticated users
     if (isPrivateEvent == null) {
@@ -85,7 +85,6 @@ public class EventController {
       @RequestParam(required = false) String query,
       @RequestParam(required = false) UUID userId,
       @RequestParam(required = false) String location,
-      @RequestParam(required = false) EventCategory category,
       @RequestParam(required = false) UUID creatorId,
       @RequestParam(required = false) LocalDateTime date,
       @RequestParam(required = false) LocalDateTime dateFrom,
@@ -93,6 +92,7 @@ public class EventController {
       @RequestParam(required = false) Boolean isPrivateEvent,
       @RequestParam(required = false) Set<UUID> eventAdminIds,
       @RequestParam(required = false) Set<UUID> participantIds,
+      @RequestParam(required = false) Set<EventCategory> categories,
       @PageableDefault(sort = "date", direction = Sort.Direction.ASC) Pageable pageable,
       Authentication authentication) {
 
@@ -102,14 +102,14 @@ public class EventController {
         new EventFilterDTO(
             query,
             location,
-            category,
             creatorId,
             date,
             dateFrom,
             dateTo,
             isPrivateEvent,
             eventAdminIds,
-            participantIds);
+            participantIds,
+            categories);
 
     // private events only visible for authenticated users
     if (isPrivateEvent == null) {

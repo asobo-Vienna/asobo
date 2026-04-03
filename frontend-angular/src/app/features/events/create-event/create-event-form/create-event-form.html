@@ -12,17 +12,18 @@
   </div>
 
   <div class="form-group position-relative mt-4">
-    <label for="create-event-category" class="visually-hidden">Category</label>
-    <p-select
-      formControlName="category"
-      [options]="eventCategories"
-      placeholder="Category"
-      inputId="create-event-category"
-    />
+    <label for="create-event-categories" class="visually-hidden">Categories</label>
+    <p-multi-select
+      inputId="categories"
+      [options]="categories()"
+      formControlName="categories"
+      optionLabel="name"
+      placeholder="Select Categories"
+      panelStyleClass="solid-dropdown"></p-multi-select>
 
-    @if (this.getFormControls['category'].touched && this.getFormControls['category'].hasError('required')) {
+    @if (this.getFormControls['categories'].touched && this.getFormControls['categories'].hasError('required')) {
       <small class="error-message">
-        Category is required.
+        At least 1 category is required.
       </small>
     }
   </div>

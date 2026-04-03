@@ -1,5 +1,5 @@
 import {EventSummary} from './events/event-summary';
-import {EventCategory} from '../enums/event-category';
+import {EventCategory} from './events/event-category';
 
 export interface EventSearchResult {
   id: string;
@@ -7,7 +7,7 @@ export interface EventSearchResult {
   description?: string;
   date?: string;
   location?: string;
-  category?: EventCategory;
+  categories?: EventCategory[];
   pictureURI?: string;
   creatorName?: string;
   creatorId?: string;

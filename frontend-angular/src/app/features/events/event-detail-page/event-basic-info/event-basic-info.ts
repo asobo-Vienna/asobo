@@ -1,5 +1,5 @@
 import {Component, computed, DestroyRef, inject, input, OnInit, output, signal} from '@angular/core';
-import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import {takeUntilDestroyed, toSignal} from '@angular/core/rxjs-interop';
 import {CdkTextareaAutosize} from "@angular/cdk/text-field";
 import {DatePicker} from "primeng/datepicker";
 import {DatePipe} from "@angular/common";
@@ -17,8 +17,8 @@ import {ConfirmDialogService} from '../../../../shared/services/confirm-dialog-s
 import {Badge} from 'primeng/badge';
 import {InputGroup} from 'primeng/inputgroup';
 import {InputGroupAddon} from 'primeng/inputgroupaddon';
-import {Select} from 'primeng/select';
-import {EventCategory} from '../../../../shared/enums/event-category';
+import {EventCategoryService} from '../../services/event-category-service';
+import {MultiSelect} from 'primeng/multiselect';
 
 @Component({
   selector: 'app-event-basic-info',
@@ -32,7 +32,7 @@ import {EventCategory} from '../../../../shared/enums/event-category';
     Badge,
     InputGroup,
     InputGroupAddon,
-    Select
+    MultiSelect
   ],
   templateUrl: './event-basic-info.html',
   styleUrl: './event-basic-info.scss',
@@ -40,13 +40,14 @@ import {EventCategory} from '../../../../shared/enums/event-category';
 export class EventBasicInfo implements OnInit {
   private formBuilder = inject(FormBuilder);
   private eventService = inject(EventService);
+  private eventCategoryService = inject(EventCategoryService);
   protected accessControlService = inject(AccessControlService);
   private router = inject(Router);
   private toastService = inject(ToastService);
   private confirmDialogService = inject(ConfirmDialogService);
   private destroyRef = inject(DestroyRef);
 
-  protected eventCategories = Object.values(EventCategory);
+  protected categories = toSignal(this.eventCategoryService.getAllCategories(), { initialValue: [] });
 
   protected readonly environment = environment;
 
@@ -77,7 +78,7 @@ export class EventBasicInfo implements OnInit {
       title: ['', [Validators.required, Validators.minLength(environment.minEventTitleLength), Validators.maxLength(environment.maxEventTitleLength)]],
       description: ['', [Validators.required, Validators.minLength(environment.minEventDescriptionLength), Validators.maxLength(environment.maxEventDescriptionLength)]],
       location: ['', [Validators.required]],
-      category: ['', [Validators.required]],
+      categories: ['', [Validators.required]],
       date: ['', [Validators.required, DateUtils.validateDate]],
       isPrivateEvent: [false, [Validators.required]],
     });
@@ -94,7 +95,7 @@ export class EventBasicInfo implements OnInit {
         title: coreInfo.title,
         description: coreInfo.description,
         location: coreInfo.location,
-        category: coreInfo.category,
+        categories: coreInfo.categories,
         date: coreInfo.date ? new Date(coreInfo.date) : null,
         isPrivateEvent: coreInfo.isPrivateEvent
       });
@@ -149,7 +150,7 @@ export class EventBasicInfo implements OnInit {
       title: coreInfo.title,
       description: coreInfo.description,
       location: coreInfo.location,
-      category: coreInfo.category,
+      categories: coreInfo.categories,
       date: coreInfo.date ? new Date(coreInfo.date) : null,
       isPrivateEvent: coreInfo.isPrivateEvent
     });

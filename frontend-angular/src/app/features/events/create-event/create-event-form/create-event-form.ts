@@ -10,8 +10,9 @@ import {Textarea} from 'primeng/textarea';
 import {Checkbox} from 'primeng/checkbox';
 import {DateUtils} from '../../../../shared/utils/date/date-utils';
 import {ToastService} from '../../../../shared/services/toast-service';
-import {Select} from 'primeng/select';
-import {EventCategory} from '../../../../shared/enums/event-category';
+import {EventCategoryService} from '../../services/event-category-service';
+import {toSignal} from '@angular/core/rxjs-interop';
+import {MultiSelect} from 'primeng/multiselect';
 
 @Component({
   selector: 'app-create-event-form',
@@ -21,7 +22,7 @@ import {EventCategory} from '../../../../shared/enums/event-category';
     PictureUpload,
     Textarea,
     Checkbox,
-    Select,
+    MultiSelect,
   ],
   templateUrl: './create-event-form.html',
   styleUrl: './create-event-form.scss',
@@ -31,12 +32,13 @@ export class CreateEventForm {
   createEventForm: FormGroup;
   private formBuilder = inject(FormBuilder);
   private eventService = inject(EventService);
+  private eventCategoryService = inject(EventCategoryService);
   private authService = inject(AuthService);
   private toastService = inject(ToastService);
   previewUrl = signal<string | null>(null);
   selectedImage: File | null = null;
 
-  eventCategories = Object.values(EventCategory);
+  protected categories = toSignal(this.eventCategoryService.getAllCategories(), { initialValue: [] });
 
   protected readonly environment = environment;
 
@@ -48,7 +50,7 @@ export class CreateEventForm {
       title: ['', [Validators.required, Validators.minLength(environment.minEventTitleLength), Validators.maxLength(environment.maxEventTitleLength)]],
       description: ['', [Validators.required, Validators.minLength(environment.minEventDescriptionLength), Validators.maxLength(environment.maxEventDescriptionLength)]],
       location: ['', [Validators.required]],
-      category: ['', [Validators.required]],
+      categories: ['', [Validators.required]],
       date: [today, [Validators.required, DateUtils.validateDate]],
       isPrivateEvent: [false]
     });

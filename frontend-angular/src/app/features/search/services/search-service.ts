@@ -12,7 +12,7 @@ import {environment} from '../../../../environments/environment';
 import {UrlUtilService} from '../../../shared/utils/url/url-util-service';
 import {EventSummary} from '../../../shared/entities/events/event-summary';
 import {List} from '../../../core/data-structures/lists/list';
-import {EventCategory} from '../../../shared/enums/event-category';
+import {EventCategory} from '../../../shared/entities/events/event-category';
 
 @Injectable({
   providedIn: 'root',
@@ -75,7 +75,7 @@ export class SearchService {
               minute: '2-digit'
             }) : '',
             location: e.location ?? 'Unknown location',
-            category: e.category ?? EventCategory.OTHER,
+            categories: new List<EventCategory>(e.categories ?? []),
             isPrivateEvent: e.isPrivateEvent ?? false,
             participantCount: e.participantCount ?? 0,
             commentCount: 0,

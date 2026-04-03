@@ -10,8 +10,8 @@ import {SecureImagePipe} from '../../../core/pipes/secure-image-pipe';
 import {environment} from '../../../../environments/environment';
 import {AccessControlService} from '../../../shared/services/access-control-service';
 import {List} from '../../../core/data-structures/lists/list';
-import {EventCategory} from '../../../shared/enums/event-category';
 import {Badge} from 'primeng/badge';
+import {EventCategory} from '../../../shared/entities/events/event-category';
 
 @Component({
   selector: 'app-event-card',
@@ -34,7 +34,7 @@ export class EventCard {
     date: '',
     time: '',
     location: '',
-    category: EventCategory.OTHER,
+    categories: new List<EventCategory>,
     description: '',
     isPrivateEvent: false,
     participantCount: 0,

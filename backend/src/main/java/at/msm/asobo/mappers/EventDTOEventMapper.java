@@ -43,7 +43,7 @@ public class EventDTOEventMapper {
     dto.setDescription(event.getDescription());
     dto.setPictureURI(event.getPictureURI());
     dto.setLocation(event.getLocation());
-    dto.setCategory(event.getCategory());
+    dto.setCategories(event.getCategories());
     dto.setDate(event.getDate());
     dto.setCreationDate(event.getCreationDate());
     dto.setModificationDate(event.getModificationDate());
@@ -85,7 +85,7 @@ public class EventDTOEventMapper {
     event.setDescription(dto.getDescription());
     event.setPictureURI(dto.getPictureURI());
     event.setLocation(dto.getLocation());
-    event.setCategory(dto.getCategory());
+    event.setCategories(dto.getCategories());
     event.setDate(dto.getDate());
     event.setCreationDate(dto.getCreationDate());
     event.setModificationDate(dto.getModificationDate());
@@ -110,7 +110,7 @@ public class EventDTOEventMapper {
     dto.setDescription(event.getDescription());
     dto.setPictureURI(event.getPictureURI());
     dto.setLocation(event.getLocation());
-    dto.setCategory(event.getCategory());
+    dto.setCategories(event.getCategories());
     dto.setDate(event.getDate());
     dto.setCreationDate(event.getCreationDate());
     dto.setModificationDate(event.getModificationDate());
@@ -139,7 +139,7 @@ public class EventDTOEventMapper {
     dto.setDescription(event.getDescription());
     // Note: picture is MultipartFile, not mapped from entity
     dto.setLocation(event.getLocation());
-    dto.setCategory(event.getCategory());
+    dto.setCategories(event.getCategories());
     dto.setDate(event.getDate());
     dto.setIsPrivateEvent(event.getIsPrivateEvent());
     // Note: modification date & creation date are set in the database, EventUpdateDTO only has the
@@ -201,7 +201,7 @@ public class EventDTOEventMapper {
     event.setTitle(dto.getTitle());
     event.setDescription(dto.getDescription());
     event.setLocation(dto.getLocation());
-    event.setCategory(dto.getCategory());
+    event.setCategories(dto.getCategories());
     event.setDate(dto.getDate());
     // event.setCreator(this.userDTOUserMapper.mapUserPublicDTOToUser(dto.getCreator()));
     event.setIsPrivateEvent(dto.getIsPrivateEvent());

@@ -11,6 +11,7 @@ export const environment = {
   apiBaseUrl: API_BASE_URL,
   fileBaseUrl: `${API_BASE_URL}/files`,
   eventsEndpoint: `${API_BASE_URL}/events`,
+  eventCategoriesEndpoint: `${API_BASE_URL}/event-categories`,
   loginEndpoint: `${API_BASE_URL}/auth/login`,
   registerEndpoint: `${API_BASE_URL}/auth/register`,
   usersEndpoint: `${API_BASE_URL}/users`,
