@@ -56,6 +56,14 @@ public class EventService {
     return this.eventDTOEventMapper.mapEventsToEventSummaryDTOs(filteredEvents);
   }
 
+  public Page<EventSummaryDTO> getUpcomingEventsPaginated(
+      EventFilterDTO filterDTO, Pageable pageable) {
+    filterDTO.setDateFrom(LocalDateTime.now());
+    Page<Event> filteredEvents =
+        eventRepository.findAll(EventSpecification.withFilters(filterDTO), pageable);
+    return this.eventDTOEventMapper.mapEventPageToEventSummaryDTOs(filteredEvents);
+  }
+
   public Page<EventSummaryDTO> getAllEventsPaginated(EventFilterDTO filterDTO, Pageable pageable) {
     Page<Event> filteredEvents =
         eventRepository.findAll(EventSpecification.withFilters(filterDTO), pageable);

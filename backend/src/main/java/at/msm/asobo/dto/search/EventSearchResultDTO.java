@@ -1,9 +1,7 @@
 package at.msm.asobo.dto.search;
 
-import at.msm.asobo.entities.EventCategory;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 public class EventSearchResultDTO {
@@ -19,7 +17,6 @@ public class EventSearchResultDTO {
   private int participantCount;
   private boolean isPrivateEvent;
   private String type = "EVENT";
-  private Set<EventCategory> categories;
 
   public EventSearchResultDTO() {}
 
@@ -61,14 +58,6 @@ public class EventSearchResultDTO {
 
   public void setLocation(String location) {
     this.location = location;
-  }
-
-  public Set<EventCategory> getCategories() {
-    return this.categories;
-  }
-
-  public void setCategories(Set<EventCategory> categories) {
-    this.categories = categories;
   }
 
   public String getPictureURI() {
