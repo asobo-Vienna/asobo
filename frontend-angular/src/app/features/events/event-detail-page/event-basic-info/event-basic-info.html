@@ -65,7 +65,10 @@
               </p-inputgroup>
             } @else {
               @for (category of event()?.categories; track category.id) {
-                <p-badge class="me-1 mt-1" [value] = category.name></p-badge>
+                <p-badge class="me-1 mt-1"
+                         [value] = category.name
+                         [style]="{ 'background-color': eventCategoryService.getCategoryColor(category.id, category.name) }">
+                </p-badge>
               }
             }
           </div>

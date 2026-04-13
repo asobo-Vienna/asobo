@@ -40,7 +40,7 @@ import {MultiSelect} from 'primeng/multiselect';
 export class EventBasicInfo implements OnInit {
   private formBuilder = inject(FormBuilder);
   private eventService = inject(EventService);
-  private eventCategoryService = inject(EventCategoryService);
+  protected eventCategoryService = inject(EventCategoryService);
   protected accessControlService = inject(AccessControlService);
   private router = inject(Router);
   private toastService = inject(ToastService);
