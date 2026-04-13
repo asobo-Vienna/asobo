@@ -30,7 +30,7 @@
           @for (category of event().categories; track category.id) {
             <p-badge class="category-badge me-1"
                      [value] = "category.name"
-                     [style]="{ 'background-color': eventCategoryService.getCategoryColor(category.id, category.name) }">
+                     [style]="{ 'background-color': eventCategoryService.getCategoryColor(category.id) }">
             </p-badge>
           }
         </div>

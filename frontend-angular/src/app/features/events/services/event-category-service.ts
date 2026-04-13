@@ -15,22 +15,8 @@ export class EventCategoryService {
     return this.http.get<EventCategory[]>(`${environment.eventCategoriesEndpoint}`);
   }
 
-  private readonly CATEGORY_COLORS = [
-    'orangered', 'deeppink', 'lightgreen', 'orange',
-    'purple', 'seagreen', 'darkcyan', 'lightslategray',
-    'steelblue', 'crimson', 'mediumorchid', 'goldenrod', 'cadetblue'
-  ];
-
-  getCategoryColor(id: number, name: string): string {
-    if (id < this.CATEGORY_COLORS.length) {
-      return this.CATEGORY_COLORS[id % this.CATEGORY_COLORS.length];
-    }
-    let hash = 0;
-    for (let i = 0; i < name.length; i++) {
-      hash = name.charCodeAt(i) + ((hash << 5) - hash);
-    }
-    const hue = Math.abs(hash) % 360;
+  getCategoryColor(index: number): string {
+    const hue = (index * 137.5) % 360;
     return `hsl(${hue}, 65%, 45%)`;
   }
-
 }
