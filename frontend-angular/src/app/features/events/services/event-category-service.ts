@@ -19,6 +19,6 @@ export class EventCategoryService {
     // each new color fills the largest remaining gap on the color wheel,
     // so colors stay as visually distinct from each other as possible
     const hue = (index * 137.5) % 360;
-    return `hsl(${hue}, 65%, 45%)`;
+    return `hsl(${hue}, 80%, 45%)`;
   }
 }
