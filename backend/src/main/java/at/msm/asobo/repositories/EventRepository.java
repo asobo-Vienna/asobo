@@ -48,7 +48,6 @@ public interface EventRepository
 
   Page<Event> findByParticipantsIdAndIsPrivateEventTrue(UUID userId, Pageable pageable);
 
-  // find public events attend by a certain user; underscore in method name is needed by JPA
   List<Event> findByParticipantsIdAndIsPrivateEventFalse(UUID userId);
 
   Page<Event> findByParticipantsIdAndIsPrivateEventFalse(UUID userId, Pageable pageable);

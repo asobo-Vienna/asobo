@@ -10,6 +10,9 @@ import {Textarea} from 'primeng/textarea';
 import {Checkbox} from 'primeng/checkbox';
 import {DateUtils} from '../../../../shared/utils/date/date-utils';
 import {ToastService} from '../../../../shared/services/toast-service';
+import {EventCategoryService} from '../../services/event-category-service';
+import {toSignal} from '@angular/core/rxjs-interop';
+import {MultiSelect} from 'primeng/multiselect';
 
 @Component({
   selector: 'app-create-event-form',
@@ -19,6 +22,7 @@ import {ToastService} from '../../../../shared/services/toast-service';
     PictureUpload,
     Textarea,
     Checkbox,
+    MultiSelect,
   ],
   templateUrl: './create-event-form.html',
   styleUrl: './create-event-form.scss',
@@ -28,10 +32,15 @@ export class CreateEventForm {
   createEventForm: FormGroup;
   private formBuilder = inject(FormBuilder);
   private eventService = inject(EventService);
+  private eventCategoryService = inject(EventCategoryService);
   private authService = inject(AuthService);
   private toastService = inject(ToastService);
   previewUrl = signal<string | null>(null);
   selectedImage: File | null = null;
+
+  protected categories = toSignal(this.eventCategoryService.getAllCategories(), { initialValue: [] });
+
+  protected readonly environment = environment;
 
   constructor() {
     const today = new Date();
@@ -41,6 +50,7 @@ export class CreateEventForm {
       title: ['', [Validators.required, Validators.minLength(environment.minEventTitleLength), Validators.maxLength(environment.maxEventTitleLength)]],
       description: ['', [Validators.required, Validators.minLength(environment.minEventDescriptionLength), Validators.maxLength(environment.maxEventDescriptionLength)]],
       location: ['', [Validators.required]],
+      categories: ['', [Validators.required]],
       date: [today, [Validators.required, DateUtils.validateDate]],
       isPrivateEvent: [false]
     });
@@ -108,6 +118,4 @@ export class CreateEventForm {
   get getFormControls() {
     return this.createEventForm.controls;
   }
-
-  protected readonly environment = environment;
 }

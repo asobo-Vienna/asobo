@@ -1,4 +1,5 @@
 @use 'variables' as *;
+@use '../../../../../styles/mixins' as *;
 
 input {
   border: none;
@@ -41,6 +42,19 @@ form.editing textarea:enabled {
 
 .event-description-textarea[readonly] {
   pointer-events: none;
+}
+
+:host ::ng-deep p-datepicker {
+  @include datepicker-styles;
+}
+
+:host ::ng-deep .p-datepicker:has(.p-datepicker-dropdown) .p-datepicker-input {
+  @include datepicker-input-styles;
+}
+
+::ng-deep .category-badge .p-badge {
+  background-color: lightslategray;
+  color: white;
 }
 
 form.editing input,

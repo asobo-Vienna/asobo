@@ -10,6 +10,9 @@ import {SecureImagePipe} from '../../../core/pipes/secure-image-pipe';
 import {environment} from '../../../../environments/environment';
 import {AccessControlService} from '../../../shared/services/access-control-service';
 import {List} from '../../../core/data-structures/lists/list';
+import {Badge} from 'primeng/badge';
+import {EventCategory} from '../../../shared/entities/events/event-category';
+import {EventCategoryService} from '../services/event-category-service';
 
 @Component({
   selector: 'app-event-card',
@@ -19,7 +22,8 @@ import {List} from '../../../core/data-structures/lists/list';
     RouterLink,
     Tag,
     AsyncPipe,
-    SecureImagePipe
+    SecureImagePipe,
+    Badge
   ],
   styleUrl: './event-card.scss'
 })
@@ -31,6 +35,7 @@ export class EventCard {
     date: '',
     time: '',
     location: '',
+    categories: new List<EventCategory>,
     description: '',
     isPrivateEvent: false,
     participantCount: 0,
@@ -41,6 +46,7 @@ export class EventCard {
   protected readonly UrlUtilService = UrlUtilService;
   authService = inject(AuthService);
   accessControlService = inject(AccessControlService);
+  eventCategoryService = inject(EventCategoryService);
 
   eventDeleted = output<EventSummary>();
 

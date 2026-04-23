@@ -1,15 +1,13 @@
 package at.msm.asobo.dto.event;
 
-import at.msm.asobo.dto.comment.UserCommentDTO;
-import at.msm.asobo.dto.medium.MediumDTO;
 import at.msm.asobo.dto.user.UserPublicDTO;
+import at.msm.asobo.entities.EventCategory;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -25,6 +23,8 @@ public class EventCreationDTO {
   @NotBlank(message = "Location is mandatory for event creation")
   private String location;
 
+  private Set<EventCategory> categories;
+
   @JsonProperty("isPrivateEvent")
   private boolean isPrivateEvent;
 
@@ -36,19 +36,12 @@ public class EventCreationDTO {
 
   private Instant modificationDate;
 
-  // add this again as soon as we have logged-in users
-  // @NotNull(message = "Event creator is mandatory for event creation")
   // TODO change this to EventCreatorDTO when we have factory instead of mapper ticket #37
   // private EventCreatorDTO creator;
+  @NotNull(message = "Event creator is mandatory for event creation")
   private UserPublicDTO creator;
 
   private Set<UserPublicDTO> eventAdmins;
-
-  private Set<UserPublicDTO> participants;
-
-  private List<UserCommentDTO> comments;
-
-  private List<MediumDTO> media;
 
   public EventCreationDTO() {}
 
@@ -68,6 +61,14 @@ public class EventCreationDTO {
     return this.location;
   }
 
+  public Set<EventCategory> getCategories() {
+    return this.categories;
+  }
+
+  public void setCategories(Set<EventCategory> categories) {
+    this.categories = categories;
+  }
+
   public LocalDateTime getDate() {
     return this.date;
   }
@@ -82,18 +83,6 @@ public class EventCreationDTO {
 
   public UserPublicDTO getCreator() {
     return this.creator;
-  }
-
-  public Set<UserPublicDTO> getParticipants() {
-    return this.participants;
-  }
-
-  public List<UserCommentDTO> getComments() {
-    return this.comments;
-  }
-
-  public List<MediumDTO> getMedia() {
-    return this.media;
   }
 
   public void setId(UUID id) {
@@ -134,18 +123,6 @@ public class EventCreationDTO {
 
   public void setIsPrivateEvent(boolean isPrivateEvent) {
     this.isPrivateEvent = isPrivateEvent;
-  }
-
-  public void setParticipants(Set<UserPublicDTO> participants) {
-    this.participants = participants;
-  }
-
-  public void setComments(List<UserCommentDTO> comments) {
-    this.comments = comments;
-  }
-
-  public void setMedia(List<MediumDTO> media) {
-    this.media = media;
   }
 
   public Set<UserPublicDTO> getEventAdmins() {

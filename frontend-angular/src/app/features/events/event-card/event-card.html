@@ -25,6 +25,15 @@
         <div class="card-date date-text">{{ event().date | date : 'EEE, MMMM d, y' }}</div>
         <div class="card-time date-text">{{ event().date | date : 'h:mm a' }}</div>
         <div class="card-location location-text mt-2">in {{ event().location }}</div>
+
+        <div class="category-badge-container">
+          @for (category of event().categories; track category.id) {
+            <p-badge class="category-badge me-1"
+                     [value] = "category.name"
+                     [style]="{ 'background-color': eventCategoryService.getCategoryColor(category.id) }">
+            </p-badge>
+          }
+        </div>
       </div>
     </div>
   </a>
