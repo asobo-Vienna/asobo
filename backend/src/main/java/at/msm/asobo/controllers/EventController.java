@@ -8,16 +8,14 @@ import at.msm.asobo.dto.filter.EventFilterDTO;
 import at.msm.asobo.entities.Event;
 import at.msm.asobo.entities.EventCategory;
 import at.msm.asobo.security.UserPrincipal;
-import at.msm.asobo.services.events.EventAdminService;
 import at.msm.asobo.services.events.EventService;
 import jakarta.validation.Valid;
-
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
-
+import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.property.*;
 import org.springframework.data.domain.Page;
@@ -32,7 +30,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import net.fortuna.ical4j.model.Calendar;
 
 @RestController
 @RequestMapping("/api/events")
@@ -183,9 +180,10 @@ public class EventController {
 
   @GetMapping(value = "/events/{id}/export", produces = "text/calendar")
   public ResponseEntity<byte[]> exportEvent(@PathVariable UUID id) {
-    Calendar cal = new Calendar()
+    Calendar cal =
+        new Calendar()
             .withProdId("-//asobō//EN")
-            .withDefaults()  // adds VERSION_2_0 and CALSCALE automatically
+            .withDefaults() // adds VERSION_2_0 and CALSCALE automatically
             .getFluentTarget();
 
     Event eventToExport = this.eventService.getEventById(id);
@@ -202,8 +200,8 @@ public class EventController {
 
     byte[] data = cal.toString().getBytes(StandardCharsets.UTF_8);
     return ResponseEntity.ok()
-            .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=event.ics")
-            .header(HttpHeaders.CONTENT_TYPE, "text/calendar; charset=UTF-8")
-            .body(data);
+        .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=event.ics")
+        .header(HttpHeaders.CONTENT_TYPE, "text/calendar; charset=UTF-8")
+        .body(data);
   }
 }
