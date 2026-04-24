@@ -5,35 +5,42 @@ import at.msm.asobo.dto.event.EventDTO;
 import at.msm.asobo.dto.event.EventSummaryDTO;
 import at.msm.asobo.dto.event.EventUpdateDTO;
 import at.msm.asobo.dto.filter.EventFilterDTO;
+import at.msm.asobo.entities.Event;
 import at.msm.asobo.entities.EventCategory;
 import at.msm.asobo.security.UserPrincipal;
 import at.msm.asobo.services.events.EventAdminService;
 import at.msm.asobo.services.events.EventService;
 import jakarta.validation.Valid;
+
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+
+import net.fortuna.ical4j.model.component.VEvent;
+import net.fortuna.ical4j.model.property.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import net.fortuna.ical4j.model.Calendar;
 
 @RestController
 @RequestMapping("/api/events")
 public class EventController {
   private final EventService eventService;
-  private final EventAdminService eventAdminService;
 
-  public EventController(EventService eventService, EventAdminService eventAdminService) {
+  public EventController(EventService eventService) {
     this.eventService = eventService;
-    this.eventAdminService = eventAdminService;
   }
 
   @GetMapping
@@ -172,5 +179,31 @@ public class EventController {
   public EventDTO deleteEventById(
       @PathVariable UUID id, @AuthenticationPrincipal UserPrincipal loggedInUser) {
     return this.eventService.deleteEventById(id, loggedInUser);
+  }
+
+  @GetMapping(value = "/events/{id}/export", produces = "text/calendar")
+  public ResponseEntity<byte[]> exportEvent(@PathVariable UUID id) {
+    Calendar cal = new Calendar()
+            .withProdId("-//asobō//EN")
+            .withDefaults()  // adds VERSION_2_0 and CALSCALE automatically
+            .getFluentTarget();
+
+    Event eventToExport = this.eventService.getEventById(id);
+
+    VEvent vEvent = new VEvent(eventToExport.getDate(), eventToExport.getTitle());
+    if (eventToExport.getDescription() != null) {
+      vEvent.getProperties().add(new Description(eventToExport.getDescription()));
+    }
+    if (eventToExport.getLocation() != null) {
+      vEvent.getProperties().add(new Location(eventToExport.getLocation()));
+    }
+    vEvent.getProperties().add(new Uid(eventToExport.getId().toString()));
+    cal.getComponents().add(vEvent);
+
+    byte[] data = cal.toString().getBytes(StandardCharsets.UTF_8);
+    return ResponseEntity.ok()
+            .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=event.ics")
+            .header(HttpHeaders.CONTENT_TYPE, "text/calendar; charset=UTF-8")
+            .body(data);
   }
 }
