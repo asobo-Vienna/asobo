@@ -138,7 +138,7 @@ export class EventService {
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = 'event.ics';
+        a.download = `event_${eventId}.ics`;
         a.click();
         URL.revokeObjectURL(url);
       });
