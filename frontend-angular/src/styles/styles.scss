@@ -451,6 +451,14 @@ textarea.p-textarea:focus {
   display: flex;
 }
 
+.p-tooltip .p-tooltip-text {
+  background-color: $asobo-purple;
+  color: white;
+  font-size: 0.9rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+}
+
 @media (max-width: 991px) {
   .table-wrapper table tbody td[data-label=""] .card-view-title {
     font-size: 1.5rem !important;

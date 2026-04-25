@@ -19,6 +19,7 @@ import {InputGroup} from 'primeng/inputgroup';
 import {InputGroupAddon} from 'primeng/inputgroupaddon';
 import {EventCategoryService} from '../../services/event-category-service';
 import {MultiSelect} from 'primeng/multiselect';
+import {Tooltip} from 'primeng/tooltip';
 
 @Component({
   selector: 'app-event-basic-info',
@@ -32,7 +33,8 @@ import {MultiSelect} from 'primeng/multiselect';
     Badge,
     InputGroup,
     InputGroupAddon,
-    MultiSelect
+    MultiSelect,
+    Tooltip
   ],
   templateUrl: './event-basic-info.html',
   styleUrl: './event-basic-info.scss',
