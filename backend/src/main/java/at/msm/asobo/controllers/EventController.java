@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import net.fortuna.ical4j.model.Calendar;
+import net.fortuna.ical4j.model.PropertyList;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.property.*;
 import org.springframework.data.domain.Page;
@@ -178,27 +179,28 @@ public class EventController {
     return this.eventService.deleteEventById(id, loggedInUser);
   }
 
-  @GetMapping(value = "/events/{id}/export", produces = "text/calendar")
+  @GetMapping(value = "/{id}/export", produces = "text/calendar")
   public ResponseEntity<byte[]> exportEvent(@PathVariable UUID id) {
-    Calendar cal =
-        new Calendar()
-            .withProdId("-//asobō//EN")
-            .withDefaults() // adds VERSION_2_0 and CALSCALE automatically
-            .getFluentTarget();
-
     Event eventToExport = this.eventService.getEventById(id);
 
+    Calendar calendar = new Calendar()
+            .withProdId("-//asobō//EN")
+            .withDefaults()
+            .getFluentTarget();
+
     VEvent vEvent = new VEvent(eventToExport.getDate(), eventToExport.getTitle());
+    vEvent.add(new Uid(eventToExport.getId().toString()));
+
     if (eventToExport.getDescription() != null) {
-      vEvent.getProperties().add(new Description(eventToExport.getDescription()));
+      vEvent.add(new Description(eventToExport.getDescription()));
     }
     if (eventToExport.getLocation() != null) {
-      vEvent.getProperties().add(new Location(eventToExport.getLocation()));
+      vEvent.add(new Location(eventToExport.getLocation()));
     }
-    vEvent.getProperties().add(new Uid(eventToExport.getId().toString()));
-    cal.getComponents().add(vEvent);
 
-    byte[] data = cal.toString().getBytes(StandardCharsets.UTF_8);
+    calendar = calendar.withComponent(vEvent).getFluentTarget();
+
+    byte[] data = calendar.toString().getBytes(StandardCharsets.UTF_8);
     return ResponseEntity.ok()
         .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=event.ics")
         .header(HttpHeaders.CONTENT_TYPE, "text/calendar; charset=UTF-8")
