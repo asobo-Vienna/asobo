@@ -38,6 +38,15 @@
           }
         </div>
 
+        <button
+          pTooltip="Add event to Calendar"
+          tooltipPosition="top"
+          class="btn btn-link p-0 export-calendar-button mt-2"
+          aria-label="Add to Calendar"
+          (click)="exportEvent()">
+          <i class="pi pi-calendar-plus clickable" aria-hidden="true"></i>
+        </button>
+
         <div class="d-flex justify-content-between">
           <input
             type="text"
@@ -55,18 +64,18 @@
                 <p-inputgroup-addon>
                   <i class="pi pi-tag"></i>
                 </p-inputgroup-addon>
-                  <p-multi-select
-                    inputId="categories"
-                    [options]="categories()"
-                    formControlName="categories"
-                    optionLabel="name"
-                    placeholder="Select Categories"
-                    panelStyleClass="solid-dropdown"></p-multi-select>
+                <p-multi-select
+                  inputId="categories"
+                  [options]="categories()"
+                  formControlName="categories"
+                  optionLabel="name"
+                  placeholder="Select Categories"
+                  panelStyleClass="solid-dropdown"></p-multi-select>
               </p-inputgroup>
             } @else {
               @for (category of event()?.categories; track category.id) {
                 <p-badge class="me-1 mt-1"
-                         [value] = category.name
+                         [value]=category.name
                          [style]="{ 'background-color': eventCategoryService.getCategoryColor(category.id) }">
                 </p-badge>
               }
@@ -105,23 +114,25 @@
           <!-- Center: confirm/cancel -->
           <div class="flex-fill d-flex justify-content-center gap-2">
             @if (isEditing()) {
-              <button type="button" class="btn btn-link p-0 me-1 clickable" aria-label="Save changes" (click)="onSubmit()">
+              <button type="button" class="btn btn-link p-0 me-1 clickable" aria-label="Save changes"
+                      (click)="onSubmit()">
                 <i class="pi pi-check clickable" aria-hidden="true"></i>
               </button>
-              <button type="button" class="btn btn-link p-0 clickable" aria-label="Cancel editing" (click)="cancelEdit()">
-                 <i class="pi pi-times clickable" aria-hidden="true"></i>
+              <button type="button" class="btn btn-link p-0 clickable" aria-label="Cancel editing"
+                      (click)="cancelEdit()">
+                <i class="pi pi-times clickable" aria-hidden="true"></i>
               </button>
             }
           </div>
           <!-- Right: edit/delete -->
           <div class="flex-fill d-flex justify-content-end gap-2">
-            @if(!isEditing()) {
+            @if (!isEditing()) {
               <button type="button" class="btn btn-link p-0" aria-label="Edit event" (click)="enterEdit()">
-                  <i class="pi pi-pen-to-square clickable" aria-hidden="true"></i>
+                <i class="pi pi-pen-to-square clickable" aria-hidden="true"></i>
               </button>
             }
             <button type="button" class="btn btn-link p-0" aria-label="Delete event" (click)="onDelete()">
-                <i class="pi pi-trash clickable" aria-hidden="true"></i>
+              <i class="pi pi-trash clickable" aria-hidden="true"></i>
             </button>
           </div>
         </div>

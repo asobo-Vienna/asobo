@@ -5,9 +5,10 @@ import at.msm.asobo.dto.event.EventDTO;
 import at.msm.asobo.dto.event.EventSummaryDTO;
 import at.msm.asobo.dto.event.EventUpdateDTO;
 import at.msm.asobo.dto.filter.EventFilterDTO;
+import at.msm.asobo.entities.Event;
 import at.msm.asobo.entities.EventCategory;
+import at.msm.asobo.export.EventIcsExporter;
 import at.msm.asobo.security.UserPrincipal;
-import at.msm.asobo.services.events.EventAdminService;
 import at.msm.asobo.services.events.EventService;
 import jakarta.validation.Valid;
 import java.time.LocalDateTime;
@@ -18,7 +19,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -29,11 +32,11 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/api/events")
 public class EventController {
   private final EventService eventService;
-  private final EventAdminService eventAdminService;
+  private final EventIcsExporter eventIcsExporter;
 
-  public EventController(EventService eventService, EventAdminService eventAdminService) {
+  public EventController(EventService eventService, EventIcsExporter eventIcsExporter) {
     this.eventService = eventService;
-    this.eventAdminService = eventAdminService;
+    this.eventIcsExporter = eventIcsExporter;
   }
 
   @GetMapping
@@ -172,5 +175,15 @@ public class EventController {
   public EventDTO deleteEventById(
       @PathVariable UUID id, @AuthenticationPrincipal UserPrincipal loggedInUser) {
     return this.eventService.deleteEventById(id, loggedInUser);
+  }
+
+  @GetMapping(value = "/{id}/export", produces = "text/calendar")
+  public ResponseEntity<byte[]> exportEvent(@PathVariable UUID id) {
+    Event eventToExport = this.eventService.getEventById(id);
+    byte[] data = this.eventIcsExporter.buildIcs(eventToExport);
+    return ResponseEntity.ok()
+        .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=event.ics")
+        .header(HttpHeaders.CONTENT_TYPE, "text/calendar; charset=UTF-8")
+        .body(data);
   }
 }

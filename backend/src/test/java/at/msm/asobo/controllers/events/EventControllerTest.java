@@ -1,5 +1,6 @@
 package at.msm.asobo.controllers.events;
 
+import static org.hamcrest.Matchers.containsString;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.verify;
@@ -7,8 +8,10 @@ import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import at.msm.asobo.builders.EventTestBuilder;
 import at.msm.asobo.config.FileStorageProperties;
 import at.msm.asobo.config.SecurityConfig;
 import at.msm.asobo.controllers.EventController;
@@ -18,8 +21,10 @@ import at.msm.asobo.dto.event.EventSummaryDTO;
 import at.msm.asobo.dto.event.EventUpdateDTO;
 import at.msm.asobo.dto.filter.EventFilterDTO;
 import at.msm.asobo.dto.user.UserPublicDTO;
+import at.msm.asobo.entities.Event;
 import at.msm.asobo.entities.EventCategory;
 import at.msm.asobo.exceptions.users.UserNotAuthorizedException;
+import at.msm.asobo.export.EventIcsExporter;
 import at.msm.asobo.security.CustomUserDetailsService;
 import at.msm.asobo.security.JwtUtil;
 import at.msm.asobo.security.RestAuthenticationEntryPoint;
@@ -71,9 +76,12 @@ class EventControllerTest {
 
   @MockitoBean private AccessControlService accessControlService;
 
+  @MockitoBean private EventIcsExporter eventIcsExporter;
+
   private final String EVENTS_URL = "/api/events";
-  private final String EVENTS_PAGINATED_URL = "/api/events/paginated";
-  private final String SINGLE_EVENT_URL = "/api/events/{eventId}";
+  private final String EVENTS_PAGINATED_URL = EVENTS_URL + "/paginated";
+  private final String SINGLE_EVENT_URL = EVENTS_URL + "/{eventId}";
+  private final String EXPORT_EVENT_URL = SINGLE_EVENT_URL + "/export";
   private UUID eventId;
   private UUID userId;
   private EventSummaryDTO eventSummary1;
@@ -458,5 +466,29 @@ class EventControllerTest {
   @Test
   void deleteEventById_WithoutAuthentication_ReturnsUnauthorized() throws Exception {
     mockMvc.perform(delete(SINGLE_EVENT_URL, eventId)).andExpect(status().isUnauthorized());
+  }
+
+  @Test
+  void exportEvent_WithValidId_ReturnsIcsAttachment() throws Exception {
+    byte[] icsBytes = "BEGIN:VCALENDAR\r\nEND:VCALENDAR\r\n".getBytes();
+    Event event = new EventTestBuilder().withId(eventId).buildEventEntity();
+
+    when(eventService.getEventById(eventId)).thenReturn(event);
+    when(eventIcsExporter.buildIcs(event)).thenReturn(icsBytes);
+
+    mockMvc
+        .perform(get(EXPORT_EVENT_URL, eventId))
+        .andExpect(status().isOk())
+        .andExpect(header().string("Content-Disposition", "attachment; filename=event.ics"))
+        .andExpect(header().string("Content-Type", containsString("text/calendar")))
+        .andExpect(content().bytes(icsBytes));
+
+    verify(eventService).getEventById(eventId);
+    verify(eventIcsExporter).buildIcs(event);
+  }
+
+  @Test
+  void exportEvent_WithInvalidId_ReturnsBadRequest() throws Exception {
+    mockMvc.perform(get(EXPORT_EVENT_URL, "invalid-id")).andExpect(status().isBadRequest());
   }
 }
