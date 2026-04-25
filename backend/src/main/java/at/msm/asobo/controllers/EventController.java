@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import net.fortuna.ical4j.model.Calendar;
-import net.fortuna.ical4j.model.PropertyList;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.property.*;
 import org.springframework.data.domain.Page;
@@ -183,10 +182,7 @@ public class EventController {
   public ResponseEntity<byte[]> exportEvent(@PathVariable UUID id) {
     Event eventToExport = this.eventService.getEventById(id);
 
-    Calendar calendar = new Calendar()
-            .withProdId("-//asobō//EN")
-            .withDefaults()
-            .getFluentTarget();
+    Calendar calendar = new Calendar().withProdId("-//asobō//EN").withDefaults().getFluentTarget();
 
     VEvent vEvent = new VEvent(eventToExport.getDate(), eventToExport.getTitle());
     vEvent.add(new Uid(eventToExport.getId().toString()));

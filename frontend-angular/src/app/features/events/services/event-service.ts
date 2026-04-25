@@ -131,4 +131,16 @@ export class EventService {
       body: userIds
     });
   }
+
+  public exportEvent(eventId: string): void {
+    this.http.get(`${environment.eventsEndpoint}/${eventId}/export`, {responseType: 'blob'})
+      .subscribe(blob => {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'event.ics';
+        a.click();
+        URL.revokeObjectURL(url);
+      });
+  }
 }

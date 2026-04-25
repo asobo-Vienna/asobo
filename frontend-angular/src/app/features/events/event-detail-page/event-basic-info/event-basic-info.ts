@@ -39,7 +39,7 @@ import {MultiSelect} from 'primeng/multiselect';
 })
 export class EventBasicInfo implements OnInit {
   private formBuilder = inject(FormBuilder);
-  private eventService = inject(EventService);
+  protected eventService = inject(EventService);
   protected eventCategoryService = inject(EventCategoryService);
   protected accessControlService = inject(AccessControlService);
   private router = inject(Router);
@@ -47,7 +47,7 @@ export class EventBasicInfo implements OnInit {
   private confirmDialogService = inject(ConfirmDialogService);
   private destroyRef = inject(DestroyRef);
 
-  protected categories = toSignal(this.eventCategoryService.getAllCategories(), { initialValue: [] });
+  protected categories = toSignal(this.eventCategoryService.getAllCategories(), {initialValue: []});
 
   protected readonly environment = environment;
 
@@ -182,5 +182,10 @@ export class EventBasicInfo implements OnInit {
           }
         });
       });
+  }
+
+  exportEvent(): void {
+    const id = this.event()?.id;
+    if (id) this.eventService.exportEvent(id);
   }
 }
