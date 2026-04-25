@@ -7,17 +7,14 @@ import at.msm.asobo.dto.event.EventUpdateDTO;
 import at.msm.asobo.dto.filter.EventFilterDTO;
 import at.msm.asobo.entities.Event;
 import at.msm.asobo.entities.EventCategory;
+import at.msm.asobo.export.EventIcsExporter;
 import at.msm.asobo.security.UserPrincipal;
 import at.msm.asobo.services.events.EventService;
 import jakarta.validation.Valid;
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
-import net.fortuna.ical4j.model.Calendar;
-import net.fortuna.ical4j.model.component.VEvent;
-import net.fortuna.ical4j.model.property.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -35,9 +32,11 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/api/events")
 public class EventController {
   private final EventService eventService;
+  private final EventIcsExporter eventIcsExporter;
 
-  public EventController(EventService eventService) {
+  public EventController(EventService eventService, EventIcsExporter eventIcsExporter) {
     this.eventService = eventService;
+    this.eventIcsExporter = eventIcsExporter;
   }
 
   @GetMapping
@@ -181,22 +180,7 @@ public class EventController {
   @GetMapping(value = "/{id}/export", produces = "text/calendar")
   public ResponseEntity<byte[]> exportEvent(@PathVariable UUID id) {
     Event eventToExport = this.eventService.getEventById(id);
-
-    Calendar calendar = new Calendar().withProdId("-//asobō//EN").withDefaults().getFluentTarget();
-
-    VEvent vEvent = new VEvent(eventToExport.getDate(), eventToExport.getTitle());
-    vEvent.add(new Uid(eventToExport.getId().toString()));
-
-    if (eventToExport.getDescription() != null) {
-      vEvent.add(new Description(eventToExport.getDescription()));
-    }
-    if (eventToExport.getLocation() != null) {
-      vEvent.add(new Location(eventToExport.getLocation()));
-    }
-
-    calendar = calendar.withComponent(vEvent).getFluentTarget();
-
-    byte[] data = calendar.toString().getBytes(StandardCharsets.UTF_8);
+    byte[] data = this.eventIcsExporter.buildIcs(eventToExport);
     return ResponseEntity.ok()
         .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=event.ics")
         .header(HttpHeaders.CONTENT_TYPE, "text/calendar; charset=UTF-8")
