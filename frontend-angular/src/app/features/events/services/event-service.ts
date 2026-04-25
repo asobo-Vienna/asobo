@@ -132,15 +132,7 @@ export class EventService {
     });
   }
 
-  public exportEvent(eventId: string): void {
-    this.http.get(`${environment.eventsEndpoint}/${eventId}/export`, {responseType: 'blob'})
-      .subscribe(blob => {
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `event_${eventId}.ics`;
-        a.click();
-        URL.revokeObjectURL(url);
-      });
+  public exportEvent(eventId: string): Observable<any> {
+    return this.http.get(`${environment.eventsEndpoint}/${eventId}/export`, {responseType: 'blob'});
   }
 }

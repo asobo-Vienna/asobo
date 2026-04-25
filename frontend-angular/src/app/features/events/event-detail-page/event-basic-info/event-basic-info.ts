@@ -185,7 +185,23 @@ export class EventBasicInfo implements OnInit {
   }
 
   exportEvent(): void {
-    const id = this.event()?.id;
-    if (id) this.eventService.exportEvent(id);
+    const eventId = this.event()?.id;
+    if (eventId) {
+      this.eventService.exportEvent(eventId).subscribe({
+        next: blob => {
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `event_${eventId}.ics`;
+          a.click();
+          URL.revokeObjectURL(url);
+          this.toastService.success('Successfully exported event calendar file.');
+        },
+        error: err => {
+          this.toastService.error('Error exporting event calendar file.');
+          console.log(err);
+        }
+      });
+    }
   }
 }
