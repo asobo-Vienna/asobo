@@ -13,10 +13,14 @@ import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.component.VEvent;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-class EventIcsExporterTest {
+@ExtendWith(MockitoExtension.class)
+class EventIcsExporterServiceTest {
 
-  private final EventIcsExporter exporter = new EventIcsExporter();
+  @InjectMocks private EventIcsExporterService exporter;
 
   private Calendar parse(byte[] data) throws Exception {
     return new CalendarBuilder().build(new ByteArrayInputStream(data));

@@ -24,7 +24,7 @@ import at.msm.asobo.dto.user.UserPublicDTO;
 import at.msm.asobo.entities.Event;
 import at.msm.asobo.entities.EventCategory;
 import at.msm.asobo.exceptions.users.UserNotAuthorizedException;
-import at.msm.asobo.export.EventIcsExporter;
+import at.msm.asobo.export.EventIcsExporterService;
 import at.msm.asobo.security.CustomUserDetailsService;
 import at.msm.asobo.security.JwtUtil;
 import at.msm.asobo.security.RestAuthenticationEntryPoint;
@@ -76,7 +76,7 @@ class EventControllerTest {
 
   @MockitoBean private AccessControlService accessControlService;
 
-  @MockitoBean private EventIcsExporter eventIcsExporter;
+  @MockitoBean private EventIcsExporterService eventIcsExporterService;
 
   private final String EVENTS_URL = "/api/events";
   private final String EVENTS_PAGINATED_URL = EVENTS_URL + "/paginated";
@@ -474,7 +474,7 @@ class EventControllerTest {
     Event event = new EventTestBuilder().withId(eventId).buildEventEntity();
 
     when(eventService.getEventById(eventId)).thenReturn(event);
-    when(eventIcsExporter.buildIcs(event)).thenReturn(icsBytes);
+    when(eventIcsExporterService.buildIcs(event)).thenReturn(icsBytes);
 
     mockMvc
         .perform(get(EXPORT_EVENT_URL, eventId))
@@ -484,7 +484,7 @@ class EventControllerTest {
         .andExpect(content().bytes(icsBytes));
 
     verify(eventService).getEventById(eventId);
-    verify(eventIcsExporter).buildIcs(event);
+    verify(eventIcsExporterService).buildIcs(event);
   }
 
   @Test

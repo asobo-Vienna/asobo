@@ -7,7 +7,7 @@ import at.msm.asobo.dto.event.EventUpdateDTO;
 import at.msm.asobo.dto.filter.EventFilterDTO;
 import at.msm.asobo.entities.Event;
 import at.msm.asobo.entities.EventCategory;
-import at.msm.asobo.export.EventIcsExporter;
+import at.msm.asobo.export.EventIcsExporterService;
 import at.msm.asobo.security.UserPrincipal;
 import at.msm.asobo.services.events.EventService;
 import jakarta.validation.Valid;
@@ -32,11 +32,12 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/api/events")
 public class EventController {
   private final EventService eventService;
-  private final EventIcsExporter eventIcsExporter;
+  private final EventIcsExporterService eventIcsExporterService;
 
-  public EventController(EventService eventService, EventIcsExporter eventIcsExporter) {
+  public EventController(
+      EventService eventService, EventIcsExporterService eventIcsExporterService) {
     this.eventService = eventService;
-    this.eventIcsExporter = eventIcsExporter;
+    this.eventIcsExporterService = eventIcsExporterService;
   }
 
   @GetMapping
@@ -180,7 +181,7 @@ public class EventController {
   @GetMapping(value = "/{id}/export", produces = "text/calendar")
   public ResponseEntity<byte[]> exportEvent(@PathVariable UUID id) {
     Event eventToExport = this.eventService.getEventById(id);
-    byte[] data = this.eventIcsExporter.buildIcs(eventToExport);
+    byte[] data = this.eventIcsExporterService.buildIcs(eventToExport);
     return ResponseEntity.ok()
         .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=event.ics")
         .header(HttpHeaders.CONTENT_TYPE, "text/calendar; charset=UTF-8")

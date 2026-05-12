@@ -7,10 +7,10 @@ import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.property.Description;
 import net.fortuna.ical4j.model.property.Location;
 import net.fortuna.ical4j.model.property.Uid;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-@Component
-public class EventIcsExporter {
+@Service
+public class EventIcsExporterService {
 
   private static final String PROD_ID = "-//asobō//EN";
 
