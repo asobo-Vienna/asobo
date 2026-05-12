@@ -18,6 +18,8 @@ import {SecureImagePipe} from '../../../core/pipes/secure-image-pipe';
 import {getTextPreview} from '../../../shared/utils/text/text-utils';
 import {ToastService} from '../../../shared/services/toast-service';
 import {ConfirmDialogService} from '../../../shared/services/confirm-dialog-service';
+import {AdminService} from '../services/admin-service';
+import {User} from '../../../shared/entities/users/user';
 
 @Component({
   selector: 'app-admin-event-list',
@@ -38,6 +40,7 @@ import {ConfirmDialogService} from '../../../shared/services/confirm-dialog-serv
 })
 export class AdminEventList implements OnInit {
   private eventService = inject(EventService);
+  private adminService = inject(AdminService);
   private router = inject(Router);
   private toastService = inject(ToastService);
   private confirmDialogService = inject(ConfirmDialogService);
@@ -71,7 +74,7 @@ export class AdminEventList implements OnInit {
 
     this.loading.set(true);
 
-    this.eventService.getAllEventsPaginated({page, size}, {}).subscribe({
+    this.adminService.getAllEvents({page, size}, {}).subscribe({
       next: (response) => {
         // Cache the page data
         this.pageCache.set(cacheKey, response.content);
@@ -121,14 +124,42 @@ export class AdminEventList implements OnInit {
 
         this.eventService.deleteEvent(event.id).subscribe({
           next: () => {
-            this.events.update(events => events.filter(e => e.id !== event.id));
-            this.totalRecords.update(total => total - 1);
+            this.events.update(events =>
+              events.map(e => e.id === event.id ? {...e, isDeleted: true} : e)
+            );
             this.clearCache();
             this.toastService.success(`Event "${event.title}" deleted successfully`);
           },
           error: (err) => {
             console.error('Error deleting event:', err);
             this.toastService.error(`Failed to delete event "${event.title}"`);
+          }
+        });
+      });
+  }
+
+  public onReactivate(event: EventSummary): void {
+    this.confirmDialogService
+      .confirmReactivate('event',event.title)
+      .then(confirmed => {
+        if (!confirmed) return;
+
+        this.adminService.reactivateEventById(event.id).subscribe({
+          next: (reactivatedEvent: EventSummary) => {
+            this.events.update(events =>
+              events.map(u =>
+                u.id === reactivatedEvent.id ? {
+                  ...u,
+                  isDeleted: reactivatedEvent.isDeleted
+                } : u
+              )
+            );
+            this.clearCache();
+            this.toastService.success(`Event "${event.title}" reactivated successfully`);
+          },
+          error: (err) => {
+            console.error('Error reactivating event:', err);
+            this.toastService.error(`Failed to reactivate event "${event.title}"`);
           }
         });
       });

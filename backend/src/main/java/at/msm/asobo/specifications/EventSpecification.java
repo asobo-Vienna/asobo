@@ -11,9 +11,13 @@ import java.util.List;
 import org.springframework.data.jpa.domain.Specification;
 
 public class EventSpecification {
-  public static Specification<Event> withFilters(EventFilterDTO filterDTO) {
+  public static Specification<Event> withFilters(EventFilterDTO filterDTO, boolean includeDeleted) {
     return (root, query, cb) -> {
       List<Predicate> predicates = new ArrayList<>();
+
+      if (!includeDeleted) {
+        predicates.add(cb.equal(root.get("isDeleted"), false));
+      }
 
       // Query filter - searches in title, description, location
       if (filterDTO.getQuery() != null && !filterDTO.getQuery().isBlank()) {

@@ -158,6 +158,11 @@ public class EventController {
     return this.eventService.getEventDTOById(id, isAuthenticated);
   }
 
+  @PostMapping("/{id}")
+  public EventDTO reactivateEventById(@PathVariable UUID id, @AuthenticationPrincipal UserPrincipal loggedInUser) {
+    return this.eventService.reactivateEventById(id, loggedInUser);
+  }
+
   @PatchMapping("/{id}")
   @PreAuthorize("hasAnyRole('USER', 'ADMIN', 'SUPERADMIN')")
   public EventDTO updateEventById(

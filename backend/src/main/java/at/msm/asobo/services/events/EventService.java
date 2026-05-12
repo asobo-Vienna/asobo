@@ -52,7 +52,7 @@ public class EventService {
   }
 
   public List<EventSummaryDTO> getAllEvents(EventFilterDTO filterDTO) {
-    List<Event> filteredEvents = eventRepository.findAll(EventSpecification.withFilters(filterDTO));
+    List<Event> filteredEvents = eventRepository.findAll(EventSpecification.withFilters(filterDTO, false));
     return this.eventDTOEventMapper.mapEventsToEventSummaryDTOs(filteredEvents);
   }
 
@@ -60,13 +60,13 @@ public class EventService {
       EventFilterDTO filterDTO, Pageable pageable) {
     filterDTO.setDateFrom(LocalDateTime.now());
     Page<Event> filteredEvents =
-        eventRepository.findAll(EventSpecification.withFilters(filterDTO), pageable);
+        eventRepository.findAll(EventSpecification.withFilters(filterDTO, false), pageable);
     return this.eventDTOEventMapper.mapEventPageToEventSummaryDTOs(filteredEvents);
   }
 
   public Page<EventSummaryDTO> getAllEventsPaginated(EventFilterDTO filterDTO, Pageable pageable) {
     Page<Event> filteredEvents =
-        eventRepository.findAll(EventSpecification.withFilters(filterDTO), pageable);
+        eventRepository.findAll(EventSpecification.withFilters(filterDTO, false), pageable);
     return this.eventDTOEventMapper.mapEventPageToEventSummaryDTOs(filteredEvents);
   }
 
@@ -224,13 +224,33 @@ public class EventService {
       throw new UserNotAuthorizedException("You are not allowed to delete this event");
     }
 
-    if (eventToDelete.getPictureURI() != null) {
-      this.fileStorageService.deleteFileFromBucket(eventToDelete.getPictureURI());
-    }
+    eventToDelete.setIsDeleted(true);
+    this.eventRepository.save(eventToDelete);
 
-    this.eventRepository.delete(eventToDelete);
     return this.eventDTOEventMapper.mapEventToEventDTO(eventToDelete);
   }
+
+  public EventDTO reactivateEventById(UUID eventId, UserPrincipal userPrincipal) {
+    Event eventToDelete = this.getEventById(eventId);
+
+    UUID loggedInUserId = userPrincipal.getUserId();
+    User loggedInUser =
+            this.userRepository
+                    .findUserByIdAndIsDeletedFalse(loggedInUserId)
+                    .orElseThrow(() -> new UserNotFoundException(loggedInUserId));
+
+    boolean canDeleteEvent =
+            this.eventAdminService.canManageEvent(eventToDelete, loggedInUser.getId());
+    if (!canDeleteEvent) {
+      throw new UserNotAuthorizedException("You are not allowed to reactivate this event");
+    }
+
+    eventToDelete.setIsDeleted(false);
+    this.eventRepository.save(eventToDelete);
+
+    return this.eventDTOEventMapper.mapEventToEventDTO(eventToDelete);
+  }
+
 
   public EventDTO updateEventById(
       UUID eventId, UserPrincipal userPrincipal, EventUpdateDTO eventUpdateDTO) {

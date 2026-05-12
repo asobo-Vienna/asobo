@@ -1,6 +1,8 @@
 package at.msm.asobo.controllers;
 
 import at.msm.asobo.dto.comment.UserCommentWithEventTitleDTO;
+import at.msm.asobo.dto.event.EventSummaryDTO;
+import at.msm.asobo.dto.filter.EventFilterDTO;
 import at.msm.asobo.dto.filter.MediumFilterDTO;
 import at.msm.asobo.dto.filter.UserCommentFilterDTO;
 import at.msm.asobo.dto.filter.UserFilterDTO;
@@ -67,6 +69,23 @@ public class AdminController {
             query, username, email, firstName, surname, location, country, isActive, roleIds);
 
     return this.adminService.getAllUsers(filterDTO);
+  }
+
+  @GetMapping("/events/paginated")
+  public Page<EventSummaryDTO> getAllEvents(
+          @RequestParam(required = false) String query,
+          @RequestParam(required = false) String location,
+          @RequestParam(required = false) UUID creatorId,
+          @RequestParam(required = false) LocalDateTime dateFrom,
+          @RequestParam(required = false) LocalDateTime dateTo,
+          @RequestParam(required = false) Boolean isPrivateEvent,
+          @PageableDefault(sort = "date", direction = Sort.Direction.ASC) Pageable pageable) {
+
+    EventFilterDTO filterDTO = new EventFilterDTO(
+            query, location, creatorId, null, dateFrom, dateTo,
+            isPrivateEvent, null, null, null);
+
+    return this.adminService.getAllEventsForAdminPaginated(filterDTO, pageable);
   }
 
   // TODO?: On expand get full user details for ONE user

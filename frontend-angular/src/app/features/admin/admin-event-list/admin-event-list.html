@@ -97,7 +97,11 @@
           <i class="pi pi-pencil clickable" title="Edit" (click)="onEdit(event)" aria-label="Edit event"></i>
         </td>
         <td data-label="Delete">
-          <i class="pi pi-trash clickable" title="Delete" (click)="onDelete(event)" aria-label="Delete event"></i>
+          @if (event.isDeleted) {
+            <i class="pi pi-power-off clickable" title="Reactivate" (click)="onReactivate(event)" aria-label="Reactivate event"></i>
+          } @else {
+            <i class="pi pi-trash clickable" title="Delete" (click)="onDelete(event)" aria-label="Delete event"></i>
+          }
         </td>
       </tr>
     </ng-template>

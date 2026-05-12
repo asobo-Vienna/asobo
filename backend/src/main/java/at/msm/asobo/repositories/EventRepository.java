@@ -57,7 +57,8 @@ public interface EventRepository
               SELECT DISTINCT e
               FROM Event e
               WHERE
-                (:includePrivate = true OR e.isPrivateEvent = false)
+                e.isDeleted = false
+                AND (:includePrivate = true OR e.isPrivateEvent = false)
 
                 AND (
                   :query IS NULL
