@@ -14,7 +14,6 @@ import {EntityFilterService} from './entity-filter-service';
 import {MediumFilters} from '../../../shared/entities/filters/medium-filters';
 import {EventFilters} from '../../../shared/entities/filters/event-filters';
 import {EventSummary} from '../../../shared/entities/events/event-summary';
-import {EventCategory} from '../../../shared/entities/events/event-category';
 
 @Injectable({
   providedIn: 'root',

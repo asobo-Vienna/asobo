@@ -52,7 +52,8 @@ public class EventService {
   }
 
   public List<EventSummaryDTO> getAllEvents(EventFilterDTO filterDTO) {
-    List<Event> filteredEvents = eventRepository.findAll(EventSpecification.withFilters(filterDTO, false));
+    List<Event> filteredEvents =
+        eventRepository.findAll(EventSpecification.withFilters(filterDTO, false));
     return this.eventDTOEventMapper.mapEventsToEventSummaryDTOs(filteredEvents);
   }
 
@@ -235,12 +236,12 @@ public class EventService {
 
     UUID loggedInUserId = userPrincipal.getUserId();
     User loggedInUser =
-            this.userRepository
-                    .findUserByIdAndIsDeletedFalse(loggedInUserId)
-                    .orElseThrow(() -> new UserNotFoundException(loggedInUserId));
+        this.userRepository
+            .findUserByIdAndIsDeletedFalse(loggedInUserId)
+            .orElseThrow(() -> new UserNotFoundException(loggedInUserId));
 
     boolean canDeleteEvent =
-            this.eventAdminService.canManageEvent(eventToDelete, loggedInUser.getId());
+        this.eventAdminService.canManageEvent(eventToDelete, loggedInUser.getId());
     if (!canDeleteEvent) {
       throw new UserNotAuthorizedException("You are not allowed to reactivate this event");
     }
@@ -250,7 +251,6 @@ public class EventService {
 
     return this.eventDTOEventMapper.mapEventToEventDTO(eventToDelete);
   }
-
 
   public EventDTO updateEventById(
       UUID eventId, UserPrincipal userPrincipal, EventUpdateDTO eventUpdateDTO) {

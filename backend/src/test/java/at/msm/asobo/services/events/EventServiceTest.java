@@ -911,8 +911,7 @@ class EventServiceTest {
     verify(eventRepository).findById(publicEvent1.getId());
     verify(userRepository).findUserByIdAndIsDeletedFalse(creator.getId());
     verify(eventAdminService).canManageEvent(publicEvent1, creator.getId());
-    verify(fileStorageService).deleteFileFromBucket(pathToPicture);
-    verify(eventRepository).delete(publicEvent1);
+    verify(eventRepository).save(publicEvent1);
     verify(eventDTOEventMapper).mapEventToEventDTO(publicEvent1);
   }
 
@@ -936,7 +935,7 @@ class EventServiceTest {
     verify(userRepository).findUserByIdAndIsDeletedFalse(creator.getId());
     verify(eventAdminService).canManageEvent(publicEvent1, creator.getId());
     verify(fileStorageService, never()).deleteFileFromBucket(any());
-    verify(eventRepository).delete(publicEvent1);
+    verify(eventRepository).save(publicEvent1);
     verify(eventDTOEventMapper).mapEventToEventDTO(publicEvent1);
   }
 
@@ -962,7 +961,7 @@ class EventServiceTest {
     verify(userRepository).findUserByIdAndIsDeletedFalse(eventAdmin1.getId());
     verify(eventAdminService).canManageEvent(publicEvent1, eventAdmin1.getId());
     verify(fileStorageService, never()).deleteFileFromBucket(any());
-    verify(eventRepository).delete(publicEvent1);
+    verify(eventRepository).save(publicEvent1);
     verify(eventDTOEventMapper).mapEventToEventDTO(publicEvent1);
   }
 

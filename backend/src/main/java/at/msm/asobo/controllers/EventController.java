@@ -159,7 +159,8 @@ public class EventController {
   }
 
   @PostMapping("/{id}")
-  public EventDTO reactivateEventById(@PathVariable UUID id, @AuthenticationPrincipal UserPrincipal loggedInUser) {
+  public EventDTO reactivateEventById(
+      @PathVariable UUID id, @AuthenticationPrincipal UserPrincipal loggedInUser) {
     return this.eventService.reactivateEventById(id, loggedInUser);
   }
 

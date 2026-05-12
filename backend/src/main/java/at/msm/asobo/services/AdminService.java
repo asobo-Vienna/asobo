@@ -77,8 +77,10 @@ public class AdminService {
     return this.userDTOUserMapper.mapUsersToUserFullDTOsAsList(users);
   }
 
-  public Page<EventSummaryDTO> getAllEventsForAdminPaginated(EventFilterDTO filterDTO, Pageable pageable) {
-    Page<Event> filteredEvents = eventRepository.findAll(EventSpecification.withFilters(filterDTO, true), pageable);
+  public Page<EventSummaryDTO> getAllEventsIncludingDeletedPaginated(
+      EventFilterDTO filterDTO, Pageable pageable) {
+    Page<Event> filteredEvents =
+        eventRepository.findAll(EventSpecification.withFilters(filterDTO, true), pageable);
     return this.eventDTOEventMapper.mapEventPageToEventSummaryDTOs(filteredEvents);
   }
 
