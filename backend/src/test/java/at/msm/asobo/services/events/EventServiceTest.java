@@ -195,7 +195,7 @@ class EventServiceTest {
     List<Event> events = List.of(publicEvent1, publicEvent2);
     Page<Event> eventPage = new PageImpl<>(events, pageable02, events.size());
 
-    when(eventRepository.findAllEvents(pageable02)).thenReturn(eventPage);
+    when(eventRepository.findAll(pageable02)).thenReturn(eventPage);
     when(eventDTOEventMapper.toEventSummaryDTO(publicEvent1)).thenReturn(publicEventSummaryDTO1);
     when(eventDTOEventMapper.toEventSummaryDTO(publicEvent2)).thenReturn(publicEventSummaryDTO2);
 
@@ -205,7 +205,7 @@ class EventServiceTest {
     assertThat(result.getTotalElements()).isEqualTo(2);
     assertThat(result.getPageable()).isEqualTo(pageable02);
 
-    verify(eventRepository).findAllEvents(pageable02);
+    verify(eventRepository).findAll(pageable02);
     verify(eventDTOEventMapper).toEventSummaryDTO(publicEvent1);
     verify(eventDTOEventMapper).toEventSummaryDTO(publicEvent2);
   }
@@ -215,7 +215,7 @@ class EventServiceTest {
     List<Event> events = List.of(privateEvent1);
     Page<Event> eventPage = new PageImpl<>(events, pageable12, 5); // Total 5 events
 
-    when(eventRepository.findAllEvents(pageable12)).thenReturn(eventPage);
+    when(eventRepository.findAll(pageable12)).thenReturn(eventPage);
     when(eventDTOEventMapper.toEventSummaryDTO(privateEvent1)).thenReturn(privateEventSummaryDTO1);
 
     Page<EventSummaryDTO> result = eventService.getAllEventsPaginated(pageable12);
@@ -225,7 +225,7 @@ class EventServiceTest {
     assertThat(result.getNumber()).isEqualTo(1);
     assertThat(result.getTotalPages()).isEqualTo(3);
 
-    verify(eventRepository).findAllEvents(pageable12);
+    verify(eventRepository).findAll(pageable12);
     verify(eventDTOEventMapper).toEventSummaryDTO(privateEvent1);
   }
 
@@ -233,7 +233,7 @@ class EventServiceTest {
   void getAllEventsPaginated_whenEmpty_shouldReturnEmptyPage() {
     Page<Event> emptyPage = new PageImpl<>(List.of(), pageable02, 0);
 
-    when(eventRepository.findAllEvents(pageable02)).thenReturn(emptyPage);
+    when(eventRepository.findAll(pageable02)).thenReturn(emptyPage);
 
     Page<EventSummaryDTO> result = eventService.getAllEventsPaginated(pageable02);
 
@@ -241,7 +241,7 @@ class EventServiceTest {
     assertThat(result.getTotalElements()).isZero();
     assertThat(result.getPageable()).isEqualTo(pageable02);
 
-    verify(eventRepository).findAllEvents(pageable02);
+    verify(eventRepository).findAll(pageable02);
   }
 
   // TODO: adapt test to our setting

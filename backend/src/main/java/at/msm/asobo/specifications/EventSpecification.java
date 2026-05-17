@@ -11,11 +11,12 @@ import java.util.List;
 import org.springframework.data.jpa.domain.Specification;
 
 public class EventSpecification {
-  public static Specification<Event> withFilters(EventFilterDTO filterDTO, boolean includeDeleted) {
+  public static Specification<Event> withFilters(EventFilterDTO filterDTO) {
     return (root, query, cb) -> {
       List<Predicate> predicates = new ArrayList<>();
 
-      if (!includeDeleted) {
+      // exclude deleted events
+      if (!Boolean.TRUE.equals(filterDTO.getIncludeDeleted())) {
         predicates.add(cb.equal(root.get("isDeleted"), false));
       }
 

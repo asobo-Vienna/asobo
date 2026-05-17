@@ -52,8 +52,7 @@ public class EventService {
   }
 
   public List<EventSummaryDTO> getAllEvents(EventFilterDTO filterDTO) {
-    List<Event> filteredEvents =
-        eventRepository.findAll(EventSpecification.withFilters(filterDTO, false));
+    List<Event> filteredEvents = eventRepository.findAll(EventSpecification.withFilters(filterDTO));
     return this.eventDTOEventMapper.mapEventsToEventSummaryDTOs(filteredEvents);
   }
 
@@ -61,13 +60,13 @@ public class EventService {
       EventFilterDTO filterDTO, Pageable pageable) {
     filterDTO.setDateFrom(LocalDateTime.now());
     Page<Event> filteredEvents =
-        eventRepository.findAll(EventSpecification.withFilters(filterDTO, false), pageable);
+        eventRepository.findAll(EventSpecification.withFilters(filterDTO), pageable);
     return this.eventDTOEventMapper.mapEventPageToEventSummaryDTOs(filteredEvents);
   }
 
   public Page<EventSummaryDTO> getAllEventsPaginated(EventFilterDTO filterDTO, Pageable pageable) {
     Page<Event> filteredEvents =
-        eventRepository.findAll(EventSpecification.withFilters(filterDTO, false), pageable);
+        eventRepository.findAll(EventSpecification.withFilters(filterDTO), pageable);
     return this.eventDTOEventMapper.mapEventPageToEventSummaryDTOs(filteredEvents);
   }
 
@@ -77,7 +76,7 @@ public class EventService {
   }
 
   public Page<EventSummaryDTO> getAllEventsPaginated(Pageable pageable) {
-    Page<Event> events = this.eventRepository.findAllEvents(pageable);
+    Page<Event> events = this.eventRepository.findAll(pageable);
     return events.map(this.eventDTOEventMapper::toEventSummaryDTO);
   }
 

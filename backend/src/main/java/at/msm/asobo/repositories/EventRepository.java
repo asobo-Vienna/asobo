@@ -16,8 +16,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface EventRepository
     extends JpaRepository<Event, UUID>, JpaSpecificationExecutor<Event> {
-  @Query("SELECT e FROM Event e")
-  Page<Event> findAllEvents(Pageable pageable);
 
   @Query("SELECT e FROM Event e WHERE e.id = :id")
   Optional<Event> findById(UUID id);

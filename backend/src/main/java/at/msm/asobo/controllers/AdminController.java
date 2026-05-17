@@ -79,11 +79,22 @@ public class AdminController {
       @RequestParam(required = false) LocalDateTime dateFrom,
       @RequestParam(required = false) LocalDateTime dateTo,
       @RequestParam(required = false) Boolean isPrivateEvent,
+      @RequestParam(required = false) Boolean includeDeleted,
       @PageableDefault(sort = "date", direction = Sort.Direction.ASC) Pageable pageable) {
 
     EventFilterDTO filterDTO =
         new EventFilterDTO(
-            query, location, creatorId, null, dateFrom, dateTo, isPrivateEvent, null, null, null);
+            query,
+            location,
+            creatorId,
+            null,
+            dateFrom,
+            dateTo,
+            isPrivateEvent,
+            includeDeleted,
+            null,
+            null,
+            null);
 
     return this.adminService.getAllEventsIncludingDeletedPaginated(filterDTO, pageable);
   }

@@ -46,6 +46,7 @@ public class EventController {
       @RequestParam(required = false) LocalDateTime dateFrom,
       @RequestParam(required = false) LocalDateTime dateTo,
       @RequestParam(required = false) Boolean isPrivateEvent,
+      @RequestParam(required = false) Boolean includeDeleted,
       @RequestParam(required = false) Set<UUID> eventAdminIds,
       @RequestParam(required = false) Set<UUID> participantIds,
       @RequestParam(required = false) Set<EventCategory> categories,
@@ -62,6 +63,7 @@ public class EventController {
             dateFrom,
             dateTo,
             isPrivateEvent,
+            includeDeleted,
             eventAdminIds,
             participantIds,
             categories);
@@ -90,6 +92,7 @@ public class EventController {
       @RequestParam(required = false) LocalDateTime dateFrom,
       @RequestParam(required = false) LocalDateTime dateTo,
       @RequestParam(required = false) Boolean isPrivateEvent,
+      @RequestParam(required = false) Boolean includeDeleted,
       @RequestParam(required = false) Set<UUID> eventAdminIds,
       @RequestParam(required = false) Set<UUID> participantIds,
       @RequestParam(required = false) Set<EventCategory> categories,
@@ -107,6 +110,7 @@ public class EventController {
             dateFrom,
             dateTo,
             isPrivateEvent,
+            includeDeleted,
             eventAdminIds,
             participantIds,
             categories);
