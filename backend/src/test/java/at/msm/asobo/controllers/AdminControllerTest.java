@@ -17,6 +17,7 @@ import at.msm.asobo.dto.user.UserAdminSummaryDTO;
 import at.msm.asobo.security.CustomUserDetailsService;
 import at.msm.asobo.security.JwtUtil;
 import at.msm.asobo.services.AdminService;
+import at.msm.asobo.services.events.EventService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 import java.util.UUID;
@@ -43,6 +44,8 @@ class AdminControllerTest {
   @Autowired private ObjectMapper objectMapper;
 
   @MockitoBean private AdminService adminService;
+
+  @MockitoBean private EventService eventService;
 
   @MockitoBean private FileStorageProperties fileStorageProperties;
 
