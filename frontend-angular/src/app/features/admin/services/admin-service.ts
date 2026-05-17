@@ -87,6 +87,6 @@ export class AdminService {
   }
 
   public reactivateEventById(eventId: string): Observable<EventSummary> {
-    return this.http.post<EventSummary>(`${environment.eventsEndpoint}/${eventId}`, {});
+    return this.http.post<EventSummary>(`${environment.adminEndpoint}/events/${eventId}/reactivate`, {});
   }
 }

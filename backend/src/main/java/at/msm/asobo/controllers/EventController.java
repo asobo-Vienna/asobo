@@ -46,7 +46,6 @@ public class EventController {
       @RequestParam(required = false) LocalDateTime dateFrom,
       @RequestParam(required = false) LocalDateTime dateTo,
       @RequestParam(required = false) Boolean isPrivateEvent,
-      @RequestParam(required = false) Boolean includeDeleted,
       @RequestParam(required = false) Set<UUID> eventAdminIds,
       @RequestParam(required = false) Set<UUID> participantIds,
       @RequestParam(required = false) Set<EventCategory> categories,
@@ -63,7 +62,7 @@ public class EventController {
             dateFrom,
             dateTo,
             isPrivateEvent,
-            includeDeleted,
+            false,
             eventAdminIds,
             participantIds,
             categories);
@@ -92,7 +91,6 @@ public class EventController {
       @RequestParam(required = false) LocalDateTime dateFrom,
       @RequestParam(required = false) LocalDateTime dateTo,
       @RequestParam(required = false) Boolean isPrivateEvent,
-      @RequestParam(required = false) Boolean includeDeleted,
       @RequestParam(required = false) Set<UUID> eventAdminIds,
       @RequestParam(required = false) Set<UUID> participantIds,
       @RequestParam(required = false) Set<EventCategory> categories,
@@ -110,7 +108,7 @@ public class EventController {
             dateFrom,
             dateTo,
             isPrivateEvent,
-            includeDeleted,
+            false,
             eventAdminIds,
             participantIds,
             categories);
@@ -160,12 +158,6 @@ public class EventController {
   public EventDTO getEventById(@PathVariable UUID id, Authentication authentication) {
     boolean isAuthenticated = authentication != null && authentication.isAuthenticated();
     return this.eventService.getEventDTOById(id, isAuthenticated);
-  }
-
-  @PostMapping("/{id}")
-  public EventDTO reactivateEventById(
-      @PathVariable UUID id, @AuthenticationPrincipal UserPrincipal loggedInUser) {
-    return this.eventService.reactivateEventById(id, loggedInUser);
   }
 
   @PatchMapping("/{id}")
