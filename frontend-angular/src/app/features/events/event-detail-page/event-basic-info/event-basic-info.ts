@@ -19,6 +19,7 @@ import {InputGroup} from 'primeng/inputgroup';
 import {InputGroupAddon} from 'primeng/inputgroupaddon';
 import {EventCategoryService} from '../../services/event-category-service';
 import {MultiSelect} from 'primeng/multiselect';
+import {Tooltip} from 'primeng/tooltip';
 
 @Component({
   selector: 'app-event-basic-info',
@@ -32,14 +33,15 @@ import {MultiSelect} from 'primeng/multiselect';
     Badge,
     InputGroup,
     InputGroupAddon,
-    MultiSelect
+    MultiSelect,
+    Tooltip
   ],
   templateUrl: './event-basic-info.html',
   styleUrl: './event-basic-info.scss',
 })
 export class EventBasicInfo implements OnInit {
   private formBuilder = inject(FormBuilder);
-  private eventService = inject(EventService);
+  protected eventService = inject(EventService);
   protected eventCategoryService = inject(EventCategoryService);
   protected accessControlService = inject(AccessControlService);
   private router = inject(Router);
@@ -47,7 +49,7 @@ export class EventBasicInfo implements OnInit {
   private confirmDialogService = inject(ConfirmDialogService);
   private destroyRef = inject(DestroyRef);
 
-  protected categories = toSignal(this.eventCategoryService.getAllCategories(), { initialValue: [] });
+  protected categories = toSignal(this.eventCategoryService.getAllCategories(), {initialValue: []});
 
   protected readonly environment = environment;
 
@@ -182,5 +184,26 @@ export class EventBasicInfo implements OnInit {
           }
         });
       });
+  }
+
+  exportEvent(): void {
+    const eventId = this.event()?.id;
+    if (eventId) {
+      this.eventService.exportEvent(eventId).subscribe({
+        next: blob => {
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `event_${eventId}.ics`;
+          a.click();
+          URL.revokeObjectURL(url);
+          this.toastService.success('Successfully exported event calendar file.');
+        },
+        error: err => {
+          this.toastService.error('Error exporting event calendar file.');
+          console.log(err);
+        }
+      });
+    }
   }
 }

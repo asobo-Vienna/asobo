@@ -131,4 +131,8 @@ export class EventService {
       body: userIds
     });
   }
+
+  public exportEvent(eventId: string): Observable<any> {
+    return this.http.get(`${environment.eventsEndpoint}/${eventId}/export`, {responseType: 'blob'});
+  }
 }
