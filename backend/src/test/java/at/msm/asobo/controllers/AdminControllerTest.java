@@ -1,26 +1,34 @@
 package at.msm.asobo.controllers;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import at.msm.asobo.config.FileStorageProperties;
 import at.msm.asobo.dto.comment.UserCommentWithEventTitleDTO;
+import at.msm.asobo.dto.event.EventDTO;
 import at.msm.asobo.dto.filter.MediumFilterDTO;
 import at.msm.asobo.dto.filter.UserCommentFilterDTO;
 import at.msm.asobo.dto.filter.UserFilterDTO;
 import at.msm.asobo.dto.medium.MediumWithEventTitleDTO;
 import at.msm.asobo.dto.user.UserAdminSummaryDTO;
+import at.msm.asobo.exceptions.events.EventNotFoundException;
 import at.msm.asobo.security.CustomUserDetailsService;
 import at.msm.asobo.security.JwtUtil;
+import at.msm.asobo.security.UserPrincipal;
 import at.msm.asobo.services.AdminService;
 import at.msm.asobo.services.events.EventService;
+import at.msm.asobo.utils.MockAuthenticationFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 import java.util.UUID;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,6 +65,16 @@ class AdminControllerTest {
   private static final String USERS_PAGINATED_URL = "/api/admin/users/paginated";
   private static final String COMMENTS_URL = "/api/admin/comments";
   private static final String MEDIA_URL = "/api/admin/media";
+  private static final String REACTIVATE_EVENT_URL = "/api/admin/events/{id}/reactivate";
+
+  private UUID eventId;
+  private UUID userId;
+
+  @BeforeEach
+  void setUp() {
+    eventId = UUID.randomUUID();
+    userId = UUID.randomUUID();
+  }
 
   @ParameterizedTest
   @ValueSource(strings = {USERS_URL, COMMENTS_URL, MEDIA_URL})
@@ -153,5 +171,59 @@ class AdminControllerTest {
         .andExpect(content().string(expectedJson));
 
     verify(adminService).getAllMediaWithEventTitle(any(MediumFilterDTO.class), any(Pageable.class));
+  }
+
+  @ParameterizedTest
+  @ValueSource(strings = {"ROLE_ADMIN", "ROLE_SUPERADMIN"})
+  void reactivateEventById_success(String role) throws Exception {
+    EventDTO reactivatedEvent = new EventDTO();
+    reactivatedEvent.setIsDeleted(false);
+    String expectedJson = objectMapper.writeValueAsString(reactivatedEvent);
+
+    when(eventService.reactivateEventById(eq(eventId), any(UserPrincipal.class)))
+        .thenReturn(reactivatedEvent);
+
+    mockMvc
+        .perform(
+            post(REACTIVATE_EVENT_URL, eventId)
+                .with(
+                    authentication(
+                        MockAuthenticationFactory.mockAuth(
+                            eventId, "testuser", "testuser@test.com", role)))
+                .with(csrf()))
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(content().string(expectedJson));
+
+    verify(eventService).reactivateEventById(eq(eventId), any(UserPrincipal.class));
+  }
+
+  @ParameterizedTest
+  @ValueSource(strings = {"ROLE_ADMIN", "ROLE_SUPERADMIN"})
+  void reactivateEventById_notFound(String role) throws Exception {
+    when(eventService.reactivateEventById(eq(eventId), any(UserPrincipal.class)))
+        .thenThrow(new EventNotFoundException(eventId));
+
+    mockMvc
+        .perform(
+            post(REACTIVATE_EVENT_URL, eventId)
+                .with(
+                    authentication(
+                        MockAuthenticationFactory.mockAuth(
+                            eventId, "testuser", "testuser@test.com", role)))
+                .with(csrf()))
+        .andExpect(status().isNotFound());
+  }
+
+  @Test
+  void reactivateEventById_userNotLoggedIn() throws Exception {
+    mockMvc.perform(post(REACTIVATE_EVENT_URL, eventId)).andExpect(status().isForbidden());
+  }
+
+  @Test
+  void reactivateEventById_forbidden() throws Exception {
+    mockMvc
+        .perform(post(REACTIVATE_EVENT_URL, eventId).with(user("user").roles("X")))
+        .andExpect(status().isForbidden());
   }
 }

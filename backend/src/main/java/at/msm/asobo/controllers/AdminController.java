@@ -102,7 +102,7 @@ public class AdminController {
     return this.adminService.getAllEventsIncludingDeletedPaginated(filterDTO, pageable);
   }
 
-  @PostMapping("events/{id}/reactivate")
+  @PostMapping("/events/{id}/reactivate")
   public EventDTO reactivateEventById(
       @PathVariable UUID id, @AuthenticationPrincipal UserPrincipal loggedInUser) {
     return this.eventService.reactivateEventById(id, loggedInUser);
