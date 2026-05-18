@@ -19,6 +19,7 @@ import at.msm.asobo.repositories.EventRepository;
 import at.msm.asobo.repositories.MediumRepository;
 import at.msm.asobo.repositories.UserCommentRepository;
 import at.msm.asobo.repositories.UserRepository;
+import at.msm.asobo.specifications.EventSpecification;
 import at.msm.asobo.specifications.MediumSpecification;
 import at.msm.asobo.specifications.UserCommentSpecification;
 import at.msm.asobo.specifications.UserSpecification;
@@ -78,10 +79,9 @@ public class AdminService {
 
   public Page<EventSummaryDTO> getAllEventsIncludingDeletedPaginated(
       EventFilterDTO filterDTO, Pageable pageable) {
-
-    // get all events (including deleted)
     filterDTO.setIncludeDeleted(true);
-    Page<Event> filteredEvents = eventRepository.findAll(pageable);
+    Page<Event> filteredEvents =
+        eventRepository.findAll(EventSpecification.withFilters(filterDTO), pageable);
     return this.eventDTOEventMapper.mapEventPageToEventSummaryDTOs(filteredEvents);
   }
 
