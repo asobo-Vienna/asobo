@@ -55,7 +55,7 @@ public interface EventRepository
               SELECT DISTINCT e
               FROM Event e
               WHERE
-                e.isDeleted = false
+                (:includeDeleted = true OR e.isDeleted = false)
                 AND (:includePrivate = true OR e.isPrivateEvent = false)
 
                 AND (
@@ -77,5 +77,6 @@ public interface EventRepository
       @Param("startDate") LocalDateTime startDate,
       @Param("endDate") LocalDateTime endDate,
       @Param("location") String location,
-      @Param("includePrivate") boolean includePrivate);
+      @Param("includePrivate") boolean includePrivate,
+      @Param("includeDeleted") boolean includeDeleted);
 }

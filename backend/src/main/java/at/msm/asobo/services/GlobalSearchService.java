@@ -18,10 +18,15 @@ public class GlobalSearchService {
 
   private final EventRepository eventRepository;
   private final UserRepository userRepository;
+  private final AccessControlService accessControlService;
 
-  public GlobalSearchService(EventRepository eventRepository, UserRepository userRepository) {
+  public GlobalSearchService(
+      EventRepository eventRepository,
+      UserRepository userRepository,
+      AccessControlService accessControlService) {
     this.eventRepository = eventRepository;
     this.userRepository = userRepository;
+    this.accessControlService = accessControlService;
   }
 
   @Transactional(readOnly = true)
@@ -38,7 +43,8 @@ public class GlobalSearchService {
               request.getStartDate(),
               request.getEndDate(),
               request.getLocation(),
-              request.getIncludePrivateEvents());
+              request.getIncludePrivateEvents(),
+              this.accessControlService.isCurrentUserAdmin());
 
       response.setEvents(
           events.stream().map(this::mapToEventResult).limit(15).collect(Collectors.toList()));

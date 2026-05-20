@@ -87,17 +87,7 @@ public class AdminController {
 
     EventFilterDTO filterDTO =
         new EventFilterDTO(
-            query,
-            location,
-            creatorId,
-            null,
-            dateFrom,
-            dateTo,
-            isPrivateEvent,
-            includeDeleted,
-            null,
-            null,
-            null);
+            query, location, creatorId, dateFrom, dateTo, isPrivateEvent, includeDeleted);
 
     return this.adminService.getAllEventsIncludingDeletedPaginated(filterDTO, pageable);
   }

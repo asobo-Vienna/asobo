@@ -15,7 +15,7 @@ public class EventSpecification {
     return (root, query, cb) -> {
       List<Predicate> predicates = new ArrayList<>();
 
-      // exclude deleted events
+      // exclude deleted events if not explicitly set
       if (!Boolean.TRUE.equals(filterDTO.getIncludeDeleted())) {
         predicates.add(cb.equal(root.get("isDeleted"), false));
       }

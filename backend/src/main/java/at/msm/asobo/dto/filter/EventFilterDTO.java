@@ -43,6 +43,23 @@ public class EventFilterDTO {
     this.categories = categories;
   }
 
+  public EventFilterDTO(
+      String query,
+      String location,
+      UUID creatorId,
+      LocalDateTime dateFrom,
+      LocalDateTime dateTo,
+      Boolean isPrivateEvent,
+      Boolean includeDeleted) {
+    this.query = query;
+    this.location = location;
+    this.creatorId = creatorId;
+    this.dateFrom = dateFrom;
+    this.dateTo = dateTo;
+    this.isPrivateEvent = isPrivateEvent;
+    this.includeDeleted = includeDeleted;
+  }
+
   public String getQuery() {
     return this.query;
   }
