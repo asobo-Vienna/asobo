@@ -49,6 +49,7 @@ export class AdminEventList implements OnInit {
   isMobile = signal(window.innerWidth <= 768);
   events = signal<EventSummary[]>([]);
   totalRecords = signal<number>(0);
+  totalActiveRecords = signal<number>(0);
   loading = signal<boolean>(true);
 
   showDescriptionDialog = false;
@@ -127,6 +128,7 @@ export class AdminEventList implements OnInit {
             this.events.update(events =>
               events.map(e => e.id === event.id ? {...e, isDeleted: true} : e)
             );
+            this.totalActiveRecords.update(totalActive => totalActive - 1);
             this.clearCache();
             this.toastService.success(`Event "${event.title}" deleted successfully`);
           },
