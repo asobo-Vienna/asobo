@@ -26,11 +26,8 @@ import {SecureImagePipe} from '../../../core/pipes/secure-image-pipe';
 export class Gallery {
   protected accessControlService = inject(AccessControlService);
 
-  //@Input() mediaItems: List<MediaItem> = new List([]);
   mediaItems = input<List<MediaItem>>(new List());
-  //@Output() mediaAdded = new EventEmitter<File>();
   mediaAdded = output<File>();
-  //@Output() mediaDeleted = new EventEmitter<MediaItem>();
   mediaDeleted = output<MediaItem>();
 
   protected readonly UrlUtilService = UrlUtilService;

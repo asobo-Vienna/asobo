@@ -1,7 +1,7 @@
 <div class="fw-bold">Photos & Videos</div>
 <div class="mt-2 media-thumbnail-container">
 
-  @for (item of mediaItems; track item.id; let i = $index) {
+  @for (item of mediaItems(); track item.id; let i = $index) {
     <div class="single-media-container"
          role="button"
          tabindex="0"
@@ -47,7 +47,7 @@
 @if (showCarousel) {
   <div class="carousel-overlay" (click)="closeCarousel()">
     <div class="carousel-content" (click)="$event.stopPropagation()">
-      <p-carousel [value]="mediaItems.toArray()"
+      <p-carousel [value]="mediaItems().toArray()"
                   [numVisible]="1"
                   [numScroll]="1"
                   [circular]="true"

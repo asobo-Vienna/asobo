@@ -18,7 +18,6 @@ import {AsyncPipe} from '@angular/common';
   styleUrl: './participants.scss'
 })
 export class Participants {
-  //@Input() participants!: List<Participant>;
   participants = input<List<Participant>>(new List());
   protected readonly UrlUtilService = UrlUtilService;
   protected readonly environment = environment;
