@@ -1,6 +1,6 @@
 <div class="fw-bold">Going</div>
 <div class="mt-2">
-  @for (participant of participants; track participant.id) {
+  @for (participant of participants(); track participant.id) {
     <a [routerLink]="`${environment.userProfileBaseUrl}${participant.username}`"
        [attr.aria-label]="participant.username + '\'s profile'">
       <img class="user-avatar"
