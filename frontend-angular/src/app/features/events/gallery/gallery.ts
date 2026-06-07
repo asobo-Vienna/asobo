@@ -1,4 +1,4 @@
-import {Component, EventEmitter, inject, input, Input, Output, ViewEncapsulation} from '@angular/core';
+import {Component, inject, input, output, ViewEncapsulation} from '@angular/core';
 import {MediaItem} from '../../../shared/entities/media/media-item';
 import {List} from "../../../core/data-structures/lists/list";
 import {UrlUtilService} from '../../../shared/utils/url/url-util-service';
@@ -26,9 +26,9 @@ import {SecureImagePipe} from '../../../core/pipes/secure-image-pipe';
 export class Gallery {
   protected accessControlService = inject(AccessControlService);
 
-  @Input() mediaItems: List<MediaItem> = new List([]);
-  @Output() mediaAdded = new EventEmitter<File>();
-  @Output() mediaDeleted = new EventEmitter<MediaItem>();
+  mediaItems = input<List<MediaItem>>(new List());
+  mediaAdded = output<File>();
+  mediaDeleted = output<MediaItem>();
 
   protected readonly UrlUtilService = UrlUtilService;
   protected readonly MediaUtilService = MediaUtilService;

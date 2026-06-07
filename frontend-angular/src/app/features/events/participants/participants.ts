@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {Component, input} from '@angular/core';
 import {Participant} from '../../../shared/entities/events/participant';
 import {List} from '../../../core/data-structures/lists/list';
 import {UrlUtilService} from '../../../shared/utils/url/url-util-service';
@@ -18,7 +18,7 @@ import {AsyncPipe} from '@angular/common';
   styleUrl: './participants.scss'
 })
 export class Participants {
-  @Input() participants!: List<Participant>;
+  participants = input<List<Participant>>(new List());
   protected readonly UrlUtilService = UrlUtilService;
   protected readonly environment = environment;
 }

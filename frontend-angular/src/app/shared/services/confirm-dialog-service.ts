@@ -30,9 +30,9 @@ const ENTITY_CONFIG = {
     label: 'Event',
     icon: 'pi pi-calendar',
     deleteMessage: (name) =>
-      name ? `Delete event ${name}?` : 'Delete this event?',
+      name ? `Are you sure that you want to delete event ${name}?` : 'Are you sure that you want to delete this event?',
     reactivateMessage: (name) =>
-      name ? `Reactivate event ${name}?` : 'Reactivate this event?'
+      name ? `Are you sure that you want to reactivate event ${name}?` : 'Are you sure that you want to reactivate this event?'
   },
 
   comment: {
@@ -41,29 +41,29 @@ const ENTITY_CONFIG = {
     deleteMessage: (name) =>
       name
         ? name.length > 30
-          ? `Delete comment ${name.slice(0, 30)}...?`
-          : `Delete comment ${name}?`
-        : 'Delete this comment?'
+          ? `Are you sure that you want to delete comment ${name.slice(0, 30)}...?`
+          : `Are you sure that you want to delete comment ${name}?`
+        : 'Are you sure that you want to delete this comment?'
   },
 
   medium: {
     label: 'Medium',
     icon: 'pi pi-folder',
-    deleteMessage: (name) => 'Delete this medium?'
+    deleteMessage: (name) => 'Are you sure that you want to delete this medium?'
   },
 
   profilePicture: {
     label: 'Profile Picture',
     icon: 'pi pi-user',
     deleteMessage: (name) =>
-      name ? `Delete profile picture of ${name}?` : 'Delete this profile picture?'
+      name ? `Are you sure that you want to delete profile picture of ${name}?` : 'Are you sure that you want to delete this profile picture?'
   },
 
   coverPicture: {
     label: 'Cover Picture',
     icon: 'pi pi-image',
     deleteMessage: (name) =>
-      name ? `Delete cover picture of event ${name}?` : 'Delete this cover picture?'
+      name ? `Are you sure that you want to delete cover picture of event ${name}?` : 'Are you sure that you want to delete this cover picture?'
   }
 } satisfies Record<EntityType, EntityConfig>;
 
