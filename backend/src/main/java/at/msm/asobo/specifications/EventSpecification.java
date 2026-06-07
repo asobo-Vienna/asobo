@@ -15,6 +15,11 @@ public class EventSpecification {
     return (root, query, cb) -> {
       List<Predicate> predicates = new ArrayList<>();
 
+      // exclude deleted events if not explicitly set
+      if (!Boolean.TRUE.equals(filterDTO.getIncludeDeleted())) {
+        predicates.add(cb.equal(root.get("isDeleted"), false));
+      }
+
       // Query filter - searches in title, description, location
       if (filterDTO.getQuery() != null && !filterDTO.getQuery().isBlank()) {
         String queryPattern = "%" + filterDTO.getQuery().toLowerCase() + "%";

@@ -12,6 +12,8 @@ import {UserFilters} from '../../../shared/entities/filters/user-filters';
 import {CommentFilters} from '../../../shared/entities/filters/comment-filters';
 import {EntityFilterService} from './entity-filter-service';
 import {MediumFilters} from '../../../shared/entities/filters/medium-filters';
+import {EventFilters} from '../../../shared/entities/filters/event-filters';
+import {EventSummary} from '../../../shared/entities/events/event-summary';
 
 @Injectable({
   providedIn: 'root',
@@ -43,6 +45,18 @@ export class AdminService {
     return this.http.get<PageResponse<User>>(`${environment.apiBaseUrl}/admin/users/paginated`, {params});
   }
 
+  public getAllEvents(params: { page: number, size: number }, eventFilters?: EventFilters): Observable<PageResponse<EventSummary>> {
+    let httpParams = eventFilters
+      ? this.entityFilterService.filtersToHttpParams(eventFilters)
+      : new HttpParams();
+
+    httpParams = httpParams
+      .set('page', params.page.toString())
+      .set('size', params.size.toString());
+
+    return this.http.get<PageResponse<EventSummary>>(`${environment.apiBaseUrl}/admin/events/paginated`, {params: httpParams});
+  }
+
 
   public getAllCommentsWithEventTitle(page: number, size: number, commentFilters?: CommentFilters): Observable<PageResponse<CommentWithEventTitle>> {
     let params = commentFilters ? this.entityFilterService.filtersToHttpParams(commentFilters) : new HttpParams();
@@ -70,5 +84,9 @@ export class AdminService {
 
   public reactivateUserById(userId: string): Observable<User> {
     return this.http.post<User>(`${environment.apiBaseUrl}/users/${userId}`, {});
+  }
+
+  public reactivateEventById(eventId: string): Observable<EventSummary> {
+    return this.http.post<EventSummary>(`${environment.adminEndpoint}/events/${eventId}/reactivate`, {});
   }
 }

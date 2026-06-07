@@ -83,6 +83,9 @@ public class Event implements PictureEntity {
   @JsonProperty("isPrivateEvent")
   private boolean isPrivateEvent;
 
+  @Column(columnDefinition = "boolean default false")
+  private boolean isDeleted;
+
   public Event() {
     this.eventAdmins = new HashSet<>();
     this.participants = new HashSet<>();
@@ -204,6 +207,14 @@ public class Event implements PictureEntity {
   @JsonProperty("isPrivateEvent")
   public void setIsPrivateEvent(boolean isPrivateEvent) {
     this.isPrivateEvent = isPrivateEvent;
+  }
+
+  public boolean getIsDeleted() {
+    return this.isDeleted;
+  }
+
+  public void setIsDeleted(boolean isDeleted) {
+    this.isDeleted = isDeleted;
   }
 
   public Set<User> getEventAdmins() {

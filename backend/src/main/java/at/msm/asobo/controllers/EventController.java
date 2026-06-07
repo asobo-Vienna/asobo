@@ -66,6 +66,7 @@ public class EventController {
             dateFrom,
             dateTo,
             isPrivateEvent,
+            false,
             eventAdminIds,
             participantIds,
             categories);
@@ -111,6 +112,7 @@ public class EventController {
             dateFrom,
             dateTo,
             isPrivateEvent,
+            false,
             eventAdminIds,
             participantIds,
             categories);

@@ -49,6 +49,7 @@ public class EventDTOEventMapper {
     dto.setModificationDate(event.getModificationDate());
     dto.setCreator(this.userDTOUserMapper.mapUserToUserPublicDTO(event.getCreator()));
     dto.setIsPrivateEvent(event.getIsPrivateEvent());
+    dto.setIsDeleted(event.getIsDeleted());
 
     if (event.getEventAdmins() != null) {
       dto.setEventAdmins(userDTOUserMapper.mapUsersToUserPublicDTOs(event.getEventAdmins()));
@@ -91,6 +92,7 @@ public class EventDTOEventMapper {
     event.setModificationDate(dto.getModificationDate());
     event.setCreator(this.userDTOUserMapper.mapUserPublicDTOToUser(dto.getCreator()));
     event.setIsPrivateEvent(dto.getIsPrivateEvent());
+    event.setIsDeleted(dto.getIsDeleted());
 
     // TODO: this is where the replacing of mappers to factory patterns ticket #37 comes in
     // Note: participants, comments, and media should be handled separately
@@ -116,6 +118,7 @@ public class EventDTOEventMapper {
     dto.setModificationDate(event.getModificationDate());
     dto.setCreator(this.userDTOUserMapper.mapUserToUserPublicDTO(event.getCreator()));
     dto.setIsPrivateEvent(event.getIsPrivateEvent());
+    dto.setIsDeleted(event.getIsDeleted());
     dto.setParticipantCount(event.getParticipants().size());
     dto.setCommentCount(event.getComments().size());
     dto.setMediaCount(event.getMedia().size());

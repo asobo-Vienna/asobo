@@ -30,7 +30,9 @@ const ENTITY_CONFIG = {
     label: 'Event',
     icon: 'pi pi-calendar',
     deleteMessage: (name) =>
-      name ? `Delete event ${name}?` : 'Delete this event?'
+      name ? `Delete event ${name}?` : 'Delete this event?',
+    reactivateMessage: (name) =>
+      name ? `Reactivate event ${name}?` : 'Reactivate this event?'
   },
 
   comment: {
@@ -95,7 +97,7 @@ export class ConfirmDialogService {
 
   // only user can call this at this point (compile-time enforced)
   confirmReactivate(
-    type: Extract<EntityType, 'user'>,
+    type: Extract<EntityType, 'user' | 'event'>,
     name?: string
   ): Promise<boolean> {
     const config = ENTITY_CONFIG[type] as ReactivableEntityConfig;

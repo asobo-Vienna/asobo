@@ -149,6 +149,7 @@ public class FileStorageService {
       }
 
     } catch (IOException | InterruptedException e) {
+      LOGGER.error("File retrieval failed for URL: {}", fileUrl, e);
       throw new RuntimeException("File retrieval failed", e);
     }
   }
