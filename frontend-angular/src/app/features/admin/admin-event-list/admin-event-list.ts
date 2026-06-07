@@ -19,7 +19,6 @@ import {getTextPreview} from '../../../shared/utils/text/text-utils';
 import {ToastService} from '../../../shared/services/toast-service';
 import {ConfirmDialogService} from '../../../shared/services/confirm-dialog-service';
 import {AdminService} from '../services/admin-service';
-import {User} from '../../../shared/entities/users/user';
 
 @Component({
   selector: 'app-admin-event-list',
@@ -82,6 +81,7 @@ export class AdminEventList implements OnInit {
 
         this.events.set(response.content);
         this.totalRecords.set(response.totalElements);
+        this.totalActiveRecords.set(response.totalActiveElements);
         this.loading.set(false);
       },
       error: (err) => {
