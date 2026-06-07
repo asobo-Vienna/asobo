@@ -1,13 +1,18 @@
 package at.msm.asobo.controllers;
 
 import at.msm.asobo.dto.comment.UserCommentWithEventTitleDTO;
+import at.msm.asobo.dto.event.EventDTO;
+import at.msm.asobo.dto.event.EventSummaryDTO;
+import at.msm.asobo.dto.filter.EventFilterDTO;
 import at.msm.asobo.dto.filter.MediumFilterDTO;
 import at.msm.asobo.dto.filter.UserCommentFilterDTO;
 import at.msm.asobo.dto.filter.UserFilterDTO;
 import at.msm.asobo.dto.medium.MediumWithEventTitleDTO;
 import at.msm.asobo.dto.user.UserAdminSummaryDTO;
 import at.msm.asobo.dto.user.UserFullDTO;
+import at.msm.asobo.security.UserPrincipal;
 import at.msm.asobo.services.AdminService;
+import at.msm.asobo.services.events.EventService;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
@@ -17,19 +22,19 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/admin")
 @PreAuthorize("hasAnyRole('ADMIN', 'SUPERADMIN')")
 public class AdminController {
   private final AdminService adminService;
+  private final EventService eventService;
 
-  public AdminController(AdminService adminService) {
+  public AdminController(AdminService adminService, EventService eventService) {
     this.adminService = adminService;
+    this.eventService = eventService;
   }
 
   @GetMapping("/users/paginated")
@@ -67,6 +72,30 @@ public class AdminController {
             query, username, email, firstName, surname, location, country, isActive, roleIds);
 
     return this.adminService.getAllUsers(filterDTO);
+  }
+
+  @GetMapping("/events/paginated")
+  public Page<EventSummaryDTO> getAllEvents(
+      @RequestParam(required = false) String query,
+      @RequestParam(required = false) String location,
+      @RequestParam(required = false) UUID creatorId,
+      @RequestParam(required = false) LocalDateTime dateFrom,
+      @RequestParam(required = false) LocalDateTime dateTo,
+      @RequestParam(required = false) Boolean isPrivateEvent,
+      @RequestParam(required = false) Boolean includeDeleted,
+      @PageableDefault(sort = "date", direction = Sort.Direction.ASC) Pageable pageable) {
+
+    EventFilterDTO filterDTO =
+        new EventFilterDTO(
+            query, location, creatorId, dateFrom, dateTo, isPrivateEvent, includeDeleted);
+
+    return this.adminService.getAllEventsIncludingDeletedPaginated(filterDTO, pageable);
+  }
+
+  @PostMapping("/events/{id}/reactivate")
+  public EventDTO reactivateEventById(
+      @PathVariable UUID id, @AuthenticationPrincipal UserPrincipal loggedInUser) {
+    return this.eventService.reactivateEventById(id, loggedInUser);
   }
 
   // TODO?: On expand get full user details for ONE user

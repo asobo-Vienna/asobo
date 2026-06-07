@@ -26,6 +26,8 @@ public class EventBaseDTO {
   private UserPublicDTO creator;
   private String pictureURI;
 
+  private boolean isDeleted;
+
   public UUID getId() {
     return this.id;
   }
@@ -112,5 +114,13 @@ public class EventBaseDTO {
 
   public void setPictureURI(String pictureURI) {
     this.pictureURI = pictureURI;
+  }
+
+  public boolean getIsDeleted() {
+    return this.isDeleted;
+  }
+
+  public void setIsDeleted(boolean isDeleted) {
+    this.isDeleted = isDeleted;
   }
 }

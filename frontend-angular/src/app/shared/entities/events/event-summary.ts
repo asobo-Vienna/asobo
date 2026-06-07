@@ -9,4 +9,5 @@ export interface EventSummary extends EventCoreInfo {
   eventAdminIds: List<string>;
   creator?: User;
   creatorId?: string;
+  isDeleted?: boolean;
 }

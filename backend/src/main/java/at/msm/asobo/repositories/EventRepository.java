@@ -16,8 +16,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface EventRepository
     extends JpaRepository<Event, UUID>, JpaSpecificationExecutor<Event> {
-  @Query("SELECT e FROM Event e")
-  Page<Event> findAllEvents(Pageable pageable);
 
   @Query("SELECT e FROM Event e WHERE e.id = :id")
   Optional<Event> findById(UUID id);
@@ -57,7 +55,8 @@ public interface EventRepository
               SELECT DISTINCT e
               FROM Event e
               WHERE
-                (:includePrivate = true OR e.isPrivateEvent = false)
+                (:includeDeleted = true OR e.isDeleted = false)
+                AND (:includePrivate = true OR e.isPrivateEvent = false)
 
                 AND (
                   :query IS NULL
@@ -78,5 +77,6 @@ public interface EventRepository
       @Param("startDate") LocalDateTime startDate,
       @Param("endDate") LocalDateTime endDate,
       @Param("location") String location,
-      @Param("includePrivate") boolean includePrivate);
+      @Param("includePrivate") boolean includePrivate,
+      @Param("includeDeleted") boolean includeDeleted);
 }

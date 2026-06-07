@@ -13,6 +13,7 @@ public class EventFilterDTO {
   private LocalDateTime dateFrom;
   private LocalDateTime dateTo;
   private Boolean isPrivateEvent;
+  private Boolean includeDeleted;
   private Set<UUID> eventAdminIds;
   private Set<UUID> participantIds;
   private Set<EventCategory> categories;
@@ -25,6 +26,7 @@ public class EventFilterDTO {
       LocalDateTime dateFrom,
       LocalDateTime dateTo,
       Boolean isPrivateEvent,
+      Boolean includeDeleted,
       Set<UUID> eventAdminsIds,
       Set<UUID> participantIds,
       Set<EventCategory> categories) {
@@ -35,9 +37,27 @@ public class EventFilterDTO {
     this.dateFrom = dateFrom;
     this.dateTo = dateTo;
     this.isPrivateEvent = isPrivateEvent;
+    this.includeDeleted = includeDeleted;
     this.eventAdminIds = eventAdminsIds;
     this.participantIds = participantIds;
     this.categories = categories;
+  }
+
+  public EventFilterDTO(
+      String query,
+      String location,
+      UUID creatorId,
+      LocalDateTime dateFrom,
+      LocalDateTime dateTo,
+      Boolean isPrivateEvent,
+      Boolean includeDeleted) {
+    this.query = query;
+    this.location = location;
+    this.creatorId = creatorId;
+    this.dateFrom = dateFrom;
+    this.dateTo = dateTo;
+    this.isPrivateEvent = isPrivateEvent;
+    this.includeDeleted = includeDeleted;
   }
 
   public String getQuery() {
@@ -94,6 +114,14 @@ public class EventFilterDTO {
 
   public void setIsPrivateEvent(Boolean isPrivateEvent) {
     this.isPrivateEvent = isPrivateEvent;
+  }
+
+  public Boolean getIncludeDeleted() {
+    return this.includeDeleted;
+  }
+
+  public void setIncludeDeleted(Boolean includeDeleted) {
+    this.includeDeleted = includeDeleted;
   }
 
   public Set<UUID> getEventAdminIds() {
